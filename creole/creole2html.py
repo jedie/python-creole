@@ -46,7 +46,8 @@ from creole import Parser
 
 import macros
 
-from PyLucid.tools.utils import escape
+#from PyLucid.tools.utils import escape
+from xml.sax.saxutils import escape 
 
 class Rules:
     # For the link targets:

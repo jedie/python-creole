@@ -16,12 +16,32 @@ BLOCK_TAGS = (
 )
 
 # Pass-through all django template blocktags
-pass_block_re = re.compile(
-    r'''(?P<data>
-        {% \s* (?P<pass_block_start>.+?) \s* .*? \s* %}
+pass_block_re = r'''(?P<pass_block>
+    {% \s* (?P<pass_block_start>.+?) \s* .*? \s* %}
+    (\n|.)*?
+    {% \s* end(?P=pass_block_start) \s* %}
+)'''
+pre_block_re = r'''
+    <pre>
+    (?P<pre_block>
         (\n|.)*?
-        {% \s* end(?P=pass_block_start) \s* %}
-    )''',
+    )
+    </pre>
+'''
+tt_block_re = r'''
+    <tt>
+    (?P<tt_block>
+        (\n|.)*?
+    )
+    </tt>
+'''
+
+block_re = re.compile(
+    '|'.join([
+        pass_block_re,
+        pre_block_re,
+        tt_block_re,
+    ]),
     re.X | re.U | re.M
 )
 
@@ -33,7 +53,7 @@ class DocNode:
     """
     A node in the document.
     """
-    def __init__(self, kind='', parent=None, attrs=[], content=None, level=0):
+    def __init__(self, kind='', parent=None, attrs=[], content=None, level=None):
         self.kind = kind
 
         self.children = []
@@ -79,110 +99,6 @@ class DebugList(list):
         list.append(self, item)
 
 
-class Html2CreoleEmitter(object):
-    def __init__(self, document_tree, debug=False):
-        self.root = document_tree
-        self.debugging = debug
-        self.__inner_list = None
-        self.__mask_linebreak = False
-
-    #-------------------------------------------------------------------------
-
-    def data_emit(self, node):
-        #~ node.debug()
-        return node.content
-
-    def blockdata_emit(self, node):
-        return node.content
-
-    def headline_emit(self, node):
-        return u"%s %s\n\n" % (u"="*node.level, self.emit_children(node))
-
-    def p_emit(self, node):
-        #~ node.debug()
-        return u"%s\n\n" % self.emit_children(node)
-
-    def strong_emit(self, node):
-        return u"**%s**" % self.emit_children(node)
-
-    def i_emit(self, node):
-        return u"//%s//" % self.emit_children(node)
-
-    def br_emit(self, node):
-        if self.__mask_linebreak:
-            return u"\\\\"
-        else:
-            return u"\n"
-
-    def a_emit(self, node):
-        node.debug()
-        link_text = self.emit_children(node)
-        return u"[[%s|%s]]" % (node.attrs["href"], link_text)
-
-    def li_emit(self, node):
-        self.__mask_linebreak = True
-        result = u"%s %s\n" % (self.__inner_list*node.level, self.emit_children(node))
-        self.__mask_linebreak = False
-        return result
-
-    def ul_emit(self, node):
-        self.__inner_list = "*"
-        return self.emit_children(node)
-
-    def ol_emit(self, node):
-        self.__inner_list = "#"
-        return self.emit_children(node)
-
-    #-------------------------------------------------------------------------
-
-    def document_emit(self, node):
-        return self.emit_children(node)
-
-    def default_emit(self, node):
-        """Fallback function for emitting unknown nodes."""
-        msg = "Node '%s' unknown" % node.kind
-        print msg
-        #~ raise NotImplementedError(msg)
-
-    def emit_children(self, node):
-        """Emit all the children of a node."""
-        result = []
-        for child in node.children:
-            content = self.emit_node(child)
-            assert isinstance(content, unicode)
-            result.append(content)
-        return u"".join(result)
-        #~ return u''.join([self.emit_node(child) for child in node.children])
-
-    def emit_node(self, node):
-        """Emit a single node."""
-        self.debug_msg("emit_node", "%s: %r" % (node.kind, node.content))
-
-        method_name = "%s_emit" % node.kind
-        emit_method = getattr(self, method_name, self.default_emit)
-        content = emit_method(node)
-        if not isinstance(content, unicode):
-            raise AssertionError(
-                "Method '%s' returns no unicode (returns: %r)" % (
-                    method_name, content
-                )
-            )
-        return content
-
-    def emit(self):
-        """Emit the document represented by self.root DOM tree."""
-        return self.emit_node(self.root)
-
-    #-------------------------------------------------------------------------
-
-    def debug_msg(self, method, txt):
-        if not self.debugging:
-            return
-        print "%13s: %s" % (method, txt)
-
-
-
-
 
 
 
@@ -208,18 +124,40 @@ class Html2CreoleParser(HTMLParser):
 
         self.__list_level = 0
 
-    def _block_cut_out(self, match):
-        data = match.group("data")
+    def _pre_cut(self, data, type):
         self.blockdata.append(data)
         id = len(self.blockdata)-1
-        return '<%s id="%s" />' % (self._placeholder, id)
+        return '<%s type="%s" id="%s" />' % (self._placeholder, type, id)
+
+    def _pre_tt_block_cut(self, groups):
+        return self._pre_cut(groups["tt_block"], "tt")
+    
+    def _pre_pre_block_cut(self, groups):
+        return self._pre_cut(groups["pre_block"], "pre")
+    
+    def _pre_pass_block_cut(self, groups):
+        return self._pre_cut(groups["pass_block"], "pass")
+    
+    _pre_pass_block_start_cut = _pre_pass_block_cut
+        
+    def _pre_cut_out(self, match):        
+        groups = match.groupdict()
+        for name, text in groups.iteritems():
+            if text is not None:
+                #if name != "char": print "%15s: %r" % (name, text)
+                print "%15s: %r" % (name, text)
+                method = getattr(self, '_pre_%s_cut' % name)
+                return method(groups)
+        
+#        data = match.group("data")
+
 
     def feed(self, data):
         data = unicode(data)
         data = data.strip()
-        data = re.sub(pass_block_re, self._block_cut_out, data)
+        data = re.sub(block_re, self._pre_cut_out, data)
 
-        lines = data.split("\n")
+        lines = data.split("\n") # FIXME: linebreaks in list!
         lines = [l.strip() for l in lines]
         lines = [l for l in lines if l]
 
@@ -269,11 +207,10 @@ class Html2CreoleParser(HTMLParser):
             )
             return
 
-        if tag in ("ul", "ol"):
-            self.__list_level += 1
-
-        if tag == "li":
+        if tag in ("li", "ul", "ol"):
             self.cur = DocNode(tag, self.cur, attrs, level=self.__list_level)
+            if tag in ("ul", "ol"):
+                self.__list_level += 1
             return
 
         self.cur = DocNode(tag, self.cur, attrs)
@@ -293,14 +230,22 @@ class Html2CreoleParser(HTMLParser):
         attr_dict = dict(attrs)
         if tag == self._placeholder:
             id = int(attr_dict["id"])
-            DocNode(self._placeholder, self.cur, content = self.blockdata[id])
-        #~ elif tag == "br":
-            #~ self.cur = DocNode("br", self.cur)
+#            block_type = attr_dict["type"]
+            DocNode(
+                "%s_%s" % (self._placeholder, attr_dict["type"]),
+                self.cur,
+                content = self.blockdata[id],
+#                attrs = attr_dict
+            )
         else:
             DocNode(tag, self.cur, attrs)
 
     def handle_endtag(self, tag):
         self.debug_msg("endtag", "%r" % tag)
+        
+        if tag in ("ul", "ol"):
+            self.__list_level -= 1
+            
         if tag in BLOCK_TAGS:
             self._go_up()
         else:
@@ -331,9 +276,13 @@ class Html2CreoleParser(HTMLParser):
                 txt = u"%s%s" % (u" "*ident, child.kind)
 
                 if child.content:
-                    txt += ": %s" % child.content
+                    txt += ": %r" % child.content
+                    
                 if child.attrs:
-                    txt += " (attrs: %r)" % child.attrs
+                    txt += " - attrs: %r" % child.attrs
+                    
+                if child.level != None:
+                    txt += " - level: %r" % child.level
 
                 print txt
                 emit(child, ident+4)
@@ -341,65 +290,226 @@ class Html2CreoleParser(HTMLParser):
         print "*"*80
 
 
-data = """
-<h1>Headline 1</h1>
 
-<p>A text block, line 1<br />
-and line 2</p>
 
-<p><strong><i>bold italics</i></strong><br />
-<i><strong>bold italics</strong></i><br />
-<i>This is <strong>also</strong> good.</i></p>
 
+
+
+
+
+
+
+
+
+
+
+class Html2CreoleEmitter(object):
+    def __init__(self, document_tree, debug=False):
+        self.root = document_tree
+        self.debugging = debug
+        self.__inner_list = None
+        self.__mask_linebreak = False
+
+    #--------------------------------------------------------------------------
+    
+    def _escape_linebreaks(self, text):
+        text = text.split("\n")
+        lines = [line.strip() for line in text]
+        return "\\\\".join(lines)
+    
+    #--------------------------------------------------------------------------
+    
+    def blockdata_pre_emit(self, node):
+        return u"{{{%s}}}\n" % node.content
+    
+    def blockdata_tt_emit(self, node):
+        return u"{{{ %s }}}" % node.content
+    
+    def blockdata_pass_emit(self, node):
+        return node.content
+    
+    #--------------------------------------------------------------------------
+
+    def data_emit(self, node):
+        #~ node.debug()
+        return node.content
+
+    def headline_emit(self, node):
+        return u"%s %s\n\n" % (u"="*node.level, self.emit_children(node))
+
+    def p_emit(self, node):
+        #~ node.debug()
+        return u"%s\n\n" % self.emit_children(node)
+
+    def strong_emit(self, node):
+        return u"**%s**" % self.emit_children(node)
+
+    def i_emit(self, node):
+        return u"//%s//" % self.emit_children(node)
+
+    def br_emit(self, node):
+        return u"\n"
+
+    def hr_emit(self, node):
+        return u"----\n"
+
+    def a_emit(self, node):
+        link_text = self.emit_children(node)
+        return u"[[%s|%s]]" % (node.attrs["href"], link_text)
+    
+    def img_emit(self, node):
+        node.debug()
+        return u"{{%(src)s|%(alt)s}}" % node.attrs
+
+    #--------------------------------------------------------------------------
+
+    def li_emit(self, node):      
+        content = self.emit_children(node)
+        print "XXX", repr(content)
+        content = self._escape_linebreaks(content)
+        list_markup = self.__inner_list*node.level
+        return u"%s %s\n" % (list_markup, content)
+
+    def ul_emit(self, node):
+        self.__inner_list = "*"
+        content = self.emit_children(node)
+        if node.level == 0:
+            return u"%s\n" % content
+        else:
+            return u"%s" % content
+
+    def ol_emit(self, node):
+        self.__inner_list = "#"
+        return u"%s\n" % self.emit_children(node)
+
+    #--------------------------------------------------------------------------
+    
+    def table_emit(self, node):
+        table_content = self.emit_children(node)
+        
+        # Optimize the table output
+        lines = table_content.split("\n")      
+        len_info = {}
+        for line in lines:
+            cells = line.split("|")
+            for no, cell in enumerate(cells):
+                cell_len = len(cell)
+                if no not in len_info:
+                    len_info[no] = cell_len
+                elif len_info[no]<cell_len:
+                    len_info[no] = cell_len
+      
+        new_lines = []
+        for line in lines:
+            cells = line.split("|")
+            for no, cell in enumerate(cells):
+                cells[no] = cell.ljust(len_info[no]+1) 
+        
+            new_lines.append("|".join(cells).strip())
+
+        return "\n".join(new_lines)
+    
+    def tr_emit(self, node):
+        return "%s|\n" % self.emit_children(node)
+    
+    def th_emit(self, node):
+        content = self.emit_children(node)
+        content = self._escape_linebreaks(content)
+        return u"|= %s" % content
+    
+    def td_emit(self, node):
+        content = self.emit_children(node)
+        content = self._escape_linebreaks(content)
+        return u"| %s" % content
+    
+    #--------------------------------------------------------------------------
+
+    def document_emit(self, node):
+        return self.emit_children(node)
+
+#    def default_emit(self, node):
+#        """Fallback function for emit unknown nodes."""
+#        msg = "Node '%s' unknown!" % node.kind
+#        print msg
+#        raise NotImplementedError(msg)
+
+    def emit_children(self, node):
+        """Emit all the children of a node."""
+        result = []
+        for child in node.children:
+            content = self.emit_node(child)
+            assert isinstance(content, unicode)
+            result.append(content)
+        return u"".join(result)
+        #~ return u''.join([self.emit_node(child) for child in node.children])
+
+    def emit_node(self, node):
+        """Emit a single node."""
+        self.debug_msg("emit_node", "%s: %r" % (node.kind, node.content))
+
+        method_name = "%s_emit" % node.kind
+        print "method name:", method_name
+        emit_method = getattr(self, method_name)#, self.default_emit)
+        content = emit_method(node)
+        if not isinstance(content, unicode):
+            raise AssertionError(
+                "Method '%s' returns no unicode (returns: %r)" % (
+                    method_name, content
+                )
+            )
+        return content
+
+    def emit(self):
+        """Emit the document represented by self.root DOM tree."""
+        result = self.emit_node(self.root) 
+        return result.strip() # FIXME
+
+    #-------------------------------------------------------------------------
+
+    def debug_msg(self, method, txt):
+        if not self.debugging:
+            return
+        print "%13s: %s" % (method, txt)
+
+
+
+
+
+
+if __name__ == '__main__':
+    data = """
 <h4>List a:</h4>
 <ul>
-<li>a1 item</li>
-<ul>
-    <li>a1.1 Force
-    linebreak</li>
-    <li>a1.2 item</li>
+    <li>a1 item</li>
     <ul>
-        <li>a1.2.1 item</li>
-        <li>a1.2.2 item</li>
+        <li>a1.1 Force
+        linebreak</li>
+        <li>a1.2 item</li>
+        <ul>
+            <li>a1.2.1 item</li>
+            <li>a1.2.2 item</li>
+        </ul>
     </ul>
-</ul>
-<li>a2 item</li>
+    <li>a2 item</li>
 </ul>
 <p>list 'a' end</p>
-
-<p>The current page name: &gt;{{ PAGE.name }}&lt; great?<br />
-A {% lucidTag page_update_list count=10 %} PyLucid plugin</p>
-{% block %}
-FooBar
-{% endblock %}
-<p>A <a href="www.domain.tld">link</a>.<br />
-no image: {{ foo|bar }}!</p>
 """
 
-data = """
-<h1>Headline 1</h1>
-
-<p>A text block, line 1<br />
-and line 2<br />
-the end line 3</p>
-
-<p>line 1: <strong><i>bold italics</i></strong><br />
-line2: <i><strong>bold italics</strong></i><br />
-line3: <i>This is <strong>also</strong> good.</i></p>
-"""
-
-print data.strip()
-h2c = Html2CreoleParser(
-    #~ debug=False
-    debug=True
-)
-document_tree = h2c.feed(data)
-h2c.debug()
-
-e = Html2CreoleEmitter(document_tree,
-    #~ debug=False
-    debug=True
-)
-print e.emit()
+    print data.strip()
+    h2c = Html2CreoleParser(
+        #~ debug=False
+        debug=True
+    )
+    document_tree = h2c.feed(data)
+    h2c.debug()
+    
+    e = Html2CreoleEmitter(document_tree,
+        #~ debug=False
+        debug=True
+    )
+    content = e.emit()
+    print "*"*79
+    print content 
+    print "*"*79
 
 

@@ -32,26 +32,19 @@
     :license: GNU GPL v3, see LICENSE.txt for more details.
 """
 
-#import sys, re, difflib, unittest, traceback
+import sys
+import unittest
 
-import tests
-from tests.utils import unittest_addons
+from utils import MarkupTest
 
-from PyLucid.system.markups.creole import Parser
-from PyLucid.system.markups.creole2html import HtmlEmitter
+sys.path.insert(0, "../creole")
+
+from creole import Parser
+from creole2html import HtmlEmitter
 
 
-## error output format:
-# =1 -> via repr()
-# =2 -> raw
-#VERBOSE = 1
-VERBOSE = 2
 
-unittest_addons.VERBOSE = VERBOSE
-
-#_____________________________________________________________________________
-
-class CreoleTest(unittest_addons.MarkupTest):
+class CreoleTest(MarkupTest):
     def _parse(self, txt):
         """
         Apply creole markup on txt
@@ -277,7 +270,7 @@ class CreoleTest(unittest_addons.MarkupTest):
               for (i = 0; i &lt; size; i++) {
                 if (x[i] &gt; 0) {
                   x[i]--;
-              &#x7D;&#x7D;}
+              }}}
             </pre>
         """)
 
@@ -510,13 +503,34 @@ class CreoleTest(unittest_addons.MarkupTest):
             </ol>
         """)
 
-    def test_table(self):
+    def test_table1(self):
+        self.assertCreole(r"""
+            A simple table:
+            |= Headline 1 |= Headline 2
+            | cell one    | cell two
+            ...end
+        """, """
+            <p>A simple table:</p>
+            <table>
+            <tr>
+            \t<th>Headline 1</th>
+            \t<th>Headline 2</th>
+            </tr>
+            <tr>
+            \t<td>cell one</td>
+            \t<td>cell two</td>
+            </tr>
+            </table>
+            <p>...end</p>
+        """)
+
+    def test_table2(self):
         self.assertCreole(r"""
             A Table...
-            |= Headline  |= a other\\headline    |= the **big end        |
-            | a cell     | a **big** cell        |**//bold italics//**   |
-            | next\\line | No == headline == or? |                       |
-            |            |                       | open end
+            |= Headline  |= a other\\headline    |= the **big end**    |
+            | a cell     | a **big** cell        |**//bold italics//** |
+            | next\\line | No == headline == or? |                     |
+            |            |nospaces| open end
             ...end
         """, """
             <p>A Table...</p>
@@ -540,7 +554,7 @@ class CreoleTest(unittest_addons.MarkupTest):
             </tr>
             <tr>
             \t<td></td>
-            \t<td></td>
+            \t<td>nospaces</td>
             \t<td>open end</td>
             </tr>
             </table>
@@ -584,32 +598,32 @@ class CreoleTest(unittest_addons.MarkupTest):
             <p>&lt;p&gt;didn\'t match,too.&lt; p &gt;</p>
         """)
         
-    def test_macro_html1(self):
-        self.assertCreole(r"""
-            <<a_not_existing_macro>>
-            
-            <<code>>
-            some code
-            <</code>>
-            
-            a macro:
-            <<code>>
-            <<code>>
-            the sourcecode
-            <</code>>
-        """, r"""
-            <p>[Error: Macro 'a_not_existing_macro' doesn't exist]</p>
-            <fieldset class="pygments_code">
-            <legend class="pygments_code"><small title="no lexer matching the text found">unknown type</small></legend>
-            <pre><code>some code</code></pre>
-            </fieldset>
-            <p>a macro:</p>
-            <fieldset class="pygments_code">
-            <legend class="pygments_code"><small title="no lexer matching the text found">unknown type</small></legend>
-            <pre><code>&lt;&lt;code&gt;&gt;
-            the sourcecode</code></pre>
-            </fieldset>
-        """)
+#    def test_macro_html1(self):
+#        self.assertCreole(r"""
+#            <<a_not_existing_macro>>
+#            
+#            <<code>>
+#            some code
+#            <</code>>
+#            
+#            a macro:
+#            <<code>>
+#            <<code>>
+#            the sourcecode
+#            <</code>>
+#        """, r"""
+#            <p>[Error: Macro 'a_not_existing_macro' doesn't exist]</p>
+#            <fieldset class="pygments_code">
+#            <legend class="pygments_code"><small title="no lexer matching the text found">unknown type</small></legend>
+#            <pre><code>some code</code></pre>
+#            </fieldset>
+#            <p>a macro:</p>
+#            <fieldset class="pygments_code">
+#            <legend class="pygments_code"><small title="no lexer matching the text found">unknown type</small></legend>
+#            <pre><code>&lt;&lt;code&gt;&gt;
+#            the sourcecode</code></pre>
+#            </fieldset>
+#        """)
         
     def test_macro_html2(self):
         self.assertCreole(r"""
@@ -622,37 +636,33 @@ class CreoleTest(unittest_addons.MarkupTest):
             <p><<this is 'html'>></p>
         """)
 
-    def test_macro_pygments_code(self):
-        self.assertCreole(r"""
-            a macro:
-            <<code ext=.css>>
-            /* Stylesheet */
-            form * {
-              vertical-align:middle;
-            }
-            <</code>>
-            the end
-        """, """
-            <p>a macro:</p>
-            <fieldset class="pygments_code">
-            <legend class="pygments_code">CSS</legend><table class="pygmentstable"><tr><td class="linenos"><pre>1
-            2
-            3
-            4</pre></td><td class="code"><div class="pygments"><pre><span class="c">/* Stylesheet */</span>
-            <span class="nt">form</span> <span class="o">*</span> <span class="p">{</span>
-              <span class="k">vertical-align</span><span class="o">:</span><span class="k">middle</span><span class="p">;</span>
-            <span class="p">}</span>
-            </pre></div>
-            </td></tr></table></fieldset>
-            <p>the end</p>
-        """)
+#    def test_macro_pygments_code(self):
+#        self.assertCreole(r"""
+#            a macro:
+#            <<code ext=.css>>
+#            /* Stylesheet */
+#            form * {
+#              vertical-align:middle;
+#            }
+#            <</code>>
+#            the end
+#        """, """
+#            <p>a macro:</p>
+#            <fieldset class="pygments_code">
+#            <legend class="pygments_code">CSS</legend><table class="pygmentstable"><tr><td class="linenos"><pre>1
+#            2
+#            3
+#            4</pre></td><td class="code"><div class="pygments"><pre><span class="c">/* Stylesheet */</span>
+#            <span class="nt">form</span> <span class="o">*</span> <span class="p">{</span>
+#              <span class="k">vertical-align</span><span class="o">:</span><span class="k">middle</span><span class="p">;</span>
+#            <span class="p">}</span>
+#            </pre></div>
+#            </td></tr></table></fieldset>
+#            <p>the end</p>
+#        """)
 
 
 
 
-if __name__ == "__main__":
-    # Run this unitest directly
-    import os
-    os.chdir("../")
-    filename = os.path.splitext(os.path.basename(__file__))[0]
-    tests.run_tests(test_labels=[filename])
+if __name__ == '__main__':
+    unittest.main()
