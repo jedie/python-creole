@@ -128,18 +128,24 @@ class Rules:
     pre_escape = r' ^(?P<indent>\s*) ~ (?P<rest> \}\}\} \s*) $'
 
     # Pass-through all django template blocktags       
-    pass_block = r'''(?P<pass_block>
+    pass_block = r'''
+            (\n|\s)*?
+            (?P<pass_block>
+            \n{0,1}
             {% \s* (?P<pass_block_start>.+?) \s* (?P<pass_block_args>.*?) \s* %}
             (\n|.)*?
             {% \s* end(?P=pass_block_start) \s* %}
-        )'''
+            \n{0,1}
+            )
+            (\n|\s)*?
+        '''
         
     pass_line = r'''\n(?P<pass_line>
-            (\n|\s)*
+            \n
             ({%.*?%})|
             ({{.*?}})
-            (\n|\s)*
-        )'''
+            \n
+        )\n\n'''
     pass_inline = r'''(?P<pass_inline>
             ({%.*?%})|
             ({{.*?}})
@@ -597,73 +603,6 @@ class DocNode:
 
 
 if __name__=="__main__":
-    txt = r"""== a headline
-
-Here is [[a internal]] link.
-This is [[http://domain.tld|external links]].
-A [[internal links|different]] link name.
-
-Basics: **bold** or //italic//
-or **//both//** or //**both**//
-Force\\linebreak.
-
-The current page name: >{{ PAGE.name }}< great?
-A {% lucidTag page_update_list count=10 %} PyLucid plugin
-
-{% sourcecode py %}
-import sys
-
-sys.stdout("Hello World!")
-{% endsourcecode %}
-
-A [[www.domain.tld|link]].
-a {{/image.jpg|My Image}} image
-
-no image: {{ foo|bar }}!
-picture [[www.domain.tld | {{ foo.JPG | Foo }} ]] as a link
-
-END
-
-==== Headline 1
-
-{% a tag 1 %}
-
-==== Headline 2
-
-{% a tag 2 %}
-
-the end
-"""
-
-    txt = r"""
-==== Headline 1
-
-The current page name: >{{ PAGE.name }}< great?
-
-{% a tag 1 %}
-
-==== Headline 2
-
-{% a tag 2 %}
-
-some text
-
-{% something arg1="foo" arg2="bar" arg2=3 %}
-foobar
-{% endsomething %}
-
-the end
-"""
-
-    txt = r"""A {% lucidTag page_update_list count=10 %} PyLucid plugin
-
-{% sourcecode py %}
-import sys
-
-sys.stdout("Hello World!")
-{% endsourcecode %}
-A [[www.domain.tld|link]]."""
-
     txt = r"""
 ==== Headline 1
 
@@ -674,48 +613,23 @@ line two
 
 {% a tag 2 %}
 
-A block:
+Right block with a end tag:
+
 {% block %}
 <Foo:> {{ Bar }}
 {% endblock %}
-end block
-
-{% block1 arg="jo" %}
-eofjwqp
-{% endblock1 %}
 
 A block without the right end block:
+
 {% block1 %}
-111
+not matched
 {% endblock2 %}
-BBB
 
 A block without endblock:
-{% block3 %}
-222
-{% block3 %}
-CCC
-
-the end"""
-#    txt = r'''
-#<<jojo>>
-#owrej
-#<<code>>
-#some code
-#<</code>>
-#a macro:
-#<<code ext=.css>>
-#/* Stylesheet */
-#form * {
-#  vertical-align:middle;
-#}
-#<</code>>
-#the end
-#<<code>>
-#<<code>>
-#jup
-#<</code>>
-#'''
+{% noblock3 %}
+not matched
+{% noblock3 %}
+CCC"""
 
 
     print "-"*80
@@ -731,12 +645,12 @@ the end"""
                     print "%13s: %r" % (name, text)
         re.sub(rules, display_match, txt)
 
-#    print "_"*80
-#    print "plain block rules match:"
-#    test_rules(Parser("").block_re, txt)
-#
-#    print "_"*80
-#    print "plain inline rules match:"
-#    test_rules(Parser("").inline_re, txt)
+    print "_"*80
+    print "plain block rules match:"
+    test_rules(Parser("").block_re, txt)
+
+    print "_"*80
+    print "plain inline rules match:"
+    test_rules(Parser("").inline_re, txt)
 
     print "---END---"

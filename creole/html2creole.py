@@ -4,6 +4,7 @@ import re
 import inspect
 from pprint import pprint
 from HTMLParser import HTMLParser
+from htmlentitydefs import entitydefs
 
 
 BLOCK_TAGS = (
@@ -11,7 +12,7 @@ BLOCK_TAGS = (
     "form",
     "h1", "h2", "h3", "h4", "h5", "h6",
     "hr", "ins", "isindex", "menu", "noframes", "noscript",
-    "ul", "ol", "table",
+    "ul", "ol", "li", "table",
     "p", "pre"
 )
 
@@ -42,10 +43,10 @@ block_re = re.compile(
         pre_block_re,
         tt_block_re,
     ]),
-    re.X | re.U | re.M
+    re.VERBOSE | re.UNICODE | re.MULTILINE
 )
 
-headline_tag_re = re.compile(r"h(\d)")
+headline_tag_re = re.compile(r"h(\d)", re.UNICODE)
 
 
 
@@ -165,11 +166,20 @@ class Html2CreoleParser(HTMLParser):
         for line in lines:
             if line and clean_data[-1] == u">" and line[0] == u"<":
                 clean_data += line
-                continue
-
-            clean_data += " " + line
+            elif line and clean_data.endswith("<br />"):
+                clean_data += line
+            else:
+                print "[%r]" % line
+                clean_data += " " + line
 
         clean_data = clean_data.strip()
+        
+        if self.debugging:
+            print "cleaned data:"
+            print clean_data
+            print "-"*79
+#            print clean_data.replace(">", ">\n")
+#            print "-"*79 
 
         HTMLParser.feed(self, clean_data)
 
@@ -184,7 +194,7 @@ class Html2CreoleParser(HTMLParser):
         of one of the listed kinds of nodes or root.
         Start at the node node.
         """
-        while node.parent is not None:
+        while node is not None and node.parent is not None:
             node = node.parent
             if node.kind in kinds:
                 break
@@ -208,22 +218,36 @@ class Html2CreoleParser(HTMLParser):
             return
 
         if tag in ("li", "ul", "ol"):
-            self.cur = DocNode(tag, self.cur, attrs, level=self.__list_level)
             if tag in ("ul", "ol"):
                 self.__list_level += 1
-            return
-
-        self.cur = DocNode(tag, self.cur, attrs)
+            self.cur = DocNode(tag, self.cur, attrs, level=self.__list_level)
+        elif tag == "img":
+            # Work-a-round if a image tag is not marked as startendtag: 
+            # wrong: <img src="/image.jpg"> doesn't work if </img> not exist
+            # right: <img src="/image.jpg" />
+            DocNode(tag, self.cur, attrs)
+        else:
+            self.cur = DocNode(tag, self.cur, attrs)
 
     def handle_data(self, data):
         self.debug_msg("data", "%r" % data)
-        DocNode("data", self.cur, content = data)
+        if data.startswith(" {%") and data.endswith("%} "):
+            # A django template line
+            DocNode(
+                "blockdata_pass",
+                self.cur,
+                content = data.strip(),
+            )
+        else:
+            DocNode("data", self.cur, content = data)
 
     def handle_charref(self, name):
         self.debug_msg("charref", "%r" % name)
+        DocNode("charref", self.cur, content=name)
 
     def handle_entityref(self, name):
         self.debug_msg("entityref", "%r" % name)
+        DocNode("entityref", self.cur, content=name)
 
     def handle_startendtag(self, tag, attrs):
         self.debug_msg("startendtag", "%r atts: %s" % (tag, attrs))
@@ -242,6 +266,7 @@ class Html2CreoleParser(HTMLParser):
 
     def handle_endtag(self, tag):
         self.debug_msg("endtag", "%r" % tag)
+        self.debug_msg("get_starttag_text", "%r" % self.get_starttag_text())
         
         if tag in ("ul", "ol"):
             self.__list_level -= 1
@@ -301,13 +326,27 @@ class Html2CreoleParser(HTMLParser):
 
 
 
+entities_regex = re.compile(r"&([#\w]+);", re.UNICODE)
+
+
+def deentitfy(text):
+    """
+    >>> deentitfy("a text with &gt;entity&lt;!")
+    'a text with >entity<!'
+    """
+    def deentitfy(match):
+        entity = match.group(1)
+        return entitydefs[entity]
+        
+    return entities_regex.sub(deentitfy, text) 
+
 
 
 class Html2CreoleEmitter(object):
     def __init__(self, document_tree, debug=False):
         self.root = document_tree
         self.debugging = debug
-        self.__inner_list = None
+        self.__inner_list = ""
         self.__mask_linebreak = False
 
     #--------------------------------------------------------------------------
@@ -320,12 +359,13 @@ class Html2CreoleEmitter(object):
     #--------------------------------------------------------------------------
     
     def blockdata_pre_emit(self, node):
-        return u"{{{%s}}}\n" % node.content
+        return u"{{{%s}}}\n" % deentitfy(node.content)
     
     def blockdata_tt_emit(self, node):
-        return u"{{{ %s }}}" % node.content
+        return u"{{{ %s }}}" % deentitfy(node.content)
     
     def blockdata_pass_emit(self, node):
+        return u"%s\n\n" % node.content
         return node.content
     
     #--------------------------------------------------------------------------
@@ -333,13 +373,23 @@ class Html2CreoleEmitter(object):
     def data_emit(self, node):
         #~ node.debug()
         return node.content
+    
+    def entityref_emit(self, node):
+        return unicode(entitydefs[node.content])
+
+    #--------------------------------------------------------------------------
+
+    def p_emit(self, node):
+        return u"%s\n\n" % self.emit_children(node)
+    
+    def br_emit(self, node):
+        if self.__inner_list != "":
+            return u"\\\\"
+        else:
+            return u"\n"
 
     def headline_emit(self, node):
         return u"%s %s\n\n" % (u"="*node.level, self.emit_children(node))
-
-    def p_emit(self, node):
-        #~ node.debug()
-        return u"%s\n\n" % self.emit_children(node)
 
     def strong_emit(self, node):
         return u"**%s**" % self.emit_children(node)
@@ -347,15 +397,16 @@ class Html2CreoleEmitter(object):
     def i_emit(self, node):
         return u"//%s//" % self.emit_children(node)
 
-    def br_emit(self, node):
-        return u"\n"
-
     def hr_emit(self, node):
-        return u"----\n"
+        return u"----\n\n"
 
     def a_emit(self, node):
         link_text = self.emit_children(node)
-        return u"[[%s|%s]]" % (node.attrs["href"], link_text)
+        url = node.attrs["href"]
+        if link_text == url:
+            return u"[[%s]]" % url
+        else:
+            return u"[[%s|%s]]" % (url, link_text)
     
     def img_emit(self, node):
         node.debug()
@@ -363,24 +414,32 @@ class Html2CreoleEmitter(object):
 
     #--------------------------------------------------------------------------
 
-    def li_emit(self, node):      
+    def li_emit(self, node):
         content = self.emit_children(node)
-        print "XXX", repr(content)
-        content = self._escape_linebreaks(content)
-        list_markup = self.__inner_list*node.level
-        return u"%s %s\n" % (list_markup, content)
+        return u"\n%s %s" % (self.__inner_list, content)
+
+    def _list_emit(self, node, list_type):
+        
+        if self.__inner_list == "": # Srart a new list
+            self.__inner_list = list_type
+        else:
+            start = False
+            self.__inner_list += list_type
+        
+        content = u"%s" % self.emit_children(node)
+        
+        self.__inner_list = self.__inner_list[:-1]
+        
+        if self.__inner_list == "": # Srart a new list
+            return content.strip() + "\n\n"
+        else:
+            return content
 
     def ul_emit(self, node):
-        self.__inner_list = "*"
-        content = self.emit_children(node)
-        if node.level == 0:
-            return u"%s\n" % content
-        else:
-            return u"%s" % content
+        return self._list_emit(node, list_type="*")
 
     def ol_emit(self, node):
-        self.__inner_list = "#"
-        return u"%s\n" % self.emit_children(node)
+        return self._list_emit(node, list_type="#")
 
     #--------------------------------------------------------------------------
     
@@ -448,7 +507,6 @@ class Html2CreoleEmitter(object):
         self.debug_msg("emit_node", "%s: %r" % (node.kind, node.content))
 
         method_name = "%s_emit" % node.kind
-        print "method name:", method_name
         emit_method = getattr(self, method_name)#, self.default_emit)
         content = emit_method(node)
         if not isinstance(content, unicode):
@@ -477,22 +535,48 @@ class Html2CreoleEmitter(object):
 
 
 if __name__ == '__main__':
+    import doctest
+    doctest.testmod()
+    
+    
     data = """
-<h4>List a:</h4>
-<ul>
-    <li>a1 item</li>
-    <ul>
-        <li>a1.1 Force
-        linebreak</li>
-        <li>a1.2 item</li>
-        <ul>
-            <li>a1.2.1 item</li>
-            <li>a1.2.2 item</li>
-        </ul>
-    </ul>
-    <li>a2 item</li>
-</ul>
-<p>list 'a' end</p>
+<p>a list:</p>
+            <ol>
+                <li>Item 1
+                <ol>
+                    <li>Item 1.1</li>
+                    <li>a <strong>bold</strong> Item 1.2</li>
+                </ol></li>
+                <li>Item 2
+                <ol>
+                    <li>Item 2.1
+                    <ol>
+                        <li><a href="a link Item 3.1">a link Item 3.1</a></li>
+                        <li>Force<br />
+                        linebreak 3.2</li>
+                        <li>item 3.3</li>
+                        <li>item 3.4</li>
+                    </ol></li>
+                </ol></li>
+            </ol>
+            <p>up to five levels</p>
+            
+            <ol>
+                <li>1
+                <ol>
+                    <li>2
+                    <ol>
+                        <li>3
+                        <ol>
+                            <li>4
+                            <ol>
+                                <li>5</li>
+                            </ol></li>
+                        </ol></li>
+                    </ol></li>
+                </ol></li>
+            </ol>
+<p>the end</p>
 """
 
     print data.strip()
@@ -511,5 +595,5 @@ if __name__ == '__main__':
     print "*"*79
     print content 
     print "*"*79
-
+    print content.replace(" ", ".").replace("\n", "\\n\n")
 

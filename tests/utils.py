@@ -128,7 +128,7 @@ class MarkupTest(unittest.TestCase):
         assert count != False, "second line is empty!"
 
         # remove indentation from all lines
-        txt = [i[count:] for i in txt]
+        txt = [i[count:].rstrip(" ") for i in txt]
 
         #~ txt = re.sub("\n {2,}", "\n", txt)
         txt = "\n".join(txt)
@@ -169,6 +169,9 @@ class MarkupTest(unittest.TestCase):
 
         """)
         self.assertEqual(out4, "one line\n    line two\n")
+
+        # removing whitespace and the end
+        self.assertEqual(self._prepare_text("\n  111  \n  222"), "111\n222")
 
         out5 = self._prepare_text("""
             one line

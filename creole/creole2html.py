@@ -97,7 +97,7 @@ class HtmlEmitter:
         return self.html_escape(node.content)
 
     def separator_emit(self, node):
-        return u'<hr />\n';
+        return u'<hr />\n\n';
 
     def paragraph_emit(self, node):
         return u'<p>%s</p>\n' % self.emit_children(node)
@@ -231,8 +231,11 @@ class HtmlEmitter:
     def pass_block_emit(self, node):
         """ Pass-through all django template blocktags and html code lines """
         return node.content + "\n"
-    pass_line_emit = pass_block_emit
     html_emit = pass_block_emit
+    
+    def pass_line_emit(self, node):
+        """ Pass-through all django template blocktags and html code lines """
+        return node.content + "\n\n"
 
     def pass_inline_emit(self, node):
         """ Pass-through all django template tags """
@@ -271,66 +274,24 @@ class HtmlEmitter:
             # No error output
             return u""
 
-if __name__=="__main__":
-    txt = r"""== a headline
-
-Here is [[a internal]] link.
-This is [[http://domain.tld|external links]].
-A [[internal links|different]] link name.
-
-Basics: **bold** or //italic//
-or **//both//** or //**both**//
-Force\\linebreak.
-
-The current page name: >{{ PAGE.name }}< great?
-A {% lucidTag page_update_list count=10 %} PyLucid plugin
-
-{% sourcecode py %}
-import sys
-
-sys.stdout("Hello World!")
-{% endsourcecode %}
-
-A [[www.domain.tld|link]].
-a {{/image.jpg|My Image}} image
-
-no image: {{ foo|bar }}!
-picture [[www.domain.tld | {{ foo.JPG | Foo }} ]] as a link
-
-END"""
-
-    
+if __name__=="__main__":   
     txt = r"""
-==== Headline 1
+a list:
 
-On {% a tag 1 %} line
-line two
+* **bold** item
+* //italic// item
 
-==== Headline 2
-
-{% a tag 2 %}
-
-A block:
-{% block %}
-<Foo:> {{ Bar }}
-{% endblock %}
-end block
-
-{% block1 arg="jo" %}
-eofjwqp
-{% endblock1 %}
-
-A block without the right end block:
-{% block1 %}
-111
-{% endblock2 %}
-BBB
-
-A block without endblock:
-{% block3 %}
-222
-{% block3 %}
-CCC
+# item about a [[certain_page]]
+# {{{ //this// is **not** [[processed]] }}}
+# Item 1
+## Item 1.1
+## a **bold** Item 1.2
+# Item 2
+## Item 2.1
+### [[a link Item 3.1]]
+### Force\\linebreak 3.2
+### item 3.3
+### item 3.4
 
 the end"""
 
@@ -340,4 +301,7 @@ the end"""
     document = p.parse()
     p.debug()
 
-    print HtmlEmitter(document).emit()
+    html = HtmlEmitter(document).emit()
+    print html
+    print "-"*79
+    print html.replace(" ", ".").replace("\n", "\\n\n")
