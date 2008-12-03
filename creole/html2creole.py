@@ -13,8 +13,11 @@ BLOCK_TAGS = (
     "h1", "h2", "h3", "h4", "h5", "h6",
     "hr", "ins", "isindex", "menu", "noframes", "noscript",
     "ul", "ol", "li", "table",
-    "p", "pre"
+    "p", "pre",
+    "br"
 )
+
+#------------------------------------------------------------------------------
 
 # Pass-through all django template blocktags
 pass_block_re = r'''(?P<pass_block>
@@ -23,12 +26,24 @@ pass_block_re = r'''(?P<pass_block>
     {% \s* end(?P=pass_block_start) \s* %}
 )'''
 pre_block_re = r'''
+    [\s\n]*
     <pre>
     (?P<pre_block>
         (\n|.)*?
     )
     </pre>
+    [\s\n]*
 '''
+block_re = re.compile(
+    '|'.join([
+        pass_block_re,
+        pre_block_re,
+    ]),
+    re.VERBOSE | re.UNICODE | re.MULTILINE
+)
+
+#------------------------------------------------------------------------------
+
 tt_block_re = r'''
     <tt>
     (?P<tt_block>
@@ -36,15 +51,22 @@ tt_block_re = r'''
     )
     </tt>
 '''
-
-block_re = re.compile(
+inline_django_re = r'''
+    (?P<django_tag>
+        [\s\n]*
+        {% [^\n]+? %}
+        [\s\n]*
+    )
+'''
+inline_re = re.compile(
     '|'.join([
-        pass_block_re,
-        pre_block_re,
         tt_block_re,
+        inline_django_re,
     ]),
-    re.VERBOSE | re.UNICODE | re.MULTILINE
+    re.VERBOSE | re.UNICODE
 )
+
+#------------------------------------------------------------------------------
 
 headline_tag_re = re.compile(r"h(\d)", re.UNICODE)
 
@@ -102,10 +124,125 @@ class DebugList(list):
 
 
 
+strip_html_regex = re.compile(
+    r"""
+        \s*
+        <
+            (?P<end>/{0,1})       # end tag e.g.: </end>
+            (?P<tag>[^ >]+)       # tag name
+            .*?
+            (?P<startend>/{0,1})  # closed tag e.g.: <closed />
+        >
+        \s*
+    """,
+    re.VERBOSE | re.MULTILINE | re.UNICODE
+)
+
+def strip_html(html_code):
+    """
+    Delete whitespace from html code. Doesn't recordnize preformatted blocks!
+    
+    >>> strip_html(u' <p>  one  \\n two  </p>')
+    u'<p>one two</p>'
+    
+    >>> strip_html(u'<p><strong><i>bold italics</i></strong></p>')
+    u'<p><strong><i>bold italics</i></strong></p>'
+    
+    >>> strip_html(u'<li>  Force  <br /> \\n linebreak </li>')
+    u'<li>Force<br />linebreak</li>'
+    
+    >>> strip_html(u'one  <i>two \\n <strong>   \\n  three  \\n  </strong></i>')
+    u'one <i>two <strong>three</strong> </i>'
+    
+    >>> strip_html(u'<p>a <unknown tag /> foobar  </p>')
+    u'<p>a <unknown tag /> foobar</p>'
+    """
+    def strip_tag(match):
+        block        = match.group(0)
+        end_tag      = match.group("end") in ("/", u"/")
+        startend_tag = match.group("startend") in ("/", u"/")
+        tag          = match.group("tag")
+        
+#        print "_"*40
+#        print match.groupdict()
+#        print "block.......: %r" % block
+#        print "end_tag.....:", end_tag
+#        print "startend_tag:", startend_tag
+#        print "tag.........: %r" % tag
+        
+        if tag in BLOCK_TAGS:
+            return block.strip()
+        
+        space_start = block.startswith(" ")
+        space_end = block.endswith(" ")
+        
+        result = block.strip()
+        
+        if end_tag:
+            # It's a normal end tag e.g.: </strong>
+            if space_start or space_end:
+                result += " "      
+        elif startend_tag:
+            # It's a closed start tag e.g.: <br />
+            
+            if space_start: # there was space before the tag
+                result = " " + result
+                          
+            if space_end: # there was space after the tag
+                result += " "
+        else:
+            # a start tag e.g.: <strong>
+            if space_start or space_end:
+                result = " " + result
+                
+        return result
+
+    data = html_code.strip()
+    clean_data = " ".join([line.strip() for line in data.split("\n")])
+    clean_data = strip_html_regex.sub(strip_tag, clean_data)
+    return clean_data
+
+
+
+#space_re = re.compile(r"^(\s*)(.*?)(\s*)$", re.DOTALL)
+#def clean_whitespace(txt):
+#    """
+#    >>> clean_whitespace(u"\\n\\nfoo bar\\n\\n")
+#    u'\\nfoo bar\\n'
+#    
+#    >>> clean_whitespace(u"   foo bar  \\n  \\n")
+#    u' foo bar\\n'
+#
+#    >>> clean_whitespace(u" \\n \\n  foo bar   ")
+#    u'\\nfoo bar '
+#    
+#    >>> clean_whitespace(u"foo   bar")
+#    u'foo   bar'
+#    """
+#    def striped(txt):
+#        if "\n" in txt:
+#            return "\n"
+#        elif " " in txt:
+#            return " "
+#        else:
+#            return ""
+#        
+#    def cleanup(match):
+#        #print "all:", repr(match.group(0))
+#        start, txt, end = match.groups()
+#        return striped(start) + txt + striped(end)   
+#            
+#    return space_re.sub(cleanup, txt)
+
+#print space_re.findall(u"   foo bar  \\n  \\n")
+#import sys
+#sys.exit()
 
 
 class Html2CreoleParser(HTMLParser):
-    _placeholder = "blockdata"
+    # placeholder html tag for pre cutout areas:
+    _block_placeholder = "blockdata"   
+    _inline_placeholder = "inlinedata"
 
     def __init__(self, debug=False):
         HTMLParser.__init__(self)
@@ -125,63 +262,65 @@ class Html2CreoleParser(HTMLParser):
 
         self.__list_level = 0
 
-    def _pre_cut(self, data, type):
+    def _pre_cut(self, data, type, placeholder):
+        if self.debugging:
+            print "append blockdata: %r" % data
+        assert isinstance(data, unicode), "blockdata is not unicode"
         self.blockdata.append(data)
         id = len(self.blockdata)-1
-        return '<%s type="%s" id="%s" />' % (self._placeholder, type, id)
+        return '<%s type="%s" id="%s" />' % (placeholder, type, id)
 
     def _pre_tt_block_cut(self, groups):
-        return self._pre_cut(groups["tt_block"], "tt")
+        return self._pre_cut(groups["tt_block"], "tt", self._inline_placeholder)
     
     def _pre_pre_block_cut(self, groups):
-        return self._pre_cut(groups["pre_block"], "pre")
+        return self._pre_cut(groups["pre_block"], "pre", self._block_placeholder)
     
     def _pre_pass_block_cut(self, groups):
-        return self._pre_cut(groups["pass_block"], "pass")
+        return self._pre_cut(groups["pass_block"], "pass", self._block_placeholder)
     
     _pre_pass_block_start_cut = _pre_pass_block_cut
+    
+    def _pre_django_tag_cut(self, groups):
+        content = groups["django_tag"]
+#        content = clean_whitespace(content)
+        return self._pre_cut(content, "django_tag", self._inline_placeholder)
         
     def _pre_cut_out(self, match):        
         groups = match.groupdict()
         for name, text in groups.iteritems():
             if text is not None:
-                #if name != "char": print "%15s: %r" % (name, text)
-                print "%15s: %r" % (name, text)
+                if self.debugging:
+                    print "%15s: %r (%r)" % (name, text, match.group(0))
                 method = getattr(self, '_pre_%s_cut' % name)
                 return method(groups)
         
 #        data = match.group("data")
 
 
-    def feed(self, data):
-        data = unicode(data)
+    def feed(self, raw_data):
+        data = unicode(raw_data)
         data = data.strip()
-        data = re.sub(block_re, self._pre_cut_out, data)
+        
+        # cut out <pre>, <tt> areas or django block tag areas
+        data = block_re.sub(self._pre_cut_out, data)
+        data = inline_re.sub(self._pre_cut_out, data)
 
-        lines = data.split("\n") # FIXME: linebreaks in list!
-        lines = [l.strip() for l in lines]
-        lines = [l for l in lines if l]
-
-        clean_data = u" "
-        for line in lines:
-            if line and clean_data[-1] == u">" and line[0] == u"<":
-                clean_data += line
-            elif line and clean_data.endswith("<br />"):
-                clean_data += line
-            else:
-                print "[%r]" % line
-                clean_data += " " + line
-
-        clean_data = clean_data.strip()
+        # Delete whitespace from html code
+        data = strip_html(data)
         
         if self.debugging:
+            print "_"*79
+            print "raw data:"
+            print repr(raw_data)
+            print " -"*40
             print "cleaned data:"
-            print clean_data
+            print data
             print "-"*79
 #            print clean_data.replace(">", ">\n")
 #            print "-"*79 
 
-        HTMLParser.feed(self, clean_data)
+        HTMLParser.feed(self, data)
 
         return self.root
 
@@ -229,17 +368,9 @@ class Html2CreoleParser(HTMLParser):
         else:
             self.cur = DocNode(tag, self.cur, attrs)
 
-    def handle_data(self, data):
+    def handle_data(self, data):       
         self.debug_msg("data", "%r" % data)
-        if data.startswith(" {%") and data.endswith("%} "):
-            # A django template line
-            DocNode(
-                "blockdata_pass",
-                self.cur,
-                content = data.strip(),
-            )
-        else:
-            DocNode("data", self.cur, content = data)
+        DocNode("data", self.cur, content = data)
 
     def handle_charref(self, name):
         self.debug_msg("charref", "%r" % name)
@@ -252,11 +383,11 @@ class Html2CreoleParser(HTMLParser):
     def handle_startendtag(self, tag, attrs):
         self.debug_msg("startendtag", "%r atts: %s" % (tag, attrs))
         attr_dict = dict(attrs)
-        if tag == self._placeholder:
+        if tag in (self._block_placeholder, self._inline_placeholder):
             id = int(attr_dict["id"])
 #            block_type = attr_dict["type"]
             DocNode(
-                "%s_%s" % (self._placeholder, attr_dict["type"]),
+                "%s_%s" % (tag, attr_dict["type"]),
                 self.cur,
                 content = self.blockdata[id],
 #                attrs = attr_dict
@@ -360,12 +491,15 @@ class Html2CreoleEmitter(object):
     
     def blockdata_pre_emit(self, node):
         return u"{{{%s}}}\n" % deentitfy(node.content)
-    
-    def blockdata_tt_emit(self, node):
-        return u"{{{ %s }}}" % deentitfy(node.content)
-    
+       
     def blockdata_pass_emit(self, node):
         return u"%s\n\n" % node.content
+        return node.content
+    
+    def inlinedata_tt_emit(self, node):
+        return u"{{{ %s }}}" % deentitfy(node.content)
+    
+    def inlinedata_django_tag_emit(self, node):
         return node.content
     
     #--------------------------------------------------------------------------
@@ -389,7 +523,7 @@ class Html2CreoleEmitter(object):
             return u"\n"
 
     def headline_emit(self, node):
-        return u"%s %s\n\n" % (u"="*node.level, self.emit_children(node))
+        return u"%s %s\n" % (u"="*node.level, self.emit_children(node))
 
     def strong_emit(self, node):
         return u"**%s**" % self.emit_children(node)
@@ -443,33 +577,45 @@ class Html2CreoleEmitter(object):
 
     #--------------------------------------------------------------------------
     
+    def _format_table(self, table_content):
+        """
+        Format a table block, so every cell has the same width.
+        """
+        # Split and preformat every table cell
+        cells = []
+        for line in table_content.strip().splitlines():
+            line_cells = []
+            for cell in line.split("|"):
+                cell = cell.strip()
+                if cell != "":
+                    if cell.startswith("="):
+                        cell += " " # Headline
+                    else:
+                        cell = " %s " % cell # normal cell
+                line_cells.append(cell)
+            cells.append(line_cells)
+    
+        # Build a list of max len for every column
+        widths = [max(map(len, col)) for col in zip(*cells)]
+    
+        # Join every line with ljust
+        lines = []
+        for row in cells:
+            cells = [cell.ljust(width) for cell, width in zip(row, widths)]
+            lines.append("|".join(cells))
+    
+        return "\n".join(lines)
+    
     def table_emit(self, node):
         table_content = self.emit_children(node)
-        
-        # Optimize the table output
-        lines = table_content.split("\n")      
-        len_info = {}
-        for line in lines:
-            cells = line.split("|")
-            for no, cell in enumerate(cells):
-                cell_len = len(cell)
-                if no not in len_info:
-                    len_info[no] = cell_len
-                elif len_info[no]<cell_len:
-                    len_info[no] = cell_len
-      
-        new_lines = []
-        for line in lines:
-            cells = line.split("|")
-            for no, cell in enumerate(cells):
-                cells[no] = cell.ljust(len_info[no]+1) 
-        
-            new_lines.append("|".join(cells).strip())
 
-        return "\n".join(new_lines)
+        # Optimize the table output
+        result = self._format_table(table_content)
+
+        return u"%s\n" % result
     
     def tr_emit(self, node):
-        return "%s|\n" % self.emit_children(node)
+        return u"%s|\n" % self.emit_children(node)
     
     def th_emit(self, node):
         content = self.emit_children(node)
@@ -538,57 +684,46 @@ if __name__ == '__main__':
     import doctest
     doctest.testmod()
     
+#    import sys
+#    sys.exit()
     
     data = """
-<p>a list:</p>
-            <ol>
-                <li>Item 1
-                <ol>
-                    <li>Item 1.1</li>
-                    <li>a <strong>bold</strong> Item 1.2</li>
-                </ol></li>
-                <li>Item 2
-                <ol>
-                    <li>Item 2.1
-                    <ol>
-                        <li><a href="a link Item 3.1">a link Item 3.1</a></li>
-                        <li>Force<br />
-                        linebreak 3.2</li>
-                        <li>item 3.3</li>
-                        <li>item 3.4</li>
-                    </ol></li>
-                </ol></li>
-            </ol>
-            <p>up to five levels</p>
+<h4>Headline 2</h4>
+
+{% a tag 2 %}
+
+<p>Right block with a end tag:</p>
+
+{% block %}
+<Foo:> {{ Bar }}
+{% endblock %}
+
+<p>A block <tt>a tt block!!!</tt> the end</p>
+
+            <p>111<br />
+            222</p>
             
-            <ol>
-                <li>1
-                <ol>
-                    <li>2
-                    <ol>
-                        <li>3
-                        <ol>
-                            <li>4
-                            <ol>
-                                <li>5</li>
-                            </ol></li>
-                        </ol></li>
-                    </ol></li>
-                </ol></li>
-            </ol>
-<p>the end</p>
+<pre>
+333
+</pre>
+            <p>444</p>
+            
+            <p>one</p>
+            
+<pre>
+foobar
+</pre>
+            <p>two</p>
 """
 
-    print data.strip()
+#    print data.strip()
     h2c = Html2CreoleParser(
-        #~ debug=False
         debug=True
     )
     document_tree = h2c.feed(data)
     h2c.debug()
     
     e = Html2CreoleEmitter(document_tree,
-        #~ debug=False
         debug=True
     )
     content = e.emit()

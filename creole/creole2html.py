@@ -178,13 +178,16 @@ class HtmlEmitter:
         target = node.content
         text = self.get_text(node)
         m = self.addr_re.match(target)
-        if m:
-            if m.group('extern_addr'):
-                return u'<img src="%s" alt="%s">' % (
-                    self.attr_escape(target), self.attr_escape(text))
-            elif m.group('inter_wiki'):
-                raise NotImplementedError
-        return u'<img src="%s" alt="%s">' % (
+        if m and m.group('inter_wiki'):
+            raise NotImplementedError
+        
+#            if m.group('extern_addr'):
+#                return u'<img src="%s" alt="%s" />' % (
+#                    self.attr_escape(target), self.attr_escape(text))
+#                
+#            elif 
+            
+        return u'<img src="%s" alt="%s" />' % (
             self.attr_escape(target), self.attr_escape(text))
 
     def macro_emit(self, node):
@@ -276,24 +279,18 @@ class HtmlEmitter:
 
 if __name__=="__main__":   
     txt = r"""
-a list:
+<h4>Headline 2</h4>
 
-* **bold** item
-* //italic// item
+{% a tag 2 %}
 
-# item about a [[certain_page]]
-# {{{ //this// is **not** [[processed]] }}}
-# Item 1
-## Item 1.1
-## a **bold** Item 1.2
-# Item 2
-## Item 2.1
-### [[a link Item 3.1]]
-### Force\\linebreak 3.2
-### item 3.3
-### item 3.4
+<p>Right block with a end tag:</p>
 
-the end"""
+{% block %}
+<Foo:> {{ Bar }}
+{% endblock %}
+
+<p>A block without the right end block:</p>
+"""
 
     print "-"*80
 #    from creole_alt.creole import Parser

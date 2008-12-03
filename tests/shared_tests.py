@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-    PyLucid unittest
+    shared unittest
     ~~~~~~~~~~~~~~~~
 
 
@@ -157,10 +157,10 @@ class SharedTests(MarkupTest):
             a {{/image.gif|GIF pictures}} and
             a {{/image.png|PNG pictures}} !
         """, """
-            <p>a <img src="/image.jpg" alt="JPG pictures"> and<br />
-            a <img src="/image.jpeg" alt="JPEG pictures"> and<br />
-            a <img src="/image.gif" alt="GIF pictures"> and<br />
-            a <img src="/image.png" alt="PNG pictures"> !</p>
+            <p>a <img src="/image.jpg" alt="JPG pictures" /> and<br />
+            a <img src="/image.jpeg" alt="JPEG pictures" /> and<br />
+            a <img src="/image.gif" alt="GIF pictures" /> and<br />
+            a <img src="/image.png" alt="PNG pictures" /> !</p>
         """)
             
     def test_django1(self):
@@ -191,16 +191,15 @@ class SharedTests(MarkupTest):
             {% endblock %}
             
             <p>A <a href="www.domain.tld">link</a>.<br />
-            a <img src="/image.jpg" alt="My Image"> image</p>
+            a <img src="/image.jpg" alt="My Image" /> image</p>
             
             <p>no image: {{ foo|bar }}!<br />
-            picture <a href="www.domain.tld"><img src="foo.JPG" alt="Foo"></a> as a link</p>
+            picture <a href="www.domain.tld"><img src="foo.JPG" alt="Foo" /></a> as a link</p>
         """)
 
     def test_django2(self):
         self.assertCreole(r"""
             ==== Headline 1
-
             On {% a tag 1 %} line
             line two
             
@@ -227,7 +226,6 @@ class SharedTests(MarkupTest):
             CCC
         """, """
             <h4>Headline 1</h4>
-            
             <p>On {% a tag 1 %} line<br />
             line two</p>
             
@@ -266,7 +264,6 @@ class SharedTests(MarkupTest):
             and this: {{{ ** <i>this</i> ** }}}
             
             === Closing braces in nowiki:
-            
             {{{
             if (x != NULL) {
               for (i = 0; i < size; i++) {
@@ -283,7 +280,6 @@ class SharedTests(MarkupTest):
             <p>and this: <tt>** &lt;i&gt;this&lt;/i&gt; **</tt></p>
             
             <h3>Closing braces in nowiki:</h3>
-            
             <pre>
             if (x != NULL) {
               for (i = 0; i &lt; size; i++) {
@@ -299,14 +295,17 @@ class SharedTests(MarkupTest):
             222
             
             {{{
-            333
+            pre line 1
+            pre line 2
             }}}
             444
 
             one
             
             {{{
-            foobar
+            foo
+            
+            bar
             }}}
             two
         """, """
@@ -314,14 +313,17 @@ class SharedTests(MarkupTest):
             222</p>
             
             <pre>
-            333
+            pre line 1
+            pre line 2
             </pre>
             <p>444</p>
             
             <p>one</p>
             
             <pre>
-            foobar
+            foo
+            
+            bar
             </pre>
             <p>two</p>
         """)
@@ -330,35 +332,21 @@ class SharedTests(MarkupTest):
     def test_headlines(self):
         self.assertCreole(r"""
             = Level 1 (largest)
-            
             == Level 2
-            
-            === Level 3
-            
+            === Level 3            
             ==== Level 4
-            
             ===== Level 5
-            
             ====== Level 6
-            
             === **not** \\ //parsed//
-            
             No == headline == or?
         """, r"""
             <h1>Level 1 (largest)</h1>
-            
             <h2>Level 2</h2>
-            
             <h3>Level 3</h3>
-            
             <h4>Level 4</h4>
-            
             <h5>Level 5</h5>
-            
             <h6>Level 6</h6>
-            
             <h3>**not** \\ //parsed//</h3>
-            
             <p>No == headline == or?</p>
         """)
 
@@ -488,7 +476,7 @@ class SharedTests(MarkupTest):
                 </ol></li>
             </ol>
         """,
-        debug = True
+#        debug = True
         )
         
     def test_list(self):
@@ -571,7 +559,7 @@ class SharedTests(MarkupTest):
             </table>
             <p>...end</p>
         """,
-            #debug=True
+#            debug = True
         )
 
 
