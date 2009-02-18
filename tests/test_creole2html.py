@@ -31,6 +31,65 @@ from creole import creole2html
 
 
 
+
+class TestCreole2htmlMacro(unittest.TestCase):
+    """
+    Tests around creole2html macro function.
+    """
+    def test_stderr(self):
+        """
+        Test if the traceback information send to a stderr handler.
+        """
+        my_stderr = StringIO.StringIO()
+        creole2html(
+            markup_string="<<notexist1>><<notexist2>><</notexist2>>",
+            verbose=2, stderr=my_stderr, debug=False
+        )
+        error_msg = my_stderr.getvalue()
+    
+        # Check if we get a traceback information into our stderr handler
+        must_have = (
+            "<pre>", "</pre>",
+            "Traceback",
+            "AttributeError:",
+            "has no attribute 'notexist1'",
+            "has no attribute 'notexist2'",
+        )
+        for part in must_have:
+            self.failUnless(
+                part in error_msg,
+                "String %r not found in:\n******\n%s******" % (part, error_msg)
+            )
+    
+    def test_default_macro(self):
+        """
+        Test the default "html" macro, found in ./creole/default_macros.py
+        """
+        html = creole2html(
+            markup_string="<<html>><p>foo</p><</html>><p>bar</p>",
+            verbose=1, 
+#            stderr=sys.stderr, debug=False
+        )
+        self.assertEqual(html, u'<p>foo</p><p>&lt;p&gt;bar&lt;/p&gt;</p>\n')
+        
+    def test_own_macro(self):
+        """
+        simple test for the "macro API"
+        """
+        class TestMacro(object):
+            def test(self, args, text):
+                return u"XXX%sXXX" % text
+        
+        html = creole2html(
+            markup_string="<<test>>foo<</test>>",
+            macros=TestMacro()
+        )
+        self.assertEqual(html, u'XXXfooXXX')
+
+
+
+
+
 class TestCreole2html(BaseCreoleTest):
 
     def assertCreole(self, *args, **kwargs):
@@ -206,32 +265,9 @@ class TestCreole2html(BaseCreoleTest):
         #----------------------------------------------------------------------
         # Test with verbose=2 ans a StringIO stderr handler
         
-        my_stderr = StringIO.StringIO()
-        self.assertCreole(
-            source_string, should_string, verbose=2, stderr=my_stderr
-        )
-        error_msg = my_stderr.getvalue()
+
         
-        # FIXME: Don't use the test.utils.utils.MarkupDiffFailure handler here
-        old_failureException = self.failureException
-        self.failureException = unittest.TestCase.failureException
-        
-        # Check if we get a traceback information into our stderr handler
-        must_have = (
-            "<pre>", "</pre>",
-            "Traceback",
-            "AttributeError:",
-            "has no attribute 'notexists'",
-            "has no attribute 'notexisttoo'",
-        )
-        for part in must_have:
-            self.failUnless(
-                part in error_msg,
-                "String %r not found in %r" % (part, error_msg)
-            )
-        
-        # Restore to the MarkupDiffFailure
-        self.failureException = old_failureException
+
 
         
         
@@ -283,6 +319,9 @@ class TestCreole2html(BaseCreoleTest):
         """, #debug=True
         )
 
+
 if __name__ == '__main__':
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestCreole2html)
-    unittest.TextTestRunner().run(suite)
+    unittest.main()
+#if __name__ == '__main__':
+#    suite = unittest.TestLoader().loadTestsFromTestCase(TestCreole2html)
+#    unittest.TextTestRunner().run(suite)

@@ -42,9 +42,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import sys, re, traceback
 
+import default_macros
 from creole import Parser
-
-import creole_macros
 
 
 #from PyLucid.tools.utils import escape
@@ -70,8 +69,9 @@ class HtmlEmitter:
             Rules.interwiki,
         ]), re.X | re.U) # for addresses
 
-    def __init__(self, root, verbose=1, stderr=sys.stderr):
+    def __init__(self, root, macros=default_macros, verbose=1, stderr=sys.stderr):
         self.root = root
+        self.macros = macros
         self.verbose = verbose
         self.stderr = stderr
 
@@ -195,7 +195,7 @@ class HtmlEmitter:
         #print node.debug()
         macro_name = node.macro_name
         try:
-            macro = getattr(creole_macros, macro_name)
+            macro = getattr(self.macros, macro_name)
         except AttributeError, e:
             return self.error(
                 u"Macro '%s' doesn't exist" % macro_name,

@@ -8,20 +8,21 @@ from html2creole import Html2CreoleParser, Html2CreoleEmitter
 
 
 
-def creole2html(markup_string, verbose=1, stderr=sys.stderr, debug=False):
+def creole2html(markup_string, **kwargs):
     """
     convert creole markup into html code
 
     >>> creole2html(u'This is **creole //markup//**!')
     u'<p>This is <strong>creole <i>markup</i></strong>!</p>\\n'
     """
+    debug = kwargs.pop("debug", False)
     # Create document tree from creole markup
     document = Parser(markup_string).parse()
     if debug:
         document.debug()
     
     # Build html code from document tree
-    return HtmlEmitter(document, verbose=verbose, stderr=stderr).emit()
+    return HtmlEmitter(document, **kwargs).emit()
 
 
 
