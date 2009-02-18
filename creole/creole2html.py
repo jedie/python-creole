@@ -268,11 +268,11 @@ class HtmlEmitter:
         """
         if self.verbose>1 and handle_traceback:
             self.stderr.write(
-                "<pre>%s</pre>" % traceback.format_exc()
+                "<pre>%s</pre>\n" % traceback.format_exc()
             )
         
         if self.verbose>0:
-            return u"[Error: %s]" % text
+            return u"[Error: %s]\n" % text
         else:
             # No error output
             return u""

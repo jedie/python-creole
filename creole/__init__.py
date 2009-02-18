@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
+import sys
+
 from creole import Parser
 from creole2html import HtmlEmitter
 from html2creole import Html2CreoleParser, Html2CreoleEmitter
 
 
 
-def creole2html(markup_string, debug=False):
+def creole2html(markup_string, verbose=1, stderr=sys.stderr, debug=False):
     """
     convert creole markup into html code
 
@@ -19,7 +21,7 @@ def creole2html(markup_string, debug=False):
         document.debug()
     
     # Build html code from document tree
-    return HtmlEmitter(document, verbose=debug).emit()
+    return HtmlEmitter(document, verbose=verbose, stderr=stderr).emit()
 
 
 

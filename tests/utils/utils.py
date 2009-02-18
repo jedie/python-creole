@@ -62,7 +62,7 @@ class MarkupDiffFailure(Exception):
         "foo" != 'bar'
         'foo' != 'bar'
         With and without a 'u' ;)
-        """
+        """        
         msg = raw_msg.lstrip("u")
         
         first_quote = msg[0]

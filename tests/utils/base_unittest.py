@@ -39,7 +39,8 @@ class BaseCreoleTest(MarkupTest):
         print text
         print "-"*79
         
-    def assert_Creole2html(self, source_string, should_string, debug=False):
+    def assert_Creole2html(self, source_string, should_string, \
+                                    verbose=1, stderr=sys.stderr, debug=False):
         """
         compare the generated html code from the markup string >source_string<
         with the >should_string< reference.
@@ -52,7 +53,9 @@ class BaseCreoleTest(MarkupTest):
             self._debug_text("assert_Creole2html() should_string", should)
         
         # convert creole markup into html code
-        out_string = creole2html(markup_string, debug)
+        out_string = creole2html(
+            markup_string, verbose=verbose, stderr=stderr, debug=debug
+        )
         if debug:
             self._debug_text("assert_Creole2html() creole2html", out_string)
         
