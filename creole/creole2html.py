@@ -44,7 +44,8 @@ import sys, re, traceback
 
 from creole import Parser
 
-import macros
+import creole_macros
+
 
 #from PyLucid.tools.utils import escape
 from xml.sax.saxutils import escape 
@@ -194,7 +195,7 @@ class HtmlEmitter:
         #print node.debug()
         macro_name = node.macro_name
         try:
-            macro = getattr(macros, macro_name)
+            macro = getattr(creole_macros, macro_name)
         except AttributeError, e:
             return self.error(
                 u"Macro '%s' doesn't exist" % macro_name,
