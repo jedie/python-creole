@@ -1,49 +1,37 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-    PyLucid unittest
-    ~~~~~~~~~~~~~~~~
+    creole2html unittest
+    ~~~~~~~~~~~~~~~~~~~~
+    
+    Here are only some tests witch doesn't work in the cross compare tests.
+    
+    Info: There exist some situations with different whitespace handling
+        between creol2html and html2creole.
 
     Test the creole markup.
-    We patches some parts of the creole markup, so it doesn't clash with the
-    django template syntax.
-
-    Some Links
-    ~~~~~~~~~~
-    http://code.google.com/p/creoleparser/source/browse/trunk/creoleparser/tests.py
-    http://hg.moinmo.in/moin/1.8/file/tip/MoinMoin/parser/
-    http://sheep.art.pl/devel/creole/file/tip
-    http://code.google.com/p/djikiki/source/browse/#svn/trunk/djikiki/creole
-    http://creoleparser.googlepages.com/cheatsheetplus.html
-    http://www.wikicreole.org/creole-sandbox/EditX.jsp?page=Home
-    http://www.wikicreole.org/wiki/Sandbox
-
-    Differences to Creole 1.0
-    ~~~~~~~~~~~~~~~~~~~~~~~~~
-     * italics -> <i> and not <em>
+    
 
     Last commit info:
     ~~~~~~~~~~~~~~~~~
-    $LastChangedDate: 2008-11-14 12:05:22 +0100 (Fr, 14 Nov 2008) $
-    $Rev: 1795 $
+    $LastChangedDate:$
+    $Rev:$
     $Author: JensDiemer $
 
-    :copyleft: 2008 by the PyLucid team, see AUTHORS for more details.
-    :license: GNU GPL v3, see LICENSE.txt for more details.
+    :copyleft: 2008-2009 by python-creole team, see AUTHORS for more details.
+    :license: GNU GPL v3 or above, see LICENSE.txt for more details.
 """
 
 import sys
 import unittest
 
-from shared_tests import SharedTests
-
-sys.path.insert(0, "../creole")
+from tests.utils.base_unittest import BaseCreoleTest
 
 from creole import creole2html
 
 
 
-class TestCreole2html(SharedTests):
+class TestCreole2html(BaseCreoleTest):
 
     def assertCreole(self, source_string, should_string, debug=False):
         self.assert_Creole2html(source_string, should_string, debug)
@@ -175,6 +163,43 @@ class TestCreole2html(SharedTests):
             </ol></li>
         </ol>
         """)
+        
+    def test_macro_html(self):
+        self.assertCreole(r"""
+            html macro:
+            <<html>>
+            <p><<this is broken 'html'>></p>
+            <</html>>
+        """, r"""
+            <p>html macro:</p>
+            <p><<this is broken 'html'>></p>
+        """, #debug=True
+        )
+        
+    def test_django(self):
+        self.assertCreole(r"""
+            One {% inline tag 1 %} in text.
+            
+            {% a single tag %}
+            
+            Text before...
+            {% block %}
+            a block tag
+            {% endblock %}
+            ...and after
+        """, r"""
+            <p>One {% inline tag 1 %} in text.</p>
+            
+            {% a single tag %}
+            
+            <p>Text before...</p>
+            {% block %}
+            a block tag
+            {% endblock %}
+            
+            <p>...and after</p>
+        """, #debug=True
+        )
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestCreole2html)

@@ -1,9 +1,19 @@
 # -*- coding: utf-8 -*-
 
 """
-    unitest utils
-    ~~~~~~~~~~~~~
+    unitest generic utils
+    ~~~~~~~~~~~~~~~~~~~~~
     
+    Generic utils useable for a markup test.
+    
+    Last commit info:
+    ~~~~~~~~~~~~~~~~~
+    $LastChangedDate:$
+    $Rev:$
+    $Author: JensDiemer $
+
+    :copyleft: 2008-2009 by python-creole team, see AUTHORS for more details.
+    :license: GNU GPL v3 or above, see LICENSE.txt for more details.
 """
 
 import sys

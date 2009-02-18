@@ -35,12 +35,14 @@ def html2creole(html_string, debug=False):
     document_tree = h2c.feed(html_string)
     if debug:
         h2c.debug()
-    
+   
     # create creole markup from the document tree
     emitter = Html2CreoleEmitter(document_tree, debug)
     return emitter.emit()
 
 
 if __name__ == '__main__':
+    print "runing local doctest..."
     import doctest
     doctest.testmod()#verbose=True)
+    print "--END--"

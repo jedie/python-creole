@@ -2,112 +2,35 @@
 # -*- coding: utf-8 -*-
 
 """
-    shared unittest
-    ~~~~~~~~~~~~~~~~
-
-
+    cross compare unittest
+    ~~~~~~~~~~~~~~~~~~~~~~
+    
+    Here we test both ways creol2html _and_ html2creole with the same given
+    refenrece strings.
+        
+    Note: This only works fine if there is no problematic whitespace handling.
+        In this case, we must test in test_creole2html.py or test_html2creole.py
 
     Last commit info:
     ~~~~~~~~~~~~~~~~~
-    $LastChangedDate: 2008-11-14 12:05:22 +0100 (Fr, 14 Nov 2008) $
-    $Rev: 1795 $
+    $LastChangedDate:$
+    $Rev:$
     $Author: JensDiemer $
 
-    :copyleft: 2008 by the PyLucid team, see AUTHORS for more details.
-    :license: GNU GPL v3, see LICENSE.txt for more details.
+    :copyleft: 2008-2009 by python-creole team, see AUTHORS for more details.
+    :license: GNU GPL v3 or above, see LICENSE.txt for more details.
 """
 
-import sys
 import unittest
 
-from utils import MarkupTest
-
-from creole import creole2html, html2creole
+from tests.utils.base_unittest import BaseCreoleTest
 
 
-class SharedTests(MarkupTest):
-    def _debug_text(self, msg, raw_text):
-        text = raw_text.replace(" ", ".")
-        text = text.replace("\n", "\\n\n")
-        text = text.replace("\t", "\\t")
-        
-        print "_"*79
-        print " Debug Text: %s" % msg
-        print text
-        print "-"*79
-        
-    def assert_Creole2html(self, source_string, should_string, debug=False):
-        # prepare whitespace on test strings
-        markup_string = self._prepare_text(source_string)
-        
-        should = self._prepare_text(should_string)
-        if debug:
-            self._debug_text("assert_Creole2html() should_string", should)
-        
-        # convert creole markup into html code
-        out_string = creole2html(markup_string)
-        if debug:
-            self._debug_text("assert_Creole2html() creole2html", out_string)
-        
-        out_string = out_string.rstrip("\n")
-        out_string = out_string.replace("\t", "    ")
-        
-        # compare
-        self.assertEqual(out_string, should)
-        
-    def assert_html2Creole(self, raw_markup, raw_html, debug=False):
-        # prepare whitespace on test strings
-        markup = self._prepare_text(raw_markup)
-        if debug:
-            self._debug_text("assert_Creole2html() markup", markup)
-        
-        html = self._prepare_text(raw_html)
-        
-        # convert html code into creole markup
-        out_string = html2creole(html, debug)
-        if debug:
-            self._debug_text("assert_html2Creole() html2creole", out_string)
-        
-        # compare
-        self.assertEqual(out_string, markup)
-
-    def assertCreole(self, source_string, should_string, debug=False):
-        self.assert_Creole2html(source_string, should_string, debug)
-        self.assert_html2Creole(source_string, should_string, debug)
-
-    
-#    def _parse(self, txt):
-#        """
-#        Apply creole markup on txt
-#        """
-#        document = Parser(txt).parse()
-#        out_string = HtmlEmitter(document, verbose=1).emit()
-#        #print ">>>%r<<<" % out_string
-#        return out_string
-#
-#    def _processCreole(self, source_string, should_string):
-#        """
-#        prepate the given text and apply the markup.
-#        """
-#        source = self._prepare_text(source_string)
-#        should = self._prepare_text(should_string)
-#        out_string = self._parse(source)
-#        return out_string, should
-#
-#    def assertCreole(self, source_string, should_string):
-#        """
-#        applies the tinyTextile markup to the given source_string and compairs
-#        it with the should_string.
-#        """
-#        out_string, should = self._processCreole(
-#            source_string, should_string
-#        )
-#        out_string = out_string.rstrip("\n")
-#        self.assertEqual(out_string, should)
-
-    #--------------------------------------------------------------------------
-
-
+class CrossCompareTests(BaseCreoleTest):
+    """
+    Cross compare tests for creol2html _and_ html2creole with the same test
+    strings. Used BaseCreoleTest.assertCreole()
+    """
     def test_bold_italics(self):
         self.assertCreole(r"""
             **//bold italics//**
@@ -200,14 +123,9 @@ class SharedTests(MarkupTest):
     def test_django2(self):
         self.assertCreole(r"""
             ==== Headline 1
-            On {% a tag 1 %} line
-            line two
-            
-            ==== Headline 2
-            
-            {% a tag 2 %}
-            
-            Right block with a end tag:
+            One {% inline tag 1 %} in text.
+                       
+            A correct django block tag:
             
             {% block %}
             <Foo:> {{ Bar }}
@@ -226,14 +144,9 @@ class SharedTests(MarkupTest):
             CCC
         """, """
             <h4>Headline 1</h4>
-            <p>On {% a tag 1 %} line<br />
-            line two</p>
+            <p>One {% inline tag 1 %} in text.</p>
             
-            <h4>Headline 2</h4>
-            
-            {% a tag 2 %}
-            
-            <p>Right block with a end tag:</p>
+            <p>A correct django block tag:</p>
             
             {% block %}
             <Foo:> {{ Bar }}
@@ -374,10 +287,11 @@ class SharedTests(MarkupTest):
             ** Item 2.1
             *** [[a link Item 3.1]]
             *** Force\\linebreak 3.2
-                *** item 3.3
-              *** item 3.4
+            *** item 3.3
+            *** item 3.4
               
             up to five levels
+            
             * 1
             ** 2
             *** 3
@@ -403,6 +317,7 @@ class SharedTests(MarkupTest):
                 </ul></li>
             </ul>
             <p>up to five levels</p>
+            
             <ul>
                 <li>1
                 <ul>
@@ -592,16 +507,7 @@ class SharedTests(MarkupTest):
 #            </fieldset>
 #        """)
         
-    def test_macro_html2(self):
-        self.assertCreole(r"""
-            html macro:
-            <<html>>
-            <p><<this is 'html'>></p>
-            <</html>>
-        """, r"""
-            <p>html macro:</p>
-            <p><<this is 'html'>></p>
-        """)
+
 
 #    def test_macro_pygments_code(self):
 #        self.assertCreole(r"""

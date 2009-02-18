@@ -588,15 +588,16 @@ class DocNode:
     def __repr__(self):
         return u"<DocNode %s: %r>" % (self.kind, self.content)
 
-    def debug(self):
-        print "_"*80
-        print "\tDocNode - debug:"
-        print "str(): %s" % self
-        print "attributes:"
-        for i in dir(self):
-            if i.startswith("_"):
-                continue
-            print "%20s: %r" % (i, getattr(self, i, "---"))
+#    def debug(self):
+#        raise
+#        print "_"*80
+#        print "\tDocNode - debug:"
+#        print "str(): %s" % self
+#        print "attributes:"
+#        for i in dir(self):
+#            if i.startswith("_"):
+#                continue
+#            print "%20s: %r" % (i, getattr(self, i, "---"))
 
 
 #------------------------------------------------------------------------------
@@ -645,12 +646,12 @@ CCC"""
                     print "%13s: %r" % (name, text)
         re.sub(rules, display_match, txt)
 
-    print "_"*80
-    print "plain block rules match:"
-    test_rules(Parser("").block_re, txt)
-
-    print "_"*80
-    print "plain inline rules match:"
-    test_rules(Parser("").inline_re, txt)
+#    print "_"*80
+#    print "plain block rules match:"
+#    test_rules(Parser("").block_re, txt)
+#
+#    print "_"*80
+#    print "plain inline rules match:"
+#    test_rules(Parser("").inline_re, txt)
 
     print "---END---"

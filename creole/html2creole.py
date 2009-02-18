@@ -2,7 +2,6 @@
 
 import re
 import inspect
-from pprint import pprint
 from HTMLParser import HTMLParser
 from htmlentitydefs import entitydefs
 
@@ -20,11 +19,14 @@ BLOCK_TAGS = (
 #------------------------------------------------------------------------------
 
 # Pass-through all django template blocktags
-pass_block_re = r'''(?P<pass_block>
-    {% \s* (?P<pass_block_start>.+?) \s* .*? \s* %}
-    (\n|.)*?
-    {% \s* end(?P=pass_block_start) \s* %}
-)'''
+pass_block_re = r'''
+    (?P<pass_block>
+        [\s\n]*
+        {% \s* (?P<pass_block_start>.+?) \s* .*? \s* %}
+        (\n|.)*?
+        {% \s* end(?P=pass_block_start) \s* %}
+        [\s\n]*
+    )'''
 pre_block_re = r'''
     [\s\n]*
     <pre>
@@ -76,7 +78,8 @@ class DocNode:
     """
     A node in the document.
     """
-    def __init__(self, kind='', parent=None, attrs=[], content=None, level=None):
+    def __init__(self, kind='', parent=None, attrs=[], content=None, \
+                                                                    level=None):
         self.kind = kind
 
         self.children = []
@@ -89,8 +92,8 @@ class DocNode:
         self.level = level
 
     def __str__(self):
-#        return "DocNode kind '%s', content: %r" % (self.kind, self.content)
         return "<DocNode %s: %r>" % (self.kind, self.content)
+    
     def __repr__(self):
         return u"<DocNode %s: %r>" % (self.kind, self.content)
 
@@ -204,39 +207,41 @@ def strip_html(html_code):
 
 
 
-#space_re = re.compile(r"^(\s*)(.*?)(\s*)$", re.DOTALL)
-#def clean_whitespace(txt):
-#    """
-#    >>> clean_whitespace(u"\\n\\nfoo bar\\n\\n")
-#    u'\\nfoo bar\\n'
-#    
-#    >>> clean_whitespace(u"   foo bar  \\n  \\n")
-#    u' foo bar\\n'
-#
-#    >>> clean_whitespace(u" \\n \\n  foo bar   ")
-#    u'\\nfoo bar '
-#    
-#    >>> clean_whitespace(u"foo   bar")
-#    u'foo   bar'
-#    """
-#    def striped(txt):
-#        if "\n" in txt:
-#            return "\n"
-#        elif " " in txt:
-#            return " "
-#        else:
-#            return ""
-#        
-#    def cleanup(match):
-#        #print "all:", repr(match.group(0))
-#        start, txt, end = match.groups()
-#        return striped(start) + txt + striped(end)   
-#            
-#    return space_re.sub(cleanup, txt)
+space_re = re.compile(r"^(\s*)(.*?)(\s*)$", re.DOTALL)
+def clean_whitespace(txt):
+    """
+    Special whitespaces cleanup, for django tags and blocktags.
+    
+    >>> clean_whitespace(u"\\n\\nfoo bar\\n\\n")
+    u'foo bar\\n'
+    
+    >>> clean_whitespace(u"   foo bar  \\n  \\n")
+    u' foo bar\\n'
 
-#print space_re.findall(u"   foo bar  \\n  \\n")
-#import sys
-#sys.exit()
+    >>> clean_whitespace(u" \\n \\n  foo bar   ")
+    u' foo bar '
+    
+    >>> clean_whitespace(u"foo   bar")
+    u'foo   bar'
+    """       
+    def cleanup(match):
+        start, txt, end = match.groups()
+        
+        if " " in start:
+            start = " "
+        else:
+            start = ""
+            
+        if "\n" in end:
+            end = "\n"
+        elif " " in end:
+            end = " "
+               
+        return start + txt + end
+            
+    return space_re.sub(cleanup, txt)
+
+
 
 
 class Html2CreoleParser(HTMLParser):
@@ -277,13 +282,14 @@ class Html2CreoleParser(HTMLParser):
         return self._pre_cut(groups["pre_block"], "pre", self._block_placeholder)
     
     def _pre_pass_block_cut(self, groups):
-        return self._pre_cut(groups["pass_block"], "pass", self._block_placeholder)
+        content = groups["pass_block"].strip()
+        return self._pre_cut(content, "pass", self._block_placeholder)
     
     _pre_pass_block_start_cut = _pre_pass_block_cut
     
     def _pre_django_tag_cut(self, groups):
         content = groups["django_tag"]
-#        content = clean_whitespace(content)
+        content = clean_whitespace(content)
         return self._pre_cut(content, "django_tag", self._inline_placeholder)
         
     def _pre_cut_out(self, match):        
@@ -543,7 +549,6 @@ class Html2CreoleEmitter(object):
             return u"[[%s|%s]]" % (url, link_text)
     
     def img_emit(self, node):
-        node.debug()
         return u"{{%(src)s|%(alt)s}}" % node.attrs
 
     #--------------------------------------------------------------------------
@@ -715,6 +720,34 @@ foobar
 </pre>
             <p>two</p>
 """
+
+    data = """
+<h4>Heae 1</h4>
+
+<p>On {% a tag 1 %} line<br />
+line two</p>
+
+<h4>HeXXXXXXXXXXne 2</h4>
+
+{% a tag 2 %}
+
+<p>Right block with a end tag:</p>
+
+{% block %}
+<Foo:> {{ Bar }}
+{% endblock %}
+
+<p>A block without the right end block:</p>
+
+<p>{% block1 %}<br />
+not matched<br />
+{% endblock2 %}</p>
+
+<p>A block without endblock:<br />
+{% noblock3 %}<br />
+not matched<br />
+{% noblock3 %}<br />
+CCC</p>"""
 
 #    print data.strip()
     h2c = Html2CreoleParser(

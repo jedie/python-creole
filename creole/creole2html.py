@@ -97,7 +97,7 @@ class HtmlEmitter:
         return self.html_escape(node.content)
 
     def separator_emit(self, node):
-        return u'<hr />\n\n';
+        return u'<hr />\n\n'
 
     def paragraph_emit(self, node):
         return u'<p>%s</p>\n' % self.emit_children(node)
@@ -279,18 +279,19 @@ class HtmlEmitter:
 
 if __name__=="__main__":   
     txt = r"""
-<h4>Headline 2</h4>
+One {% inline tag 1 %} in text.
 
-{% a tag 2 %}
+{% a single tag %}
 
-<p>Right block with a end tag:</p>
+before
+{% single tag 2 %}
+after
 
+Text before...
 {% block %}
-<Foo:> {{ Bar }}
+a block tag
 {% endblock %}
-
-<p>A block without the right end block:</p>
-"""
+...and after"""
 
     print "-"*80
 #    from creole_alt.creole import Parser

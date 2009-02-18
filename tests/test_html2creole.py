@@ -3,20 +3,26 @@
 """
     unitest utils
     ~~~~~~~~~~~~~
-    
+
+    Last commit info:
+    ~~~~~~~~~~~~~~~~~
+    $LastChangedDate:$
+    $Rev:$
+    $Author: JensDiemer $
+
+    :copyleft: 2008-2009 by python-creole team, see AUTHORS for more details.
+    :license: GNU GPL v3 or above, see LICENSE.txt for more details.
 """
 
 import sys
 import unittest
 
-from shared_tests import SharedTests
-
-sys.path.insert(0, "../creole")
+from tests.utils.base_unittest import BaseCreoleTest
 
 from creole import html2creole
 
 
-class TestHtml2Creole(SharedTests):
+class TestHtml2Creole(BaseCreoleTest):
 
     def assertCreole(self, source_string, should_string, debug=False):
         self.assert_html2Creole(source_string, should_string, debug)
@@ -213,24 +219,28 @@ class TestHtml2Creole(SharedTests):
 #    # TODO:
 #
 #
-#    def test_django(self):
-#        self.assertCreole(r"""
-#            The current page name: >{{ PAGE.name }}< great?
-#            A {% lucidTag page_update_list count=10 %} PyLucid plugin
-#            {% block %}
-#            FooBar
-#            {% endblock %}
-#            A [[www.domain.tld|link]].
-#            no image: {{ foo|bar }}!
-#        """, """
-#            <p>The current page name: &gt;{{ PAGE.name }}&lt; great?<br />
-#            A {% lucidTag page_update_list count=10 %} PyLucid plugin</p>
-#            {% block %}
-#            FooBar
-#            {% endblock %}
-#            <p>A <a href="www.domain.tld">link</a>.<br />
-#            no image: {{ foo|bar }}!</p>
-#        """)
+    def test_django(self):
+        self.assertCreole(r"""
+            The current page name: >{{ PAGE.name }}< great?
+            A {% lucidTag page_update_list count=10 %} PyLucid plugin
+            
+            {% block %}
+            FooBar
+            {% endblock %}
+            
+            A [[www.domain.tld|link]].
+            no image: {{ foo|bar }}!
+        """, """
+            <p>The current page name: &gt;{{ PAGE.name }}&lt; great?<br />
+            A {% lucidTag page_update_list count=10 %} PyLucid plugin</p>
+            
+            {% block %}
+            FooBar
+            {% endblock %}
+            
+            <p>A <a href="www.domain.tld">link</a>.<br />
+            no image: {{ foo|bar }}!</p>
+        """)
 #
 #    def test_escape_char(self):
 #        self.assertCreole(r"""
