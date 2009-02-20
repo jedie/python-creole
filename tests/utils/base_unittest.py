@@ -45,6 +45,8 @@ class BaseCreoleTest(MarkupTest):
         compare the generated html code from the markup string >source_string<
         with the >should_string< reference.
         """
+        self.assertNotEqual(source_string, should_string)
+        
         # prepare whitespace on test strings
         markup_string = self._prepare_text(source_string)
         
@@ -70,6 +72,8 @@ class BaseCreoleTest(MarkupTest):
         Compare the genereted markup from the given >raw_html< html code, with
         the given >raw_markup< reference string.
         """
+        self.assertNotEqual(raw_markup, raw_html)
+        
         # prepare whitespace on test strings
         markup = self._prepare_text(raw_markup)
         if debug:
@@ -92,9 +96,9 @@ class BaseCreoleTest(MarkupTest):
         
         This only works fine if there is no problematic whitespace handling.
         """
+        self.assertNotEqual(source_string, should_string)
         self.assert_Creole2html(source_string, should_string, debug)
         self.assert_html2Creole(source_string, should_string, debug)
-
     
 #    def _parse(self, txt):
 #        """

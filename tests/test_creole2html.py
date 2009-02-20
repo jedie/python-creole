@@ -61,7 +61,7 @@ class TestCreole2htmlMacro(unittest.TestCase):
                 "String %r not found in:\n******\n%s******" % (part, error_msg)
             )
     
-    def test_default_macro(self):
+    def test_default_macro1(self):
         """
         Test the default "html" macro, found in ./creole/default_macros.py
         """
@@ -71,6 +71,14 @@ class TestCreole2htmlMacro(unittest.TestCase):
 #            stderr=sys.stderr, debug=False
         )
         self.assertEqual(html, u'<p>foo</p><p>&lt;p&gt;bar&lt;/p&gt;</p>\n')
+    
+    def test_default_macro2(self):
+        html = creole2html(
+            markup_string="<<html>>{{{&lt;nocode&gt;}}}<</html>>",
+            verbose=1, 
+#            stderr=sys.stderr, debug=False
+        )
+        self.assertEqual(html, u'{{{&lt;nocode&gt;}}}')
         
     def test_own_macro(self):
         """
@@ -223,7 +231,7 @@ class TestCreole2html(BaseCreoleTest):
         </ol>
         """)
         
-    def test_macro_html(self):
+    def test_macro_html1(self):
         self.assertCreole(r"""
             html macro:
             <<html>>
@@ -232,6 +240,20 @@ class TestCreole2html(BaseCreoleTest):
         """, r"""
             <p>html macro:</p>
             <p><<this is broken 'html', but it will be pass throu>></p>
+        """, #debug=True
+        )
+        
+    
+    def test_macro_html2(self):
+        """
+        FIXME: Inline macro doesn't work :(
+        """
+        self.assertCreole(r"""
+            Creole <<html>>&#x7B;...&#x7D;<</html>> code
+        """, r"""
+            <p>Creole</p>
+            &#x7B;...&#x7D;
+            <p>code</p>
         """, #debug=True
         )
         
@@ -255,6 +277,7 @@ class TestCreole2html(BaseCreoleTest):
         should_string = r"""
             <p>macro block:</p>
             [Error: Macro 'notexists' doesn't exist]
+            
             <p>inline macro:<br />
             [Error: Macro 'notexisttoo' doesn't exist]
             </p>
@@ -275,7 +298,7 @@ class TestCreole2html(BaseCreoleTest):
         """
         not existing macro with creole2html.HtmlEmitter(verbose=0):
         
-        No error messages should be insered.
+        No error messages should be inserted.
         """
         self.assertCreole(r"""
             macro block:
@@ -287,6 +310,7 @@ class TestCreole2html(BaseCreoleTest):
             <<notexisttoo foo="bar">>
         """, r"""
             <p>macro block:</p>
+            
             <p>inline macro:<br />
             </p>
         """,

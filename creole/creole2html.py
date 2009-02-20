@@ -57,7 +57,7 @@ class Rules:
             (?P<inter_wiki> [A-Z][a-zA-Z]+ ) :
             (?P<inter_page> .* )
         '''
-
+        
 class HtmlEmitter:
     """
     Generate HTML output for the document
@@ -146,18 +146,40 @@ class HtmlEmitter:
     def table_head_emit(self, node):
         return u'\t<th>%s</th>\n' % self.emit_children(node)
 
-    def emphasis_emit(self, node):
-        return u'<i>%s</i>' % self.emit_children(node)
+    #--------------------------------------------------------------------------
 
+    def _typeface(self, node, tag):
+        return u'<%(tag)s>%(data)s</%(tag)s>' % {
+            "tag": tag,
+            "data": self.emit_children(node),
+        }
+
+    # TODO: How can we generalize that:
+    def emphasis_emit(self, node):
+        return self._typeface(node, tag="i")
     def strong_emit(self, node):
-        return u'<strong>%s</strong>' % self.emit_children(node)
+        return self._typeface(node, tag="strong")    
+    def monospace_emit(self, node):
+        return self._typeface(node, tag="tt")
+    def superscript_emit(self, node):
+        return self._typeface(node, tag="sup")
+    def subscript_emit(self, node):
+        return self._typeface(node, tag="sub")
+    def underline_emit(self, node):
+        return self._typeface(node, tag="u")
+    def small_emit(self, node):
+        return self._typeface(node, tag="small")
+    def delete_emit(self, node):
+        return self._typeface(node, tag="del")
+        
+    #-------------------------------------------------------------------------- 
 
     def header_emit(self, node):
         return u'<h%d>%s</h%d>\n' % (
             node.level, self.html_escape(node.content), node.level)
 
-    def code_emit(self, node):
-        return u'<tt>%s</tt>' % self.html_escape(node.content)
+    def preformatted_emit(self, node):
+        return u'<pre>%s</pre>' % self.html_escape(node.content)
 
     def link_emit(self, node):
         target = node.content
@@ -209,7 +231,7 @@ class HtmlEmitter:
                 u"Macro '%s' error: %s" % (macro_name, err),
                 handle_traceback = True
             )
-        
+            
         if not isinstance(result, unicode):
             msg = u"Macro '%s' doesn't return a unicode string!" % macro_name
             if self.verbose>1:
@@ -230,7 +252,7 @@ class HtmlEmitter:
         return u"\n"
 
     def preformatted_emit(self, node):
-        return u"<pre>\n%s\n</pre>\n" % self.html_escape(node.content)
+        return u"<pre>%s</pre>" % self.html_escape(node.content)
 
     def pass_block_emit(self, node):
         """ Pass-through all django template blocktags and html code lines """
@@ -279,20 +301,8 @@ class HtmlEmitter:
             return u""
 
 if __name__=="__main__":   
-    txt = r"""
-One {% inline tag 1 %} in text.
-
-{% a single tag %}
-
-before
-{% single tag 2 %}
-after
-
-Text before...
-{% block %}
-a block tag
-{% endblock %}
-...and after"""
+    txt = r"""Creole **<<html>>&#x7B;...&#x7D;<</html>>** code"""
+    txt = r"""Creole {{{preprepre}}} c **od** e"""
 
     print "-"*80
 #    from creole_alt.creole import Parser

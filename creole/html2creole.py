@@ -46,13 +46,13 @@ block_re = re.compile(
 
 #------------------------------------------------------------------------------
 
-tt_block_re = r'''
-    <tt>
-    (?P<tt_block>
-        (\n|.)*?
-    )
-    </tt>
-'''
+#tt_block_re = r'''
+#    <tt>
+#    (?P<tt_block>
+#        (\n|.)*?
+#    )
+#    </tt>
+#'''
 inline_django_re = r'''
     (?P<django_tag>
         [\s\n]*
@@ -62,7 +62,7 @@ inline_django_re = r'''
 '''
 inline_re = re.compile(
     '|'.join([
-        tt_block_re,
+#        tt_block_re,
         inline_django_re,
     ]),
     re.VERBOSE | re.UNICODE
@@ -93,7 +93,7 @@ class DocNode:
 
     def __str__(self):
         return "<DocNode %s: %r>" % (self.kind, self.content)
-    
+
     def __repr__(self):
         return u"<DocNode %s: %r>" % (self.kind, self.content)
 
@@ -144,19 +144,19 @@ strip_html_regex = re.compile(
 def strip_html(html_code):
     """
     Delete whitespace from html code. Doesn't recordnize preformatted blocks!
-    
+
     >>> strip_html(u' <p>  one  \\n two  </p>')
     u'<p>one two</p>'
-    
+
     >>> strip_html(u'<p><strong><i>bold italics</i></strong></p>')
     u'<p><strong><i>bold italics</i></strong></p>'
-    
+
     >>> strip_html(u'<li>  Force  <br /> \\n linebreak </li>')
     u'<li>Force<br />linebreak</li>'
-    
+
     >>> strip_html(u'one  <i>two \\n <strong>   \\n  three  \\n  </strong></i>')
     u'one <i>two <strong>three</strong> </i>'
-    
+
     >>> strip_html(u'<p>a <unknown tag /> foobar  </p>')
     u'<p>a <unknown tag /> foobar</p>'
     """
@@ -165,39 +165,39 @@ def strip_html(html_code):
         end_tag      = match.group("end") in ("/", u"/")
         startend_tag = match.group("startend") in ("/", u"/")
         tag          = match.group("tag")
-        
+
 #        print "_"*40
 #        print match.groupdict()
 #        print "block.......: %r" % block
 #        print "end_tag.....:", end_tag
 #        print "startend_tag:", startend_tag
 #        print "tag.........: %r" % tag
-        
+
         if tag in BLOCK_TAGS:
             return block.strip()
-        
+
         space_start = block.startswith(" ")
         space_end = block.endswith(" ")
-        
+
         result = block.strip()
-        
+
         if end_tag:
             # It's a normal end tag e.g.: </strong>
             if space_start or space_end:
-                result += " "      
+                result += " "
         elif startend_tag:
             # It's a closed start tag e.g.: <br />
-            
+
             if space_start: # there was space before the tag
                 result = " " + result
-                          
+
             if space_end: # there was space after the tag
                 result += " "
         else:
             # a start tag e.g.: <strong>
             if space_start or space_end:
                 result = " " + result
-                
+
         return result
 
     data = html_code.strip()
@@ -211,34 +211,34 @@ space_re = re.compile(r"^(\s*)(.*?)(\s*)$", re.DOTALL)
 def clean_whitespace(txt):
     """
     Special whitespaces cleanup, for django tags and blocktags.
-    
+
     >>> clean_whitespace(u"\\n\\nfoo bar\\n\\n")
     u'foo bar\\n'
-    
+
     >>> clean_whitespace(u"   foo bar  \\n  \\n")
     u' foo bar\\n'
 
     >>> clean_whitespace(u" \\n \\n  foo bar   ")
     u' foo bar '
-    
+
     >>> clean_whitespace(u"foo   bar")
     u'foo   bar'
-    """       
+    """
     def cleanup(match):
         start, txt, end = match.groups()
-        
+
         if " " in start:
             start = " "
         else:
             start = ""
-            
+
         if "\n" in end:
             end = "\n"
         elif " " in end:
             end = " "
-               
+
         return start + txt + end
-            
+
     return space_re.sub(cleanup, txt)
 
 
@@ -246,7 +246,7 @@ def clean_whitespace(txt):
 
 class Html2CreoleParser(HTMLParser):
     # placeholder html tag for pre cutout areas:
-    _block_placeholder = "blockdata"   
+    _block_placeholder = "blockdata"
     _inline_placeholder = "inlinedata"
 
     def __init__(self, debug=False):
@@ -277,22 +277,22 @@ class Html2CreoleParser(HTMLParser):
 
     def _pre_tt_block_cut(self, groups):
         return self._pre_cut(groups["tt_block"], "tt", self._inline_placeholder)
-    
+
     def _pre_pre_block_cut(self, groups):
         return self._pre_cut(groups["pre_block"], "pre", self._block_placeholder)
-    
+
     def _pre_pass_block_cut(self, groups):
         content = groups["pass_block"].strip()
         return self._pre_cut(content, "pass", self._block_placeholder)
-    
+
     _pre_pass_block_start_cut = _pre_pass_block_cut
-    
+
     def _pre_django_tag_cut(self, groups):
         content = groups["django_tag"]
         content = clean_whitespace(content)
         return self._pre_cut(content, "django_tag", self._inline_placeholder)
-        
-    def _pre_cut_out(self, match):        
+
+    def _pre_cut_out(self, match):
         groups = match.groupdict()
         for name, text in groups.iteritems():
             if text is not None:
@@ -300,21 +300,21 @@ class Html2CreoleParser(HTMLParser):
                     print "%15s: %r (%r)" % (name, text, match.group(0))
                 method = getattr(self, '_pre_%s_cut' % name)
                 return method(groups)
-        
+
 #        data = match.group("data")
 
 
     def feed(self, raw_data):
         data = unicode(raw_data)
         data = data.strip()
-        
+
         # cut out <pre>, <tt> areas or django block tag areas
         data = block_re.sub(self._pre_cut_out, data)
         data = inline_re.sub(self._pre_cut_out, data)
 
         # Delete whitespace from html code
         data = strip_html(data)
-        
+
         if self.debugging:
             print "_"*79
             print "raw data:"
@@ -324,7 +324,7 @@ class Html2CreoleParser(HTMLParser):
             print data
             print "-"*79
 #            print clean_data.replace(">", ">\n")
-#            print "-"*79 
+#            print "-"*79
 
         HTMLParser.feed(self, data)
 
@@ -367,14 +367,14 @@ class Html2CreoleParser(HTMLParser):
                 self.__list_level += 1
             self.cur = DocNode(tag, self.cur, attrs, level=self.__list_level)
         elif tag == "img":
-            # Work-a-round if a image tag is not marked as startendtag: 
+            # Work-a-round if a image tag is not marked as startendtag:
             # wrong: <img src="/image.jpg"> doesn't work if </img> not exist
             # right: <img src="/image.jpg" />
             DocNode(tag, self.cur, attrs)
         else:
             self.cur = DocNode(tag, self.cur, attrs)
 
-    def handle_data(self, data):       
+    def handle_data(self, data):
         self.debug_msg("data", "%r" % data)
         DocNode("data", self.cur, content = data)
 
@@ -404,10 +404,10 @@ class Html2CreoleParser(HTMLParser):
     def handle_endtag(self, tag):
         self.debug_msg("endtag", "%r" % tag)
         self.debug_msg("get_starttag_text", "%r" % self.get_starttag_text())
-        
+
         if tag in ("ul", "ol"):
             self.__list_level -= 1
-            
+
         if tag in BLOCK_TAGS:
             self._go_up()
         else:
@@ -439,10 +439,10 @@ class Html2CreoleParser(HTMLParser):
 
                 if child.content:
                     txt += ": %r" % child.content
-                    
+
                 if child.attrs:
                     txt += " - attrs: %r" % child.attrs
-                    
+
                 if child.level != None:
                     txt += " - level: %r" % child.level
 
@@ -474,8 +474,8 @@ def deentitfy(text):
     def deentitfy(match):
         entity = match.group(1)
         return entitydefs[entity]
-        
-    return entities_regex.sub(deentitfy, text) 
+
+    return entities_regex.sub(deentitfy, text)
 
 
 
@@ -487,33 +487,33 @@ class Html2CreoleEmitter(object):
         self.__mask_linebreak = False
 
     #--------------------------------------------------------------------------
-    
+
     def _escape_linebreaks(self, text):
         text = text.split("\n")
         lines = [line.strip() for line in text]
         return "\\\\".join(lines)
-    
+
     #--------------------------------------------------------------------------
-    
+
     def blockdata_pre_emit(self, node):
         return u"{{{%s}}}\n" % deentitfy(node.content)
-       
+
     def blockdata_pass_emit(self, node):
         return u"%s\n\n" % node.content
         return node.content
-    
+
     def inlinedata_tt_emit(self, node):
         return u"{{{ %s }}}" % deentitfy(node.content)
-    
+
     def inlinedata_django_tag_emit(self, node):
         return node.content
-    
+
     #--------------------------------------------------------------------------
 
     def data_emit(self, node):
         #~ node.debug()
         return node.content
-    
+
     def entityref_emit(self, node):
         return unicode(entitydefs[node.content])
 
@@ -521,7 +521,7 @@ class Html2CreoleEmitter(object):
 
     def p_emit(self, node):
         return u"%s\n\n" % self.emit_children(node)
-    
+
     def br_emit(self, node):
         if self.__inner_list != "":
             return u"\\\\"
@@ -531,11 +531,35 @@ class Html2CreoleEmitter(object):
     def headline_emit(self, node):
         return u"%s %s\n" % (u"="*node.level, self.emit_children(node))
 
+    #--------------------------------------------------------------------------
+
+    def _typeface(self, node, key):
+        return key + self.emit_children(node) + key
+
     def strong_emit(self, node):
-        return u"**%s**" % self.emit_children(node)
+        return self._typeface(node, key="**")
+    b_emit = strong_emit
+    big_emit = strong_emit
 
     def i_emit(self, node):
-        return u"//%s//" % self.emit_children(node)
+        return self._typeface(node, key="//")
+    em_emit = i_emit
+    
+    def tt_emit(self, node):
+        return self._typeface(node, key="##")
+    def sup_emit(self, node):
+        return self._typeface(node, key="^^")
+    def sub_emit(self, node):
+        return self._typeface(node, key=",,")
+    def u_emit(self, node):
+        return self._typeface(node, key="__")
+    def small_emit(self, node):
+        return self._typeface(node, key="--")
+    def del_emit(self, node):
+        return self._typeface(node, key="~~")
+    strike_emit = del_emit 
+
+    #--------------------------------------------------------------------------
 
     def hr_emit(self, node):
         return u"----\n\n"
@@ -547,7 +571,7 @@ class Html2CreoleEmitter(object):
             return u"[[%s]]" % url
         else:
             return u"[[%s|%s]]" % (url, link_text)
-    
+
     def img_emit(self, node):
         return u"{{%(src)s|%(alt)s}}" % node.attrs
 
@@ -558,17 +582,17 @@ class Html2CreoleEmitter(object):
         return u"\n%s %s" % (self.__inner_list, content)
 
     def _list_emit(self, node, list_type):
-        
+
         if self.__inner_list == "": # Srart a new list
             self.__inner_list = list_type
         else:
             start = False
             self.__inner_list += list_type
-        
+
         content = u"%s" % self.emit_children(node)
-        
+
         self.__inner_list = self.__inner_list[:-1]
-        
+
         if self.__inner_list == "": # Srart a new list
             return content.strip() + "\n\n"
         else:
@@ -581,7 +605,7 @@ class Html2CreoleEmitter(object):
         return self._list_emit(node, list_type="#")
 
     #--------------------------------------------------------------------------
-    
+
     def _format_table(self, table_content):
         """
         Format a table block, so every cell has the same width.
@@ -599,18 +623,18 @@ class Html2CreoleEmitter(object):
                         cell = " %s " % cell # normal cell
                 line_cells.append(cell)
             cells.append(line_cells)
-    
+
         # Build a list of max len for every column
         widths = [max(map(len, col)) for col in zip(*cells)]
-    
+
         # Join every line with ljust
         lines = []
         for row in cells:
             cells = [cell.ljust(width) for cell, width in zip(row, widths)]
             lines.append("|".join(cells))
-    
+
         return "\n".join(lines)
-    
+
     def table_emit(self, node):
         table_content = self.emit_children(node)
 
@@ -618,30 +642,32 @@ class Html2CreoleEmitter(object):
         result = self._format_table(table_content)
 
         return u"%s\n" % result
-    
+
     def tr_emit(self, node):
         return u"%s|\n" % self.emit_children(node)
-    
+
     def th_emit(self, node):
         content = self.emit_children(node)
         content = self._escape_linebreaks(content)
         return u"|= %s" % content
-    
+
     def td_emit(self, node):
         content = self.emit_children(node)
         content = self._escape_linebreaks(content)
         return u"| %s" % content
-    
+
     #--------------------------------------------------------------------------
 
     def document_emit(self, node):
         return self.emit_children(node)
 
-#    def default_emit(self, node):
-#        """Fallback function for emit unknown nodes."""
-#        msg = "Node '%s' unknown!" % node.kind
-#        print msg
-#        raise NotImplementedError(msg)
+    def default_emit(self, node):
+        """
+        Fallback function for emit unknown nodes.
+        """
+        raise NotImplementedError(
+            "Node from type '%s' is not implemented!" % node.kind
+        )
 
     def emit_children(self, node):
         """Emit all the children of a node."""
@@ -658,7 +684,8 @@ class Html2CreoleEmitter(object):
         self.debug_msg("emit_node", "%s: %r" % (node.kind, node.content))
 
         method_name = "%s_emit" % node.kind
-        emit_method = getattr(self, method_name)#, self.default_emit)
+        emit_method = getattr(self, method_name, self.default_emit)
+
         content = emit_method(node)
         if not isinstance(content, unicode):
             raise AssertionError(
@@ -670,7 +697,7 @@ class Html2CreoleEmitter(object):
 
     def emit(self):
         """Emit the document represented by self.root DOM tree."""
-        result = self.emit_node(self.root) 
+        result = self.emit_node(self.root)
         return result.strip() # FIXME
 
     #-------------------------------------------------------------------------
@@ -688,66 +715,26 @@ class Html2CreoleEmitter(object):
 if __name__ == '__main__':
     import doctest
     doctest.testmod()
-    
+    print "doc test done."
+
 #    import sys
 #    sys.exit()
-    
-    data = """
-<h4>Headline 2</h4>
-
-{% a tag 2 %}
-
-<p>Right block with a end tag:</p>
-
-{% block %}
-<Foo:> {{ Bar }}
-{% endblock %}
-
-<p>A block <tt>a tt block!!!</tt> the end</p>
-
-            <p>111<br />
-            222</p>
-            
-<pre>
-333
-</pre>
-            <p>444</p>
-            
-            <p>one</p>
-            
-<pre>
-foobar
-</pre>
-            <p>two</p>
-"""
 
     data = """
-<h4>Heae 1</h4>
+<pre> jojo </pre>
+<p>basics:<br />
+<strong><i>bold italics</i></strong><br />
+<i><strong>bold italics</strong></i><br />
+<i>This is <strong>also</strong> good.</i></p>
 
-<p>On {% a tag 1 %} line<br />
-line two</p>
+<p>Creole 1.0 optional:<br />
+This is <tt>monospace</tt> text.<br />
+This is <sup>superscripted</sup> text.<br />
+This is <sub>subscripted</sub> text.<br />
+This is <u>underlined</u> text.</p>
 
-<h4>HeXXXXXXXXXXne 2</h4>
-
-{% a tag 2 %}
-
-<p>Right block with a end tag:</p>
-
-{% block %}
-<Foo:> {{ Bar }}
-{% endblock %}
-
-<p>A block without the right end block:</p>
-
-<p>{% block1 %}<br />
-not matched<br />
-{% endblock2 %}</p>
-
-<p>A block without endblock:<br />
-{% noblock3 %}<br />
-not matched<br />
-{% noblock3 %}<br />
-CCC</p>"""
+<p>own additions:<br />
+This is <small>small</small> and this <del>strikeout</del> ;)</p>"""
 
 #    print data.strip()
     h2c = Html2CreoleParser(
@@ -755,13 +742,13 @@ CCC</p>"""
     )
     document_tree = h2c.feed(data)
     h2c.debug()
-    
+
     e = Html2CreoleEmitter(document_tree,
         debug=True
     )
     content = e.emit()
     print "*"*79
-    print content 
+    print content
     print "*"*79
     print content.replace(" ", ".").replace("\n", "\\n\n")
 

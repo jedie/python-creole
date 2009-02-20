@@ -32,10 +32,14 @@
 import re
 
 
-class Rules:
-    """Hold all the rules for generating regular expressions."""
 
-    # For the inline elements:
+
+
+
+class InlineRules:
+    """
+    All inline rules
+    """
     proto = r'http|https|ftp|nntp|news|mailto|telnet|file|irc'
     url =  r'''(?P<url>
             (^ | (?<=\s | [.,:;!?()/=]))
@@ -76,45 +80,109 @@ class Rules:
         )(?i)'''
     #--------------------------------------------------------------------------
 
-    macro_block = r'''(?P<macro_block>
-            \s* << (?P<macro_block_start>\w+) \s* (?P<macro_block_args>.*?) >>
-            (?P<macro_block_text>(.|\n)+?)
-            <</(?P=macro_block_start)>> \s*
-        )'''
-        
     macro = r'''(?P<macro>
-            <<
-            (?P<macro_name> \w+) (?P<macro_args>.*?)
-            >>
+            <<(?P<macro_name> \w+) (?P<macro_args>.*?)>>
         )'''
-    code = r'(?P<code> {{{ (?P<code_text>.*?) }}} )'
+
+    inline_macro = r'''
+        (?P<inline_macro>
+        << \s* (?P<inline_macro_start>\w+) \s* (?P<inline_macro_args>.*?) \s* >>
+        (?P<inline_macro_text>(.|\n)*)
+        <</ \s* (?P=inline_macro_start) \s* >>
+        )
+    '''
+        
+    preformatted = r'(?P<preformatted> {{{ (?P<preformatted_text>.*?) }}} )'
+    
+    # Basic text typefaces:
     emph = r'(?P<emph> (?<!:)// )' # there must be no : in front of the //
                                    # avoids italic rendering in urls with
                                    # unknown protocols
+                                   
     strong = r'(?P<strong> \*\* )'
+    
+    # Creole 1.0 optional:
+    monospace = r'(?P<monospace> \#\# )'
+    superscript = r'(?P<superscript> \^\^ )'
+    subscript = r'(?P<subscript> ,, )'
+    underline = r'(?P<underline> __ )'
+    delete = r'(?P<delete> ~~ )'
+    
+    # own additions:
+    small = r'(?P<small> -- )'
+    
     linebreak = r'(?P<linebreak> \\\\ )'
     escape = r'(?P<escape> ~ (?P<escaped_char>\S) )'
     char =  r'(?P<char> . )'
 
-    # For the block elements:
-    separator = r'(?P<separator> ^ \s* ---- \s* $ )' # horizontal line
-    line = r'''(?P<line> ^\s*$ )''' # empty line that separates paragraphs
-    head = r'''(?P<head>
-            ^
-            (?P<head_head>=+) \s*
-            (?P<head_text> .*? )
-            =*$
+    pass_inline = r'''(?P<pass_inline>
+            ({%.*?%})|
+            ({{.*?}})
         )'''
-    text = r'(?P<text> .+ ) (?P<break> (?<!\\)$\n(?!\s*$) )?'
-    list = r'''(?P<list>
-            ^ [ \t]* ([*][^*\#]|[\#][^\#*]).* $
-            ( \n[ \t]* [*\#]+.* $ )*
-        )''' # Matches the whole list, separate items are parsed later. The
-             # list *must* start with a single bullet.
-    item = r'''^ \s* (?P<item>
-            (?P<item_head> [\#*]+) \s*
-            (?P<item_text> .*?)
-        ) \s* $''' # Matches single list items
+
+    #--------------------------------------------------------------------------
+    # Special rules
+
+
+
+
+    
+class BlockRules:
+    """
+    All used block rules.
+    """
+    # Pass-through all django template blocktags       
+    pass_block = r'''
+        (\n|\s)*?
+        (?P<pass_block>
+        \n{0,1}
+        {% \s* (?P<pass_block_start>.+?) \s* (?P<pass_block_args>.*?) \s* %}
+        (\n|.)*?
+        {% \s* end(?P=pass_block_start) \s* %}
+        \n{0,1}
+        )
+        (\n|\s)*?
+    '''
+    pass_line = r'''\n(?P<pass_line>
+            \n
+            ({%.*?%})|
+            ({{.*?}})
+            \n
+        )\n\n'''
+        
+#    macro_block = r'''(?P<macro_block>
+#            \s* << (?P<macro_block_start>\w+) \s* (?P<macro_block_args>.*?) >>
+#            (?P<macro_block_text>(.|\n)+?)
+#            <</(?P=macro_block_start)>> \s*
+#        )'''
+#    macro_block = r'''(?P<macro_block>
+#            <<(?P<macro_block_start>.*?)>>
+#            (?P<macro_block_text>.*?)
+#            <</.*?>>
+#        )'''
+
+    macro_block = r'''
+        (?P<macro_block>
+        << \s* (?P<macro_block_start>\w+) \s* (?P<macro_block_args>.*?) \s* >>
+        (?P<macro_block_text>(.|\n)*)
+        <</ \s* (?P=macro_block_start) \s* >>
+        )
+    '''
+    
+    #Pass-through html code lines
+    html = r'''(?P<html>
+        ^[ \t]*<[a-zA-Z].*?<(/[a-zA-Z ]+?)>[ \t]*$
+    )'''
+        
+    line = r'''(?P<line> ^\s*$ )''' # empty line that separates paragraphs
+    
+    head = r'''(?P<head>
+        ^
+        (?P<head_head>=+) \s*
+        (?P<head_text> .*? )
+        =*$
+    )'''
+    separator = r'(?P<separator> ^ \s* ---- \s* $ )' # horizontal line
     pre = r'''(?P<pre>
             ^{{{ \s* $
             (\n)?
@@ -125,42 +193,32 @@ class Rules:
             (\n)?
             ^}}} \s*$
         )'''
-    pre_escape = r' ^(?P<indent>\s*) ~ (?P<rest> \}\}\} \s*) $'
-
-    # Pass-through all django template blocktags       
-    pass_block = r'''
-            (\n|\s)*?
-            (?P<pass_block>
-            \n{0,1}
-            {% \s* (?P<pass_block_start>.+?) \s* (?P<pass_block_args>.*?) \s* %}
-            (\n|.)*?
-            {% \s* end(?P=pass_block_start) \s* %}
-            \n{0,1}
-            )
-            (\n|\s)*?
-        '''
-        
-    pass_line = r'''\n(?P<pass_line>
-            \n
-            ({%.*?%})|
-            ({{.*?}})
-            \n
-        )\n\n'''
-    pass_inline = r'''(?P<pass_inline>
-            ({%.*?%})|
-            ({{.*?}})
-        )'''
-        
-    #Pass-through html code lines
-    html = r'''(?P<html>
-            ^[ \t]*<[a-zA-Z].*?<(/[a-zA-Z ]+?)>[ \t]*$
-        )'''
+    list = r'''(?P<list>
+        ^ [ \t]* ([*][^*\#]|[\#][^\#*]).* $
+        ( \n[ \t]* [*\#]+.* $ )*
+    )''' # Matches the whole list, separate items are parsed later. The
+         # list *must* start with a single bullet.
+         
 
     table = r'''^ \s*(?P<table>
             [|].*? \s*
             [|]?
         ) \s* $'''
 
+
+    text = r'(?P<text> .+ ) (?P<break> (?<!\\)$\n(?!\s*$) )?'
+
+
+class SpecialRules:
+    """
+    re rules witch not directly used as inline/block rules.
+    """
+    # Matches single list items:
+    item = r'''^ \s* (?P<item>
+        (?P<item_head> [\#*]+) \s*
+        (?P<item_text> .*?)
+    ) \s* $''' 
+    
     # For splitting table cells:
     cell = r'''
             \| \s*
@@ -168,13 +226,74 @@ class Rules:
                 (?P<head> [=][^|]+ ) |
                 (?P<cell> (  %s | [^|])+ )
             ) \s*
-        ''' % '|'.join([link, macro, image, code])
+        ''' % '|'.join([
+            InlineRules.link, InlineRules.macro, InlineRules.image,
+            InlineRules.preformatted
+        ])
+        
+    # For pre escaping, in creole 1.0 done with ~:
+    pre_escape = r' ^(?P<indent>\s*) ~ (?P<rest> \}\}\} \s*) $'
 
-    #--------------------------------------------------------------------------
-#    blockelements = (
-#        "head", "list", "pre", "code", "table", "separator", "macro",
-#        "pass_block", "pass_line", "html"
-#    )
+
+
+BLOCK_FLAGS = re.VERBOSE | re.UNICODE | re.MULTILINE
+BLOCK_RULES = (
+    BlockRules.pass_block,
+    BlockRules.pass_line,
+    BlockRules.macro_block,
+    BlockRules.html,
+    BlockRules.line, BlockRules.head, BlockRules.separator, BlockRules.pre, BlockRules.list,
+    BlockRules.table, BlockRules.text,
+)
+
+INLINE_FLAGS = re.VERBOSE | re.UNICODE
+INLINE_RULES = (
+    InlineRules.link, InlineRules.url,
+    InlineRules.macro,
+    InlineRules.inline_macro,
+    InlineRules.preformatted, InlineRules.image,
+    InlineRules.pass_inline,
+    
+    InlineRules.strong, InlineRules.emph,        
+    InlineRules.monospace, InlineRules.underline,
+    InlineRules.superscript, InlineRules.subscript,
+    InlineRules.small, InlineRules.delete,
+
+    InlineRules.linebreak,
+    InlineRules.escape, InlineRules.char
+)
+
+
+def verify_rules(rules, flags):
+    """
+    Simple verify the rules -> try to compile it ;)
+    """
+    # Test with re.compile
+    rule_list = []
+    for rule in rules:
+        try:
+#            print rule
+            re.compile(rule, flags)
+        
+            # Try to merge the rules. e.g. Check if group named double used.
+            rule_list.append(rule)
+            re.compile('|'.join(rule_list), flags)
+        except Exception, err:
+            print " *** Error with rule:"
+            print rule
+            print " -"*39            
+            raise
+    print "Rule test ok."
+
+
+# If one rule failed, we can check this here.
+# This schould be normaly off, only for debugging!
+#verify_rules(INLINE_RULES, INLINE_FLAGS)
+#verify_rules(BLOCK_RULES, BLOCK_FLAGS)
+
+
+
+
 
 class Parser:
     """
@@ -182,37 +301,28 @@ class Parser:
     that can be converted into output using Emitter.
     """
     # For pre escaping, in creole 1.0 done with ~:
-    pre_escape_re = re.compile(Rules.pre_escape, re.M | re.X)
+    pre_escape_re = re.compile(
+        SpecialRules.pre_escape, re.MULTILINE | re.VERBOSE
+    )
+    
     # for link descriptions:
     link_re = re.compile(
-        '|'.join([Rules.image, Rules.linebreak, Rules.char]),
-        re.X | re.U
+        '|'.join([InlineRules.image, InlineRules.linebreak, InlineRules.char]),
+        re.VERBOSE | re.UNICODE
     )
-    item_re = re.compile(Rules.item, re.X | re.U | re.M) # for list items
-    cell_re = re.compile(Rules.cell, re.X | re.U) # for table cells
+    # for list items:
+    item_re = re.compile(
+        SpecialRules.item, re.VERBOSE | re.UNICODE | re.MULTILINE
+    )
+    
+    # for table cells:
+    cell_re = re.compile(SpecialRules.cell, re.VERBOSE | re.UNICODE)
+    
     # For block elements:
-    block_re = re.compile(
-        '|'.join([
-            Rules.pass_block,
-            Rules.pass_line,
-            Rules.macro_block,
-            Rules.html,
-            Rules.line, Rules.head, Rules.separator, Rules.pre, Rules.list,
-            Rules.table, Rules.text,
-        ]),
-        re.X | re.U | re.M
-    )
+    block_re = re.compile('|'.join(BLOCK_RULES), BLOCK_FLAGS)
+    
     # For inline elements:
-    inline_re = re.compile(
-        '|'.join([
-            Rules.link, Rules.url, Rules.macro,
-            Rules.code, Rules.image,
-            Rules.pass_inline,
-            Rules.strong, Rules.emph, Rules.linebreak,
-            Rules.escape, Rules.char
-        ]),
-        re.X | re.U
-    )
+    inline_re = re.compile('|'.join(INLINE_RULES), INLINE_FLAGS)
 
     def __init__(self, raw):
         self.raw = raw
@@ -295,7 +405,7 @@ class Parser:
         self.parse_inline(groups.get('text', u""))
 
         if groups.get('break') and self.cur.kind in ('paragraph',
-            'emphasis', 'strong', 'code'):
+            'emphasis', 'strong', 'preformatted'):
             self.last_text_break = DocNode('break', self.cur, u"")
 
         self.text = None
@@ -469,25 +579,41 @@ class Parser:
         self._upto_block()
         DocNode('line', self.cur, u"")
 
-    def _code_repl(self, groups):
-        DocNode('code', self.cur, groups.get('code_text', u"").strip())
+    def _preformatted_repl(self, groups):
+        text = groups.get('preformatted_text', u"")
+        DocNode('preformatted', self.cur, text)
         self.text = None
-    _code_text_repl = _code_repl
-    _code_head_repl = _code_repl
+    _preformatted_text_repl = _preformatted_repl
+    _preformatted_head_repl = _preformatted_repl
 
+    #--------------------------------------------------------------------------
+
+    def _inline_mark(self, groups, key):
+        if self.cur.kind != key:
+            self.cur = DocNode(key, self.cur)
+        else:
+            self.cur = self._upto(self.cur, (key, )).parent
+        self.text = None
+
+    # TODO: How can we generalize that:
     def _emph_repl(self, groups):
-        if self.cur.kind != 'emphasis':
-            self.cur = DocNode('emphasis', self.cur)
-        else:
-            self.cur = self._upto(self.cur, ('emphasis', )).parent
-        self.text = None
-
+        self._inline_mark(groups, key='emphasis')
     def _strong_repl(self, groups):
-        if self.cur.kind != 'strong':
-            self.cur = DocNode('strong', self.cur)
-        else:
-            self.cur = self._upto(self.cur, ('strong', )).parent
-        self.text = None
+        self._inline_mark(groups, key='strong')
+    def _monospace_repl(self, groups):
+        self._inline_mark(groups, key='monospace')
+    def _superscript_repl(self, groups):
+        self._inline_mark(groups, key='superscript')
+    def _subscript_repl(self, groups):
+        self._inline_mark(groups, key='subscript')
+    def _underline_repl(self, groups):
+        self._inline_mark(groups, key='underline')
+    def _small_repl(self, groups):
+        self._inline_mark(groups, key='small')
+    def _delete_repl(self, groups):
+        self._inline_mark(groups, key='delete')
+
+    #--------------------------------------------------------------------------
 
     def _linebreak_repl(self, groups):
         DocNode('break', self.cur, None)
@@ -507,11 +633,18 @@ class Parser:
 
     def _replace(self, match):
         """Invoke appropriate _*_repl method. Called for every matched group."""
+        
+        def debug(groups):
+            from pprint import pformat
+            data = dict([
+                group for group in groups.iteritems() if group[1] is not None
+            ])
+            print "%s\n" % pformat(data)
+        
         groups = match.groupdict()
         for name, text in groups.iteritems():
             if text is not None:
-                #if name != "char": print "%15s: %r" % (name, text)
-                #print "%15s: %r" % (name, text)
+                #if name != "char": debug(groups)
                 replace = getattr(self, '_%s_repl' % name)
                 replace(groups)
                 return
@@ -604,54 +737,52 @@ class DocNode:
 
 
 if __name__=="__main__":
-    txt = r"""
-==== Headline 1
-
-On {% a tag 1 %} line
-line two
-
-==== Headline 2
-
-{% a tag 2 %}
-
-Right block with a end tag:
-
-{% block %}
-<Foo:> {{ Bar }}
-{% endblock %}
-
-A block without the right end block:
-
-{% block1 %}
-not matched
-{% endblock2 %}
-
-A block without endblock:
-{% noblock3 %}
-not matched
-{% noblock3 %}
-CCC"""
-
+    import doctest
+    doctest.testmod()
+    print "doc test done."
+    
+    txt = r"""Creole **<<html>>&#x7B;...&#x7D;<</html>>** code"""
+    txt = r"""foo
+Y<<html>>the
+code X<</html>>bar
+Creole <<html>>&#x7B;...&#x7D;<</html>> code
+ """
 
     print "-"*80
     p = Parser(txt)
     document = p.parse()
     p.debug()
-    
-    def test_rules(rules, txt):
-        def display_match(match):
-            groups = match.groupdict()
-            for name, text in groups.iteritems():
-                if name != "char" and text != None:
-                    print "%13s: %r" % (name, text)
-        re.sub(rules, display_match, txt)
 
-#    print "_"*80
-#    print "plain block rules match:"
-#    test_rules(Parser("").block_re, txt)
-#
-#    print "_"*80
-#    print "plain inline rules match:"
-#    test_rules(Parser("").inline_re, txt)
+    def display_match(match):
+        groups = match.groupdict()
+        for name, text in groups.iteritems():
+            if name != "char" and text != None:
+                print "%20s: %r" % (name, text)
+    
+
+    parser = Parser("")
+
+    print "_"*80
+    print "merged block rules test:"
+    re.sub(parser.block_re, display_match, txt)
+    
+    print "_"*80
+    print "merged inline rules test:"
+    re.sub(parser.inline_re, display_match, txt)
+    
+    
+    def test_single(rules, flags, txt):
+        for rule in rules:
+            rexp = re.compile(rule, flags)
+            rexp.sub(display_match, txt)
+            
+    print "_"*80
+    print "single block rules match test:"
+    test_single(BLOCK_RULES, BLOCK_FLAGS, txt)
+    
+    print "_"*80
+    print "single inline rules match test:"
+    test_single(INLINE_RULES, INLINE_FLAGS, txt)
+    
 
     print "---END---"

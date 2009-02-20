@@ -31,15 +31,35 @@ class CrossCompareTests(BaseCreoleTest):
     Cross compare tests for creol2html _and_ html2creole with the same test
     strings. Used BaseCreoleTest.assertCreole()
     """
-    def test_bold_italics(self):
+    def test_typeface(self):
         self.assertCreole(r"""
+            basics:
             **//bold italics//**
             //**bold italics**//
             //This is **also** good.//
+            
+            Creole 1.0 optional:
+            This is ##monospace## text.
+            This is ^^superscripted^^ text.
+            This is ,,subscripted,, text.
+            This is __underlined__ text.
+            
+            own additions:
+            This is --small-- and this ~~strikeout~~ ;)
         """, """
-            <p><strong><i>bold italics</i></strong><br />
+            <p>basics:<br />
+            <strong><i>bold italics</i></strong><br />
             <i><strong>bold italics</strong></i><br />
             <i>This is <strong>also</strong> good.</i></p>
+            
+            <p>Creole 1.0 optional:<br />
+            This is <tt>monospace</tt> text.<br />
+            This is <sup>superscripted</sup> text.<br />
+            This is <sub>subscripted</sub> text.<br />
+            This is <u>underlined</u> text.</p>
+            
+            <p>own additions:<br />
+            This is <small>small</small> and this <del>strikeout</del> ;)</p>
         """)
 
     def test_internal_links(self):
@@ -187,10 +207,8 @@ class CrossCompareTests(BaseCreoleTest):
         """, """
             <p>this:</p>
             
-            <pre>
-            //This// does **not** get [[formatted]]
-            </pre>
-            <p>and this: <tt>** &lt;i&gt;this&lt;/i&gt; **</tt></p>
+            <pre>//This// does **not** get [[formatted]]</pre>
+            <p>and this: <pre>** &lt;i&gt;this&lt;/i&gt; **</pre></p>
             
             <h3>Closing braces in nowiki:</h3>
             <pre>
@@ -401,7 +419,7 @@ class CrossCompareTests(BaseCreoleTest):
             * //italic// item
             
             # item about a [[certain_page]]
-            # {{{ //this// is **not** [[processed]] }}}
+            # {{{//this// is **not** [[processed]]}}}
         """, """
             <ul>
                 <li><strong>bold</strong> item</li>
@@ -409,7 +427,7 @@ class CrossCompareTests(BaseCreoleTest):
             </ul>
             <ol>
                 <li>item about a <a href="certain_page">certain_page</a></li>
-                <li><tt>//this// is **not** [[processed]]</tt></li>
+                <li><pre>//this// is **not** [[processed]]</pre></li>
             </ol>
         """)
 

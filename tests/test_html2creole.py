@@ -24,40 +24,48 @@ from creole import html2creole
 
 class TestHtml2Creole(BaseCreoleTest):
 
-    def assertCreole(self, source_string, should_string, debug=False):
-        self.assert_html2Creole(source_string, should_string, debug)
+    def assertCreole(self, raw_markup, raw_html, debug=False):
+        self.assert_html2Creole(raw_markup, raw_html, debug)
 
     #--------------------------------------------------------------------------
-
-#    def test_creole_basic(self):
-#        out_string = creole2html("a text line.")
-#        self.assertEqual(out_string, "<p>a text line.</p>\n")
-#
-#    def test_lineendings(self):
-#        """ Test all existing lineending version """
-#        out_string = creole2html(u"first\nsecond")
-#        self.assertEqual(out_string, u"<p>first<br />\nsecond</p>\n")
-#        
-#        out_string = creole2html(u"first\rsecond")
-#        self.assertEqual(out_string, u"<p>first<br />\nsecond</p>\n")
-#        
-#        out_string = creole2html(u"first\r\nsecond")
-#        self.assertEqual(out_string, u"<p>first<br />\nsecond</p>\n")
+    
+    def test_not_used(self):
+        """
+        Some other html tags -> convert.
+        """
+        self.assertCreole(r"""
+            **Bold text**
+            **Big text**
+            //em tag//
+        """, """
+            <p><b>Bold text</b><br />
+            <big>Big text</big><br />
+            <em>em tag</em></p>
+        """)
+    
+    def test_unknown_html(self):
+        """
+        FIXME: catch error?
+        """
+        self.assertCreole(r"""
+            The current page name: >{{ PAGE.name }}< great?
+            A {% lucidTag page_update_list count=10 %} PyLucid plugin
+            
+            {% block %}
+            FooBar
+            {% endblock %}
+            
+            A [[www.domain.tld|link]].
+            no image: {{ foo|bar }}!
+        """, """
+            <p>Foo Bar</p>
+            <unknown>foo</unknown>
+            
+            <unknown />
+        """)
         
     #--------------------------------------------------------------------------
 
-#    def test_bold_italics(self):
-#        self.assertCreole(r"""
-#            **//bold italics//**
-#            //**bold italics**//
-#            //This is **also** good.//
-#        """, """
-#            <p><strong><i>bold italics</i></strong><br />
-#            <i><strong>bold italics</strong></i><br />
-#            <i>This is <strong>also</strong> good.</i></p>
-#        """,
-##            debug=True
-#        )
 #
 #    def test_links(self):
 #        self.assertCreole(r"""
@@ -241,7 +249,7 @@ class TestHtml2Creole(BaseCreoleTest):
             <p>A <a href="www.domain.tld">link</a>.<br />
             no image: {{ foo|bar }}!</p>
         """)
-#
+
 #    def test_escape_char(self):
 #        self.assertCreole(r"""
 #            ~#1
@@ -258,5 +266,7 @@ class TestHtml2Creole(BaseCreoleTest):
 #        """)
 
 if __name__ == '__main__':
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestHtml2Creole)
-    unittest.TextTestRunner().run(suite)
+    unittest.main()
+#if __name__ == '__main__':
+#    suite = unittest.TestLoader().loadTestsFromTestCase(TestHtml2Creole)
+#    unittest.TextTestRunner().run(suite)
