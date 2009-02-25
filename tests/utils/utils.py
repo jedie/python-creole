@@ -52,34 +52,55 @@ class MarkupDiffFailure(Exception):
         result = ["%2s %s\n" % (line, i) for line, i in enumerate(diff)]
         return "".join(result)
 
-    def _build_errormsg(self):
-        raw_msg = self.args[0]
-        
+    def _split_message(self, raw_msg):
         """
-        Get the right split_string is not easy. There are three kinds:
-        "foo" != "bar"
-        'foo' != "bar"
-        "foo" != 'bar'
-        'foo' != 'bar'
+        Get the right split_string is not easy. There are many variants. Every 
+        part of the string can be used ' oder " and can be marked with the 
+        'u' (unicode) character.
+        Here some tests:
+        
+        >>> MarkupDiffFailure()._split_message('''"foo" != "bar"''')
+        ('foo', 'bar')
+
+        >>> MarkupDiffFailure()._split_message('''u"foo" != "bar"''')
+        ('foo', 'bar')
+        >>> MarkupDiffFailure()._split_message('''"foo" != u"bar"''')
+        ('foo', 'bar')
+        >>> MarkupDiffFailure()._split_message('''u"foo" != u"bar"''')
+        ('foo', 'bar')
+        >>> MarkupDiffFailure()._split_message('''u'foo' != "bar"''')
+        ('foo', 'bar')
+        >>> MarkupDiffFailure()._split_message(''''foo' != u"bar"''')
+        ('foo', 'bar')
+        
+        >>> MarkupDiffFailure()._split_message('''u"" != u"bar"''')
+        ('', 'bar')
+        >>> MarkupDiffFailure()._split_message('''u'foo' != u""''')
+        ('foo', '')
+        
         With and without a 'u' ;)
-        """        
+        """
+#        print repr(raw_msg)
+        
         msg = raw_msg.lstrip("u")
+#        print repr(msg)
         
         first_quote = msg[0]
         second_quote  = msg[-1]
-        
-        msg = msg.strip("'\"")
-        
+        #print "quote chars: [%s] [%s]" % (first_quote, second_quote)
+               
         split_string = "%s != %s" % (first_quote, second_quote)
+        #print "split string1:", split_string
 
         if split_string not in msg:
             # Second part is unicode?
             split_string = "%s != u%s" % (first_quote, second_quote)
+            #print "split string2:", split_string
             
         if split_string not in msg:
             msg = (
                 "Split error output failed!"
-                " - split string >%r< not in message: %r"
+                " - split string >%s< not in message: %s"
             ) % (split_string, raw_msg)
             raise AssertionError(msg)
            
@@ -89,8 +110,23 @@ class MarkupDiffFailure(Exception):
             msg = self._format_output(msg)
             return (
                 "Can't split error output: %r\n"
-                "Info:\n%s"
-            ) % (err, msg)
+                "Info:\n%s\n"
+                "raw split: %r"
+            ) % (err, msg, msg.split(split_string))
+        
+        block1 = block1.strip("'\"")
+        block2 = block2.strip("'\"")
+        
+        return block1, block2
+
+    def _build_errormsg(self):
+        raw_msg = self.args[0]
+        
+        """
+
+        """
+        block1, block2 = self._split_message(raw_msg)
+
 
         #~ block1 = block1.rstrip("\\n")
         #~ block2 = block2.rstrip("\\n")
@@ -111,7 +147,6 @@ class MarkupDiffFailure(Exception):
         except:
             etype, value, tb = sys.exc_info()
             return traceback.format_exc(tb)
-
 
 
 
@@ -197,4 +232,8 @@ class MarkupTest(unittest.TestCase):
 
 
 if __name__ == '__main__':
+    import doctest
+    doctest.testmod()
+    print "doc test done."
+    
     unittest.main()
