@@ -2,6 +2,7 @@
 
 import re
 import inspect
+import warnings
 from HTMLParser import HTMLParser
 from xml.sax.saxutils import escape
 from htmlentitydefs import entitydefs
@@ -135,11 +136,11 @@ class DebugList(list):
 #        for stack_frame in inspect.stack(): print stack_frame
 
         line, method = inspect.stack()[1][2:4]
-
-        print "%-8s   append: %-35r (%-15s line:%s)" % (
+        msg = "%-8s   append: %-35r (%-15s line:%s)" % (
             self.html2creole.getpos(), item,
             method, line
         )
+        warnings.warn(msg)
         list.append(self, item)
 
 
@@ -275,8 +276,9 @@ class Html2CreoleParser(HTMLParser):
 
         self.debugging = debug
         if self.debugging:
-            print "_"*79
-            print "Html2Creole debug is on! print every data append."
+            warnings.warn(
+                message="Html2Creole debug is on! warn every data append."
+            ) 
             self.result = DebugList(self)
         else:
             self.result = []
