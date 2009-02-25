@@ -32,9 +32,9 @@ from creole import creole2html
 
 
 
-class TestCreole2htmlMacro(unittest.TestCase):
+class TestCreole2html(unittest.TestCase):
     """
-    Tests around creole2html macro function.
+    Tests around creole2html API and macro function.
     """
     def test_stderr(self):
         """
@@ -66,11 +66,11 @@ class TestCreole2htmlMacro(unittest.TestCase):
         Test the default "html" macro, found in ./creole/default_macros.py
         """
         html = creole2html(
-            markup_string="<<html>><p>foo</p><</html>><p>bar</p>",
+            markup_string="<<html>><p>foo</p><</html>><bar?>",
             verbose=1, 
 #            stderr=sys.stderr, debug=False
         )
-        self.assertEqual(html, u'<p>foo</p><p>&lt;p&gt;bar&lt;/p&gt;</p>\n')
+        self.assertEqual(html, u'<p>foo</p>\n<p>&lt;bar?&gt;</p>\n')
     
     def test_default_macro2(self):
         html = creole2html(
@@ -78,7 +78,15 @@ class TestCreole2htmlMacro(unittest.TestCase):
             verbose=1, 
 #            stderr=sys.stderr, debug=False
         )
-        self.assertEqual(html, u'{{{&lt;nocode&gt;}}}')
+        self.assertEqual(html, u'{{{&lt;nocode&gt;}}}\n')
+    
+    def test_default_macro2(self):
+        html = creole2html(
+            markup_string="<<html>>1<</html>><<html>>2<</html>>",
+            verbose=1, 
+#            stderr=sys.stderr, debug=False
+        )
+        self.assertEqual(html, u'1\n2\n')
         
     def test_own_macro(self):
         """
@@ -86,19 +94,19 @@ class TestCreole2htmlMacro(unittest.TestCase):
         """
         class TestMacro(object):
             def test(self, args, text):
-                return u"XXX%sXXX" % text
+                return u"XXX%s|%sXXX" % (args, text)
         
         html = creole2html(
-            markup_string="<<test>>foo<</test>>",
+            markup_string="<<test foo=1>>bar<</test>>",
             macros=TestMacro()
         )
-        self.assertEqual(html, u'XXXfooXXX')
+        self.assertEqual(html, u'XXXfoo=1|barXXX\n')
 
 
 
 
 
-class TestCreole2html(BaseCreoleTest):
+class TestCreole2htmlMarkup(BaseCreoleTest):
 
     def assertCreole(self, *args, **kwargs):
         self.assert_Creole2html(*args, **kwargs)
@@ -231,29 +239,48 @@ class TestCreole2html(BaseCreoleTest):
         </ol>
         """)
         
+    def test_macro_basic(self):
+        """
+        Test the three diferent macro types with a "unittest macro"
+        """
+
+        self.assertCreole(r"""
+            There exist three different macro types:
+            A <<test_macro args="foo1">>bar1<</test_macro>> in a line...
+            ...a single <<test_macro args="foo2">> tag,
+            or: <<test_macro args="foo2" />> closed...
+            
+            a macro block:
+            <<test_macro args="foo3">>
+            the
+            text
+            <</test_macro>>
+            the end
+        """, r"""
+            <p>There exist three different macro types:<br />
+            A [args="foo1" text: bar1] in a line...<br />
+            ...a single [args="foo2" text: None] tag,<br />
+            or: [args="foo2" text: None] closed...</p>
+            
+            <p>a macro block:</p>
+            [args="foo3" text: the
+            text]
+            <p>the end</p>
+        """)        
+        
     def test_macro_html1(self):
         self.assertCreole(r"""
             html macro:
             <<html>>
             <p><<this is broken 'html', but it will be pass throu>></p>
             <</html>>
+            
+            inline: <<html>>&#x7B;...&#x7D;<</html>> code
         """, r"""
             <p>html macro:</p>
             <p><<this is broken 'html', but it will be pass throu>></p>
-        """, #debug=True
-        )
-        
-    
-    def test_macro_html2(self):
-        """
-        FIXME: Inline macro doesn't work :(
-        """
-        self.assertCreole(r"""
-            Creole <<html>>&#x7B;...&#x7D;<</html>> code
-        """, r"""
-            <p>Creole</p>
-            &#x7B;...&#x7D;
-            <p>code</p>
+            
+            <p>inline: &#x7B;...&#x7D; code</p>
         """, #debug=True
         )
         

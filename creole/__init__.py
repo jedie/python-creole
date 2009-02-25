@@ -8,14 +8,13 @@ from html2creole import Html2CreoleParser, Html2CreoleEmitter
 
 
 
-def creole2html(markup_string, **kwargs):
+def creole2html(markup_string, debug=False, **kwargs):
     """
     convert creole markup into html code
 
     >>> creole2html(u'This is **creole //markup//**!')
     u'<p>This is <strong>creole <i>markup</i></strong>!</p>\\n'
     """
-    debug = kwargs.pop("debug", False)
     # Create document tree from creole markup
     document = Parser(markup_string).parse()
     if debug:
@@ -26,7 +25,7 @@ def creole2html(markup_string, **kwargs):
 
 
 
-def html2creole(html_string, debug=False):
+def html2creole(html_string, debug=False, **kwargs):
     """
     convert html code into creole markup
 
@@ -40,7 +39,7 @@ def html2creole(html_string, debug=False):
         h2c.debug()
    
     # create creole markup from the document tree
-    emitter = Html2CreoleEmitter(document_tree, debug)
+    emitter = Html2CreoleEmitter(document_tree, debug=debug, **kwargs)
     return emitter.emit()
 
 

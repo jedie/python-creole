@@ -22,6 +22,7 @@ import unittest
 from utils import MarkupTest
 
 from creole import creole2html, html2creole
+from creole.html2creole import HTML_MACRO_UNKNOWN_NODES
 
 
 class BaseCreoleTest(MarkupTest):
@@ -67,7 +68,7 @@ class BaseCreoleTest(MarkupTest):
         # compare
         self.assertEqual(out_string, should)
         
-    def assert_html2Creole(self, raw_markup, raw_html, debug=False):
+    def assert_html2Creole(self, raw_markup, raw_html, debug=False, **kwargs):
         """
         Compare the genereted markup from the given >raw_html< html code, with
         the given >raw_markup< reference string.
@@ -82,7 +83,7 @@ class BaseCreoleTest(MarkupTest):
         html = self._prepare_text(raw_html)
         
         # convert html code into creole markup
-        out_string = html2creole(html, debug)
+        out_string = html2creole(html, debug, **kwargs)
         if debug:
             self._debug_text("assert_html2Creole() html2creole", out_string)
         
@@ -98,35 +99,8 @@ class BaseCreoleTest(MarkupTest):
         """
         self.assertNotEqual(source_string, should_string)
         self.assert_Creole2html(source_string, should_string, debug)
-        self.assert_html2Creole(source_string, should_string, debug)
-    
-#    def _parse(self, txt):
-#        """
-#        Apply creole markup on txt
-#        """
-#        document = Parser(txt).parse()
-#        out_string = HtmlEmitter(document, verbose=1).emit()
-#        #print ">>>%r<<<" % out_string
-#        return out_string
-#
-#    def _processCreole(self, source_string, should_string):
-#        """
-#        prepate the given text and apply the markup.
-#        """
-#        source = self._prepare_text(source_string)
-#        should = self._prepare_text(should_string)
-#        out_string = self._parse(source)
-#        return out_string, should
-#
-#    def assertCreole(self, source_string, should_string):
-#        """
-#        applies the tinyTextile markup to the given source_string and compairs
-#        it with the should_string.
-#        """
-#        out_string, should = self._processCreole(
-#            source_string, should_string
-#        )
-#        out_string = out_string.rstrip("\n")
-#        self.assertEqual(out_string, should)
+        self.assert_html2Creole(
+            source_string, should_string, debug,
+            unknown_emit=HTML_MACRO_UNKNOWN_NODES
+        )
 
-    #--------------------------------------------------------------------------

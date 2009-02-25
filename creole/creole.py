@@ -80,19 +80,20 @@ class InlineRules:
         )(?i)'''
     #--------------------------------------------------------------------------
 
-    macro = r'''(?P<macro>
-            <<(?P<macro_name> \w+) (?P<macro_args>.*?)>>
-        )'''
-
+    # a macro like: <<macro>>text<</macro>>
     inline_macro = r'''
         (?P<inline_macro>
-        << \s* (?P<inline_macro_start>\w+) \s* (?P<inline_macro_args>.*?) \s* >>
-        (?P<inline_macro_text>(.|\n)*)
-        <</ \s* (?P=inline_macro_start) \s* >>
+        << \s* (?P<macro_inline_start>\w+) \s* (?P<macro_inline_args>.*?) \s* >>
+        (?P<macro_inline_text>(.|\n)*?)
+        <</ \s* (?P=macro_inline_start) \s* >>
         )
     '''
+    # A single macro tag, like <<macro-a foo="bar">> or <<macro />>
+    macro_tag = r'''(?P<macro_tag>
+            <<(?P<macro_tag_name> \w+) (?P<macro_tag_args>.*?) \s* /*>>
+        )'''
         
-    preformatted = r'(?P<preformatted> {{{ (?P<preformatted_text>.*?) }}} )'
+    pre_inline = r'(?P<pre_inline> {{{ (?P<pre_inline_text>.*?) }}} )'
     
     # Basic text typefaces:
     emph = r'(?P<emph> (?<!:)// )' # there must be no : in front of the //
@@ -164,7 +165,7 @@ class BlockRules:
     macro_block = r'''
         (?P<macro_block>
         << \s* (?P<macro_block_start>\w+) \s* (?P<macro_block_args>.*?) \s* >>
-        (?P<macro_block_text>(.|\n)*)
+        (?P<macro_block_text>(.|\n)*?)
         <</ \s* (?P=macro_block_start) \s* >>
         )
     '''
@@ -183,16 +184,15 @@ class BlockRules:
         =*$
     )'''
     separator = r'(?P<separator> ^ \s* ---- \s* $ )' # horizontal line
-    pre = r'''(?P<pre>
+    
+    pre_block = r'''(?P<pre_block>
             ^{{{ \s* $
-            (\n)?
-            (?P<pre_text>
-                ([\#]!(?P<pre_kind>\w*?)(\s+.*)?$)?
+            (?P<pre_block_text>
+                ([\#]!(?P<pre_block_kind>\w*?)(\s+.*)?$)?
                 (.|\n)+?
             )
-            (\n)?
-            ^}}} \s*$
-        )'''
+            ^}}})
+        '''
     list = r'''(?P<list>
         ^ [ \t]* ([*][^*\#]|[\#][^\#*]).* $
         ( \n[ \t]* [*\#]+.* $ )*
@@ -227,8 +227,10 @@ class SpecialRules:
                 (?P<cell> (  %s | [^|])+ )
             ) \s*
         ''' % '|'.join([
-            InlineRules.link, InlineRules.macro, InlineRules.image,
-            InlineRules.preformatted
+            InlineRules.link, 
+            InlineRules.inline_macro, InlineRules.macro_tag,
+            InlineRules.image,
+            InlineRules.pre_inline
         ])
         
     # For pre escaping, in creole 1.0 done with ~:
@@ -242,16 +244,16 @@ BLOCK_RULES = (
     BlockRules.pass_line,
     BlockRules.macro_block,
     BlockRules.html,
-    BlockRules.line, BlockRules.head, BlockRules.separator, BlockRules.pre, BlockRules.list,
+    BlockRules.line, BlockRules.head, BlockRules.separator,
+    BlockRules.pre_block, BlockRules.list,
     BlockRules.table, BlockRules.text,
 )
 
 INLINE_FLAGS = re.VERBOSE | re.UNICODE
 INLINE_RULES = (
     InlineRules.link, InlineRules.url,
-    InlineRules.macro,
-    InlineRules.inline_macro,
-    InlineRules.preformatted, InlineRules.image,
+    InlineRules.inline_macro, InlineRules.macro_tag,
+    InlineRules.pre_inline, InlineRules.image,
     InlineRules.pass_inline,
     
     InlineRules.strong, InlineRules.emph,        
@@ -405,7 +407,7 @@ class Parser:
         self.parse_inline(groups.get('text', u""))
 
         if groups.get('break') and self.cur.kind in ('paragraph',
-            'emphasis', 'strong', 'preformatted'):
+            'emphasis', 'strong', 'pre_inline'):
             self.last_text_break = DocNode('break', self.cur, u"")
 
         self.text = None
@@ -442,44 +444,80 @@ class Parser:
         self.text = None
     _link_target_repl = _link_repl
     _link_text_repl = _link_repl
+    
+    #--------------------------------------------------------------------------
 
-    def _add_macro(self, macro_name, macro_args, macro_text=u""):
-#        self._upto_block()
-        node = DocNode("macro", self.cur, macro_text.strip())
-        node.macro_name = macro_name
-        node.macro_args = macro_args.strip()
+    def _add_macro(self, groups, macro_type, name_key, args_key, text_key=None):
+        """
+        generic mathod to handle the macro, used for all variants:
+        inline, inline-tag, block
+        """
+        #self.debug_groups(groups)
+        assert macro_type in ("macro_inline", "macro_block")
+        
+        if text_key:
+            macro_text = groups.get(text_key, u"").strip()
+        else:
+            macro_text = None
+        
+        node = DocNode(macro_type, self.cur, macro_text)
+        node.macro_name = groups[name_key]
+        node.macro_args = groups.get(args_key, u"").strip()
+
         self.text = None
 
     def _macro_block_repl(self, groups):
-        """Handles macros using the placeholder syntax."""
-        #self.debug_groups(groups)
+        """
+        block macro, e.g:
+        <<macro args="foo">>
+        some
+        lines
+        <</macro>>
+        """
         self._upto_block()
         self.cur = self.root
         self._add_macro(
-            macro_name = groups['macro_block_start'],
-            macro_text = groups.get('macro_block_text', u""),
-            macro_args = groups.get('macro_block_args', u""),
+            groups,
+            macro_type = "macro_block",
+            name_key = "macro_block_start",
+            args_key = "macro_block_args",
+            text_key = "macro_block_text",
         )
-        self.text = None
     _macro_block_start_repl = _macro_block_repl
     _macro_block_args_repl = _macro_block_repl
     _macro_block_text_repl = _macro_block_repl
 
-    def _macro_repl(self, groups):
-        """Handles macros using the placeholder syntax."""
-        macro_name = groups.get('macro_name', u"")
-        macro_args = groups.get('macro_args', u"")
-        self._add_macro(macro_name, macro_args)
-        self.text = None
+    def _macro_tag_repl(self, groups):
+        """
+        A single macro tag, e.g.: <<macro-a foo="bar">> or <<macro />>
+        """
+        self._add_macro(
+            groups,
+            macro_type = "macro_inline",
+            name_key = "macro_tag_name",
+            args_key = "macro_tag_args",
+            text_key = None,
+        )
+    _macro_tag_name_repl = _macro_tag_repl
+    _macro_tag_args_repl = _macro_tag_repl
 
-#        text = (groups.get('macro_text', u"") or u"").strip()
-#        node = DocNode('macro', self.cur, name)
-#        node.args = groups.get('macro_args', u"") or ''
-#        DocNode('text', node, text or name)
-#        self.text = None
-    _macro_name_repl = _macro_repl
-    _macro_args_repl = _macro_repl
-#    _macro_text_repl = _macro_repl
+    
+    def _macro_inline_repl(self, groups):
+        """
+        inline macro tag with data, e.g.: <<macro>>text<</macro>>
+        """
+        self._add_macro(
+            groups,
+            macro_type = "macro_inline",
+            name_key = "macro_inline_start",
+            args_key = "macro_inline_args",
+            text_key = "macro_inline_text",
+        )
+    _macro_inline_start_repl = _macro_inline_repl
+    _macro_inline_args_repl = _macro_inline_repl
+    _macro_inline_text_repl = _macro_inline_repl
+
+    #--------------------------------------------------------------------------
 
     def _image_repl(self, groups):
         """Handles images and attachemnts included in the page."""
@@ -560,31 +598,31 @@ class Parser:
         self.cur = tb
         self.text = None
 
-    def _pre_repl(self, groups):
+    def _pre_block_repl(self, groups):
         self._upto_block()
-        kind = groups.get('pre_kind', None)
-        text = groups.get('pre_text', u"")
+        kind = groups.get('pre_block_kind', None)
+        text = groups.get('pre_block_text', u"")
         def remove_tilde(m):
             return m.group('indent') + m.group('rest')
         text = self.pre_escape_re.sub(remove_tilde, text)
-        node = DocNode('preformatted', self.cur, text)
+        node = DocNode('pre_block', self.cur, text)
         node.sect = kind or ''
         self.text = None
-    _pre_text_repl = _pre_repl
-    _pre_head_repl = _pre_repl
-    _pre_kind_repl = _pre_repl
+    _pre_block_text_repl = _pre_block_repl
+    _pre_block_head_repl = _pre_block_repl
+    _pre_block_kind_repl = _pre_block_repl
 
     def _line_repl(self, groups):
         """ Transfer newline from the original markup into the html code """
         self._upto_block()
         DocNode('line', self.cur, u"")
 
-    def _preformatted_repl(self, groups):
-        text = groups.get('preformatted_text', u"")
-        DocNode('preformatted', self.cur, text)
+    def _pre_inline_repl(self, groups):
+        text = groups.get('pre_inline_text', u"")
+        DocNode('pre_inline', self.cur, text)
         self.text = None
-    _preformatted_text_repl = _preformatted_repl
-    _preformatted_head_repl = _preformatted_repl
+    _pre_inline_text_repl = _pre_inline_repl
+    _pre_inline_head_repl = _pre_inline_repl
 
     #--------------------------------------------------------------------------
 
@@ -721,16 +759,15 @@ class DocNode:
     def __repr__(self):
         return u"<DocNode %s: %r>" % (self.kind, self.content)
 
-#    def debug(self):
-#        raise
-#        print "_"*80
-#        print "\tDocNode - debug:"
-#        print "str(): %s" % self
-#        print "attributes:"
-#        for i in dir(self):
-#            if i.startswith("_"):
-#                continue
-#            print "%20s: %r" % (i, getattr(self, i, "---"))
+    def debug(self):
+        print "_"*80
+        print "\tDocNode - debug:"
+        print "str(): %s" % self
+        print "attributes:"
+        for i in dir(self):
+            if i.startswith("_"):
+                continue
+            print "%20s: %r" % (i, getattr(self, i, "---"))
 
 
 #------------------------------------------------------------------------------
@@ -741,12 +778,10 @@ if __name__=="__main__":
     doctest.testmod()
     print "doc test done."
     
-    txt = r"""Creole **<<html>>&#x7B;...&#x7D;<</html>>** code"""
-    txt = r"""foo
-Y<<html>>the
-code X<</html>>bar
-Creole <<html>>&#x7B;...&#x7D;<</html>> code
- """
+    txt = r"""111 <<html>><X><</html>>foo<<html>></X><</html>> 222
+            333<<html>><X foo1="bar1"><</html>>foobar<<html>></X><</html>>444
+
+            555<<html>><X /><</html>>666"""
 
     print "-"*80
     p = Parser(txt)

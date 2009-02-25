@@ -20,12 +20,23 @@ import unittest
 from tests.utils.base_unittest import BaseCreoleTest
 
 from creole import html2creole
+from creole.html2creole import RAISE_UNKNOWN_NODES, HTML_MACRO_UNKNOWN_NODES, \
+                                                            ESCAPE_UNKNOWN_NODES
 
 
-class TestHtml2Creole(BaseCreoleTest):
+class TestHtml2Creole(unittest.TestCase):
+    """
+    Tests around html2creole API.
+    """
+    pass
 
-    def assertCreole(self, raw_markup, raw_html, debug=False):
-        self.assert_html2Creole(raw_markup, raw_html, debug)
+
+
+
+class TestHtml2CreoleMarkup(BaseCreoleTest):
+
+    def assertCreole(self, raw_markup, raw_html, debug=False, **kwargs):
+        self.assert_html2Creole(raw_markup, raw_html, debug=debug, **kwargs)
 
     #--------------------------------------------------------------------------
     
@@ -42,27 +53,36 @@ class TestHtml2Creole(BaseCreoleTest):
             <big>Big text</big><br />
             <em>em tag</em></p>
         """)
-    
-    def test_unknown_html(self):
+
+    def test_raise_unknown_node(self):
         """
-        FIXME: catch error?
+        Test creole.html2creole.RAISE_UNKNOWN_NODES mode:
+        Raise NotImplementedError on unknown tags.
+        """
+        self.assertRaises(NotImplementedError, 
+            html2creole,
+            html_string="<unknwon>",
+            unknown_emit=RAISE_UNKNOWN_NODES
+        )
+
+    def test_escape_unknown_nodes(self):
+        """
+        Test creole.html2creole.ESCAPE_UNKNOWN_NODES mode:
+        All unknown tags should be escaped.
         """
         self.assertCreole(r"""
-            The current page name: >{{ PAGE.name }}< great?
-            A {% lucidTag page_update_list count=10 %} PyLucid plugin
+            111 &lt;unknown&gt;foo&lt;/unknown&gt; 222
+            333&lt;unknown foo1="bar1" foo2="bar2"&gt;foobar&lt;/unknown&gt;444
             
-            {% block %}
-            FooBar
-            {% endblock %}
-            
-            A [[www.domain.tld|link]].
-            no image: {{ foo|bar }}!
+            555&lt;unknown /&gt;666
         """, """
-            <p>Foo Bar</p>
-            <unknown>foo</unknown>
+            <p>111 <unknown>foo</unknown> 222<br />
+            333<unknown foo1="bar1" foo2="bar2">foobar</unknown>444</p>
             
-            <unknown />
-        """)
+            <p>555<unknown />666</p>
+        """, 
+            unknown_emit=ESCAPE_UNKNOWN_NODES
+        )
         
     #--------------------------------------------------------------------------
 

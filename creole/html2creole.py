@@ -3,11 +3,13 @@
 import re
 import inspect
 from HTMLParser import HTMLParser
+from xml.sax.saxutils import escape
 from htmlentitydefs import entitydefs
 
 
+
 BLOCK_TAGS = (
-    "address", "blockquote", "center", "del", "dir", "div", "dl", "fieldset",
+    "address", "blockquote", "center", "dir", "div", "dl", "fieldset",
     "form",
     "h1", "h2", "h3", "h4", "h5", "h6",
     "hr", "ins", "isindex", "menu", "noframes", "noscript",
@@ -28,12 +30,11 @@ pass_block_re = r'''
         [\s\n]*
     )'''
 pre_block_re = r'''
-    [\s\n]*
-    <pre>
+    ^<pre> \s* $
     (?P<pre_block>
         (\n|.)*?
     )
-    </pre>
+    ^</pre> \s* $
     [\s\n]*
 '''
 block_re = re.compile(
@@ -46,13 +47,6 @@ block_re = re.compile(
 
 #------------------------------------------------------------------------------
 
-#tt_block_re = r'''
-#    <tt>
-#    (?P<tt_block>
-#        (\n|.)*?
-#    )
-#    </tt>
-#'''
 inline_django_re = r'''
     (?P<django_tag>
         [\s\n]*
@@ -60,9 +54,16 @@ inline_django_re = r'''
         [\s\n]*
     )
 '''
+pre_inline_re = r'''
+    <pre>
+    (?P<pre_inline>
+        (\n|.)*?
+    )
+    </pre>
+'''
 inline_re = re.compile(
     '|'.join([
-#        tt_block_re,
+        pre_inline_re,
         inline_django_re,
     ]),
     re.VERBOSE | re.UNICODE
@@ -71,6 +72,12 @@ inline_re = re.compile(
 #------------------------------------------------------------------------------
 
 headline_tag_re = re.compile(r"h(\d)", re.UNICODE)
+
+
+
+
+
+
 
 
 
@@ -90,6 +97,17 @@ class DocNode:
         self.attrs = dict(attrs)
         self.content = content
         self.level = level
+
+    def get_attrs_as_string(self):
+        """
+        FIXME!
+        """
+        attr_list = []
+        for key, value in self.attrs.iteritems():
+            if isinstance(value, unicode):
+                value = value.encode("utf-8")
+            attr_list.append("%s=%r" % (key, value))
+        return " ".join(attr_list).replace("'", '"')
 
     def __str__(self):
         return "<DocNode %s: %r>" % (self.kind, self.content)
@@ -159,6 +177,9 @@ def strip_html(html_code):
 
     >>> strip_html(u'<p>a <unknown tag /> foobar  </p>')
     u'<p>a <unknown tag /> foobar</p>'
+    
+    >>> strip_html(u'<p>a <pre> preformated area </pre> foo </p>')
+    u'<p>a<pre>preformated area</pre>foo</p>'
     """
     def strip_tag(match):
         block        = match.group(0)
@@ -275,8 +296,8 @@ class Html2CreoleParser(HTMLParser):
         id = len(self.blockdata)-1
         return '<%s type="%s" id="%s" />' % (placeholder, type, id)
 
-    def _pre_tt_block_cut(self, groups):
-        return self._pre_cut(groups["tt_block"], "tt", self._inline_placeholder)
+    def _pre_pre_inline_cut(self, groups):
+        return self._pre_cut(groups["pre_inline"], "pre", self._inline_placeholder)
 
     def _pre_pre_block_cut(self, groups):
         return self._pre_cut(groups["pre_block"], "pre", self._block_placeholder)
@@ -479,13 +500,89 @@ def deentitfy(text):
 
 
 
+#------------------------------------------------------------------------------
+
+RAISE_UNKNOWN_NODES = 1
+HTML_MACRO_UNKNOWN_NODES = 2
+ESCAPE_UNKNOWN_NODES = 3
+
 class Html2CreoleEmitter(object):
-    def __init__(self, document_tree, debug=False):
+
+    def __init__(self, document_tree, unknown_emit=ESCAPE_UNKNOWN_NODES, 
+                                                                debug=False):
         self.root = document_tree
+        
+        if unknown_emit == RAISE_UNKNOWN_NODES:
+            self.unknown_emit = self.raise_unknown_node
+        elif unknown_emit == HTML_MACRO_UNKNOWN_NODES:
+            self.unknown_emit = self.use_html_macro
+        elif unknown_emit == ESCAPE_UNKNOWN_NODES:
+            self.unknown_emit = self.escape_unknown_nodes
+        else:
+            raise AssertionError("wrong keyword argument 'unknown_emit'!")
+            
         self.debugging = debug
         self.__inner_list = ""
         self.__mask_linebreak = False
 
+    #--------------------------------------------------------------------------
+    
+    def raise_unknown_node(self, node):
+        """
+        Raise NotImplementedError on unknown tags.
+        """
+        raise NotImplementedError(
+            "Node from type '%s' is not implemented!" % node.kind
+        )
+    
+    def use_html_macro(self, node):
+        """
+        Use the <<html>> macro to mask unknown tags.
+        """
+        #node.debug()
+        attrs = node.get_attrs_as_string()
+        if attrs:
+            attrs = " "+attrs
+        
+        tag_data = {
+            "tag": node.kind,
+            "attrs": attrs,
+        }
+        
+        content = self.emit_children(node)
+        if not content:
+            # single tag
+            return u"<<html>><%(tag)s%(attrs)s /><</html>>" % tag_data
+            
+        start_tag = u"<<html>><%(tag)s%(attrs)s><</html>>" % tag_data
+        end_tag = u"<<html>></%(tag)s><</html>>" % tag_data
+        
+        return start_tag + content + end_tag
+    
+    def escape_unknown_nodes(self, node):
+        """
+        All unknown tags should be escaped.
+        """
+        #node.debug()
+        attrs = node.get_attrs_as_string()
+        if attrs:
+            attrs = " "+attrs
+        
+        tag_data = {
+            "tag": node.kind,
+            "attrs": attrs,
+        }
+        
+        content = self.emit_children(node)
+        if not content:
+            # single tag
+            return escape(u"<%(tag)s%(attrs)s />" % tag_data)
+            
+        start_tag = escape(u"<%(tag)s%(attrs)s>" % tag_data)
+        end_tag = escape(u"</%(tag)s>" % tag_data)
+        
+        return start_tag + content + end_tag
+    
     #--------------------------------------------------------------------------
 
     def _escape_linebreaks(self, text):
@@ -496,14 +593,15 @@ class Html2CreoleEmitter(object):
     #--------------------------------------------------------------------------
 
     def blockdata_pre_emit(self, node):
+        """ pre block -> with newline at the end """
         return u"{{{%s}}}\n" % deentitfy(node.content)
+    def inlinedata_pre_emit(self, node):
+        """ a pre inline block -> no newline at the end """
+        return u"{{{%s}}}" % deentitfy(node.content)
 
     def blockdata_pass_emit(self, node):
         return u"%s\n\n" % node.content
         return node.content
-
-    def inlinedata_tt_emit(self, node):
-        return u"{{{ %s }}}" % deentitfy(node.content)
 
     def inlinedata_django_tag_emit(self, node):
         return node.content
@@ -661,14 +759,6 @@ class Html2CreoleEmitter(object):
     def document_emit(self, node):
         return self.emit_children(node)
 
-    def default_emit(self, node):
-        """
-        Fallback function for emit unknown nodes.
-        """
-        raise NotImplementedError(
-            "Node from type '%s' is not implemented!" % node.kind
-        )
-
     def emit_children(self, node):
         """Emit all the children of a node."""
         result = []
@@ -684,7 +774,7 @@ class Html2CreoleEmitter(object):
         self.debug_msg("emit_node", "%s: %r" % (node.kind, node.content))
 
         method_name = "%s_emit" % node.kind
-        emit_method = getattr(self, method_name, self.default_emit)
+        emit_method = getattr(self, method_name, self.unknown_emit)
 
         content = emit_method(node)
         if not isinstance(content, unicode):
@@ -717,24 +807,13 @@ if __name__ == '__main__':
     doctest.testmod()
     print "doc test done."
 
-#    import sys
-#    sys.exit()
+#    import sys;sys.exit()
 
     data = """
-<pre> jojo </pre>
-<p>basics:<br />
-<strong><i>bold italics</i></strong><br />
-<i><strong>bold italics</strong></i><br />
-<i>This is <strong>also</strong> good.</i></p>
+<p>111 <x>foo</x> 222<br />
+333<x foo1="bar1">foobar</x>444</p>
 
-<p>Creole 1.0 optional:<br />
-This is <tt>monospace</tt> text.<br />
-This is <sup>superscripted</sup> text.<br />
-This is <sub>subscripted</sub> text.<br />
-This is <u>underlined</u> text.</p>
-
-<p>own additions:<br />
-This is <small>small</small> and this <del>strikeout</del> ;)</p>"""
+<p>555<x />666</p>"""
 
 #    print data.strip()
     h2c = Html2CreoleParser(

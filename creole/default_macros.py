@@ -6,3 +6,11 @@ def html(args, text):
     Pass-trought for html code (or other stuff) 
     """
     return text
+
+
+
+def test_macro(args, text):
+    """
+    a macro only for testing
+    """
+    return u"[%s text: %s]" % (args, text)

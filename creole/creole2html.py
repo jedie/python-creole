@@ -238,7 +238,12 @@ class HtmlEmitter:
                 msg += " - returns: %r, type %r" % (result, type(result))
             return self.error(msg)
         
+        if node.kind == "macro_block":
+            result += "\n"
+        
         return result
+    macro_inline_emit = macro_emit
+    macro_block_emit = macro_emit
 
     def break_emit(self, node):
         if node.parent.kind == "list_item":
@@ -251,7 +256,11 @@ class HtmlEmitter:
     def line_emit(self, node):
         return u"\n"
 
-    def preformatted_emit(self, node):
+    def pre_block_emit(self, node):
+        """ pre block, with newline at the end """
+        return u"<pre>%s</pre>\n" % self.html_escape(node.content)
+    def pre_inline_emit(self, node):
+        """ pre without newline at the end """
         return u"<pre>%s</pre>" % self.html_escape(node.content)
 
     def pass_block_emit(self, node):
@@ -301,8 +310,7 @@ class HtmlEmitter:
             return u""
 
 if __name__=="__main__":   
-    txt = r"""Creole **<<html>>&#x7B;...&#x7D;<</html>>** code"""
-    txt = r"""Creole {{{preprepre}}} c **od** e"""
+    txt = r"""<<html>>1<</html><<html>>2<</html>>"""
 
     print "-"*80
 #    from creole_alt.creole import Parser

@@ -25,6 +25,9 @@ import unittest
 
 from tests.utils.base_unittest import BaseCreoleTest
 
+from creole.html2creole import RAISE_UNKNOWN_NODES, HTML_MACRO_UNKNOWN_NODES, \
+                                                        ESCAPE_UNKNOWN_NODES
+
 
 class CrossCompareTests(BaseCreoleTest):
     """
@@ -194,7 +197,7 @@ class CrossCompareTests(BaseCreoleTest):
             {{{
             //This// does **not** get [[formatted]]
             }}}
-            and this: {{{ ** <i>this</i> ** }}}
+            and this: {{{** <i>this</i> **}}}
             
             === Closing braces in nowiki:
             {{{
@@ -207,7 +210,9 @@ class CrossCompareTests(BaseCreoleTest):
         """, """
             <p>this:</p>
             
-            <pre>//This// does **not** get [[formatted]]</pre>
+            <pre>
+            //This// does **not** get [[formatted]]
+            </pre>
             <p>and this: <pre>** &lt;i&gt;this&lt;/i&gt; **</pre></p>
             
             <h3>Closing braces in nowiki:</h3>
@@ -222,8 +227,8 @@ class CrossCompareTests(BaseCreoleTest):
 
     def test_nowiki2(self):
         self.assertCreole(r"""
-            111
-            222
+            111 {{{ inline pre }}} 222
+            333
             
             {{{
             pre line 1
@@ -240,8 +245,8 @@ class CrossCompareTests(BaseCreoleTest):
             }}}
             two
         """, """
-            <p>111<br />
-            222</p>
+            <p>111 <pre> inline pre </pre> 222<br />
+            333</p>
             
             <pre>
             pre line 1
@@ -495,7 +500,23 @@ class CrossCompareTests(BaseCreoleTest):
 #            debug = True
         )
 
+    def test_html_macro_unknown_nodes(self):
+        """
+        use the <<html>> macro to mask unknown tags.
+        Note:
+            All cross compare teste use html2creole.HTML_MACRO_UNKNOWN_NODES
+        """
+        self.assertCreole(r"""
+            111 <<html>><x><</html>>foo<<html>></x><</html>> 222
+            333<<html>><x foo1="bar1"><</html>>foobar<<html>></x><</html>>444
 
+            555<<html>><x /><</html>>666
+        """, """
+            <p>111 <x>foo</x> 222<br />
+            333<x foo1="bar1">foobar</x>444</p>
+            
+            <p>555<x />666</p>
+        """)
 
         
 #    def test_macro_html1(self):
