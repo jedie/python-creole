@@ -42,7 +42,7 @@ class TestCreole2html(unittest.TestCase):
         """
         my_stderr = StringIO.StringIO()
         creole2html(
-            markup_string="<<notexist1>><<notexist2>><</notexist2>>",
+            markup_string=u"<<notexist1>><<notexist2>><</notexist2>>",
             verbose=2, stderr=my_stderr, debug=False
         )
         error_msg = my_stderr.getvalue()
@@ -66,7 +66,7 @@ class TestCreole2html(unittest.TestCase):
         Test the default "html" macro, found in ./creole/default_macros.py
         """
         html = creole2html(
-            markup_string="<<html>><p>foo</p><</html>><bar?>",
+            markup_string=u"<<html>><p>foo</p><</html>><bar?>",
             verbose=1, 
 #            stderr=sys.stderr, debug=False
         )
@@ -74,7 +74,7 @@ class TestCreole2html(unittest.TestCase):
     
     def test_default_macro2(self):
         html = creole2html(
-            markup_string="<<html>>{{{&lt;nocode&gt;}}}<</html>>",
+            markup_string=u"<<html>>{{{&lt;nocode&gt;}}}<</html>>",
             verbose=1, 
 #            stderr=sys.stderr, debug=False
         )
@@ -82,7 +82,7 @@ class TestCreole2html(unittest.TestCase):
     
     def test_default_macro3(self):
         html = creole2html(
-            markup_string="<<html>>1<</html>><<html>>2<</html>>",
+            markup_string=u"<<html>>1<</html>><<html>>2<</html>>",
             verbose=1, 
 #            stderr=sys.stderr, debug=False
         )
@@ -97,7 +97,7 @@ class TestCreole2html(unittest.TestCase):
                 return u"XXX%s|%sXXX" % (args, text)
         
         html = creole2html(
-            markup_string="<<test foo=1>>bar<</test>>",
+            markup_string=u"<<test foo=1>>bar<</test>>",
             macros=TestMacro()
         )
         self.assertEqual(html, u'XXXfoo=1|barXXX\n')
@@ -114,7 +114,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
     #--------------------------------------------------------------------------
 
     def test_creole_basic(self):
-        out_string = creole2html("a text line.")
+        out_string = creole2html(u"a text line.")
         self.assertEqual(out_string, "<p>a text line.</p>\n")
 
     def test_lineendings(self):
@@ -144,7 +144,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             escape html chars like < and > ;)
             
             html code must start and end with a tag:
-            <p>this <strong class="my">html code</strong> line pass-through</p>
+            <p>this <strong class=u"my">html code</strong> line pass-through</p>
             this works.
 
             this:
@@ -161,7 +161,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             escape html chars like &lt; and &gt; ;)</p>
             
             <p>html code must start and end with a tag:</p>
-            <p>this <strong class="my">html code</strong> line pass-through</p>
+            <p>this <strong class=u"my">html code</strong> line pass-through</p>
             <p>this works.</p>
             
             <p>this:<br />

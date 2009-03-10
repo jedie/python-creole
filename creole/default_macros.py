@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 
+"""
+    Creole macros
+    ~~~~~~~~~~~~~
+    
+    Note: all mecro functions must return unicode!
+"""
+
 def html(args, text):
     """
     Macro tag <<html>>...<</html>>

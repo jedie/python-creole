@@ -61,7 +61,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         """
         self.assertRaises(NotImplementedError, 
             html2creole,
-            html_string="<unknwon>",
+            html_string=u"<unknwon>",
             unknown_emit=RAISE_UNKNOWN_NODES
         )
 

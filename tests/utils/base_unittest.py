@@ -97,6 +97,8 @@ class BaseCreoleTest(MarkupTest):
         
         This only works fine if there is no problematic whitespace handling.
         """
+        source_string = unicode(source_string)
+        should_string = unicode(should_string)
         self.assertNotEqual(source_string, should_string)
         self.assert_Creole2html(source_string, should_string, debug)
         self.assert_html2Creole(

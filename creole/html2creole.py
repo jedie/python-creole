@@ -101,14 +101,23 @@ class DocNode:
 
     def get_attrs_as_string(self):
         """
-        FIXME!
+        FIXME: Find a better was to do this.
+        
+        >>> node = DocNode(attrs={'foo':"bar", u"no":123})
+        >>> node.get_attrs_as_string()
+        u'foo="bar" no="123"'
+        
+        >>> node = DocNode(attrs={"foo":'bar', "no":u"ABC"})
+        >>> node.get_attrs_as_string()
+        u'foo="bar" no="ABC"'
         """
         attr_list = []
         for key, value in self.attrs.iteritems():
-            if isinstance(value, unicode):
-                value = value.encode("utf-8")
-            attr_list.append("%s=%r" % (key, value))
-        return " ".join(attr_list).replace("'", '"')
+            if not isinstance(value, unicode):
+                value = unicode(value)
+            value_string = repr(value).lstrip("u").replace(u"'", u'"')
+            attr_list.append(u"%s=%s" % (key, value_string))
+        return u" ".join(attr_list)
 
     def __str__(self):
         return "<DocNode %s: %r>" % (self.kind, self.content)
@@ -296,7 +305,7 @@ class Html2CreoleParser(HTMLParser):
         assert isinstance(data, unicode), "blockdata is not unicode"
         self.blockdata.append(data)
         id = len(self.blockdata)-1
-        return '<%s type="%s" id="%s" />' % (placeholder, type, id)
+        return u'<%s type="%s" id="%s" />' % (placeholder, type, id)
 
     def _pre_pre_inline_cut(self, groups):
         return self._pre_cut(groups["pre_inline"], "pre", self._inline_placeholder)
@@ -328,8 +337,8 @@ class Html2CreoleParser(HTMLParser):
 
 
     def feed(self, raw_data):
-        data = unicode(raw_data)
-        data = data.strip()
+        assert isinstance(raw_data, unicode), "feed data must be unicode!"
+        data = raw_data.strip()
 
         # cut out <pre>, <tt> areas or django block tag areas
         data = block_re.sub(self._pre_cut_out, data)
@@ -809,9 +818,9 @@ if __name__ == '__main__':
     doctest.testmod()
     print "doc test done."
 
-#    import sys;sys.exit()
+    import sys;sys.exit()
 
-    data = """
+    data = u"""
 <p>111 <x>foo</x> 222<br />
 333<x foo1="bar1">foobar</x>444</p>
 

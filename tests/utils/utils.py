@@ -184,6 +184,7 @@ class MarkupTest(unittest.TestCase):
         if txt.endswith("\n"): txt = txt[:-1]
         #~ print repr(txt)
         #~ print "-"*79
+        txt = unicode(txt)
         return txt
     
     def testSelf(self):

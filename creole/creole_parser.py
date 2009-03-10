@@ -1,4 +1,5 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
+
 """
     Creole wiki markup parser
 
@@ -304,7 +305,7 @@ class Parser:
     """
     # For pre escaping, in creole 1.0 done with ~:
     pre_escape_re = re.compile(
-        SpecialRules.pre_escape, re.MULTILINE | re.VERBOSE
+        SpecialRules.pre_escape, re.MULTILINE | re.VERBOSE | re.UNICODE
     )
     
     # for link descriptions:
@@ -327,6 +328,7 @@ class Parser:
     inline_re = re.compile('|'.join(INLINE_RULES), INLINE_FLAGS)
 
     def __init__(self, raw):
+        assert isinstance(raw, unicode)
         self.raw = raw
         self.root = DocNode('document', None)
         self.cur = self.root        # The most recent document node
@@ -478,10 +480,10 @@ class Parser:
         self.cur = self.root
         self._add_macro(
             groups,
-            macro_type = "macro_block",
-            name_key = "macro_block_start",
-            args_key = "macro_block_args",
-            text_key = "macro_block_text",
+            macro_type = u"macro_block",
+            name_key = u"macro_block_start",
+            args_key = u"macro_block_args",
+            text_key = u"macro_block_text",
         )
     _macro_block_start_repl = _macro_block_repl
     _macro_block_args_repl = _macro_block_repl
@@ -493,9 +495,9 @@ class Parser:
         """
         self._add_macro(
             groups,
-            macro_type = "macro_inline",
-            name_key = "macro_tag_name",
-            args_key = "macro_tag_args",
+            macro_type = u"macro_inline",
+            name_key = u"macro_tag_name",
+            args_key = u"macro_tag_args",
             text_key = None,
         )
     _macro_tag_name_repl = _macro_tag_repl
@@ -508,10 +510,10 @@ class Parser:
         """
         self._add_macro(
             groups,
-            macro_type = "macro_inline",
-            name_key = "macro_inline_start",
-            args_key = "macro_inline_args",
-            text_key = "macro_inline_text",
+            macro_type = u"macro_inline",
+            name_key = u"macro_inline_start",
+            args_key = u"macro_inline_args",
+            text_key = u"macro_inline_text",
         )
     _macro_inline_start_repl = _macro_inline_repl
     _macro_inline_args_repl = _macro_inline_repl
@@ -683,8 +685,8 @@ class Parser:
         for name, text in groups.iteritems():
             if text is not None:
                 #if name != "char": debug(groups)
-                replace = getattr(self, '_%s_repl' % name)
-                replace(groups)
+                replace_method = getattr(self, '_%s_repl' % name)
+                replace_method(groups)
                 return
 
     def parse_inline(self, raw):
@@ -745,9 +747,9 @@ class DocNode:
         self.children = []
         self.parent = parent
         self.kind = kind
-
+        
         if content:
-            content = unicode(content)
+            assert isinstance(content, unicode)
         self.content = content
 
         if self.parent is not None:
@@ -784,9 +786,9 @@ if __name__=="__main__":
             555<<html>><X /><</html>>666"""
 
     print "-"*80
-    p = Parser(txt)
-    document = p.parse()
-    p.debug()
+#    p = Parser(txt)
+#    document = p.parse()
+#    p.debug()
 
     def display_match(match):
         groups = match.groupdict()
@@ -795,7 +797,7 @@ if __name__=="__main__":
                 print "%20s: %r" % (name, text)
     
 
-    parser = Parser("")
+    parser = Parser(u"")
 
     print "_"*80
     print "merged block rules test:"
