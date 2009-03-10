@@ -2,7 +2,7 @@
 
 import sys
 
-from creole import Parser
+from creole_parser import Parser
 from creole2html import HtmlEmitter
 from html2creole import Html2CreoleParser, Html2CreoleEmitter
 
