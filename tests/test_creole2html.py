@@ -80,7 +80,7 @@ class TestCreole2html(unittest.TestCase):
         )
         self.assertEqual(html, u'{{{&lt;nocode&gt;}}}\n')
     
-    def test_default_macro2(self):
+    def test_default_macro3(self):
         html = creole2html(
             markup_string="<<html>>1<</html>><<html>>2<</html>>",
             verbose=1, 
