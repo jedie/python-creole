@@ -43,7 +43,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import sys, re, traceback
 
 import default_macros
-from creole import Parser
+from creole_parser import Parser
 
 
 #from PyLucid.tools.utils import escape
