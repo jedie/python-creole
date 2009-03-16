@@ -8,7 +8,6 @@ from xml.sax.saxutils import escape
 from htmlentitydefs import entitydefs
 
 
-
 BLOCK_TAGS = (
     "address", "blockquote", "center", "dir", "div", "dl", "fieldset",
     "form",
@@ -102,11 +101,11 @@ class DocNode:
     def get_attrs_as_string(self):
         """
         FIXME: Find a better was to do this.
-        
+
         >>> node = DocNode(attrs={'foo':"bar", u"no":123})
         >>> node.get_attrs_as_string()
         u'foo="bar" no="123"'
-        
+
         >>> node = DocNode(attrs={"foo":'bar', "no":u"ABC"})
         >>> node.get_attrs_as_string()
         u'foo="bar" no="ABC"'
@@ -187,7 +186,7 @@ def strip_html(html_code):
 
     >>> strip_html(u'<p>a <unknown tag /> foobar  </p>')
     u'<p>a <unknown tag /> foobar</p>'
-    
+
     >>> strip_html(u'<p>a <pre> preformated area </pre> foo </p>')
     u'<p>a<pre>preformated area</pre>foo</p>'
     """
@@ -287,7 +286,7 @@ class Html2CreoleParser(HTMLParser):
         if self.debugging:
             warnings.warn(
                 message="Html2Creole debug is on! warn every data append."
-            ) 
+            )
             self.result = DebugList(self)
         else:
             self.result = []
@@ -519,10 +518,10 @@ ESCAPE_UNKNOWN_NODES = 3
 
 class Html2CreoleEmitter(object):
 
-    def __init__(self, document_tree, unknown_emit=ESCAPE_UNKNOWN_NODES, 
+    def __init__(self, document_tree, unknown_emit=ESCAPE_UNKNOWN_NODES,
                                                                 debug=False):
         self.root = document_tree
-        
+
         if unknown_emit == RAISE_UNKNOWN_NODES:
             self.unknown_emit = self.raise_unknown_node
         elif unknown_emit == HTML_MACRO_UNKNOWN_NODES:
@@ -531,13 +530,13 @@ class Html2CreoleEmitter(object):
             self.unknown_emit = self.escape_unknown_nodes
         else:
             raise AssertionError("wrong keyword argument 'unknown_emit'!")
-            
+
         self.debugging = debug
         self.__inner_list = ""
         self.__mask_linebreak = False
 
     #--------------------------------------------------------------------------
-    
+
     def raise_unknown_node(self, node):
         """
         Raise NotImplementedError on unknown tags.
@@ -545,7 +544,7 @@ class Html2CreoleEmitter(object):
         raise NotImplementedError(
             "Node from type '%s' is not implemented!" % node.kind
         )
-    
+
     def use_html_macro(self, node):
         """
         Use the <<html>> macro to mask unknown tags.
@@ -554,22 +553,22 @@ class Html2CreoleEmitter(object):
         attrs = node.get_attrs_as_string()
         if attrs:
             attrs = " "+attrs
-        
+
         tag_data = {
             "tag": node.kind,
             "attrs": attrs,
         }
-        
+
         content = self.emit_children(node)
         if not content:
             # single tag
             return u"<<html>><%(tag)s%(attrs)s /><</html>>" % tag_data
-            
+
         start_tag = u"<<html>><%(tag)s%(attrs)s><</html>>" % tag_data
         end_tag = u"<<html>></%(tag)s><</html>>" % tag_data
-        
+
         return start_tag + content + end_tag
-    
+
     def escape_unknown_nodes(self, node):
         """
         All unknown tags should be escaped.
@@ -578,22 +577,22 @@ class Html2CreoleEmitter(object):
         attrs = node.get_attrs_as_string()
         if attrs:
             attrs = " "+attrs
-        
+
         tag_data = {
             "tag": node.kind,
             "attrs": attrs,
         }
-        
+
         content = self.emit_children(node)
         if not content:
             # single tag
             return escape(u"<%(tag)s%(attrs)s />" % tag_data)
-            
+
         start_tag = escape(u"<%(tag)s%(attrs)s>" % tag_data)
         end_tag = escape(u"</%(tag)s>" % tag_data)
-        
+
         return start_tag + content + end_tag
-    
+
     #--------------------------------------------------------------------------
 
     def _escape_linebreaks(self, text):
@@ -624,7 +623,44 @@ class Html2CreoleEmitter(object):
         return node.content
 
     def entityref_emit(self, node):
-        return unicode(entitydefs[node.content])
+        """
+        emit a named html entity
+        """
+        entity = node.content
+
+        if entity == "nbsp":
+            # Non breaking spaces
+            return u" "
+
+        try:
+            character = entitydefs[entity]
+        except KeyError, err:
+            if self.debugging:
+                print "unknown html entity found: %r" % entity
+            return "&%s" % entity # FIXME
+
+        try:
+            return unicode(character)
+        except UnicodeDecodeError, err:
+            raise UnicodeError(
+                "Error handling entity %r: %s" % (entity, err)
+            )
+
+    def charref_emit(self, node):
+        """
+        emit a not named html entity
+        """
+        entity = node.content
+
+        if entity.startswith("x"):
+            # entity in hex
+            hex_no = entity[1:]
+            unicode_no = int(hex_no, 16)
+        else:
+            # entity as a unicode number
+            unicode_no = int(entity)
+
+        return unichr(unicode_no)
 
     #--------------------------------------------------------------------------
 
@@ -653,7 +689,7 @@ class Html2CreoleEmitter(object):
     def i_emit(self, node):
         return self._typeface(node, key="//")
     em_emit = i_emit
-    
+
     def tt_emit(self, node):
         return self._typeface(node, key="##")
     def sup_emit(self, node):
@@ -666,7 +702,7 @@ class Html2CreoleEmitter(object):
         return self._typeface(node, key="--")
     def del_emit(self, node):
         return self._typeface(node, key="~~")
-    strike_emit = del_emit 
+    strike_emit = del_emit
 
     #--------------------------------------------------------------------------
 
@@ -818,13 +854,14 @@ if __name__ == '__main__':
     doctest.testmod()
     print "doc test done."
 
-    import sys;sys.exit()
+    #import sys;sys.exit()
 
-    data = u"""
-<p>111 <x>foo</x> 222<br />
-333<x foo1="bar1">foobar</x>444</p>
-
-<p>555<x />666</p>"""
+    data = u"""<p>less-than sign: &lt; &#60; &#x3C;<br/>
+greater-than sign: &gt; &#62; &#x3E;</p>
+<p>copyright sign: &#xA9; (hex: a9)<br/>
+pilcrow sign: &#xB6; (hex: b6)</p>
+<p>copy&paste</p>
+"""
 
 #    print data.strip()
     h2c = Html2CreoleParser(

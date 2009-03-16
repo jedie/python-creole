@@ -83,6 +83,47 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         """, 
             unknown_emit=ESCAPE_UNKNOWN_NODES
         )
+
+    def test_entities(self):
+        """
+        Test html entities.
+        
+        copyright sign is in Latin-1 Supplement:
+            http://pylucid.org/_command/144/DecodeUnicode/display/1/
+        Box Drawing:
+            http://pylucid.org/_command/144/DecodeUnicode/display/66/
+        """
+        self.assertCreole(u"""
+            * less-than sign: < < <
+            * greater-than sign: > > >
+            * copyright sign: © ©
+            * box drawing: ╬ ╬
+        """, """
+            <ul>
+            <li>less-than sign: &lt; &#60; &#x3C;</li>
+            <li>greater-than sign: &gt; &#62; &#x3E;</li>
+            <li>copyright sign: &#169; &#xA9;</li>
+            <li>box drawing: &#9580; &#x256C;</li>
+            </ul>
+        """)
+        
+    def test_html_entity2(self):
+        self.assertCreole(r"""
+            a non braking space: [ ] !
+        """, """
+            <p>a non braking space: [&nbsp;] !</p>
+        """)
+        
+    def test_unknown_entity(self):
+        """
+        Test a unknown html entity.
+        FIXME: What sould happend?
+        """
+        self.assertCreole(r"""
+            copy&paste
+        """, """
+            <p>copy&paste</p>
+        """)
         
     #--------------------------------------------------------------------------
 
