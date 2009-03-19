@@ -39,7 +39,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         self.assert_html2Creole(raw_markup, raw_html, debug=debug, **kwargs)
 
     #--------------------------------------------------------------------------
-    
+
     def test_not_used(self):
         """
         Some other html tags -> convert.
@@ -59,7 +59,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         Test creole.html2creole.RAISE_UNKNOWN_NODES mode:
         Raise NotImplementedError on unknown tags.
         """
-        self.assertRaises(NotImplementedError, 
+        self.assertRaises(NotImplementedError,
             html2creole,
             html_string=u"<unknwon>",
             unknown_emit=RAISE_UNKNOWN_NODES
@@ -73,21 +73,21 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         self.assertCreole(r"""
             111 &lt;unknown&gt;foo&lt;/unknown&gt; 222
             333&lt;unknown foo1="bar1" foo2="bar2"&gt;foobar&lt;/unknown&gt;444
-            
+
             555&lt;unknown /&gt;666
         """, """
             <p>111 <unknown>foo</unknown> 222<br />
             333<unknown foo1="bar1" foo2="bar2">foobar</unknown>444</p>
-            
+
             <p>555<unknown />666</p>
-        """, 
+        """,
             unknown_emit=ESCAPE_UNKNOWN_NODES
         )
 
     def test_entities(self):
         """
         Test html entities.
-        
+
         copyright sign is in Latin-1 Supplement:
             http://pylucid.org/_command/144/DecodeUnicode/display/1/
         Box Drawing:
@@ -106,14 +106,22 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             <li>box drawing: &#9580; &#x256C;</li>
             </ul>
         """)
-        
-    def test_html_entity2(self):
+
+    def test_html_entity_nbsp(self):
+        """ Non breaking spaces is not in htmlentitydefs """
         self.assertCreole(r"""
             a non braking space: [ ] !
         """, """
             <p>a non braking space: [&nbsp;] !</p>
         """)
-        
+
+    def test_html_entity_in_pre(self):
+        self.assertCreole(r"""
+            {{{<code>{% lucidTag RSS url="http url" %}</code>}}}
+        """, """
+            <pre><code>&#x7B;% lucidTag RSS url="http url" %&#x7D;</code></pre>
+        """)
+
     def test_unknown_entity(self):
         """
         Test a unknown html entity.
@@ -124,7 +132,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         """, """
             <p>copy&paste</p>
         """)
-        
+
     #--------------------------------------------------------------------------
 
 #
@@ -143,14 +151,14 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 #            a {{/image.jpeg|JPEG pictures}} and
 #            a {{/image.gif|GIF pictures}} and
 #            a {{/image.png|PNG pictures}} !
-#            
+#
 #            picture [[www.domain.tld|{{foo.JPG|Foo}}]] as a link
 #        """, """
 #            <p>a <img src="/image.jpg" alt="JPG pictures"> and<br />
 #            a <img src="/image.jpeg" alt="JPEG pictures"> and<br />
 #            a <img src="/image.gif" alt="GIF pictures" /> and<br />
 #            a <img src="/image.png" alt="PNG pictures" /> !</p>
-#            
+#
 #            <p>picture <a href="www.domain.tld"><img src="foo.JPG" alt="Foo"></a> as a link</p>
 #        """)
 #
@@ -161,7 +169,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 #            //This// does **not** get [[formatted]]
 #            }}}
 #            and this: {{{** <i>this</i> ** }}} not, too.
-#            
+#
 #            === Closing braces in nowiki:
 #            {{{
 #            if (x != NULL) {
@@ -176,7 +184,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 #            //This// does **not** get [[formatted]]
 #            </pre>
 #            <p>and this: <tt>** &lt;i&gt;this&lt;/i&gt; ** </tt> not, too.</p>
-#            
+#
 #            <h3>Closing braces in nowiki:</h3>
 #            <pre>
 #            if (x != NULL) {
@@ -186,9 +194,9 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 #              }}}
 #            </pre>
 #        """)
-#    
+#
 
-#        
+#
 #    def test_horizontal_rule(self):
 #        self.assertCreole(r"""
 #            one
@@ -202,7 +210,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 #
 #    def test_list1(self):
 #        """
-#        FIXME: Two newlines between a list and the next paragraph :( 
+#        FIXME: Two newlines between a list and the next paragraph :(
 #        """
 #        self.assertCreole(r"""
 #            ==== List a:
@@ -212,10 +220,10 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 #            *** a1.2.1 item
 #            *** a1.2.2 item
 #            * a2 item
-#            
-#            
+#
+#
 #            list 'a' end
-#            
+#
 #            ==== List b:
 #            # b1 item
 #            ## b1.2 item
@@ -223,8 +231,8 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 #            ### b1.2.2 Force\\linebreak1\\linebreak2
 #            ## b1.3 item
 #            # b2 item
-#            
-#            
+#
+#
 #            list 'b' end
 #        """, """
 #            <h4>List a:</h4>
@@ -242,7 +250,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 #            <li>a2 item</li>
 #            </ul>
 #            <p>list 'a' end</p>
-#            
+#
 #            <h4>List b:</h4>
 #            <ol>
 #            <li>b1 item</li>
@@ -268,7 +276,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 #        self.assertCreole(r"""
 #            * **bold** item
 #            * //italic// item
-#            
+#
 #            # item about a [[domain.tld|page link]]
 #            # {{{ //this// is **not** [[processed]] }}}
 #        """, """
@@ -292,21 +300,21 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         self.assertCreole(r"""
             The current page name: >{{ PAGE.name }}< great?
             A {% lucidTag page_update_list count=10 %} PyLucid plugin
-            
+
             {% block %}
             FooBar
             {% endblock %}
-            
+
             A [[www.domain.tld|link]].
             no image: {{ foo|bar }}!
         """, """
             <p>The current page name: &gt;{{ PAGE.name }}&lt; great?<br />
             A {% lucidTag page_update_list count=10 %} PyLucid plugin</p>
-            
+
             {% block %}
             FooBar
             {% endblock %}
-            
+
             <p>A <a href="www.domain.tld">link</a>.<br />
             no image: {{ foo|bar }}!</p>
         """)

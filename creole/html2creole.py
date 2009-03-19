@@ -492,21 +492,63 @@ class Html2CreoleParser(HTMLParser):
 
 
 
+entities_rules = '|'.join([
+    r"(&\#(?P<number>\d+);)",
+    r"(&\#x(?P<hex>[a-fA-F0-9]+);)",
+    r"(&(?P<named>[a-zA-Z]+);)",
+])
+#print entities_rules
+entities_regex = re.compile(
+    entities_rules, re.VERBOSE | re.UNICODE | re.MULTILINE
+)
 
-
-entities_regex = re.compile(r"&([#\w]+);", re.UNICODE)
-
-
-def deentitfy(text):
+class Deentity(object):
     """
-    >>> deentitfy("a text with &gt;entity&lt;!")
-    'a text with >entity<!'
-    """
-    def deentitfy(match):
-        entity = match.group(1)
-        return entitydefs[entity]
+    replace html entity
 
-    return entities_regex.sub(deentitfy, text)
+    >>> d = Deentity()
+    >>> d.replace_all(u"-=[&nbsp;&gt;&#62;&#x3E;nice&lt;&#60;&#x3C;&nbsp;]=-")
+    u'-=[ >>>nice<<< ]=-'
+
+    >>> d.replace_number("126")
+    u'~'
+    >>> d.replace_hex("7E")
+    u'~'
+    >>> d.replace_named("amp")
+    u'&'
+    """
+    def replace_number(self, text):
+        """ unicode number entity """
+        unicode_no = int(text)
+        return unichr(unicode_no)
+
+    def replace_hex(self, text):
+        """ hex entity """
+        unicode_no = int(text, 16)
+        return unichr(unicode_no)
+
+    def replace_named(self, text):
+        """ named entity """
+        if text == "nbsp":
+            # Non breaking spaces is not in htmlentitydefs
+            return u" "
+        else:
+            character = entitydefs[text]
+            return unicode(character)
+
+    def replace_all(self, content):
+        """ replace all html entities form the given text. """
+        def replace_entity(match):
+            groups = match.groupdict()
+            for name, text in groups.iteritems():
+                if text is not None:
+                    replace_method = getattr(self, 'replace_%s' % name)
+                    return replace_method(text)
+
+            # Should never happen:
+            raise RuntimeError("deentitfy re rules wrong!")
+
+        return entities_regex.sub(replace_entity, content)
 
 
 
@@ -532,6 +574,8 @@ class Html2CreoleEmitter(object):
             raise AssertionError("wrong keyword argument 'unknown_emit'!")
 
         self.debugging = debug
+
+        self.deentity = Deentity() # for replacing html entities
         self.__inner_list = ""
         self.__mask_linebreak = False
 
@@ -604,10 +648,10 @@ class Html2CreoleEmitter(object):
 
     def blockdata_pre_emit(self, node):
         """ pre block -> with newline at the end """
-        return u"{{{%s}}}\n" % deentitfy(node.content)
+        return u"{{{%s}}}\n" % self.deentity.replace_all(node.content)
     def inlinedata_pre_emit(self, node):
         """ a pre inline block -> no newline at the end """
-        return u"{{{%s}}}" % deentitfy(node.content)
+        return u"{{{%s}}}" % self.deentity.replace_all(node.content)
 
     def blockdata_pass_emit(self, node):
         return u"%s\n\n" % node.content
@@ -628,19 +672,12 @@ class Html2CreoleEmitter(object):
         """
         entity = node.content
 
-        if entity == "nbsp":
-            # Non breaking spaces
-            return u" "
-
         try:
-            character = entitydefs[entity]
+            return self.deentity.replace_named(entity)
         except KeyError, err:
             if self.debugging:
                 print "unknown html entity found: %r" % entity
             return "&%s" % entity # FIXME
-
-        try:
-            return unicode(character)
         except UnicodeDecodeError, err:
             raise UnicodeError(
                 "Error handling entity %r: %s" % (entity, err)
@@ -655,12 +692,10 @@ class Html2CreoleEmitter(object):
         if entity.startswith("x"):
             # entity in hex
             hex_no = entity[1:]
-            unicode_no = int(hex_no, 16)
+            return self.deentity.replace_hex(hex_no)
         else:
             # entity as a unicode number
-            unicode_no = int(entity)
-
-        return unichr(unicode_no)
+            return self.deentity.replace_number(entity)
 
     #--------------------------------------------------------------------------
 
@@ -854,7 +889,7 @@ if __name__ == '__main__':
     doctest.testmod()
     print "doc test done."
 
-    #import sys;sys.exit()
+    import sys;sys.exit()
 
     data = u"""<p>less-than sign: &lt; &#60; &#x3C;<br/>
 greater-than sign: &gt; &#62; &#x3E;</p>
