@@ -8,7 +8,7 @@
     ~~~~~~~~~~~~~~~~~
     $LastChangedDate:$
     $Rev:$
-    $Author: JensDiemer $
+    $Author$
 
     :copyleft: 2008-2009 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE.txt for more details.
