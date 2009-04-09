@@ -6,6 +6,12 @@ from creole_parser import Parser
 from creole2html import HtmlEmitter
 from html2creole import Html2CreoleParser, Html2CreoleEmitter
 
+# Important for setuptools:
+# - Only use . as a separator
+# - No spaces: "0.8.0 RC2" -> "0.8.0RC2"
+# http://peak.telecommunity.com/DevCenter/setuptools#specifying-your-project-s-version
+__version__ = (0, 1, 0, "")
+VERSION_STRING = "0.1.0"
 
 
 def creole2html(markup_string, debug=False, **kwargs):
