@@ -36,63 +36,28 @@ BLOCK_TAGS = (
 
 #------------------------------------------------------------------------------
 
-# Pass-through all django template blocktags
-pass_block_re = r'''
-    (?P<pass_block>
-        [\s\n]*
-        {% \s* (?P<pass_block_start>.+?) \s* .*? \s* %}
-        (\n|.)*?
-        {% \s* end(?P=pass_block_start) \s* %}
-        [\s\n]*
-    )'''
-pre_block_re = r'''
+block_re = re.compile(r'''
     ^<pre> \s* $
     (?P<pre_block>
         (\n|.)*?
     )
     ^</pre> \s* $
     [\s\n]*
-'''
-block_re = re.compile(
-    '|'.join([
-        pass_block_re,
-        pre_block_re,
-    ]),
-    re.VERBOSE | re.UNICODE | re.MULTILINE
-)
+''', re.VERBOSE | re.UNICODE | re.MULTILINE)
 
 #------------------------------------------------------------------------------
 
-inline_django_re = r'''
-    (?P<django_tag>
-        [\s\n]*
-        {% [^\n]+? %}
-        [\s\n]*
-    )
-'''
-pre_inline_re = r'''
+inline_re = re.compile(r'''
     <pre>
     (?P<pre_inline>
         (\n|.)*?
     )
     </pre>
-'''
-inline_re = re.compile(
-    '|'.join([
-        pre_inline_re,
-        inline_django_re,
-    ]),
-    re.VERBOSE | re.UNICODE
-)
+''', re.VERBOSE | re.UNICODE)
 
 #------------------------------------------------------------------------------
 
 headline_tag_re = re.compile(r"h(\d)", re.UNICODE)
-
-
-
-
-
 
 
 
@@ -256,7 +221,7 @@ def strip_html(html_code):
 space_re = re.compile(r"^(\s*)(.*?)(\s*)$", re.DOTALL)
 def clean_whitespace(txt):
     """
-    Special whitespaces cleanup, for django tags and blocktags.
+    Special whitespaces cleanup
 
     >>> clean_whitespace(u"\\n\\nfoo bar\\n\\n")
     u'foo bar\\n'
@@ -334,11 +299,6 @@ class Html2CreoleParser(HTMLParser):
 
     _pre_pass_block_start_cut = _pre_pass_block_cut
 
-    def _pre_django_tag_cut(self, groups):
-        content = groups["django_tag"]
-        content = clean_whitespace(content)
-        return self._pre_cut(content, "django_tag", self._inline_placeholder)
-
     def _pre_cut_out(self, match):
         groups = match.groupdict()
         for name, text in groups.iteritems():
@@ -355,7 +315,7 @@ class Html2CreoleParser(HTMLParser):
         assert isinstance(raw_data, unicode), "feed data must be unicode!"
         data = raw_data.strip()
 
-        # cut out <pre>, <tt> areas or django block tag areas
+        # cut out <pre> and <tt> areas block tag areas
         data = block_re.sub(self._pre_cut_out, data)
         data = inline_re.sub(self._pre_cut_out, data)
 
@@ -671,9 +631,6 @@ class Html2CreoleEmitter(object):
 
     def blockdata_pass_emit(self, node):
         return u"%s\n\n" % node.content
-        return node.content
-
-    def inlinedata_django_tag_emit(self, node):
         return node.content
 
     #--------------------------------------------------------------------------

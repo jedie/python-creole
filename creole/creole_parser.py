@@ -117,13 +117,6 @@ class InlineRules:
     escape = r'(?P<escape> ~ (?P<escaped_char>\S) )'
     char =  r'(?P<char> . )'
 
-    pass_inline = r'''(?P<pass_inline>
-            ({%.*?%})|
-            ({{.*?}})
-        )'''
-
-    #--------------------------------------------------------------------------
-    # Special rules
 
 
 
@@ -132,26 +125,7 @@ class InlineRules:
 class BlockRules:
     """
     All used block rules.
-    """
-    # Pass-through all django template blocktags       
-    pass_block = r'''
-        (\n|\s)*?
-        (?P<pass_block>
-        \n{0,1}
-        {% \s* (?P<pass_block_start>.+?) \s* (?P<pass_block_args>.*?) \s* %}
-        (\n|.)*?
-        {% \s* end(?P=pass_block_start) \s* %}
-        \n{0,1}
-        )
-        (\n|\s)*?
-    '''
-    pass_line = r'''\n(?P<pass_line>
-            \n
-            ({%.*?%})|
-            ({{.*?}})
-            \n
-        )\n\n'''
-        
+    """       
 #    macro_block = r'''(?P<macro_block>
 #            \s* << (?P<macro_block_start>\w+) \s* (?P<macro_block_args>.*?) >>
 #            (?P<macro_block_text>(.|\n)+?)
@@ -170,11 +144,6 @@ class BlockRules:
         <</ \s* (?P=macro_block_start) \s* >>
         )
     '''
-    
-    #Pass-through html code lines
-    html = r'''(?P<html>
-        ^[ \t]*<[a-zA-Z].*?<(/[a-zA-Z ]+?)>[ \t]*$
-    )'''
         
     line = r'''(?P<line> ^\s*$ )''' # empty line that separates paragraphs
     
@@ -241,10 +210,7 @@ class SpecialRules:
 
 BLOCK_FLAGS = re.VERBOSE | re.UNICODE | re.MULTILINE
 BLOCK_RULES = (
-    BlockRules.pass_block,
-    BlockRules.pass_line,
     BlockRules.macro_block,
-    BlockRules.html,
     BlockRules.line, BlockRules.head, BlockRules.separator,
     BlockRules.pre_block, BlockRules.list,
     BlockRules.table, BlockRules.text,
@@ -255,7 +221,6 @@ INLINE_RULES = (
     InlineRules.link, InlineRules.url,
     InlineRules.inline_macro, InlineRules.macro_tag,
     InlineRules.pre_inline, InlineRules.image,
-    InlineRules.pass_inline,
     
     InlineRules.strong, InlineRules.emph,        
     InlineRules.monospace, InlineRules.underline,
@@ -369,33 +334,6 @@ class Parser:
     #__________________________________________________________________________
     # The _*_repl methods called for matches in regexps. Sometimes the
     # same method needs several names, because of group names in regexps.
-
-    def _pass_block_repl(self, groups):
-        """ Pass-through all django template blocktags """          
-        self._upto_block()
-        self.cur = self.root
-        DocNode("pass_block", self.cur, groups["pass_block"])
-        self.text = None
-    _pass_block_start_repl = _pass_block_repl
-    _pass_block_end_repl = _pass_block_repl
-
-    def _pass_line_repl(self, groups):
-        """ Pass-through all django tags witch is alone in a code line """
-        self._upto_block()
-        self.cur = self.root
-        DocNode("pass_line", self.cur, groups["pass_line"])
-        self.text = None
-        
-    def _pass_inline_repl(self, groups):
-        """ Pass-through all inline django tags"""
-        DocNode("pass_inline", self.cur, groups["pass_inline"])
-        self.text = None
-
-    def _html_repl(self, groups):
-        """ Pass-through html code """
-        self._upto_block()
-        DocNode("html", self.root, groups["html"])
-        self.text = None
 
     def _text_repl(self, groups):
 #        print "_text_repl()", self.cur.kind, groups.get('break') != None

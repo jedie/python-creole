@@ -3,8 +3,10 @@
 =======
 
 Python lib for:
- * creole markup -> html
- * html -> creole markup 
+
+ - creole markup -> html
+
+ - html -> creole markup 
 
 python-creole is pure python. No external libs needed.
 
@@ -25,6 +27,23 @@ u'This is **creole //markup//**'
 
 
 See also: http://code.google.com/p/python-creole/source/browse/trunk/demo.py
+
+=========
+ history
+=========
+
+- v0.2
+
+  - remove all django template tag stuff: http://code.google.com/p/python-creole/issues/detail?id=3
+  - html code always escaped
+
+- v0.1.1
+
+  - improve macros stuff, patch by Vitja Makarov: http://code.google.com/p/python-creole/issues/detail?id=2
+
+- v0.1.0
+
+  - first version cut out from PyLucid CMS - http://www.pylucid.org
 
 =======
  links

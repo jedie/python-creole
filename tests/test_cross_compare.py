@@ -13,8 +13,8 @@
 
     Last commit info:
     ~~~~~~~~~~~~~~~~~
-    $LastChangedDate:$
-    $Rev:$
+    $LastChangedDate$
+    $Rev$
     $Author$
 
     :copyleft: 2008-2009 by python-creole team, see AUTHORS for more details.
@@ -108,87 +108,6 @@ class CrossCompareTests(BaseCreoleTest):
             a <img src="/image.gif" alt="GIF pictures" /> and<br />
             a <img src="/image.png" alt="PNG pictures" /> !</p>
         """)
-
-    def test_django1(self):
-        """
-        Test if django template tags are not changed by Creole.
-        The Creole image tag use "{{" and "}}", too.
-        We test also the passthrough for all django template blocktags
-        """
-        self.assertCreole(r"""
-            The current page name: >{{ PAGE.name }}< great?
-            A {% lucidTag page_update_list count=10 %} PyLucid plugin
-
-            {% block %}
-            FooBar
-            {% endblock %}
-
-            A [[www.domain.tld|link]].
-            a {{/image.jpg|My Image}} image
-
-            no image: {{ foo|bar }}!
-            picture [[www.domain.tld|{{foo.JPG|Foo}}]] as a link
-        """, """
-            <p>The current page name: &gt;{{ PAGE.name }}&lt; great?<br />
-            A {% lucidTag page_update_list count=10 %} PyLucid plugin</p>
-
-            {% block %}
-            FooBar
-            {% endblock %}
-
-            <p>A <a href="www.domain.tld">link</a>.<br />
-            a <img src="/image.jpg" alt="My Image" /> image</p>
-
-            <p>no image: {{ foo|bar }}!<br />
-            picture <a href="www.domain.tld"><img src="foo.JPG" alt="Foo" /></a> as a link</p>
-        """)
-
-    def test_django2(self):
-        self.assertCreole(r"""
-            ==== Headline 1
-            One {% inline tag 1 %} in text.
-
-            A correct django block tag:
-
-            {% block %}
-            <Foo:> {{ Bar }}
-            {% endblock %}
-
-            A block without the right end block:
-
-            {% block1 %}
-            not matched
-            {% endblock2 %}
-
-            A block without endblock:
-            {% noblock3 %}
-            not matched
-            {% noblock3 %}
-            CCC
-        """, """
-            <h4>Headline 1</h4>
-            <p>One {% inline tag 1 %} in text.</p>
-
-            <p>A correct django block tag:</p>
-
-            {% block %}
-            <Foo:> {{ Bar }}
-            {% endblock %}
-
-            <p>A block without the right end block:</p>
-
-            <p>{% block1 %}<br />
-            not matched<br />
-            {% endblock2 %}</p>
-
-            <p>A block without endblock:<br />
-            {% noblock3 %}<br />
-            not matched<br />
-            {% noblock3 %}<br />
-            CCC</p>
-        """,
-        #debug=True
-        )
 
     def test_nowiki1(self):
         self.assertCreole(r"""

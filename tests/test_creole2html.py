@@ -171,36 +171,20 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             This is a normal Text block witch would
             escape html chars like < and > ;)
             
-            html code must start and end with a tag:
-            <p>this <strong class=u"my">html code</strong> line pass-through</p>
-            this works.
-
-            this:
-            <p>didn't<br />
-            match</p>
+            So you can't insert <html> directly.
+            You can use the <<html>><strong>html macro</strong><</html>> for it.
+            This is a default macro.
             
-            <p>
-                didn't match
-            </p>
-            
-            <p>didn't match,too.< p >
+            <p>This escaped, too.</p>
         """, """
             <p>This is a normal Text block witch would<br />
             escape html chars like &lt; and &gt; ;)</p>
             
-            <p>html code must start and end with a tag:</p>
-            <p>this <strong class=u"my">html code</strong> line pass-through</p>
-            <p>this works.</p>
+            <p>So you can't insert &lt;html&gt; directly.<br />
+            You can use the <strong>html macro</strong> for it.<br />
+            This is a default macro.</p>
             
-            <p>this:<br />
-            &lt;p&gt;didn\'t&lt;br /&gt;<br />
-            match&lt;/p&gt;</p>
-            
-            <p>&lt;p&gt;<br />
-                didn\'t match<br />
-            &lt;/p&gt;</p>
-            
-            <p>&lt;p&gt;didn\'t match,too.&lt; p &gt;</p>
+            <p>&lt;p&gt;This escaped, too.&lt;/p&gt;</p>
         """)
         
     def test_escape_char(self):
@@ -343,12 +327,6 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
         #----------------------------------------------------------------------
         # Test with verbose=2 ans a StringIO stderr handler
         
-
-        
-
-
-        
-        
     def test_macro_not_exist2(self):
         """
         not existing macro with creole2html.HtmlEmitter(verbose=0):
@@ -370,32 +348,6 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             </p>
         """,
             verbose=0
-        )
-        
-
-    def test_django(self):
-        self.assertCreole(r"""
-            One {% inline tag 1 %} in text.
-            
-            {% a single tag %}
-            
-            Text before...
-            {% block %}
-            a block tag
-            {% endblock %}
-            ...and after
-        """, r"""
-            <p>One {% inline tag 1 %} in text.</p>
-            
-            {% a single tag %}
-            
-            <p>Text before...</p>
-            {% block %}
-            a block tag
-            {% endblock %}
-            
-            <p>...and after</p>
-        """, #debug=True
         )
 
 

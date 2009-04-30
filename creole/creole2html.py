@@ -276,19 +276,6 @@ class HtmlEmitter:
         """ pre without newline at the end """
         return u"<pre>%s</pre>" % self.html_escape(node.content)
 
-    def pass_block_emit(self, node):
-        """ Pass-through all django template blocktags and html code lines """
-        return node.content + "\n"
-    html_emit = pass_block_emit
-    
-    def pass_line_emit(self, node):
-        """ Pass-through all django template blocktags and html code lines """
-        return node.content + "\n\n"
-
-    def pass_inline_emit(self, node):
-        """ Pass-through all django template tags """
-        return node.content
-
     def default_emit(self, node):
         """Fallback function for emitting unknown nodes."""
         raise NotImplementedError("Node '%s' unknown" % node.kind)
