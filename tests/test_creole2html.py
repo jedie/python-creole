@@ -14,8 +14,8 @@
 
     Last commit info:
     ~~~~~~~~~~~~~~~~~
-    $LastChangedDate:$
-    $Rev:$
+    $LastChangedDate$
+    $Rev$
     $Author$
 
     :copyleft: 2008-2009 by python-creole team, see AUTHORS for more details.
@@ -88,7 +88,7 @@ class TestCreole2html(unittest.TestCase):
         )
         self.assertEqual(html, u'1\n2\n')
         
-    def test_own_macro(self):
+    def test_macro_class(self):
         """
         simple test for the "macro API"
         """
@@ -99,6 +99,34 @@ class TestCreole2html(unittest.TestCase):
         html = creole2html(
             markup_string=u"<<test foo=1>>bar<</test>>",
             macros=TestMacro()
+        )
+        self.assertEqual(html, u'XXXfoo=1|barXXX\n')
+        
+    def test_macro_dict(self):
+        """
+        simple test for the "macro API"
+        """
+        def test(args, text):
+            return u"XXX%s|%sXXX" % (args, text) 
+        
+        html = creole2html(
+            markup_string=u"<<test foo=1>>bar<</test>>",
+            macros={"test": test}
+        )
+        self.assertEqual(html, u'XXXfoo=1|barXXX\n')
+        
+    def test_macro_callable(self):
+        """
+        simple test for the "macro API"
+        """
+        def testmacro(macroname, args, text):
+            if macroname=="test":
+                return u"XXX%s|%sXXX" % (args, text)
+            raise AssertionError("Wrong macro name?")
+        
+        html = creole2html(
+            markup_string=u"<<test foo=1>>bar<</test>>",
+            macros=testmacro
         )
         self.assertEqual(html, u'XXXfoo=1|barXXX\n')
 

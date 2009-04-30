@@ -216,9 +216,22 @@ class HtmlEmitter:
     def macro_emit(self, node):
         #print node.debug()
         macro_name = node.macro_name
-        try:
-            macro = getattr(self.macros, macro_name)
-        except AttributeError, e:
+        macro = None
+
+        if callable(self.macros):
+            macro = lambda args, text: self.macros(macro_name, args=args, text=text)
+        elif isinstance(self.macros, dict):
+            try:
+                macro = self.macros[macro_name]
+            except KeyError, e:
+                pass
+        else:
+            try:
+                macro = getattr(self.macros, macro_name)
+            except AttributeError, e:
+                pass
+        
+        if macro == None:
             return self.error(
                 u"Macro '%s' doesn't exist" % macro_name,
                 handle_traceback = True
