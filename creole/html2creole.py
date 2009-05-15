@@ -19,9 +19,9 @@
 import re
 import inspect
 import warnings
+import htmlentitydefs
 from HTMLParser import HTMLParser
 from xml.sax.saxutils import escape
-from htmlentitydefs import entitydefs
 
 
 BLOCK_TAGS = (
@@ -33,6 +33,7 @@ BLOCK_TAGS = (
     "p", "pre",
     "br"
 )
+IGNORE_TAGS = ("tbody",)
 
 #------------------------------------------------------------------------------
 
@@ -361,6 +362,9 @@ class Html2CreoleParser(HTMLParser):
 
     def handle_starttag(self, tag, attrs):
         self.debug_msg("starttag", "%r atts: %s" % (tag, attrs))
+        
+        if tag in IGNORE_TAGS:
+            return
 
         headline = headline_tag_re.match(tag)
         if headline:
@@ -418,7 +422,7 @@ class Html2CreoleParser(HTMLParser):
         if tag in BLOCK_TAGS:
             self._go_up()
         else:
-            self.cur = self.cur.parent
+            self.cur = self.cur.parent                
 
     #-------------------------------------------------------------------------
 
@@ -478,6 +482,9 @@ entities_regex = re.compile(
     entities_rules, re.VERBOSE | re.UNICODE | re.MULTILINE
 )
 
+
+
+
 class Deentity(object):
     """
     replace html entity
@@ -485,6 +492,9 @@ class Deentity(object):
     >>> d = Deentity()
     >>> d.replace_all(u"-=[&nbsp;&gt;&#62;&#x3E;nice&lt;&#60;&#x3C;&nbsp;]=-")
     u'-=[ >>>nice<<< ]=-'
+        
+    >>> d.replace_all(u"-=[M&uuml;hlheim]=-") # uuml - latin small letter u with diaeresis
+    u'-=[M\\xfchlheim]=-'
 
     >>> d.replace_number("126")
     u'~'
@@ -509,8 +519,9 @@ class Deentity(object):
             # Non breaking spaces is not in htmlentitydefs
             return u" "
         else:
-            character = entitydefs[text]
-            return unicode(character)
+            codepoint = htmlentitydefs.name2codepoint[text]
+            character = unichr(codepoint)
+            return character
 
     def replace_all(self, content):
         """ replace all html entities form the given text. """

@@ -98,12 +98,14 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             * greater-than sign: > > >
             * copyright sign: © ©
             * box drawing: ╬ ╬
+            * german umlauts: ä ö ü
         """, """
             <ul>
             <li>less-than sign: &lt; &#60; &#x3C;</li>
             <li>greater-than sign: &gt; &#62; &#x3E;</li>
             <li>copyright sign: &#169; &#xA9;</li>
             <li>box drawing: &#9580; &#x256C;</li>
+            <li>german umlauts: &auml; &ouml; &uuml;</li>
             </ul>
         """)
 
@@ -131,6 +133,26 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             copy&paste
         """, """
             <p>copy&paste</p>
+        """)
+
+    def test_tbody_table(self):
+        """ ignore 'tbody' tag in tables."""
+        self.assertCreole(r"""
+            |= Headline 1 |= Headline 2 |
+            | cell one    | cell two    |
+        """, """
+            <table>
+            <tbody>
+            <tr>
+                <th>Headline 1</th>
+                <th>Headline 2</th>
+            </tr>
+            <tr>
+                <td>cell one</td>
+                <td>cell two</td>
+            </tr>
+            </tbody>
+            </table>
         """)
 
     #--------------------------------------------------------------------------
