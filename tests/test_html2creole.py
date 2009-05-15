@@ -136,11 +136,14 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         """)
 
     def test_tbody_table(self):
-        """ ignore 'tbody' tag in tables."""
         self.assertCreole(r"""
+            Ignore 'tbody' tag in tables:
+            
             |= Headline 1 |= Headline 2 |
             | cell one    | cell two    |
+            end
         """, """
+            <p>Ignore 'tbody' tag in tables:</p>
             <table>
             <tbody>
             <tr>
@@ -152,6 +155,20 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
                 <td>cell two</td>
             </tr>
             </tbody>
+            </table>
+            <p>end</p>
+        """)
+        
+    def test_p_table(self):
+        """ strip <p> tags in table cells """
+        self.assertCreole(r"""
+            | cell one | cell two\\new line |
+        """, """
+            <table>
+            <tr>
+                <td><p>cell one</p></td>
+                <td><p>cell two</p><p>new line</p><p></p></td>
+            </tr>
             </table>
         """)
 

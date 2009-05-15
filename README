@@ -32,6 +32,13 @@ See also: http://code.google.com/p/python-creole/source/browse/trunk/demo.py
  history
 =========
 
+- v0.2.1
+
+  - html2creole bugfixes in:
+  
+    - converting tables: ignore tbody tag and better handling p and a tags in td 
+    - converting named entity
+
 - v0.2
 
   - remove all django template tag stuff: http://code.google.com/p/python-creole/issues/detail?id=3

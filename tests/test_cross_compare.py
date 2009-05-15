@@ -385,6 +385,7 @@ class CrossCompareTests(BaseCreoleTest):
             |= Headline  |= a other\\headline    |= the **big end**     |
             | a cell     | a **big** cell        | **//bold italics//** |
             | next\\line | No == headline == or? |                      |
+            | link test: | a [[/url/|link]] in   | a cell.              |
             |            |                       | empty cells          |
             ...end
         """, """
@@ -407,6 +408,11 @@ class CrossCompareTests(BaseCreoleTest):
                     line</td>
                 <td>No == headline == or?</td>
                 <td></td>
+            </tr>
+            <tr>
+                <td>link test:</td>
+                <td>a <a href="/url/">link</a> in</td>
+                <td>a cell.</td>
             </tr>
             <tr>
                 <td></td>

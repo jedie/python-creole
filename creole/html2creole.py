@@ -29,7 +29,7 @@ BLOCK_TAGS = (
     "form",
     "h1", "h2", "h3", "h4", "h5", "h6",
     "hr", "ins", "isindex", "menu", "noframes", "noscript",
-    "ul", "ol", "li", "table",
+    "ul", "ol", "li", "table", "th", "tr", "td",
     "p", "pre",
     "br"
 )
@@ -357,6 +357,7 @@ class Html2CreoleParser(HTMLParser):
     def _go_up(self):
         kinds = list(BLOCK_TAGS) + ["document"]
         self.cur = self._upto(self.cur, kinds)
+        self.debug_msg("go up to", self.cur)
 
     #-------------------------------------------------------------------------
 
@@ -413,8 +414,11 @@ class Html2CreoleParser(HTMLParser):
             DocNode(tag, self.cur, attrs)
 
     def handle_endtag(self, tag):
+        if tag in IGNORE_TAGS:
+            return
+        
         self.debug_msg("endtag", "%r" % tag)
-        self.debug_msg("get_starttag_text", "%r" % self.get_starttag_text())
+        self.debug_msg("starttag", "%r" % self.get_starttag_text())
 
         if tag in ("ul", "ol"):
             self.__list_level -= 1
@@ -422,7 +426,7 @@ class Html2CreoleParser(HTMLParser):
         if tag in BLOCK_TAGS:
             self._go_up()
         else:
-            self.cur = self.cur.parent                
+            self.cur = self.cur.parent
 
     #-------------------------------------------------------------------------
 
@@ -626,13 +630,6 @@ class Html2CreoleEmitter(object):
 
     #--------------------------------------------------------------------------
 
-    def _escape_linebreaks(self, text):
-        text = text.split("\n")
-        lines = [line.strip() for line in text]
-        return "\\\\".join(lines)
-
-    #--------------------------------------------------------------------------
-
     def blockdata_pre_emit(self, node):
         """ pre block -> with newline at the end """
         return u"{{{%s}}}\n" % self.deentity.replace_all(node.content)
@@ -770,55 +767,38 @@ class Html2CreoleEmitter(object):
 
     #--------------------------------------------------------------------------
 
-    def _format_table(self, table_content):
-        """
-        Format a table block, so every cell has the same width.
-        """
-        # Split and preformat every table cell
-        cells = []
-        for line in table_content.strip().splitlines():
-            line_cells = []
-            for cell in line.split("|"):
-                cell = cell.strip()
-                if cell != "":
-                    if cell.startswith("="):
-                        cell += " " # Headline
-                    else:
-                        cell = " %s " % cell # normal cell
-                line_cells.append(cell)
-            cells.append(line_cells)
-
-        # Build a list of max len for every column
-        widths = [max(map(len, col)) for col in zip(*cells)]
-
-        # Join every line with ljust
-        lines = []
-        for row in cells:
-            cells = [cell.ljust(width) for cell, width in zip(row, widths)]
-            lines.append("|".join(cells))
-
-        return "\n".join(lines)
-
     def table_emit(self, node):
-        table_content = self.emit_children(node)
-
-        # Optimize the table output
-        result = self._format_table(table_content)
-
-        return u"%s\n" % result
+        self._table = CreoleTable(self.debug_msg)
+        self.emit_children(node)
+        content = self._table.get_creole()
+        return u"%s\n" % content
 
     def tr_emit(self, node):
-        return u"%s|\n" % self.emit_children(node)
+        self._table.add_tr()
+        content = self.emit_children(node)
+        return u""
+
+    def _escape_linebreaks(self, text):
+        test = text.strip()
+        text = text.split("\n")
+        lines = [line.strip() for line in text]
+        lines = [line for line in lines if line]
+        content = "\\\\".join(lines)
+        content = content.strip("\\")
+        return content
 
     def th_emit(self, node):
         content = self.emit_children(node)
         content = self._escape_linebreaks(content)
-        return u"|= %s" % content
-
+        content = u"= %s" % content
+        self._table.add_td(content)
+        return u""
+    
     def td_emit(self, node):
         content = self.emit_children(node)
-        content = self._escape_linebreaks(content)
-        return u"| %s" % content
+        content = self._escape_linebreaks(content)       
+        self._table.add_td(content)
+        return u""
 
     #--------------------------------------------------------------------------
 
@@ -867,19 +847,86 @@ class Html2CreoleEmitter(object):
 
 
 
+class CreoleTable(object):
+    """
+    Container for holding table data and render the data in creole markup.
+    Format every cell width to the same col width.
+    
+    >>> def debug_msg(*args): pass
+    >>> t = CreoleTable(debug_msg)
+    >>> t.add_tr()
+    >>> t.add_td(u"= head1")
+    >>> t.add_td(u"= head2")
+    >>> t.add_tr()
+    >>> t.add_td(u"1.1.")
+    >>> t.add_td(u"1.2.")
+    >>> t.add_tr()
+    >>> t.add_td(u"2.1.")
+    >>> t.add_td(u"2.2.")
+    >>> t.get_creole().splitlines()
+    [u'|= head1 |= head2 |', u'| 1.1.   | 1.2.   |', u'| 2.1.   | 2.2.   |']
+    """
+    def __init__(self, debug_msg):
+        self.debug_msg = debug_msg
+        self.rows = []
+        self.row_index = None
+        
+    def add_tr(self):
+        self.debug_msg("Table.add_tr", "")
+        self.rows.append([])
+        self.row_index = len(self.rows)-1
+        
+    def add_td(self, text):
+        if self.row_index==None:
+            self.add_tr()
+        
+        self.debug_msg("Table.add_td", text)
+        self.rows[self.row_index].append(text)
+    
+    def get_creole(self):
+        """ return the table data in creole markup. """
+        # preformat every table cell
+        cells = []
+        for row in self.rows:
+            line_cells = []
+            for cell in row:
+                cell = cell.strip()
+                if cell != "":
+                    if cell.startswith("="):
+                        cell += " " # Headline
+                    else:
+                        cell = " %s " % cell # normal cell
+                line_cells.append(cell)
+            cells.append(line_cells)
+
+        # Build a list of max len for every column
+        widths = [max(map(len, col)) for col in zip(*cells)]
+
+        # Join every line with ljust
+        lines = []
+        for row in cells:
+            cells = [cell.ljust(width) for cell, width in zip(row, widths)]
+            lines.append("|" + "|".join(cells) + "|")
+        
+        result = "\n".join(lines)
+
+        self.debug_msg("Table.get_creole", result)
+        return result
+
 
 if __name__ == '__main__':
     import doctest
     doctest.testmod()
     print "doc test done."
 
-    import sys;sys.exit()
+#    import sys;sys.exit()
 
-    data = u"""<p>less-than sign: &lt; &#60; &#x3C;<br/>
-greater-than sign: &gt; &#62; &#x3E;</p>
-<p>copyright sign: &#xA9; (hex: a9)<br/>
-pilcrow sign: &#xB6; (hex: b6)</p>
-<p>copy&paste</p>
+    data = u"""            <table>
+            <tr>
+                <td><p>cell one</p></td>
+                <td><p>cell two</p><p>new line</p><p></p></td>
+            </tr>
+            </table>
 """
 
 #    print data.strip()
