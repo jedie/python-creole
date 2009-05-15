@@ -355,7 +355,7 @@ class CrossCompareTests(BaseCreoleTest):
             </ol>
         """)
 
-    def test_table1(self):
+    def test_simple_table(self):
         self.assertCreole(r"""
             A simple table:
 
@@ -378,7 +378,7 @@ class CrossCompareTests(BaseCreoleTest):
             <p>...end</p>
         """)
 
-    def test_table2(self):
+    def test_big_table(self):
         self.assertCreole(r"""
             A Table...
 
