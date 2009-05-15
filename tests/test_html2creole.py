@@ -173,8 +173,17 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         """)
 
     #--------------------------------------------------------------------------
+    # TODOs:
+    
+    def test_format_in_a_text(self):
+        """ http://code.google.com/p/python-creole/issues/detail?id=4 """
+        self.assertCreole(r"""
+            **[[/url/|title]]**
+        """, """
+            <a href="/url/"><strong>title</strong></a>
+        """)
 
-#
+
 #    def test_links(self):
 #        self.assertCreole(r"""
 #            test link: '[[internal links|link A]]' 1 and
