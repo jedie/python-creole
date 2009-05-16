@@ -77,6 +77,8 @@ class DocNode:
             self.parent.children.append(self)
 
         self.attrs = dict(attrs)
+        if content:
+            assert isinstance(content, unicode)
         self.content = content
         self.level = level
 
@@ -388,6 +390,8 @@ class Html2CreoleParser(HTMLParser):
 
     def handle_data(self, data):
         self.debug_msg("data", "%r" % data)
+        if isinstance(data, str):
+            data = unicode(data)
         DocNode("data", self.cur, content = data)
 
     def handle_charref(self, name):
@@ -644,7 +648,7 @@ class Html2CreoleEmitter(object):
     #--------------------------------------------------------------------------
 
     def data_emit(self, node):
-        #~ node.debug()
+        #node.debug()
         return node.content
 
     def entityref_emit(self, node):
@@ -921,12 +925,8 @@ if __name__ == '__main__':
 
 #    import sys;sys.exit()
 
-    data = u"""            <table>
-            <tr>
-                <td><p>cell one</p></td>
-                <td><p>cell two</p><p>new line</p><p></p></td>
-            </tr>
-            </table>
+    data = u"""
+<a href="/url/">Search & Destroy</a>
 """
 
 #    print data.strip()

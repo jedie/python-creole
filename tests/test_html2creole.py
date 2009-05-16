@@ -134,6 +134,11 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         """, """
             <p>copy&paste</p>
         """)
+        self.assertCreole(r"""
+            [[/url/|Search & Destroy]]
+        """, """
+            <a href="/url/">Search & Destroy</a>
+        """)
 
     def test_tbody_table(self):
         self.assertCreole(r"""

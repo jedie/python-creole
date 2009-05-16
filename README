@@ -32,6 +32,10 @@ See also: http://code.google.com/p/python-creole/source/browse/trunk/demo.py
  history
 =========
 
+- v0.2.2
+
+  - html2creole bugfix: convert '''<a href="/url/">Search & Destroy</a>'''
+
 - v0.2.1
 
   - html2creole bugfixes in:
