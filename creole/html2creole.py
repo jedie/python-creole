@@ -19,6 +19,7 @@
 import re
 import inspect
 import warnings
+import posixpath
 import htmlentitydefs
 from HTMLParser import HTMLParser
 from xml.sax.saxutils import escape
@@ -738,7 +739,19 @@ class Html2CreoleEmitter(object):
             return u"[[%s|%s]]" % (url, link_text)
 
     def img_emit(self, node):
-        return u"{{%(src)s|%(alt)s}}" % node.attrs
+        src = node.attrs["src"]
+        
+        title = node.attrs.get("title", "")
+        alt = node.attrs.get("alt", "")
+        if len(alt)>len(title): # Use the longest one
+            text = alt
+        else:
+            text = title
+        
+        if text=="": # Use filename as picture text
+            text = posixpath.basename(src)
+            
+        return u"{{%s|%s}}" % (src, text)
 
     #--------------------------------------------------------------------------
 

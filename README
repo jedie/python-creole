@@ -32,6 +32,13 @@ See also: http://code.google.com/p/python-creole/source/browse/trunk/demo.py
  history
 =========
 
+- v0.2.3
+ 
+  - html2creole bugfix/enhanced: convert image tag without alt attribute:
+  
+    - see also: http://code.google.com/p/python-creole/issues/detail?id=6
+    - Thanks Betz Stefan alias 'encbladexp'
+
 - v0.2.2
 
   - html2creole bugfix: convert '''<a href="/url/">Search & Destroy</a>'''

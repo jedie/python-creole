@@ -349,6 +349,18 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
         """,
             verbose=0
         )
+        
+    def test_image(self):
+        """ test image tag with different picture text """
+        self.assertCreole(r"""
+            {{foobar1.jpg}}
+            {{/foobar2.jpg|foobar2.jpg}}
+            {{/path1/path2/foobar3.jpg|foobar3.jpg}}
+        """, """
+            <p><img src="foobar1.jpg" alt="foobar1.jpg" /><br />
+            <img src="/foobar2.jpg" alt="foobar2.jpg" /><br />
+            <img src="/path1/path2/foobar3.jpg" alt="foobar3.jpg" /></p>
+        """)
 
 
 if __name__ == '__main__':

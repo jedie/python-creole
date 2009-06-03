@@ -176,6 +176,24 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             </tr>
             </table>
         """)
+        
+    def test_image(self):
+        """ test image tag with different alt/title attribute """
+        self.assertCreole(r"""
+            {{foobar1.jpg|foobar1.jpg}}
+            {{/foobar2.jpg|foobar2.jpg}}
+            {{/path1/path2/foobar3.jpg|foobar3.jpg}}
+            {{/foobar4.jpg|It's foobar 4}}
+            {{/foobar5.jpg|It's foobar 5}}
+            {{/foobar6.jpg|a long picture title}}
+        """, """
+            <p><img src="foobar1.jpg" /><br />
+            <img src="/foobar2.jpg" /><br />
+            <img src="/path1/path2/foobar3.jpg" /><br />
+            <img src="/foobar4.jpg" alt="It's foobar 4" /><br />
+            <img src="/foobar5.jpg" title="It's foobar 5" /><br />
+            <img src="/foobar6.jpg" alt="short name" title="a long picture title" /></p>
+        """)
 
     #--------------------------------------------------------------------------
     # TODOs:
