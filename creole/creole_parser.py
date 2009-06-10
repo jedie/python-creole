@@ -67,15 +67,10 @@ class InlineRules:
 #            \[\[(?P<internal_link>.+)\]\]
 #        ''' % proto
 
-    #--------------------------------------------------------------------------
-    # The image rule should not match on django template tags! So we make it
-    # more restricted.
-    # It matches only if...
-    # ...image target ends with a picture extention
-    # ...separator >|< and the image text exist
+    # image tag
     image = r'''(?P<image>
             {{
-            (?P<image_target>.+?(\.jpg|\.jpeg|\.gif|\.png)) \s*
+            (?P<image_target>.+?) \s*
             (\| \s* (?P<image_text>.+?) \s*)?
             }}
         )(?i)'''

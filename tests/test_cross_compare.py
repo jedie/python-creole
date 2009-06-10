@@ -104,11 +104,15 @@ class CrossCompareTests(BaseCreoleTest):
             a {{/image.jpeg|JPEG pictures}} and
             a {{/image.gif|GIF pictures}} and
             a {{/image.png|PNG pictures}} !
+            {{/path1/path2/image|Image without files ext?}}
+            [[http://example.com/|{{myimage.jpg|example site}}]]
         """, """
             <p>a <img src="/image.jpg" alt="JPG pictures" /> and<br />
             a <img src="/image.jpeg" alt="JPEG pictures" /> and<br />
             a <img src="/image.gif" alt="GIF pictures" /> and<br />
-            a <img src="/image.png" alt="PNG pictures" /> !</p>
+            a <img src="/image.png" alt="PNG pictures" /> !<br />
+            <img src="/path1/path2/image" alt="Image without files ext?" /><br />
+            <a href="http://example.com/"><img src="myimage.jpg" alt="example site" /></a></p>
         """)
 
     def test_nowiki1(self):
