@@ -362,6 +362,15 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             <img src="/path1/path2/foobar3.jpg" alt="foobar3.jpg" /></p>
         """)
 
+    def test_links(self):
+        
+        self.assertCreole(r"""
+            [[/foobar/Creole_(Markup)]]
+            [[http://de.wikipedia.org/wiki/Creole_(Markup)|Creole@wikipedia]]
+        """, """
+            <p><a href="/foobar/Creole_(Markup)">/foobar/Creole_(Markup)</a><br />
+            <a href="http://de.wikipedia.org/wiki/Creole_(Markup)">Creole@wikipedia</a></p>
+        """)
 
 if __name__ == '__main__':
     unittest.main()

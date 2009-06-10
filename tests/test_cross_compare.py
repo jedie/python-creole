@@ -79,10 +79,12 @@ class CrossCompareTests(BaseCreoleTest):
             With pipe separator:
             1 [[internal links|link A]] test.
             2 [[http://domain.tld|link B]] test.
+            3 [[http://de.wikipedia.org/wiki/Creole_(Markup)|Creole@wikipedia]]
         """, """
             <p>With pipe separator:<br />
             1 <a href="internal links">link A</a> test.<br />
-            2 <a href="http://domain.tld">link B</a> test.</p>
+            2 <a href="http://domain.tld">link B</a> test.<br />
+            3 <a href="http://de.wikipedia.org/wiki/Creole_(Markup)">Creole@wikipedia</a></p>
         """)
 
     def test_bolditalic_links(self):
