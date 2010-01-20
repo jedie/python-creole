@@ -47,7 +47,7 @@ from creole_parser import Parser
 
 
 #from PyLucid.tools.utils import escape
-from xml.sax.saxutils import escape 
+from xml.sax.saxutils import escape
 
 class Rules:
     # For the link targets:
@@ -57,7 +57,7 @@ class Rules:
             (?P<inter_wiki> [A-Z][a-zA-Z]+ ) :
             (?P<inter_page> .* )
         '''
-        
+
 class HtmlEmitter:
     """
     Generate HTML output for the document
@@ -109,7 +109,7 @@ class HtmlEmitter:
             formatter = u''
         else:
             formatter = u'\n'
-        
+
         if list_type == "li":
             formatter += (
                 u'%(i)s<%(t)s>%(c)s</%(t)s>'
@@ -120,7 +120,7 @@ class HtmlEmitter:
                 '%(i)s</%(t)s>'
             )
         return formatter % {
-            "i": "\t"*node.level,
+            "i": "\t" * node.level,
             "c": self.emit_children(node),
             "t": list_type,
         }
@@ -158,7 +158,7 @@ class HtmlEmitter:
     def emphasis_emit(self, node):
         return self._typeface(node, tag="i")
     def strong_emit(self, node):
-        return self._typeface(node, tag="strong")    
+        return self._typeface(node, tag="strong")
     def monospace_emit(self, node):
         return self._typeface(node, tag="tt")
     def superscript_emit(self, node):
@@ -171,7 +171,7 @@ class HtmlEmitter:
         return self._typeface(node, tag="small")
     def delete_emit(self, node):
         return self._typeface(node, tag="del")
-        
+
     #-------------------------------------------------------------------------- 
 
     def header_emit(self, node):
@@ -203,13 +203,13 @@ class HtmlEmitter:
         m = self.addr_re.match(target)
         if m and m.group('inter_wiki'):
             raise NotImplementedError
-        
+
 #            if m.group('extern_addr'):
 #                return u'<img src="%s" alt="%s" />' % (
 #                    self.attr_escape(target), self.attr_escape(text))
 #                
 #            elif 
-            
+
         return u'<img src="%s" alt="%s" />' % (
             self.attr_escape(target), self.attr_escape(text))
 
@@ -230,37 +230,37 @@ class HtmlEmitter:
                 macro = getattr(self.macros, macro_name)
             except AttributeError, e:
                 pass
-        
+
         if macro == None:
             return self.error(
                 u"Macro '%s' doesn't exist" % macro_name,
-                handle_traceback = True
+                handle_traceback=True
             )
-        
+
         try:
             result = macro(args=node.macro_args, text=node.content)
         except Exception, err:
             return self.error(
                 u"Macro '%s' error: %s" % (macro_name, err),
-                handle_traceback = True
+                handle_traceback=True
             )
-            
+
         if not isinstance(result, unicode):
             msg = u"Macro '%s' doesn't return a unicode string!" % macro_name
-            if self.verbose>1:
+            if self.verbose > 1:
                 msg += " - returns: %r, type %r" % (result, type(result))
             return self.error(msg)
-        
+
         if node.kind == "macro_block":
             result += "\n"
-        
+
         return result
     macro_inline_emit = macro_emit
     macro_block_emit = macro_emit
 
     def break_emit(self, node):
         if node.parent.kind == "list_item":
-            return u"<br />\n" + "\t"*node.parent.level
+            return u"<br />\n" + "\t" * node.parent.level
         elif node.parent.kind in ("table_head", "table_cell"):
             return u"<br />\n\t\t"
         else:
@@ -298,21 +298,22 @@ class HtmlEmitter:
         """
         Error Handling.
         """
-        if self.verbose>1 and handle_traceback:
+        if self.verbose > 1 and handle_traceback:
             self.stderr.write(
                 "<pre>%s</pre>\n" % traceback.format_exc()
             )
-        
-        if self.verbose>0:
+
+        if self.verbose > 0:
             return u"[Error: %s]\n" % text
         else:
             # No error output
             return u""
 
-if __name__=="__main__":   
-    txt = r"""<<html>>1<</html><<html>>2<</html>>"""
+if __name__ == "__main__":
+    txt = u"""this is **bold** ok?
+            for example ** this sentence"""
 
-    print "-"*80
+    print "-" * 80
 #    from creole_alt.creole import Parser
     p = Parser(txt)
     document = p.parse()
@@ -320,5 +321,5 @@ if __name__=="__main__":
 
     html = HtmlEmitter(document).emit()
     print html
-    print "-"*79
+    print "-" * 79
     print html.replace(" ", ".").replace("\n", "\\n\n")

@@ -65,6 +65,28 @@ class CrossCompareTests(BaseCreoleTest):
             This is <small>small</small> and this <del>strikeout</del> ;)</p>
         """)
 
+    def test_small(self):
+        """
+        http://code.google.com/p/python-creole/issues/detail?id=12#c0
+        """
+        self.assertCreole(r"""
+            no -- small
+            no // italics
+            no ** bold
+            no ## monospace
+            no ^^ superscripted
+            no ,, subscripted
+            no __ underline
+        """, """
+            <p>no -- small<br />
+            no // italics<br />
+            no ** bold<br />
+            no ## monospace<br />
+            no ^^ superscripted<br />
+            no ,, subscripted<br />
+            no __ underline</p>
+        """, debug=False)
+
     def test_internal_links(self):
         self.assertCreole(r"""
             A [[internal]] link...

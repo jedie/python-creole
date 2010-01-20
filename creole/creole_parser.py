@@ -42,7 +42,7 @@ class InlineRules:
     All inline rules
     """
     proto = r'http|https|ftp|nntp|news|mailto|telnet|file|irc'
-    url =  r'''(?P<url>
+    url = r'''(?P<url>
             (^ | (?<=\s | [.,:;!?()/=]))
             (?P<escaped_url>~)?
             (?P<url_target> (?P<url_proto> %s ):\S+? )
@@ -88,39 +88,40 @@ class InlineRules:
     macro_tag = r'''(?P<macro_tag>
             <<(?P<macro_tag_name> \w+) (?P<macro_tag_args>.*?) \s* /*>>
         )'''
-        
+
     pre_inline = r'(?P<pre_inline> {{{ (?P<pre_inline_text>.*?) }}} )'
-    
+
     # Basic text typefaces:
-    emph = r'(?P<emph> (?<!:)// )' # there must be no : in front of the //
-                                   # avoids italic rendering in urls with
-                                   # unknown protocols
-                                   
-    strong = r'(?P<strong> \*\* )'
-    
+
+    emphasis = r'(?P<emphasis>(?<!:)// (?P<emphasis_text>.+?) (?<!:)// )'
+    # there must be no : in front of the // avoids italic rendering
+    # in urls with unknown protocols
+
+    strong = r'(?P<strong>\*\* (?P<strong_text>.+?) \*\* )'
+
     # Creole 1.0 optional:
-    monospace = r'(?P<monospace> \#\# )'
-    superscript = r'(?P<superscript> \^\^ )'
-    subscript = r'(?P<subscript> ,, )'
-    underline = r'(?P<underline> __ )'
-    delete = r'(?P<delete> ~~ )'
-    
+    monospace = r'(?P<monospace> \#\# (?P<monospace_text>.+?) \#\# )'
+    superscript = r'(?P<superscript> \^\^ (?P<superscript_text>.+?) \^\^ )'
+    subscript = r'(?P<subscript> ,, (?P<subscript_text>.+?) ,, )'
+    underline = r'(?P<underline> __ (?P<underline_text>.+?) __ )'
+    delete = r'(?P<delete> ~~ (?P<delete_text>.+?) ~~ )'
+
     # own additions:
-    small = r'(?P<small> -- )'
-    
+    small = r'(?P<small>-- (?P<small_text>.+?) -- )'
+
     linebreak = r'(?P<linebreak> \\\\ )'
     escape = r'(?P<escape> ~ (?P<escaped_char>\S) )'
-    char =  r'(?P<char> . )'
+    char = r'(?P<char> . )'
 
 
 
 
 
-    
+
 class BlockRules:
     """
     All used block rules.
-    """       
+    """
 #    macro_block = r'''(?P<macro_block>
 #            \s* << (?P<macro_block_start>\w+) \s* (?P<macro_block_args>.*?) >>
 #            (?P<macro_block_text>(.|\n)+?)
@@ -139,9 +140,9 @@ class BlockRules:
         <</ \s* (?P=macro_block_start) \s* >>
         )
     '''
-        
+
     line = r'''(?P<line> ^\s*$ )''' # empty line that separates paragraphs
-    
+
     head = r'''(?P<head>
         ^
         (?P<head_head>=+) \s*
@@ -149,7 +150,7 @@ class BlockRules:
         =*$
     )'''
     separator = r'(?P<separator> ^ \s* ---- \s* $ )' # horizontal line
-    
+
     pre_block = r'''(?P<pre_block>
             ^{{{ \s* $
             (?P<pre_block_text>
@@ -163,7 +164,7 @@ class BlockRules:
         ( \n[ \t]* [*\#]+.* $ )*
     )''' # Matches the whole list, separate items are parsed later. The
          # list *must* start with a single bullet.
-         
+
 
     table = r'''^ \s*(?P<table>
             [|].*? \s*
@@ -182,8 +183,8 @@ class SpecialRules:
     item = r'''^ \s* (?P<item>
         (?P<item_head> [\#*]+) \s*
         (?P<item_text> .*?)
-    ) \s* $''' 
-    
+    ) \s* $'''
+
     # For splitting table cells:
     cell = r'''
             \| \s*
@@ -192,12 +193,12 @@ class SpecialRules:
                 (?P<cell> (  %s | [^|])+ )
             ) \s*
         ''' % '|'.join([
-            InlineRules.link, 
+            InlineRules.link,
             InlineRules.inline_macro, InlineRules.macro_tag,
             InlineRules.image,
             InlineRules.pre_inline
         ])
-        
+
     # For pre escaping, in creole 1.0 done with ~:
     pre_escape = r' ^(?P<indent>\s*) ~ (?P<rest> \}\}\} \s*) $'
 
@@ -216,8 +217,8 @@ INLINE_RULES = (
     InlineRules.link, InlineRules.url,
     InlineRules.inline_macro, InlineRules.macro_tag,
     InlineRules.pre_inline, InlineRules.image,
-    
-    InlineRules.strong, InlineRules.emph,        
+
+    InlineRules.strong, InlineRules.emphasis,
     InlineRules.monospace, InlineRules.underline,
     InlineRules.superscript, InlineRules.subscript,
     InlineRules.small, InlineRules.delete,
@@ -237,14 +238,14 @@ def verify_rules(rules, flags):
         try:
 #            print rule
             re.compile(rule, flags)
-        
+
             # Try to merge the rules. e.g. Check if group named double used.
             rule_list.append(rule)
             re.compile('|'.join(rule_list), flags)
         except Exception, err:
             print " *** Error with rule:"
             print rule
-            print " -"*39            
+            print " -" * 39
             raise
     print "Rule test ok."
 
@@ -267,7 +268,7 @@ class Parser:
     pre_escape_re = re.compile(
         SpecialRules.pre_escape, re.MULTILINE | re.VERBOSE | re.UNICODE
     )
-    
+
     # for link descriptions:
     link_re = re.compile(
         '|'.join([InlineRules.image, InlineRules.linebreak, InlineRules.char]),
@@ -277,13 +278,13 @@ class Parser:
     item_re = re.compile(
         SpecialRules.item, re.VERBOSE | re.UNICODE | re.MULTILINE
     )
-    
+
     # for table cells:
     cell_re = re.compile(SpecialRules.cell, re.VERBOSE | re.UNICODE)
-    
+
     # For block elements:
     block_re = re.compile('|'.join(BLOCK_RULES), BLOCK_FLAGS)
-    
+
     # For inline elements:
     inline_re = re.compile('|'.join(INLINE_RULES), INLINE_FLAGS)
 
@@ -320,7 +321,7 @@ class Parser:
         self.cleanup_break(node) # remove unused end line breaks.
         while node.parent is not None and not node.kind in kinds:
             node = node.parent
-        
+
         return node
 
     def _upto_block(self):
@@ -379,7 +380,7 @@ class Parser:
         self.text = None
     _link_target_repl = _link_repl
     _link_text_repl = _link_repl
-    
+
     #--------------------------------------------------------------------------
 
     def _add_macro(self, groups, macro_type, name_key, args_key, text_key=None):
@@ -389,12 +390,12 @@ class Parser:
         """
         #self.debug_groups(groups)
         assert macro_type in ("macro_inline", "macro_block")
-        
+
         if text_key:
             macro_text = groups.get(text_key, u"").strip()
         else:
             macro_text = None
-        
+
         node = DocNode(macro_type, self.cur, macro_text)
         node.macro_name = groups[name_key]
         node.macro_args = groups.get(args_key, u"").strip()
@@ -413,10 +414,10 @@ class Parser:
         self.cur = self.root
         self._add_macro(
             groups,
-            macro_type = u"macro_block",
-            name_key = u"macro_block_start",
-            args_key = u"macro_block_args",
-            text_key = u"macro_block_text",
+            macro_type=u"macro_block",
+            name_key=u"macro_block_start",
+            args_key=u"macro_block_args",
+            text_key=u"macro_block_text",
         )
     _macro_block_start_repl = _macro_block_repl
     _macro_block_args_repl = _macro_block_repl
@@ -428,25 +429,25 @@ class Parser:
         """
         self._add_macro(
             groups,
-            macro_type = u"macro_inline",
-            name_key = u"macro_tag_name",
-            args_key = u"macro_tag_args",
-            text_key = None,
+            macro_type=u"macro_inline",
+            name_key=u"macro_tag_name",
+            args_key=u"macro_tag_args",
+            text_key=None,
         )
     _macro_tag_name_repl = _macro_tag_repl
     _macro_tag_args_repl = _macro_tag_repl
 
-    
+
     def _macro_inline_repl(self, groups):
         """
         inline macro tag with data, e.g.: <<macro>>text<</macro>>
         """
         self._add_macro(
             groups,
-            macro_type = u"macro_inline",
-            name_key = u"macro_inline_start",
-            args_key = u"macro_inline_args",
-            text_key = u"macro_inline_text",
+            macro_type=u"macro_inline",
+            name_key=u"macro_inline_start",
+            args_key=u"macro_inline_args",
+            text_key=u"macro_inline_text",
         )
     _macro_inline_start_repl = _macro_inline_repl
     _macro_inline_args_repl = _macro_inline_repl
@@ -469,13 +470,14 @@ class Parser:
         DocNode('separator', self.cur)
 
     def _item_repl(self, groups):
+        """ List item """
         bullet = groups.get('item_head', u"")
         text = groups.get('item_text', u"")
         if bullet[-1] == '#':
             kind = 'number_list'
         else:
             kind = 'bullet_list'
-        level = len(bullet)-1
+        level = len(bullet) - 1
         lst = self.cur
         # Find a list of the same kind and level up the tree
         while (lst and
@@ -492,13 +494,14 @@ class Parser:
             self.cur = DocNode(kind, self.cur)
             self.cur.level = level
         self.cur = DocNode('list_item', self.cur)
-        self.cur.level = level+1
+        self.cur.level = level + 1
         self.parse_inline(text)
         self.text = None
     _item_text_repl = _item_repl
     _item_head_repl = _item_repl
 
     def _list_repl(self, groups):
+        """ complete list """
         self.item_re.sub(self._replace, groups["list"])
 
     def _head_repl(self, groups):
@@ -562,29 +565,48 @@ class Parser:
     #--------------------------------------------------------------------------
 
     def _inline_mark(self, groups, key):
-        if self.cur.kind != key:
-            self.cur = DocNode(key, self.cur)
-        else:
-            self.cur = self._upto(self.cur, (key, )).parent
+        self.cur = DocNode(key, self.cur)
+
+        self.text = None
+        text = groups["%s_text" % key]
+        self.parse_inline(text)
+
+        self.cur = self._upto(self.cur, (key,)).parent
         self.text = None
 
+
     # TODO: How can we generalize that:
-    def _emph_repl(self, groups):
+    def _emphasis_repl(self, groups):
         self._inline_mark(groups, key='emphasis')
+    _emphasis_text_repl = _emphasis_repl
+
     def _strong_repl(self, groups):
         self._inline_mark(groups, key='strong')
+    _strong_text_repl = _strong_repl
+
     def _monospace_repl(self, groups):
         self._inline_mark(groups, key='monospace')
+    _monospace_text_repl = _monospace_repl
+
     def _superscript_repl(self, groups):
         self._inline_mark(groups, key='superscript')
+    _superscript_text_repl = _superscript_repl
+
     def _subscript_repl(self, groups):
         self._inline_mark(groups, key='subscript')
+    _subscript_text_repl = _subscript_repl
+
     def _underline_repl(self, groups):
         self._inline_mark(groups, key='underline')
+    _underline_text_repl = _underline_repl
+
     def _small_repl(self, groups):
         self._inline_mark(groups, key='small')
+    _small_text_repl = _small_repl
+
     def _delete_repl(self, groups):
         self._inline_mark(groups, key='delete')
+    _delete_text_repl = _delete_repl
 
     #--------------------------------------------------------------------------
 
@@ -606,14 +628,14 @@ class Parser:
 
     def _replace(self, match):
         """Invoke appropriate _*_repl method. Called for every matched group."""
-        
-        def debug(groups):
-            from pprint import pformat
-            data = dict([
-                group for group in groups.iteritems() if group[1] is not None
-            ])
-            print "%s\n" % pformat(data)
-        
+
+#        def debug(groups):
+#            from pprint import pformat
+#            data = dict([
+#                group for group in groups.iteritems() if group[1] is not None
+#            ])
+#            print "%s\n" % pformat(data)
+
         groups = match.groupdict()
         for name, text in groups.iteritems():
             if text is not None:
@@ -643,29 +665,29 @@ class Parser:
         """
         Display the current document tree
         """
-        print "_"*80
-                
+        print "_" * 80
+
         if start_node == None:
             start_node = self.root
             print "  document tree:"
         else:
             print "  tree from %s:" % start_node
-            
-        print "="*80
+
+        print "=" * 80
         def emit(node, ident=0):
             for child in node.children:
-                print u"%s%s: %r" % (u" "*ident, child.kind, child.content)
-                emit(child, ident+4)
+                print u"%s%s: %r" % (u" " * ident, child.kind, child.content)
+                emit(child, ident + 4)
         emit(start_node)
-        print "*"*80
+        print "*" * 80
 
     def debug_groups(self, groups):
-        print "_"*80
+        print "_" * 80
         print "  debug groups:"
         for name, text in groups.iteritems():
             if text is not None:
                 print "%15s: %r" % (name, text)
-        print "-"*80
+        print "-" * 80
 
 
 
@@ -680,7 +702,7 @@ class DocNode:
         self.children = []
         self.parent = parent
         self.kind = kind
-        
+
         if content:
             assert isinstance(content, unicode)
         self.content = content
@@ -695,7 +717,7 @@ class DocNode:
         return u"<DocNode %s: %r>" % (self.kind, self.content)
 
     def debug(self):
-        print "_"*80
+        print "_" * 80
         print "\tDocNode - debug:"
         print "str(): %s" % self
         print "attributes:"
@@ -708,51 +730,59 @@ class DocNode:
 #------------------------------------------------------------------------------
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     import doctest
     doctest.testmod()
     print "doc test done."
-    
-    txt = r"""111 <<html>><X><</html>>foo<<html>></X><</html>> 222
-            333<<html>><X foo1="bar1"><</html>>foobar<<html>></X><</html>>444
 
-            555<<html>><X /><</html>>666"""
+    print "-" * 80
 
-    print "-"*80
-#    p = Parser(txt)
-#    document = p.parse()
-#    p.debug()
+    txt = u"""
+Bold and italics should //be
+able// to cross lines.
+
+But, should //not be...
+
+...able// to cross paragraphs.
+"""
+
+    print txt
+    print "-" * 80
+
+    p = Parser(txt)
+    document = p.parse()
+    p.debug()
 
     def display_match(match):
         groups = match.groupdict()
         for name, text in groups.iteritems():
             if name != "char" and text != None:
                 print "%20s: %r" % (name, text)
-    
+
 
     parser = Parser(u"")
 
-    print "_"*80
+    print "_" * 80
     print "merged block rules test:"
     re.sub(parser.block_re, display_match, txt)
-    
-    print "_"*80
+
+    print "_" * 80
     print "merged inline rules test:"
     re.sub(parser.inline_re, display_match, txt)
-    
-    
+
+
     def test_single(rules, flags, txt):
         for rule in rules:
             rexp = re.compile(rule, flags)
             rexp.sub(display_match, txt)
-            
-    print "_"*80
+
+    print "_" * 80
     print "single block rules match test:"
     test_single(BLOCK_RULES, BLOCK_FLAGS, txt)
-    
-    print "_"*80
+
+    print "_" * 80
     print "single inline rules match test:"
     test_single(INLINE_RULES, INLINE_FLAGS, txt)
-    
+
 
     print "---END---"

@@ -32,6 +32,11 @@ See also: http://code.google.com/p/python-creole/source/browse/trunk/demo.py
  history
 =========
 
+- v0.2.5
+
+  - creole2html: Bugfix if "--", "//" etc. stands alone, see also: http://code.google.com/p/python-creole/issues/detail?id=12
+  - Note: bold, italic etc. can't cross line anymore.
+
 - v0.2.4
 
   - creole2html: ignore file extensions in image tag
