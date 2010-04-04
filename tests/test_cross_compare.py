@@ -480,6 +480,7 @@ class CrossCompareTests(BaseCreoleTest):
             greater-than sign: &gt;</p>
         """)
 
+
 #    def test_macro_html1(self):
 #        self.assertCreole(r"""
 #            <<a_not_existing_macro>>

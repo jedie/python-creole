@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# coding: utf-8
 """
     run all unittests
     ~~~~~~~~~~~~~~~~~
@@ -7,8 +7,8 @@
 
     Last commit info:
     ~~~~~~~~~~~~~~~~~
-    $LastChangedDate:$
-    $Rev:$
+    $LastChangedDate$
+    $Rev$
     $Author$
 
     :copyleft: 2008-2009 by python-creole team, see AUTHORS for more details.
@@ -24,4 +24,3 @@ from tests.test_html2creole import TestHtml2Creole, TestHtml2CreoleMarkup
 
 if __name__ == '__main__':
     unittest.main()
-    

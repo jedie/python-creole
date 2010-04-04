@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding: utf-8
 
 """
     Creole wiki markup parser
@@ -17,17 +17,11 @@
       unrecognized schemes (like wtf://server/path) triggering italic rendering
       for the rest of the paragraph.
 
-    PyLucid Updates by the PyLucid team:
-        - Bugfixes and better html code style
-        - Make the image tag match more strict, so it doesn't clash with
-            django template tags
-        - Add a passthrough for all django template blocktags
-        - Add a passthrough for html code lines
 
     @copyright: 2007 MoinMoin:RadomirDopieralski (creole 0.5 implementation),
                 2007 MoinMoin:ThomasWaldmann (updates)
-                2008 PyLucid:JensDiemer (PyLucid patches)
-    @license: GNU GPL, see COPYING for details.
+                2008-2010 JensDiemer
+    @license: GNU GPL v3 or above, see LICENSE for details.
 """
 
 import re

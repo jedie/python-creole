@@ -12,7 +12,7 @@
     
     created by Jens Diemer
 
-    :copyleft: 2009 by the python-creole team, see AUTHORS for more details.
+    :copyleft: 2009-2010 by the python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -110,7 +110,7 @@ class DocNode:
         return u"<DocNode %s: %r>" % (self.kind, self.content)
 
     def debug(self):
-        print "_"*80
+        print "_" * 80
         print "\tDocNode - debug:"
         print "str(): %s" % self
         print "attributes:"
@@ -176,10 +176,10 @@ def strip_html(html_code):
     u'<p>a<pre>preformated area</pre>foo</p>'
     """
     def strip_tag(match):
-        block        = match.group(0)
-        end_tag      = match.group("end") in ("/", u"/")
+        block = match.group(0)
+        end_tag = match.group("end") in ("/", u"/")
         startend_tag = match.group("startend") in ("/", u"/")
-        tag          = match.group("tag")
+        tag = match.group("tag")
 
 #        print "_"*40
 #        print match.groupdict()
@@ -288,7 +288,7 @@ class Html2CreoleParser(HTMLParser):
             print "append blockdata: %r" % data
         assert isinstance(data, unicode), "blockdata is not unicode"
         self.blockdata.append(data)
-        id = len(self.blockdata)-1
+        id = len(self.blockdata) - 1
         return u'<%s type="%s" id="%s" />' % (placeholder, type, id)
 
     def _pre_pre_inline_cut(self, groups):
@@ -327,13 +327,13 @@ class Html2CreoleParser(HTMLParser):
         data = strip_html(data)
 
         if self.debugging:
-            print "_"*79
+            print "_" * 79
             print "raw data:"
             print repr(raw_data)
-            print " -"*40
+            print " -" * 40
             print "cleaned data:"
             print data
-            print "-"*79
+            print "-" * 79
 #            print clean_data.replace(">", ">\n")
 #            print "-"*79
 
@@ -366,14 +366,14 @@ class Html2CreoleParser(HTMLParser):
 
     def handle_starttag(self, tag, attrs):
         self.debug_msg("starttag", "%r atts: %s" % (tag, attrs))
-        
+
         if tag in IGNORE_TAGS:
             return
 
         headline = headline_tag_re.match(tag)
         if headline:
             self.cur = DocNode(
-                "headline", self.cur, level = int(headline.group(1))
+                "headline", self.cur, level=int(headline.group(1))
             )
             return
 
@@ -393,7 +393,7 @@ class Html2CreoleParser(HTMLParser):
         self.debug_msg("data", "%r" % data)
         if isinstance(data, str):
             data = unicode(data)
-        DocNode("data", self.cur, content = data)
+        DocNode("data", self.cur, content=data)
 
     def handle_charref(self, name):
         self.debug_msg("charref", "%r" % name)
@@ -412,7 +412,7 @@ class Html2CreoleParser(HTMLParser):
             DocNode(
                 "%s_%s" % (tag, attr_dict["type"]),
                 self.cur,
-                content = self.blockdata[id],
+                content=self.blockdata[id],
 #                attrs = attr_dict
             )
         else:
@@ -421,7 +421,7 @@ class Html2CreoleParser(HTMLParser):
     def handle_endtag(self, tag):
         if tag in IGNORE_TAGS:
             return
-        
+
         self.debug_msg("endtag", "%r" % tag)
         self.debug_msg("starttag", "%r" % self.get_starttag_text())
 
@@ -444,7 +444,7 @@ class Html2CreoleParser(HTMLParser):
         """
         Display the current document tree
         """
-        print "_"*80
+        print "_" * 80
 
         if start_node == None:
             start_node = self.root
@@ -452,10 +452,10 @@ class Html2CreoleParser(HTMLParser):
         else:
             print "  tree from %s:" % start_node
 
-        print "="*80
+        print "=" * 80
         def emit(node, ident=0):
             for child in node.children:
-                txt = u"%s%s" % (u" "*ident, child.kind)
+                txt = u"%s%s" % (u" " * ident, child.kind)
 
                 if child.content:
                     txt += ": %r" % child.content
@@ -467,9 +467,9 @@ class Html2CreoleParser(HTMLParser):
                     txt += " - level: %r" % child.level
 
                 print txt
-                emit(child, ident+4)
+                emit(child, ident + 4)
         emit(start_node)
-        print "*"*80
+        print "*" * 80
 
 
 
@@ -592,7 +592,7 @@ class Html2CreoleEmitter(object):
         #node.debug()
         attrs = node.get_attrs_as_string()
         if attrs:
-            attrs = " "+attrs
+            attrs = " " + attrs
 
         tag_data = {
             "tag": node.kind,
@@ -616,7 +616,7 @@ class Html2CreoleEmitter(object):
         #node.debug()
         attrs = node.get_attrs_as_string()
         if attrs:
-            attrs = " "+attrs
+            attrs = " " + attrs
 
         tag_data = {
             "tag": node.kind,
@@ -695,7 +695,7 @@ class Html2CreoleEmitter(object):
             return u"\n"
 
     def headline_emit(self, node):
-        return u"%s %s\n" % (u"="*node.level, self.emit_children(node))
+        return u"%s %s\n" % (u"=" * node.level, self.emit_children(node))
 
     #--------------------------------------------------------------------------
 
@@ -740,17 +740,17 @@ class Html2CreoleEmitter(object):
 
     def img_emit(self, node):
         src = node.attrs["src"]
-        
+
         title = node.attrs.get("title", "")
         alt = node.attrs.get("alt", "")
-        if len(alt)>len(title): # Use the longest one
+        if len(alt) > len(title): # Use the longest one
             text = alt
         else:
             text = title
-        
-        if text=="": # Use filename as picture text
+
+        if text == "": # Use filename as picture text
             text = posixpath.basename(src)
-            
+
         return u"{{%s|%s}}" % (src, text)
 
     #--------------------------------------------------------------------------
@@ -810,10 +810,10 @@ class Html2CreoleEmitter(object):
         content = u"= %s" % content
         self._table.add_td(content)
         return u""
-    
+
     def td_emit(self, node):
         content = self.emit_children(node)
-        content = self._escape_linebreaks(content)       
+        content = self._escape_linebreaks(content)
         self._table.add_td(content)
         return u""
 
@@ -887,19 +887,19 @@ class CreoleTable(object):
         self.debug_msg = debug_msg
         self.rows = []
         self.row_index = None
-        
+
     def add_tr(self):
         self.debug_msg("Table.add_tr", "")
         self.rows.append([])
-        self.row_index = len(self.rows)-1
-        
+        self.row_index = len(self.rows) - 1
+
     def add_td(self, text):
-        if self.row_index==None:
+        if self.row_index == None:
             self.add_tr()
-        
+
         self.debug_msg("Table.add_td", text)
         self.rows[self.row_index].append(text)
-    
+
     def get_creole(self):
         """ return the table data in creole markup. """
         # preformat every table cell
@@ -924,7 +924,7 @@ class CreoleTable(object):
         for row in cells:
             cells = [cell.ljust(width) for cell, width in zip(row, widths)]
             lines.append("|" + "|".join(cells) + "|")
-        
+
         result = "\n".join(lines)
 
         self.debug_msg("Table.get_creole", result)
@@ -953,8 +953,8 @@ if __name__ == '__main__':
         debug=True
     )
     content = e.emit()
-    print "*"*79
+    print "*" * 79
     print content
-    print "*"*79
+    print "*" * 79
     print content.replace(" ", ".").replace("\n", "\\n\n")
 

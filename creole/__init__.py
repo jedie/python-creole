@@ -1,17 +1,31 @@
 # -*- coding: utf-8 -*-
 
+
+__version__ = (0, 2, 6)
+__api__ = (1, 0) # Creole 1.0 spec - http://wikicreole.org/
+
+
+import os
 import sys
 
 from creole_parser import Parser
 from creole2html import HtmlEmitter
 from html2creole import Html2CreoleParser, Html2CreoleEmitter
 
-# Important for setuptools:
-# - Only use . as a separator
-# - No spaces: "0.8.0 RC2" -> "0.8.0RC2"
-# http://peak.telecommunity.com/DevCenter/setuptools#specifying-your-project-s-version
-__version__ = (0, 2, 5, "")
-VERSION_STRING = "0.2.5"
+try:
+    from django.utils.version import get_svn_revision
+except ImportError:
+    pass
+else:
+    path = os.path.split(os.path.abspath(__file__))[0]
+    svn_revision = get_svn_revision(path)
+    if svn_revision != u'SVN-unknown':
+        svn_revision = svn_revision.replace("-", "").lower()
+        __version__ += (svn_revision,)
+
+
+VERSION_STRING = '.'.join(str(part) for part in __version__)
+API_STRING = '.'.join(str(integer) for integer in __api__)
 
 
 def creole2html(markup_string, debug=False, **kwargs):

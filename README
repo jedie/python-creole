@@ -32,6 +32,12 @@ See also: http://code.google.com/p/python-creole/source/browse/trunk/demo.py
  history
 =========
 
+- v0.2.6
+
+  - bugfix in setup.py
+  - Cleanup DocStrings
+  - add unittests
+
 - v0.2.5
 
   - creole2html: Bugfix if "--", "//" etc. stands alone, see also: http://code.google.com/p/python-creole/issues/detail?id=12

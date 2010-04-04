@@ -46,7 +46,7 @@ class TestCreole2html(unittest.TestCase):
             verbose=2, stderr=my_stderr, debug=False
         )
         error_msg = my_stderr.getvalue()
-    
+
         # Check if we get a traceback information into our stderr handler
         must_have = (
             "<pre>", "</pre>",
@@ -60,34 +60,34 @@ class TestCreole2html(unittest.TestCase):
                 part in error_msg,
                 "String %r not found in:\n******\n%s******" % (part, error_msg)
             )
-    
+
     def test_default_macro1(self):
         """
         Test the default "html" macro, found in ./creole/default_macros.py
         """
         html = creole2html(
             markup_string=u"<<html>><p>foo</p><</html>><bar?>",
-            verbose=1, 
+            verbose=1,
 #            stderr=sys.stderr, debug=False
         )
         self.assertEqual(html, u'<p>foo</p>\n<p>&lt;bar?&gt;</p>\n')
-    
+
     def test_default_macro2(self):
         html = creole2html(
             markup_string=u"<<html>>{{{&lt;nocode&gt;}}}<</html>>",
-            verbose=1, 
+            verbose=1,
 #            stderr=sys.stderr, debug=False
         )
         self.assertEqual(html, u'{{{&lt;nocode&gt;}}}\n')
-    
+
     def test_default_macro3(self):
         html = creole2html(
             markup_string=u"<<html>>1<</html>><<html>>2<</html>>",
-            verbose=1, 
+            verbose=1,
 #            stderr=sys.stderr, debug=False
         )
         self.assertEqual(html, u'1\n2\n')
-        
+
     def test_macro_class(self):
         """
         simple test for the "macro API"
@@ -95,40 +95,42 @@ class TestCreole2html(unittest.TestCase):
         class TestMacro(object):
             def test(self, args, text):
                 return u"XXX%s|%sXXX" % (args, text)
-        
+
         html = creole2html(
             markup_string=u"<<test foo=1>>bar<</test>>",
             macros=TestMacro()
         )
         self.assertEqual(html, u'XXXfoo=1|barXXX\n')
-        
+
     def test_macro_dict(self):
         """
         simple test for the "macro API"
         """
         def test(args, text):
-            return u"XXX%s|%sXXX" % (args, text) 
-        
+            return u"XXX%s|%sXXX" % (args, text)
+
         html = creole2html(
             markup_string=u"<<test foo=1>>bar<</test>>",
             macros={"test": test}
         )
         self.assertEqual(html, u'XXXfoo=1|barXXX\n')
-        
+
     def test_macro_callable(self):
         """
         simple test for the "macro API"
         """
         def testmacro(macroname, args, text):
-            if macroname=="test":
+            if macroname == "test":
                 return u"XXX%s|%sXXX" % (args, text)
             raise AssertionError("Wrong macro name?")
-        
+
         html = creole2html(
             markup_string=u"<<test foo=1>>bar<</test>>",
             macros=testmacro
         )
         self.assertEqual(html, u'XXXfoo=1|barXXX\n')
+
+
 
 
 
@@ -149,13 +151,13 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
         """ Test all existing lineending version """
         out_string = creole2html(u"first\nsecond")
         self.assertEqual(out_string, u"<p>first<br />\nsecond</p>\n")
-        
+
         out_string = creole2html(u"first\rsecond")
         self.assertEqual(out_string, u"<p>first<br />\nsecond</p>\n")
-        
+
         out_string = creole2html(u"first\r\nsecond")
         self.assertEqual(out_string, u"<p>first<br />\nsecond</p>\n")
-        
+
     #--------------------------------------------------------------------------
 
     def test_creole_linebreak(self):
@@ -186,7 +188,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             
             <p>&lt;p&gt;This escaped, too.&lt;/p&gt;</p>
         """)
-        
+
     def test_escape_char(self):
         self.assertCreole(r"""
             ~#1
@@ -202,24 +204,36 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             [[Link]]</p>
         """)
 
-    def test_cross_paragraphs(self):
+    def test_cross_lines(self):
+        """
+        TODO: bold/italics cross lines
+        see: http://code.google.com/p/python-creole/issues/detail?id=13 
+        """
         self.assertCreole(r"""
             Bold and italics should //be
-            able// to cross lines.
-
-            But, should //not be...
-
-            ...able// to cross paragraphs.
+            able// to **cross
+            lines.**
         """, """
             <p>Bold and italics should <i>be<br />
-            able</i> to cross lines.</p>
-            
-            <p>But, should <i>not be...</i></p>
-            
-            <p>...able<i> to cross paragraphs.</i></p>
+            able</i> to <strong>cross<br />
+            lines.</strong></p>
         """)
-        
-        
+
+    def test_cross_paragraphs(self):
+        self.assertCreole(r"""
+            Bold and italics should //not be...
+
+            ...able// to **cross 
+            
+            paragraphs.**
+        """, """
+            <p>Bold and italics should //not be...</p>
+            
+            <p>...able// to **cross</p>
+            
+            <p>paragraphs.**</p>
+        """)
+
     def test_list_special(self):
         """
         optional whitespace before the list 
@@ -250,7 +264,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             </ol></li>
         </ol>
         """)
-        
+
     def test_macro_basic(self):
         """
         Test the three diferent macro types with a "unittest macro"
@@ -278,8 +292,8 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             [args="foo3" text: the
             text]
             <p>the end</p>
-        """)        
-        
+        """)
+
     def test_macro_html1(self):
         self.assertCreole(r"""
             html macro:
@@ -295,7 +309,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             <p>inline: &#x7B;...&#x7D; code</p>
         """, #debug=True
         )
-        
+
     def test_macro_not_exist1(self):
         """
         not existing macro with creole2html.HtmlEmitter(verbose=1):
@@ -321,12 +335,12 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             [Error: Macro 'notexisttoo' doesn't exist]
             </p>
         """
-        
+
         self.assertCreole(source_string, should_string, verbose=1)
-        
+
         #----------------------------------------------------------------------
         # Test with verbose=2 ans a StringIO stderr handler
-        
+
     def test_macro_not_exist2(self):
         """
         not existing macro with creole2html.HtmlEmitter(verbose=0):
@@ -349,7 +363,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
         """,
             verbose=0
         )
-        
+
     def test_image(self):
         """ test image tag with different picture text """
         self.assertCreole(r"""
@@ -363,7 +377,6 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
         """)
 
     def test_links(self):
-        
         self.assertCreole(r"""
             [[/foobar/Creole_(Markup)]]
             [[http://de.wikipedia.org/wiki/Creole_(Markup)|Creole@wikipedia]]
@@ -371,6 +384,37 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             <p><a href="/foobar/Creole_(Markup)">/foobar/Creole_(Markup)</a><br />
             <a href="http://de.wikipedia.org/wiki/Creole_(Markup)">Creole@wikipedia</a></p>
         """)
+
+    def test_macro_get_raw_content(self):
+        """
+        A macro should get the complete content without any modifications.
+        """
+        def testmacro(macroname, args, text):
+            self.failUnlessEqual(macroname, "code")
+            text = text.replace("{", "&#x7B;").replace("}", "&#x7D;")
+            return text
+
+        html = creole2html(
+            markup_string=self._prepare_text(u"""
+                intro
+                <<code>>
+                a {{ django }} variable, not a image ;)
+                Foo {% blocktag %} bar {% endblocktag %}!
+                **bold** //italics//
+                <</code>>
+                outro
+            """),
+            macros=testmacro
+        )
+        self.assertEqual(html, self._prepare_text(u"""
+            <p>intro</p>
+            a &#x7B;&#x7B; django &#x7D;&#x7D; variable, not a image ;)
+            Foo &#x7B;% blocktag %&#x7D; bar &#x7B;% endblocktag %&#x7D;!
+            **bold** //italics//
+            <p>outro</p>
+            
+        """))
+
 
 if __name__ == '__main__':
     unittest.main()

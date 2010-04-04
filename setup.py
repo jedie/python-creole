@@ -16,24 +16,27 @@
 """
 
 import os
-import sys
 
 from setuptools import setup, find_packages
 
 from creole import VERSION_STRING
 
 
+PACKAGE_ROOT = os.path.dirname(os.path.abspath(__file__))
+
+
 def get_authors():
     authors = []
-    f = file("AUTHORS", "r")
+    f = file(os.path.join(PACKAGE_ROOT, "AUTHORS"), "r")
     for line in f:
         if line.startswith('*'):
             authors.append(line[1:].strip())
     f.close()
     return authors
 
+
 def get_long_description():
-    f = file("README", "r")
+    f = file(os.path.join(PACKAGE_ROOT, "README"), "r")
     long_description = f.read()
     f.close()
     long_description.strip()
@@ -44,15 +47,15 @@ setup(
     name='python-creole',
     version=VERSION_STRING,
     description='python-creole is an open-source creole2html and html2creole converter in pure Python.',
-    long_description = get_long_description(),
-    author = get_authors(),
-    maintainer = "Jens Diemer",
+    long_description=get_long_description(),
+    author=get_authors(),
+    maintainer="Jens Diemer",
     url='http://code.google.com/p/python-creole/',
     packages=find_packages(),
     include_package_data=True, # include package data under svn source control
     zip_safe=True,
-    classifiers = [
-        "Development Status :: 4 - Beta",
+    classifiers=[
+#        "Development Status :: 4 - Beta",
         "Development Status :: 5 - Production/Stable",
         "Environment :: Web Environment",
         "Intended Audience :: Developers",
