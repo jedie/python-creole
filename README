@@ -13,6 +13,15 @@ python-creole is pure python. No external libs needed.
 The creole2html part based on the creole markup parser and emitter from the MoinMoin project by Radomir Dopieralski and Thomas Waldmann.
 
 =========
+ install
+=========
+
+Python packages available on: http://pypi.python.org/pypi/python-creole/
+
+~$ easy_install python-creole
+
+
+=========
  example
 =========
 
@@ -26,7 +35,7 @@ u'<p>This is <strong>creole <i>markup</i></strong></p>\n'
 u'This is **creole //markup//**'
 
 
-See also: http://code.google.com/p/python-creole/source/browse/trunk/demo.py
+See also: http://github.com/jedie/python-creole/blob/master/demo.py
 
 =========
  history
@@ -91,10 +100,9 @@ See also: http://code.google.com/p/python-creole/source/browse/trunk/demo.py
 :homepage:
   http://code.google.com/p/python-creole/
 
-:SVN:
-  http://python-creole.googlecode.com/svn/trunk/
+:sourcecode:
+  http://github.com/jedie/python-creole
 
-:changes:
-  http://code.google.com/p/python-creole/source/list
+:PyPi:
+  http://pypi.python.org/pypi/python-creole/
 
-*(Readme text $Rev$)*
