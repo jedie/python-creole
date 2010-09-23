@@ -3,13 +3,7 @@
 """
     html2creole
     ~~~~~~~~~~~
-
-    Last commit info:
-    ~~~~~~~~~~~~~~~~~
-    $LastChangedDate$
-    $Rev$
-    $Author$
-    
+   
     created by Jens Diemer
 
     :copyleft: 2009-2010 by the python-creole team, see AUTHORS for more details.
@@ -314,7 +308,6 @@ class Html2CreoleParser(HTMLParser):
 
 #        data = match.group("data")
 
-
     def feed(self, raw_data):
         assert isinstance(raw_data, unicode), "feed data must be unicode!"
         data = raw_data.strip()
@@ -381,8 +374,8 @@ class Html2CreoleParser(HTMLParser):
             if tag in ("ul", "ol"):
                 self.__list_level += 1
             self.cur = DocNode(tag, self.cur, attrs, level=self.__list_level)
-        elif tag == "img":
-            # Work-a-round if a image tag is not marked as startendtag:
+        elif tag in ("img", "br"):
+            # Work-a-round if img or br  tag is not marked as startendtag:
             # wrong: <img src="/image.jpg"> doesn't work if </img> not exist
             # right: <img src="/image.jpg" />
             DocNode(tag, self.cur, attrs)
@@ -423,6 +416,10 @@ class Html2CreoleParser(HTMLParser):
             return
 
         self.debug_msg("endtag", "%r" % tag)
+
+        if tag == "br": # handled in starttag
+            return
+
         self.debug_msg("starttag", "%r" % self.get_starttag_text())
 
         if tag in ("ul", "ol"):
@@ -939,7 +936,7 @@ if __name__ == '__main__':
 #    import sys;sys.exit()
 
     data = u"""
-<a href="/url/">Search & Destroy</a>
+<p>one<br></br>two</p>
 """
 
 #    print data.strip()

@@ -32,6 +32,10 @@ See also: http://code.google.com/p/python-creole/source/browse/trunk/demo.py
  history
 =========
 
+- v0.2.7
+
+  - handle obsolete non-closed <br> tag
+
 - v0.2.6
 
   - bugfix in setup.py

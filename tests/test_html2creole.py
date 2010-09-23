@@ -1,16 +1,13 @@
 # -*- coding: utf-8 -*-
 
 """
-    unitest utils
-    ~~~~~~~~~~~~~
-
-    Last commit info:
+    html2creole tests
     ~~~~~~~~~~~~~~~~~
-    $LastChangedDate$
-    $Rev$
-    $Author$
+    
+    special html to creole convert tests, witch can't tests in "cross compare"
+    
 
-    :copyleft: 2008-2009 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2008-2010 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE.txt for more details.
 """
 
@@ -48,10 +45,12 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             **Bold text**
             **Big text**
             //em tag//
+            //italic//
         """, """
             <p><b>Bold text</b><br />
             <big>Big text</big><br />
-            <em>em tag</em></p>
+            <em>em tag</em><br />
+            <i>italic</i></p>
         """)
 
     def test_raise_unknown_node(self):
@@ -163,7 +162,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             </table>
             <p>end</p>
         """)
-        
+
     def test_p_table(self):
         """ strip <p> tags in table cells """
         self.assertCreole(r"""
@@ -176,7 +175,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             </tr>
             </table>
         """)
-        
+
     def test_image(self):
         """ test image tag with different alt/title attribute """
         self.assertCreole(r"""
@@ -195,9 +194,27 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             <img src="/foobar6.jpg" alt="short name" title="a long picture title" /></p>
         """)
 
+    def test_non_closed_br(self):
+        self.assertCreole(r"""
+            one
+            two
+        """, """
+            <p>one<br>
+            two</p>
+        """)
+
+    def test_explicit_closed_br(self):
+        self.assertCreole(r"""
+            one
+            two
+        """, """
+            <p>one<br></br>
+            two</p>
+        """)
+
     #--------------------------------------------------------------------------
     # TODOs:
-    
+
     def test_format_in_a_text(self):
         """ http://code.google.com/p/python-creole/issues/detail?id=4 """
         self.assertCreole(r"""
