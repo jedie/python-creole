@@ -1,0 +1,4 @@
+*.pyc
+*~
+/python_creole.egg-info
+/dist
