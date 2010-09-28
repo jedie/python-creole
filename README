@@ -41,6 +41,10 @@ See also: http://github.com/jedie/python-creole/blob/master/demo.py
  history
 =========
 
+- v0.2.8
+
+  - bugfix in setup.py
+
 - v0.2.7
 
   - handle obsolete non-closed <br> tag
