@@ -27,11 +27,7 @@
 import re
 
 
-
-
-
-
-class InlineRules:
+class InlineRules(object):
     """
     All inline rules
     """
@@ -112,7 +108,7 @@ class InlineRules:
 
 
 
-class BlockRules:
+class BlockRules(object):
     """
     All used block rules.
     """
@@ -165,11 +161,28 @@ class BlockRules:
             [|]?
         ) \s* $'''
 
+    re_flags = re.VERBOSE | re.UNICODE | re.MULTILINE
 
-    text = r'(?P<text> .+ ) (?P<break> (?<!\\)$\n(?!\s*$) )?'
+    def __init__(self, blog_line_breaks):
+        if blog_line_breaks:
+            # use blog style line breaks (every line break would be convertet into <br />) 
+            self.text = r'(?P<text> .+ ) (?P<break> (?<!\\)$\n(?!\s*$) )?'
+        else:
+            # use wiki style line breaks
+            self.text = r'(?P<text> .+ )'
+
+        self.rules = (
+            self.macro_block,
+            self.line, self.head, self.separator,
+            self.pre_block, self.list,
+            self.table, self.text,
+        )
 
 
-class SpecialRules:
+
+
+
+class SpecialRules(object):
     """
     re rules witch not directly used as inline/block rules.
     """
@@ -196,15 +209,6 @@ class SpecialRules:
     # For pre escaping, in creole 1.0 done with ~:
     pre_escape = r' ^(?P<indent>\s*) ~ (?P<rest> \}\}\} \s*) $'
 
-
-
-BLOCK_FLAGS = re.VERBOSE | re.UNICODE | re.MULTILINE
-BLOCK_RULES = (
-    BlockRules.macro_block,
-    BlockRules.line, BlockRules.head, BlockRules.separator,
-    BlockRules.pre_block, BlockRules.list,
-    BlockRules.table, BlockRules.text,
-)
 
 INLINE_FLAGS = re.VERBOSE | re.UNICODE
 INLINE_RULES = (
@@ -276,15 +280,17 @@ class Parser:
     # for table cells:
     cell_re = re.compile(SpecialRules.cell, re.VERBOSE | re.UNICODE)
 
-    # For block elements:
-    block_re = re.compile('|'.join(BLOCK_RULES), BLOCK_FLAGS)
-
     # For inline elements:
     inline_re = re.compile('|'.join(INLINE_RULES), INLINE_FLAGS)
 
-    def __init__(self, raw):
+
+    def __init__(self, raw, block_rules):
         assert isinstance(raw, unicode)
         self.raw = raw
+
+        # For block elements:
+        self.block_re = re.compile('|'.join(block_rules.rules), block_rules.re_flags)
+
         self.root = DocNode('document', None)
         self.cur = self.root        # The most recent document node
         self.text = None            # The node to add inline characters to

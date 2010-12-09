@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 
 
-__version__ = (0, 2, 8)
+__version__ = (0, 3, 0)
 __api__ = (1, 0) # Creole 1.0 spec - http://wikicreole.org/
 
 
 import os
 import sys
 
-from creole_parser import Parser
+from creole_parser import BlockRules, Parser
 from creole2html import HtmlEmitter
 from html2creole import Html2CreoleParser, Html2CreoleEmitter
 
@@ -28,7 +28,7 @@ VERSION_STRING = '.'.join(str(part) for part in __version__)
 API_STRING = '.'.join(str(integer) for integer in __api__)
 
 
-def creole2html(markup_string, debug=False, **kwargs):
+def creole2html(markup_string, debug=False, blog_line_breaks=True, **kwargs):
     """
     convert creole markup into html code
 
@@ -36,7 +36,7 @@ def creole2html(markup_string, debug=False, **kwargs):
     u'<p>This is <strong>creole <i>markup</i></strong>!</p>\\n'
     """
     # Create document tree from creole markup
-    document = Parser(markup_string).parse()
+    document = Parser(markup_string, BlockRules(blog_line_breaks)).parse()
     if debug:
         document.debug()
 

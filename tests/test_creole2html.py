@@ -415,6 +415,40 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             
         """))
 
+    def test_wiki_style_line_breaks(self):
+
+        html = creole2html(
+            markup_string=self._prepare_text(u"""
+                with blog line breaks, every line break would be convertet into <br />
+                with wiki style not.
+                
+                This is the first line,\\\\and this is the second.
+                
+                new line
+                 block 1
+                
+                new line
+                 block 2
+                
+                end
+            """),
+            blog_line_breaks=False
+        )
+        self.assertEqual(html, self._prepare_text(u"""
+            <p>with blog line breaks, every line break would be convertet into &lt;br /&gt;with wiki style not.</p>
+            
+            <p>This is the first line,<br />
+            and this is the second.</p>
+            
+            <p>new line block 1</p>
+            
+            <p>new line block 2</p>
+            
+            <p>end</p>
+            
+        """))
+
+
 
 if __name__ == '__main__':
     unittest.main()
