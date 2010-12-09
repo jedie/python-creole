@@ -163,7 +163,7 @@ class BlockRules(object):
 
     re_flags = re.VERBOSE | re.UNICODE | re.MULTILINE
 
-    def __init__(self, blog_line_breaks):
+    def __init__(self, blog_line_breaks=True):
         if blog_line_breaks:
             # use blog style line breaks (every line break would be convertet into <br />) 
             self.text = r'(?P<text> .+ ) (?P<break> (?<!\\)$\n(?!\s*$) )?'
@@ -284,11 +284,13 @@ class Parser:
     inline_re = re.compile('|'.join(INLINE_RULES), INLINE_FLAGS)
 
 
-    def __init__(self, raw, block_rules):
+    def __init__(self, raw, block_rules=None):
         assert isinstance(raw, unicode)
         self.raw = raw
 
-        # For block elements:
+        # setup block element rules:
+        if not block_rules:
+            block_rules = BlockRules()
         self.block_re = re.compile('|'.join(block_rules.rules), block_rules.re_flags)
 
         self.root = DocNode('document', None)

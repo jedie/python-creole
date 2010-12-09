@@ -1,7 +1,23 @@
-# -*- coding: utf-8 -*-
+# coding: utf-8
 
+"""
+    python-creole
+    ~~~~~~~~~~~~~
 
-__version__ = (0, 3, 0)
+    :homepage:
+      http://code.google.com/p/python-creole/
+    
+    :sourcecode:
+      http://github.com/jedie/python-creole
+    
+    :PyPi:
+      http://pypi.python.org/pypi/python-creole/
+
+    :copyleft: 2008-2010 by python-creole team, see AUTHORS for more details.
+    :license: GNU GPL v3 or above, see LICENSE.txt for more details.
+"""
+
+__version__ = (0, 3, 1)
 __api__ = (1, 0) # Creole 1.0 spec - http://wikicreole.org/
 
 
