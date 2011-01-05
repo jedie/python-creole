@@ -41,6 +41,10 @@ See also: http://github.com/jedie/python-creole/blob/master/demo.py
  history
 =========
 
+- v0.3.2
+
+  - Bugfix for spaces after Headline: https://code.google.com/p/python-creole/issues/detail?id=15
+
 - v0.3.1
 
   - Make argument 'block_rules' in Parser() optional 

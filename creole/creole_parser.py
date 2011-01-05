@@ -20,7 +20,7 @@
 
     @copyright: 2007 MoinMoin:RadomirDopieralski (creole 0.5 implementation),
                 2007 MoinMoin:ThomasWaldmann (updates)
-                2008-2010 JensDiemer
+                2008-2011 JensDiemer
     @license: GNU GPL v3 or above, see LICENSE for details.
 """
 
@@ -137,7 +137,7 @@ class BlockRules(object):
         ^
         (?P<head_head>=+) \s*
         (?P<head_text> .*? )
-        =*$
+        (=|\s)*?$
     )'''
     separator = r'(?P<separator> ^ \s* ---- \s* $ )' # horizontal line
 

@@ -10,15 +10,8 @@
         between creol2html and html2creole.
 
     Test the creole markup.
-    
 
-    Last commit info:
-    ~~~~~~~~~~~~~~~~~
-    $LastChangedDate$
-    $Rev$
-    $Author$
-
-    :copyleft: 2008-2009 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2008-2011 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE.txt for more details.
 """
 
@@ -445,6 +438,18 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             <p>new line block 2</p>
             
             <p>end</p>
+            
+        """))
+
+
+    def test_headline_spaces(self):
+        """
+        https://code.google.com/p/python-creole/issues/detail?id=15
+        """
+        html = creole2html(markup_string=u"== Headline1 == \n== Headline2== ")
+        self.assertEqual(html, self._prepare_text(u"""
+            <h2>Headline1</h2>
+            <h2>Headline2</h2>
             
         """))
 
