@@ -98,10 +98,11 @@ class DocNode:
         return u" ".join(attr_list)
 
     def __str__(self):
-        return "<DocNode %s: %r>" % (self.kind, self.content)
+        return str(self.__repr__())
 
     def __repr__(self):
         return u"<DocNode %s: %r>" % (self.kind, self.content)
+#        return u"<DocNode %s (parent: %r): %r>" % (self.kind, self.parent, self.content)
 
     def debug(self):
         print "_" * 80
@@ -758,7 +759,7 @@ class Html2CreoleEmitter(object):
 
     def _list_emit(self, node, list_type):
 
-        if self.__inner_list == "": # Srart a new list
+        if self.__inner_list == "": # Start a new list
             self.__inner_list = list_type
         else:
             start = False
@@ -768,7 +769,7 @@ class Html2CreoleEmitter(object):
 
         self.__inner_list = self.__inner_list[:-1]
 
-        if self.__inner_list == "": # Srart a new list
+        if self.__inner_list == "": # Start a new list
             return content.strip() + "\n\n"
         else:
             return content
@@ -936,7 +937,7 @@ if __name__ == '__main__':
 #    import sys;sys.exit()
 
     data = u"""
-<p>one<br></br>two</p>
+<b>foo</b> <ul><li>one</li></ul>
 """
 
 #    print data.strip()
