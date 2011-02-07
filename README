@@ -41,6 +41,10 @@ See also: http://github.com/jedie/python-creole/blob/master/demo.py
  history
 =========
 
+- v0.3.3pre
+
+  - Bugfix in html2creole: insert newline before block tags
+
 - v0.3.2
 
   - Bugfix for spaces after Headline: https://code.google.com/p/python-creole/issues/detail?id=15

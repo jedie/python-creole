@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python
+# coding: utf-8
 
 """
     html2creole tests
@@ -7,7 +8,7 @@
     special html to creole convert tests, witch can't tests in "cross compare"
     
 
-    :copyleft: 2008-2010 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2008-2011 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE.txt for more details.
 """
 
@@ -212,8 +213,43 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             two</p>
         """)
 
+    def test_newline_before_list(self):
+        """
+        http://code.google.com/p/python-creole/issues/detail?id=16
+        """
+        self.assertCreole(r"""
+            **foo**
+            
+            * one
+        """, """
+            <b>foo</b><ul><li>one</li></ul>
+        """)
+
+    def test_newline_before_headline(self):
+        self.assertCreole(r"""
+            **foo**
+            
+            = one
+        """, """
+            <b>foo</b>
+            <h1>one</h1>
+        """)#, debug=True)
+
     #--------------------------------------------------------------------------
     # TODOs:
+
+    def test_no_space_before_blocktag(self):
+        """
+        TODO: Bug in html2creole.strip_html(): Don't add a space before/after block tags
+        """
+        self.assertCreole(r"""
+            **foo**
+            
+            * one
+        """, """
+            <b>foo</b>
+            <ul><li>one</li></ul>
+        """)#, debug=True)
 
     def test_format_in_a_text(self):
         """ http://code.google.com/p/python-creole/issues/detail?id=4 """

@@ -17,7 +17,7 @@
     :license: GNU GPL v3 or above, see LICENSE.txt for more details.
 """
 
-__version__ = (0, 3, 2)
+__version__ = (0, 3, 3, "pre")
 __api__ = (1, 0) # Creole 1.0 spec - http://wikicreole.org/
 
 

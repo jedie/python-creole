@@ -6,7 +6,7 @@
    
     created by Jens Diemer
 
-    :copyleft: 2009-2010 by the python-creole team, see AUTHORS for more details.
+    :copyleft: 2009-2011 by the python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -169,7 +169,12 @@ def strip_html(html_code):
 
     >>> strip_html(u'<p>a <pre> preformated area </pre> foo </p>')
     u'<p>a<pre>preformated area</pre>foo</p>'
+    
+    FIXME:
+    >>> strip_html(u'<strong>foo</strong>\\n<ul><li>one</li></ul>')
+    u'<strong>foo</strong><ul><li>one</li></ul>'
     """
+
     def strip_tag(match):
         block = match.group(0)
         end_tag = match.group("end") in ("/", u"/")
@@ -567,6 +572,7 @@ class Html2CreoleEmitter(object):
         else:
             raise AssertionError("wrong keyword argument 'unknown_emit'!")
 
+        self.last = None
         self.debugging = debug
 
         self.deentity = Deentity() # for replacing html entities
@@ -758,6 +764,10 @@ class Html2CreoleEmitter(object):
         return u"\n%s %s" % (self.__inner_list, content)
 
     def _list_emit(self, node, list_type):
+        start_newline = False
+        if self.last and self.last.kind not in BLOCK_TAGS:
+            if not self.last.content or not self.last.content.endswith("\n"):
+                start_newline = True
 
         if self.__inner_list == "": # Start a new list
             self.__inner_list = list_type
@@ -770,7 +780,10 @@ class Html2CreoleEmitter(object):
         self.__inner_list = self.__inner_list[:-1]
 
         if self.__inner_list == "": # Start a new list
-            return content.strip() + "\n\n"
+            if start_newline:
+                return "\n" + content + "\n\n"
+            else:
+                return content.strip() + "\n\n"
         else:
             return content
 
@@ -818,10 +831,12 @@ class Html2CreoleEmitter(object):
     #--------------------------------------------------------------------------
 
     def document_emit(self, node):
+        self.last = node
         return self.emit_children(node)
 
     def emit_children(self, node):
         """Emit all the children of a node."""
+        self.last = node
         result = []
         for child in node.children:
             content = self.emit_node(child)
@@ -844,6 +859,7 @@ class Html2CreoleEmitter(object):
                     method_name, content
                 )
             )
+        self.last = node
         return content
 
     def emit(self):
@@ -938,6 +954,8 @@ if __name__ == '__main__':
 
     data = u"""
 <b>foo</b> <ul><li>one</li></ul>
+
+<b>foo2</b><ul><li>one2</li></ul>
 """
 
 #    print data.strip()
