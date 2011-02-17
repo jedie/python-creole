@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# coding: utf-8
+
 """
     creole2html unittest
     ~~~~~~~~~~~~~~~~~~~~
@@ -15,14 +16,13 @@
     :license: GNU GPL v3 or above, see LICENSE.txt for more details.
 """
 
+
 import unittest
 import StringIO
 
 from tests.utils.base_unittest import BaseCreoleTest
 
 from creole import creole2html
-
-
 
 
 class TestCreole2html(unittest.TestCase):
@@ -453,6 +453,23 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             
         """))
 
+
+    def test_pre(self):
+        self.assertCreole(r"""
+            start
+            {{{
+            line two
+            line tree
+            }}}
+            end
+        """, """
+            <p>start</p>
+            <pre>
+            line two
+            line tree
+            </pre>
+            <p>end</p>
+        """)
 
 
 if __name__ == '__main__':
