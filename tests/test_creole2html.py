@@ -197,21 +197,6 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             [[Link]]</p>
         """)
 
-    def test_cross_lines(self):
-        """
-        TODO: bold/italics cross lines
-        see: http://code.google.com/p/python-creole/issues/detail?id=13 
-        """
-        self.assertCreole(r"""
-            Bold and italics should //be
-            able// to **cross
-            lines.**
-        """, """
-            <p>Bold and italics should <i>be<br />
-            able</i> to <strong>cross<br />
-            lines.</strong></p>
-        """)
-
     def test_cross_paragraphs(self):
         self.assertCreole(r"""
             Bold and italics should //not be...
@@ -453,23 +438,15 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             
         """))
 
-
-    def test_pre(self):
+    def test_tt(self):
         self.assertCreole(r"""
-            start
-            {{{
-            line two
-            line tree
-            }}}
-            end
+            inline {{{<escaped>}}} and {{{ **not strong** }}}...
+            ...and ##**strong** Teletyper## ;)
         """, """
-            <p>start</p>
-            <pre>
-            line two
-            line tree
-            </pre>
-            <p>end</p>
+            <p>inline <tt>&lt;escaped&gt;</tt> and <tt> **not strong** </tt>...<br />
+            ...and <tt><strong>strong</strong> Teletyper</tt> ;)</p>
         """)
+
 
 
 if __name__ == '__main__':

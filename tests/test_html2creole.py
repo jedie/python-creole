@@ -225,7 +225,12 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             <b>foo</b><ul><li>one</li></ul>
         """)
 
+    #--------------------------------------------------------------------------
+    # TODOs:
+
+
     def test_newline_before_headline(self):
+        """ TODO: http://code.google.com/p/python-creole/issues/detail?id=16#c5 """
         self.assertCreole(r"""
             **foo**
             
@@ -235,13 +240,23 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             <h1>one</h1>
         """)#, debug=True)
 
-    #--------------------------------------------------------------------------
-    # TODOs:
+    def test_cross_lines(self):
+        """ TODO: bold/italics cross lines
+        see: http://code.google.com/p/python-creole/issues/detail?id=13 
+        """
+        self.assertCreole(r"""
+            Bold and italics should //be
+            able// to **cross
+            lines.**
+        """, """
+            <p>Bold and italics should <i>be<br />
+            able</i> to <strong>cross<br />
+            lines.</strong></p>
+        """)
+
 
     def test_no_space_before_blocktag(self):
-        """
-        TODO: Bug in html2creole.strip_html(): Don't add a space before/after block tags
-        """
+        """ TODO: Bug in html2creole.strip_html(): Don't add a space before/after block tags """
         self.assertCreole(r"""
             **foo**
             
@@ -251,8 +266,9 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             <ul><li>one</li></ul>
         """)#, debug=True)
 
+
     def test_format_in_a_text(self):
-        """ http://code.google.com/p/python-creole/issues/detail?id=4 """
+        """ TODO: http://code.google.com/p/python-creole/issues/detail?id=4 """
         self.assertCreole(r"""
             **[[/url/|title]]**
         """, """

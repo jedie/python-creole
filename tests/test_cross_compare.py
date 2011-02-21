@@ -137,15 +137,8 @@ class CrossCompareTests(BaseCreoleTest):
             <a href="http://example.com/"><img src="myimage.jpg" alt="example site" /></a></p>
         """)
 
-    def test_nowiki1(self):
+    def test_pre_contains_braces(self):
         self.assertCreole(r"""
-            this:
-
-            {{{
-            //This// does **not** get [[formatted]]
-            }}}
-            and this: {{{** <i>this</i> **}}}
-
             === Closing braces in nowiki:
             {{{
             if (x != NULL) {
@@ -155,13 +148,6 @@ class CrossCompareTests(BaseCreoleTest):
               }}}
             }}}
         """, """
-            <p>this:</p>
-
-            <pre>
-            //This// does **not** get [[formatted]]
-            </pre>
-            <p>and this: <pre>** &lt;i&gt;this&lt;/i&gt; **</pre></p>
-
             <h3>Closing braces in nowiki:</h3>
             <pre>
             if (x != NULL) {
@@ -172,19 +158,17 @@ class CrossCompareTests(BaseCreoleTest):
             </pre>
         """)
 
-    def test_nowiki2(self):
+    def test_pre2(self):
         self.assertCreole(r"""
-            111 {{{ inline pre }}} 222
-            333
-
+            111
+            
             {{{
-            pre line 1
-            pre line 2
+            //This// does **not** get [[formatted]]
             }}}
-            444
+            222
 
             one
-
+            
             {{{
             foo
 
@@ -192,17 +176,15 @@ class CrossCompareTests(BaseCreoleTest):
             }}}
             two
         """, """
-            <p>111 <pre> inline pre </pre> 222<br />
-            333</p>
-
+            <p>111</p>
+            
             <pre>
-            pre line 1
-            pre line 2
+            //This// does **not** get [[formatted]]
             </pre>
-            <p>444</p>
-
+            <p>222</p>
+            
             <p>one</p>
-
+            
             <pre>
             foo
 
@@ -211,6 +193,31 @@ class CrossCompareTests(BaseCreoleTest):
             <p>two</p>
         """)
 
+    def test_pre(self):
+        self.assertCreole(r"""
+            start
+            
+            {{{
+            * no list
+            <html escaped>
+            }}}
+            end
+        """, """
+            <p>start</p>
+            
+            <pre>
+            * no list
+            &lt;html escaped&gt;
+            </pre>
+            <p>end</p>
+        """)
+
+    def test_tt(self):
+        self.assertCreole(r"""
+            this is ##**strong** Teletyper## ;)
+        """, """
+            <p>this is <tt><strong>strong</strong> Teletyper</tt> ;)</p>
+        """)
 
     def test_headlines(self):
         self.assertCreole(r"""
@@ -371,7 +378,6 @@ class CrossCompareTests(BaseCreoleTest):
             * //italic// item
 
             # item about a [[certain_page]]
-            # {{{//this// is **not** [[processed]]}}}
         """, """
             <ul>
                 <li><strong>bold</strong> item</li>
@@ -379,7 +385,6 @@ class CrossCompareTests(BaseCreoleTest):
             </ul>
             <ol>
                 <li>item about a <a href="certain_page">certain_page</a></li>
-                <li><pre>//this// is **not** [[processed]]</pre></li>
             </ol>
         """)
 
@@ -479,7 +484,6 @@ class CrossCompareTests(BaseCreoleTest):
             <p>less-than sign: &lt;<br />
             greater-than sign: &gt;</p>
         """)
-
 
 #    def test_macro_html1(self):
 #        self.assertCreole(r"""

@@ -240,9 +240,10 @@ class HtmlEmitter:
     def pre_block_emit(self, node):
         """ pre block, with newline at the end """
         return u"<pre>%s</pre>\n" % self.html_escape(node.content)
+
     def pre_inline_emit(self, node):
         """ pre without newline at the end """
-        return u"<pre>%s</pre>" % self.html_escape(node.content)
+        return u"<tt>%s</tt>" % self.html_escape(node.content)
 
     def default_emit(self, node):
         """Fallback function for emitting unknown nodes."""
