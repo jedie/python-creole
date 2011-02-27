@@ -354,6 +354,19 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             <img src="/path1/path2/foobar3.jpg" alt="foobar3.jpg" /></p>
         """)
 
+    def test_image_unknown_extension(self):       
+        self.assertCreole(r"""
+            # {{/path/to/image.ext|image ext}} one
+            # {{/no/extension|no extension}} two
+            # {{/image.xyz}} tree
+        """, """
+            <ol>
+                <li><img src="/path/to/image.ext" alt="image ext" /> one</li>
+                <li><img src="/no/extension" alt="no extension" /> two</li>
+                <li><img src="/image.xyz" alt="/image.xyz" /> tree</li>
+            </ol>
+        """)
+        
     def test_links(self):
         self.assertCreole(r"""
             [[/foobar/Creole_(Markup)]]
