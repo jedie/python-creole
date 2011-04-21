@@ -354,7 +354,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             <img src="/path1/path2/foobar3.jpg" alt="foobar3.jpg" /></p>
         """)
 
-    def test_image_unknown_extension(self):       
+    def test_image_unknown_extension(self):
         self.assertCreole(r"""
             # {{/path/to/image.ext|image ext}} one
             # {{/no/extension|no extension}} two
@@ -366,7 +366,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
                 <li><img src="/image.xyz" alt="/image.xyz" /> tree</li>
             </ol>
         """)
-        
+
     def test_links(self):
         self.assertCreole(r"""
             [[/foobar/Creole_(Markup)]]
@@ -458,6 +458,16 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
         """, """
             <p>inline <tt>&lt;escaped&gt;</tt> and <tt> **not strong** </tt>...<br />
             ...and <tt><strong>strong</strong> Teletyper</tt> ;)</p>
+        """)
+
+    def test_upcase_url(self):
+        """
+        FIXME: remove inter wiki stuff???
+        """
+        self.assertCreole(r"""
+            [[Http://www.domain.tld|test]]
+        """, """
+            <a href="Http://www.domain.tld">test</a>
         """)
 
 
