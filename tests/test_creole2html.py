@@ -460,16 +460,6 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             ...and <tt><strong>strong</strong> Teletyper</tt> ;)</p>
         """)
 
-    def test_upcase_url(self):
-        """
-        FIXME: remove inter wiki stuff???
-        """
-        self.assertCreole(r"""
-            [[Http://www.domain.tld|test]]
-        """, """
-            <a href="Http://www.domain.tld">test</a>
-        """)
-
 
 
 if __name__ == '__main__':

@@ -87,26 +87,25 @@ class CrossCompareTests(BaseCreoleTest):
             no __ underline</p>
         """, debug=False)
 
-    def test_internal_links(self):
+    def test_links(self):
         self.assertCreole(r"""
             A [[internal]] link...
             ...and [[/a internal]] link.
-        """, """
-            <p>A <a href="internal">internal</a> link...<br />
-            ...and <a href="/a internal">/a internal</a> link.</p>
-        """)
-
-    def test_external_links(self):
-        self.assertCreole(r"""
+        
             With pipe separator:
             1 [[internal links|link A]] test.
             2 [[http://domain.tld|link B]] test.
             3 [[http://de.wikipedia.org/wiki/Creole_(Markup)|Creole@wikipedia]]
+            4 [[Foo://bar|unknown protocol]]
         """, """
+            <p>A <a href="internal">internal</a> link...<br />
+            ...and <a href="/a internal">/a internal</a> link.</p>
+            
             <p>With pipe separator:<br />
             1 <a href="internal links">link A</a> test.<br />
             2 <a href="http://domain.tld">link B</a> test.<br />
-            3 <a href="http://de.wikipedia.org/wiki/Creole_(Markup)">Creole@wikipedia</a></p>
+            3 <a href="http://de.wikipedia.org/wiki/Creole_(Markup)">Creole@wikipedia</a><br />
+            4 <a href="Foo://bar">unknown protocol</a></p>
         """)
 
     def test_bolditalic_links(self):
