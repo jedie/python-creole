@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+# coding: utf-8
+
 
 """
     unitest base class
@@ -6,15 +7,10 @@
 
     Basic unittest class for all python-creole tests.
 
-    Last commit info:
-    ~~~~~~~~~~~~~~~~~
-    $LastChangedDate:$
-    $Rev:$
-    $Author$
-
     :copyleft: 2008-2009 by python-creole team, see AUTHORS for more details.
-    :license: GNU GPL v3 or above, see LICENSE.txt for more details.
+    :license: GNU GPL v3 or above, see LICENSE for more details.
 """
+
 
 import sys
 import unittest
@@ -35,10 +31,10 @@ class BaseCreoleTest(MarkupTest):
         text = text.replace("\t", "\\t")
 
         print
-        print "_"*79
+        print "_" * 79
         print " Debug Text: %s" % msg
         print text
-        print "-"*79
+        print "-" * 79
 
     def assert_Creole2html(self, source_string, should_string, \
                                     verbose=1, stderr=sys.stderr, debug=False):

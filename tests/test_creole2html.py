@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+
 """
     creole2html unittest
     ~~~~~~~~~~~~~~~~~~~~
@@ -13,7 +14,7 @@
     Test the creole markup.
 
     :copyleft: 2008-2011 by python-creole team, see AUTHORS for more details.
-    :license: GNU GPL v3 or above, see LICENSE.txt for more details.
+    :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 

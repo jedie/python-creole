@@ -1,5 +1,6 @@
 # coding: utf-8
 
+
 """
     html2creole
     ~~~~~~~~~~~
@@ -9,6 +10,7 @@
     :copyleft: 2009-2011 by the python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
+
 
 import re
 import inspect

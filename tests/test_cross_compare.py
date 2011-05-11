@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# coding: utf-8
+
 
 """
     cross compare unittest
@@ -11,15 +12,10 @@
     Note: This only works fine if there is no problematic whitespace handling.
         In this case, we must test in test_creole2html.py or test_html2creole.py
 
-    Last commit info:
-    ~~~~~~~~~~~~~~~~~
-    $LastChangedDate$
-    $Rev$
-    $Author$
-
     :copyleft: 2008-2009 by python-creole team, see AUTHORS for more details.
-    :license: GNU GPL v3 or above, see LICENSE.txt for more details.
+    :license: GNU GPL v3 or above, see LICENSE for more details.
 """
+
 
 import unittest
 
