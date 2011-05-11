@@ -225,6 +225,13 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             <b>foo</b><ul><li>one</li></ul>
         """)
 
+    def test_empty_tags_are_not_escaped(self):
+        self.assertCreole(r"""
+            //baz//, **quux**
+        """, """
+            <div class="foo" id="bar"><span><em>baz</em></span>, <strong>quux</strong></div>
+        """)
+
     #--------------------------------------------------------------------------
     # TODOs:
 

@@ -830,6 +830,19 @@ class Html2CreoleEmitter(object):
 
     #--------------------------------------------------------------------------
 
+    def _emit_content(self, node):
+        content = self.emit_children(node)
+        content = self._escape_linebreaks(content)
+        return content
+
+    def div_emit(self, node):
+        return self._emit_content(node)
+
+    def span_emit(self, node):
+        return self._emit_content(node)
+
+    #--------------------------------------------------------------------------
+
     def document_emit(self, node):
         self.last = node
         return self.emit_children(node)
