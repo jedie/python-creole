@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+
 """
     creole2html unittest
     ~~~~~~~~~~~~~~~~~~~~
@@ -13,7 +14,7 @@
     Test the creole markup.
 
     :copyleft: 2008-2011 by python-creole team, see AUTHORS for more details.
-    :license: GNU GPL v3 or above, see LICENSE.txt for more details.
+    :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 
@@ -458,16 +459,6 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
         """, """
             <p>inline <tt>&lt;escaped&gt;</tt> and <tt> **not strong** </tt>...<br />
             ...and <tt><strong>strong</strong> Teletyper</tt> ;)</p>
-        """)
-
-    def test_upcase_url(self):
-        """
-        FIXME: remove inter wiki stuff???
-        """
-        self.assertCreole(r"""
-            [[Http://www.domain.tld|test]]
-        """, """
-            <a href="Http://www.domain.tld">test</a>
         """)
 
 

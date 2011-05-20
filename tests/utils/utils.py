@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+# coding: utf-8
+
 
 """
     unitest generic utils
@@ -6,15 +7,10 @@
 
     Generic utils useable for a markup test.
 
-    Last commit info:
-    ~~~~~~~~~~~~~~~~~
-    $LastChangedDate:$
-    $Rev:$
-    $Author$
-
     :copyleft: 2008-2009 by python-creole team, see AUTHORS for more details.
-    :license: GNU GPL v3 or above, see LICENSE.txt for more details.
+    :license: GNU GPL v3 or above, see LICENSE for more details.
 """
+
 
 import sys
 import difflib
@@ -86,7 +82,7 @@ class MarkupDiffFailure(Exception):
 #        print repr(msg)
 
         first_quote = msg[0]
-        second_quote  = msg[-1]
+        second_quote = msg[-1]
         #print "quote chars: [%s] [%s]" % (first_quote, second_quote)
 
         split_string = "%s != %s" % (first_quote, second_quote)
@@ -162,13 +158,13 @@ class MarkupTest(unittest.TestCase):
         """
         txt = unicode(txt)
         txt = txt.splitlines()
-        assert txt[0]=="", "First must be empty!"
+        assert txt[0] == "", "First must be empty!"
         txt = txt[1:] # Skip the first line
 
         # get the indentation level from the first line
         count = False
         for count, char in enumerate(txt[0]):
-            if char!=" ":
+            if char != " ":
                 break
 
         assert count != False, "second line is empty!"

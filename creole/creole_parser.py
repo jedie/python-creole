@@ -1,5 +1,6 @@
 # coding: utf-8
 
+
 """
     Creole wiki markup parser
 
@@ -17,12 +18,10 @@
       unrecognized schemes (like wtf://server/path) triggering italic rendering
       for the rest of the paragraph.
 
-
-    @copyright: 2007 MoinMoin:RadomirDopieralski (creole 0.5 implementation),
-                2007 MoinMoin:ThomasWaldmann (updates)
-                2008-2011 JensDiemer
-    @license: GNU GPL v3 or above, see LICENSE for details.
+    :copyleft: 2008-2011 by python-creole team, see AUTHORS for more details.
+    :license: GNU GPL v3 or above, see LICENSE for more details.
 """
+
 
 import re
 

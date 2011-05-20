@@ -1,5 +1,6 @@
 # coding: utf-8
 
+
 """
     html2creole
     ~~~~~~~~~~~
@@ -9,6 +10,7 @@
     :copyleft: 2009-2011 by the python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
+
 
 import re
 import inspect
@@ -817,7 +819,7 @@ class Html2CreoleEmitter(object):
         return u""
 
     def _escape_linebreaks(self, text):
-        test = text.strip()
+        text = text.strip()
         text = text.split("\n")
         lines = [line.strip() for line in text]
         lines = [line for line in lines if line]

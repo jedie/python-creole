@@ -1,12 +1,15 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# coding: utf-8
+
 
 """
     simple demo
     ~~~~~~~~~~~
 """
 
+
 from creole import creole2html, html2creole
+
 
 source = u"""\
 == simple demo
@@ -23,16 +26,19 @@ You can convert from:
 
 More info on our [[http://code.google.com/p/python-creole/|Homepage]]."""
 
+
 print "*" * 79
 print " Source creole markup text:"
 print "-" * 79
 print source
+
 
 print "*" * 79
 print " Convert it into html:"
 print "-" * 79
 html = creole2html(source)
 print html
+
 
 print "*" * 79
 print " Convert the html code back into creole:"

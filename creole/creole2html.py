@@ -1,41 +1,28 @@
 # coding: utf-8
 
+
 """
     WikiCreole to HTML converter
 
-    @copyright: 2007 MoinMoin:RadomirDopieralski,
-                2008-2010 JensDiemer
-    @license: GNU GPL v3 or above, see LICENSE for details.
+    :copyleft: 2008-2011 by python-creole team, see AUTHORS for more details.
+    :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-import sys, re, traceback
+
+from xml.sax.saxutils import escape
+import re
+import sys
+import traceback
 
 import default_macros
 from creole_parser import Parser
 
-
-#from PyLucid.tools.utils import escape
-from xml.sax.saxutils import escape
-
-class Rules:
-    # For the link targets:
-    proto = r'http|https|ftp|nntp|news|mailto|telnet|file|irc'
-    extern = r'(?P<extern_addr>(?P<extern_proto>%s):.*)' % proto
-    interwiki = r'''
-            (?P<inter_wiki> [A-Z][a-zA-Z]+ ) :
-            (?P<inter_page> .* )
-        '''
 
 class HtmlEmitter:
     """
     Generate HTML output for the document
     tree consisting of DocNodes.
     """
-
-    addr_re = re.compile('|'.join([
-            Rules.extern,
-            Rules.interwiki,
-        ]), re.X | re.U) # for addresses
 
     def __init__(self, root, macros=default_macros, verbose=1, stderr=sys.stderr):
         self.root = root
@@ -52,7 +39,6 @@ class HtmlEmitter:
 
     def html_escape(self, text):
         return escape(text)
-        #return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
 
     def attr_escape(self, text):
         return self.html_escape(text).replace('"', '&quot')
@@ -155,28 +141,13 @@ class HtmlEmitter:
             inside = self.emit_children(node)
         else:
             inside = self.html_escape(target)
-        m = self.addr_re.match(target)
-        if m:
-            if m.group('extern_addr'):
-                return u'<a href="%s">%s</a>' % (
-                    self.attr_escape(target), inside)
-            elif m.group('inter_wiki'):
-                raise NotImplementedError
+
         return u'<a href="%s">%s</a>' % (
             self.attr_escape(target), inside)
 
     def image_emit(self, node):
         target = node.content
         text = self.get_text(node)
-        m = self.addr_re.match(target)
-        if m and m.group('inter_wiki'):
-            raise NotImplementedError
-
-#            if m.group('extern_addr'):
-#                return u'<img src="%s" alt="%s" />' % (
-#                    self.attr_escape(target), self.attr_escape(text))
-#                
-#            elif 
 
         return u'<img src="%s" alt="%s" />' % (
             self.attr_escape(target), self.attr_escape(text))
@@ -277,6 +248,7 @@ class HtmlEmitter:
         else:
             # No error output
             return u""
+
 
 if __name__ == "__main__":
     txt = u"""this is **bold** ok?

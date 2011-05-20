@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+
 """
     html2creole tests
     ~~~~~~~~~~~~~~~~~
@@ -9,8 +10,9 @@
     
 
     :copyleft: 2008-2011 by python-creole team, see AUTHORS for more details.
-    :license: GNU GPL v3 or above, see LICENSE.txt for more details.
+    :license: GNU GPL v3 or above, see LICENSE for more details.
 """
+
 
 import sys
 import unittest

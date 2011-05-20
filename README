@@ -41,6 +41,11 @@ See also: http://github.com/jedie/python-creole/blob/master/demo.py
  history
 =========
 
+- v0.4
+
+  - only emit children of empty tags like div and span (contributed by Eric O'Connell)
+  - remove inter wiki links and doen't check the protocol
+
 - v0.3.3
 
   - Use <tt> when {{{ ... }}} is inline and not <pre>, see: http://forum.pylucid.org/viewtopic.php?f=3&t=320
@@ -126,4 +131,7 @@ See also: http://github.com/jedie/python-creole/blob/master/demo.py
 
 :PyPi:
   http://pypi.python.org/pypi/python-creole/
+
+:flattr this:
+  http://flattr.com/thing/181554/python-creole
 
