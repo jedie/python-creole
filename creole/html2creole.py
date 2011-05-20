@@ -556,6 +556,8 @@ class Deentity(object):
 RAISE_UNKNOWN_NODES = 1
 HTML_MACRO_UNKNOWN_NODES = 2
 ESCAPE_UNKNOWN_NODES = 3
+TRANSPARENT_UNKNOWN_NODES = 4
+
 
 class Html2CreoleEmitter(object):
 
@@ -569,6 +571,8 @@ class Html2CreoleEmitter(object):
             self.unknown_emit = self.use_html_macro
         elif unknown_emit == ESCAPE_UNKNOWN_NODES:
             self.unknown_emit = self.escape_unknown_nodes
+        elif unknown_emit == TRANSPARENT_UNKNOWN_NODES:
+            self.unknown_emit = self.transparent_unknown_nodes
         else:
             raise AssertionError("wrong keyword argument 'unknown_emit'!")
 
@@ -636,6 +640,9 @@ class Html2CreoleEmitter(object):
         end_tag = escape(u"</%(tag)s>" % tag_data)
 
         return start_tag + content + end_tag
+
+    def transparent_unknown_nodes(self, node):
+        return self._emit_content(node)
 
     #--------------------------------------------------------------------------
 
@@ -836,6 +843,8 @@ class Html2CreoleEmitter(object):
     def _emit_content(self, node):
         content = self.emit_children(node)
         content = self._escape_linebreaks(content)
+        if node.kind in BLOCK_TAGS:
+            content = u"%s\n\n" % content
         return content
 
     def div_emit(self, node):

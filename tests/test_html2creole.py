@@ -19,7 +19,7 @@ from tests.utils.base_unittest import BaseCreoleTest
 
 from creole import html2creole
 from creole.html2creole import RAISE_UNKNOWN_NODES, HTML_MACRO_UNKNOWN_NODES, \
-                                                            ESCAPE_UNKNOWN_NODES
+                                ESCAPE_UNKNOWN_NODES, TRANSPARENT_UNKNOWN_NODES
 
 
 class TestHtml2Creole(unittest.TestCase):
@@ -234,6 +234,25 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         """, """
             <div class="foo" id="bar"><span><em>baz</em></span>, <strong>quux</strong></div>
         """)
+
+    def test_transparent_unknown_nodes(self):
+        self.assertCreole(r"""
+            //baz//, **quux**
+        """, """
+            <form class="foo" id="bar"><label><em>baz</em></label>, <strong>quux</strong></form>
+        """, unknown_emit = TRANSPARENT_UNKNOWN_NODES)
+
+    def test_linefeeds_after_block_elements(self):
+        self.assertCreole(r"""
+            //baz//,
+
+            **quux**
+
+            spam, ham, and eggs
+        """, """
+            <div><em>baz</em>,</div> <fieldset><strong>quux</strong></fieldset>
+            <span>spam, </span><label>ham, </label>and eggs
+        """, unknown_emit = TRANSPARENT_UNKNOWN_NODES)
 
     #--------------------------------------------------------------------------
     # TODOs:
