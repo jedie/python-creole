@@ -192,7 +192,10 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             <img src="/path1/path2/foobar3.jpg" /><br />
             <img src="/foobar4.jpg" alt="It's foobar 4" /><br />
             <img src="/foobar5.jpg" title="It's foobar 5" /><br />
-            <img src="/foobar6.jpg" alt="short name" title="a long picture title" /></p>
+            <img src="/foobar6.jpg" alt="short name" title="a long picture title" /><br />
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA
+            AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
+            9TXL0Y4OHwAAAABJRU5ErkJggg==" alt="data uri should be disallowed" /></p>
         """)
 
     def test_non_closed_br(self):

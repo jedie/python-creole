@@ -745,6 +745,9 @@ class Html2CreoleEmitter(object):
     def img_emit(self, node):
         src = node.attrs["src"]
 
+        if src.split(':')[0] == 'data':
+            return u""
+
         title = node.attrs.get("title", "")
         alt = node.attrs.get("alt", "")
         if len(alt) > len(title): # Use the longest one
