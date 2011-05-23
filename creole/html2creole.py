@@ -809,7 +809,7 @@ class Html2CreoleEmitter(object):
         return u""
 
     def _escape_linebreaks(self, text):
-        test = text.strip()
+        text = text.strip()
         text = text.split("\n")
         lines = [line.strip() for line in text]
         lines = [line for line in lines if line]
