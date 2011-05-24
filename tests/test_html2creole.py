@@ -112,7 +112,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             <div><em>baz</em>,</div> <fieldset><strong>quux</strong></fieldset>
             <span>spam, </span><label>ham, </label>and eggs
         """, unknown_emit = transparent_unknown_nodes)    
-
+        
     def test_entities(self):
         """
         Test html entities.
@@ -278,6 +278,17 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             <b>foo</b>
             <h1>one</h1>
         """)#, debug=True)
+
+    def test_newslines_after_headlines(self):
+        self.assertCreole(r"""
+            = Headline news
+
+            [[http://google.com|The googlezor]] is a big bad mother.
+        """, """
+            <h1>Headline news</h1>
+
+            <p><a href="http://google.com">The googlezor</a> is a big bad mother.</p>
+        """)
 
     def test_cross_lines(self):
         """ TODO: bold/italics cross lines

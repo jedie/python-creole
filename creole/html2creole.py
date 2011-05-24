@@ -691,7 +691,7 @@ class Html2CreoleEmitter(object):
             return u"\n"
 
     def headline_emit(self, node):
-        return u"%s %s\n" % (u"=" * node.level, self.emit_children(node))
+        return u"%s %s\n\n" % (u"=" * node.level, self.emit_children(node))
 
     #--------------------------------------------------------------------------
 
