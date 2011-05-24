@@ -555,7 +555,7 @@ class Deentity(object):
 #------------------------------------------------------------------------------
 
 
-def raise_unknown_node(self, node):
+def raise_unknown_node(emitter, node):
     """
     Raise NotImplementedError on unknown tags.
     """
@@ -563,11 +563,10 @@ def raise_unknown_node(self, node):
         "Node from type '%s' is not implemented!" % node.kind
     )
 
-def use_html_macro(self, node):
+def use_html_macro(emitter, node):
     """
     Use the <<html>> macro to mask unknown tags.
     """
-    #node.debug()
     attrs = node.get_attrs_as_string()
     if attrs:
         attrs = " " + attrs
@@ -577,7 +576,7 @@ def use_html_macro(self, node):
         "attrs": attrs,
     }
 
-    content = self.emit_children(node)
+    content = emitter.emit_children(node)
     if not content:
         # single tag
         return u"<<html>><%(tag)s%(attrs)s /><</html>>" % tag_data
@@ -587,11 +586,10 @@ def use_html_macro(self, node):
 
     return start_tag + content + end_tag
 
-def escape_unknown_nodes(self, node):
+def escape_unknown_nodes(emitter, node):
     """
     All unknown tags should be escaped.
     """
-    #node.debug()
     attrs = node.get_attrs_as_string()
     if attrs:
         attrs = " " + attrs
@@ -601,7 +599,7 @@ def escape_unknown_nodes(self, node):
         "attrs": attrs,
     }
 
-    content = self.emit_children(node)
+    content = emitter.emit_children(node)
     if not content:
         # single tag
         return escape(u"<%(tag)s%(attrs)s />" % tag_data)
@@ -611,8 +609,8 @@ def escape_unknown_nodes(self, node):
 
     return start_tag + content + end_tag
 
-def transparent_unknown_nodes(self, node):
-    return self._emit_content(node)
+def transparent_unknown_nodes(emitter, node):
+    return emitter._emit_content(node)
 
 
 
