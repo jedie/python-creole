@@ -20,8 +20,8 @@ import unittest
 from tests.utils.base_unittest import BaseCreoleTest
 
 from creole import html2creole
-from creole.html2creole import RAISE_UNKNOWN_NODES, HTML_MACRO_UNKNOWN_NODES, \
-                                ESCAPE_UNKNOWN_NODES, TRANSPARENT_UNKNOWN_NODES
+from creole.html2creole import raise_unknown_node, use_html_macro, \
+                            escape_unknown_nodes, transparent_unknown_nodes
 
 
 class TestHtml2Creole(unittest.TestCase):
@@ -58,18 +58,18 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 
     def test_raise_unknown_node(self):
         """
-        Test creole.html2creole.RAISE_UNKNOWN_NODES mode:
+        Test creole.html2creole.raise_unknown_node callable:
         Raise NotImplementedError on unknown tags.
         """
         self.assertRaises(NotImplementedError,
             html2creole,
             html_string=u"<unknwon>",
-            unknown_emit=RAISE_UNKNOWN_NODES
+            unknown_emit=raise_unknown_node
         )
 
     def test_escape_unknown_nodes(self):
         """
-        Test creole.html2creole.ESCAPE_UNKNOWN_NODES mode:
+        Test creole.html2creole.escape_unknown_nodes callable:
         All unknown tags should be escaped.
         """
         self.assertCreole(r"""
@@ -83,8 +83,35 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 
             <p>555<unknown />666</p>
         """,
-            unknown_emit=ESCAPE_UNKNOWN_NODES
+            unknown_emit=escape_unknown_nodes
         )
+    
+    def test_transparent_unknown_nodes(self):
+        """
+        Test creole.html2creole.transparent_unknown_nodes callable:
+        All unknown tags should be "transparent" and show only
+        their child nodes' content.
+        """
+        self.assertCreole(r"""
+            //baz//, **quux**
+        """, """
+            <form class="foo" id="bar"><label><em>baz</em></label>, <strong>quux</strong></form>
+        """, unknown_emit = transparent_unknown_nodes)
+
+    def test_transparent_unknown_nodes_block_elements(self):
+        """
+        Test that block elements insert linefeeds into the stream.
+        """
+        self.assertCreole(r"""
+            //baz//,
+
+            **quux**
+
+            spam, ham, and eggs
+        """, """
+            <div><em>baz</em>,</div> <fieldset><strong>quux</strong></fieldset>
+            <span>spam, </span><label>ham, </label>and eggs
+        """, unknown_emit = transparent_unknown_nodes)    
 
     def test_entities(self):
         """
@@ -236,25 +263,6 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         """, """
             <div class="foo" id="bar"><span><em>baz</em></span>, <strong>quux</strong></div>
         """)
-
-    def test_transparent_unknown_nodes(self):
-        self.assertCreole(r"""
-            //baz//, **quux**
-        """, """
-            <form class="foo" id="bar"><label><em>baz</em></label>, <strong>quux</strong></form>
-        """, unknown_emit = TRANSPARENT_UNKNOWN_NODES)
-
-    def test_linefeeds_after_block_elements(self):
-        self.assertCreole(r"""
-            //baz//,
-
-            **quux**
-
-            spam, ham, and eggs
-        """, """
-            <div><em>baz</em>,</div> <fieldset><strong>quux</strong></fieldset>
-            <span>spam, </span><label>ham, </label>and eggs
-        """, unknown_emit = TRANSPARENT_UNKNOWN_NODES)
 
     #--------------------------------------------------------------------------
     # TODOs:

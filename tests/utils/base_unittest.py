@@ -18,7 +18,7 @@ import unittest
 from utils import MarkupTest
 
 from creole import creole2html, html2creole
-from creole.html2creole import HTML_MACRO_UNKNOWN_NODES
+from creole.html2creole import use_html_macro
 
 
 class BaseCreoleTest(MarkupTest):
@@ -107,6 +107,6 @@ class BaseCreoleTest(MarkupTest):
         self.assert_Creole2html(source_string, should_string, debug)
         self.assert_html2Creole(
             source_string, should_string, debug,
-            unknown_emit=HTML_MACRO_UNKNOWN_NODES
+            unknown_emit=use_html_macro
         )
 

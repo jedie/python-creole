@@ -552,31 +552,77 @@ class Deentity(object):
         return entities_regex.sub(replace_entity, content)
 
 
-
 #------------------------------------------------------------------------------
 
-RAISE_UNKNOWN_NODES = 1
-HTML_MACRO_UNKNOWN_NODES = 2
-ESCAPE_UNKNOWN_NODES = 3
-TRANSPARENT_UNKNOWN_NODES = 4
+
+def raise_unknown_node(self, node):
+    """
+    Raise NotImplementedError on unknown tags.
+    """
+    raise NotImplementedError(
+        "Node from type '%s' is not implemented!" % node.kind
+    )
+
+def use_html_macro(self, node):
+    """
+    Use the <<html>> macro to mask unknown tags.
+    """
+    #node.debug()
+    attrs = node.get_attrs_as_string()
+    if attrs:
+        attrs = " " + attrs
+
+    tag_data = {
+        "tag": node.kind,
+        "attrs": attrs,
+    }
+
+    content = self.emit_children(node)
+    if not content:
+        # single tag
+        return u"<<html>><%(tag)s%(attrs)s /><</html>>" % tag_data
+
+    start_tag = u"<<html>><%(tag)s%(attrs)s><</html>>" % tag_data
+    end_tag = u"<<html>></%(tag)s><</html>>" % tag_data
+
+    return start_tag + content + end_tag
+
+def escape_unknown_nodes(self, node):
+    """
+    All unknown tags should be escaped.
+    """
+    #node.debug()
+    attrs = node.get_attrs_as_string()
+    if attrs:
+        attrs = " " + attrs
+
+    tag_data = {
+        "tag": node.kind,
+        "attrs": attrs,
+    }
+
+    content = self.emit_children(node)
+    if not content:
+        # single tag
+        return escape(u"<%(tag)s%(attrs)s />" % tag_data)
+
+    start_tag = escape(u"<%(tag)s%(attrs)s>" % tag_data)
+    end_tag = escape(u"</%(tag)s>" % tag_data)
+
+    return start_tag + content + end_tag
+
+def transparent_unknown_nodes(self, node):
+    return self._emit_content(node)
+
 
 
 class Html2CreoleEmitter(object):
 
-    def __init__(self, document_tree, unknown_emit=ESCAPE_UNKNOWN_NODES,
+    def __init__(self, document_tree, unknown_emit=raise_unknown_node,
                                                                 debug=False):
         self.root = document_tree
 
-        if unknown_emit == RAISE_UNKNOWN_NODES:
-            self.unknown_emit = self.raise_unknown_node
-        elif unknown_emit == HTML_MACRO_UNKNOWN_NODES:
-            self.unknown_emit = self.use_html_macro
-        elif unknown_emit == ESCAPE_UNKNOWN_NODES:
-            self.unknown_emit = self.escape_unknown_nodes
-        elif unknown_emit == TRANSPARENT_UNKNOWN_NODES:
-            self.unknown_emit = self.transparent_unknown_nodes
-        else:
-            raise AssertionError("wrong keyword argument 'unknown_emit'!")
+        self._unknown_emit = unknown_emit
 
         self.last = None
         self.debugging = debug
@@ -584,67 +630,6 @@ class Html2CreoleEmitter(object):
         self.deentity = Deentity() # for replacing html entities
         self.__inner_list = ""
         self.__mask_linebreak = False
-
-    #--------------------------------------------------------------------------
-
-    def raise_unknown_node(self, node):
-        """
-        Raise NotImplementedError on unknown tags.
-        """
-        raise NotImplementedError(
-            "Node from type '%s' is not implemented!" % node.kind
-        )
-
-    def use_html_macro(self, node):
-        """
-        Use the <<html>> macro to mask unknown tags.
-        """
-        #node.debug()
-        attrs = node.get_attrs_as_string()
-        if attrs:
-            attrs = " " + attrs
-
-        tag_data = {
-            "tag": node.kind,
-            "attrs": attrs,
-        }
-
-        content = self.emit_children(node)
-        if not content:
-            # single tag
-            return u"<<html>><%(tag)s%(attrs)s /><</html>>" % tag_data
-
-        start_tag = u"<<html>><%(tag)s%(attrs)s><</html>>" % tag_data
-        end_tag = u"<<html>></%(tag)s><</html>>" % tag_data
-
-        return start_tag + content + end_tag
-
-    def escape_unknown_nodes(self, node):
-        """
-        All unknown tags should be escaped.
-        """
-        #node.debug()
-        attrs = node.get_attrs_as_string()
-        if attrs:
-            attrs = " " + attrs
-
-        tag_data = {
-            "tag": node.kind,
-            "attrs": attrs,
-        }
-
-        content = self.emit_children(node)
-        if not content:
-            # single tag
-            return escape(u"<%(tag)s%(attrs)s />" % tag_data)
-
-        start_tag = escape(u"<%(tag)s%(attrs)s>" % tag_data)
-        end_tag = escape(u"</%(tag)s>" % tag_data)
-
-        return start_tag + content + end_tag
-
-    def transparent_unknown_nodes(self, node):
-        return self._emit_content(node)
 
     #--------------------------------------------------------------------------
 
@@ -877,9 +862,13 @@ class Html2CreoleEmitter(object):
         self.debug_msg("emit_node", "%s: %r" % (node.kind, node.content))
 
         method_name = "%s_emit" % node.kind
-        emit_method = getattr(self, method_name, self.unknown_emit)
+        emit_method = getattr(self, method_name, None)
 
-        content = emit_method(node)
+        if emit_method:
+            content = emit_method(node)
+        else:
+            content = self._unknown_emit(self, node)
+            
         if not isinstance(content, unicode):
             raise AssertionError(
                 "Method '%s' returns no unicode (returns: %r)" % (
