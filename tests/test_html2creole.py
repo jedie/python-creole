@@ -279,7 +279,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             <h1>one</h1>
         """)#, debug=True)
 
-    def test_newslines_after_headlines(self):
+    def test_newlines_after_headlines(self):
         self.assertCreole(r"""
             = Headline news
 
