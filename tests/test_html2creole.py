@@ -85,7 +85,34 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         """,
             unknown_emit=ESCAPE_UNKNOWN_NODES
         )
+    
+    def test_transparent_unknown_nodes(self):
+        """
+        Test creole.html2creole.transparent_unknown_nodes callable:
+        All unknown tags should be "transparent" and show only
+        their child nodes' content.
+        """
+        self.assertCreole(r"""
+            //baz//, **quux**
+        """, """
+            <form class="foo" id="bar"><label><em>baz</em></label>, <strong>quux</strong></form>
+        """, unknown_emit = TRANSPARENT_UNKNOWN_NODES)
 
+    def test_transparent_unknown_nodes_block_elements(self):
+        """
+        Test that block elements insert linefeeds into the stream.
+        """
+        self.assertCreole(r"""
+            //baz//,
+
+            **quux**
+
+            spam, ham, and eggs
+        """, """
+            <div><em>baz</em>,</div> <fieldset><strong>quux</strong></fieldset>
+            <span>spam, </span><label>ham, </label>and eggs
+        """, unknown_emit = TRANSPARENT_UNKNOWN_NODES)    
+        
     def test_entities(self):
         """
         Test html entities.
@@ -270,6 +297,17 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             <b>foo</b>
             <h1>one</h1>
         """)#, debug=True)
+
+    def test_newslines_after_headlines(self):
+        self.assertCreole(r"""
+            = Headline news
+
+            [[http://google.com|The googlezor]] is a big bad mother.
+        """, """
+            <h1>Headline news</h1>
+
+            <p><a href="http://google.com">The googlezor</a> is a big bad mother.</p>
+        """)
 
     def test_cross_lines(self):
         """ TODO: bold/italics cross lines
