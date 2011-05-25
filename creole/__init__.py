@@ -17,7 +17,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-__version__ = (0, 4, 0)#, "pre")
+__version__ = (0, 4, 1, "pre")
 __api__ = (1, 0) # Creole 1.0 spec - http://wikicreole.org/
 
 
@@ -27,6 +27,8 @@ import sys
 from creole_parser import BlockRules, Parser
 from creole2html import HtmlEmitter
 from html2creole import Html2CreoleParser, Html2CreoleEmitter
+from html2creole import raise_unknown_node, use_html_macro, \
+                            escape_unknown_nodes, transparent_unknown_nodes
 
 try:
     from django.utils.version import get_svn_revision
