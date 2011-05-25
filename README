@@ -37,13 +37,34 @@ u'This is **creole //markup//**'
 
 See also: http://github.com/jedie/python-creole/blob/master/demo.py
 
+
+===============
+ documentation
+===============
+
+We store documentation/exmplate into the project wiki:
+
+  - http://code.google.com/p/python-creole/w/list
+
+
+How to handle unknown html tags in html2creole:
+
+  - http://code.google.com/p/python-creole/wiki/UnknownHtmlTags
+
+
+Contributers should take a look at this page:
+
+  - http://code.google.com/p/python-creole/wiki/DeveloperInfo
+
+
 =========
  history
 =========
 
 - v0.5
 
-  - API changed: Html2CreoleEmitter optinal argument 'unknown_emit' taks now a callable for handle unknown html tags. 
+  - API changed: Html2CreoleEmitter optinal argument 'unknown_emit' taks now a callable for handle unknown html tags.
+  - remove unknown html tags is default behaviour in html2creole converting.
 
 - v0.4
 
@@ -122,6 +143,7 @@ See also: http://github.com/jedie/python-creole/blob/master/demo.py
 - v0.1.0
 
   - first version cut out from PyLucid CMS - http://www.pylucid.org
+
 
 =======
  links

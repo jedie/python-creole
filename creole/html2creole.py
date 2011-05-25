@@ -477,13 +477,7 @@ class Html2CreoleParser(HTMLParser):
         print "*" * 80
 
 
-
-
-
-
-
-
-
+#------------------------------------------------------------------------------
 
 
 entities_rules = '|'.join([
@@ -495,8 +489,6 @@ entities_rules = '|'.join([
 entities_regex = re.compile(
     entities_rules, re.VERBOSE | re.UNICODE | re.MULTILINE
 )
-
-
 
 
 class Deentity(object):
@@ -628,11 +620,12 @@ def transparent_unknown_nodes(emitter, node):
     return emitter._emit_content(node)
 
 
+#------------------------------------------------------------------------------
+
 
 class Html2CreoleEmitter(object):
 
-    def __init__(self, document_tree, unknown_emit=raise_unknown_node,
-                                                                debug=False):
+    def __init__(self, document_tree, unknown_emit=transparent_unknown_nodes, debug=False):
         self.root = document_tree
 
         self._unknown_emit = unknown_emit
