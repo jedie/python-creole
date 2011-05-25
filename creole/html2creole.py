@@ -557,14 +557,19 @@ class Deentity(object):
 
 def raise_unknown_node(emitter, node):
     """
+    unknown_emit callable for Html2CreoleEmitter
+    
     Raise NotImplementedError on unknown tags.
     """
     raise NotImplementedError(
         "Node from type '%s' is not implemented!" % node.kind
     )
 
+
 def use_html_macro(emitter, node):
     """
+    unknown_emit callable for Html2CreoleEmitter
+    
     Use the <<html>> macro to mask unknown tags.
     """
     attrs = node.get_attrs_as_string()
@@ -586,8 +591,11 @@ def use_html_macro(emitter, node):
 
     return start_tag + content + end_tag
 
+
 def escape_unknown_nodes(emitter, node):
     """
+    unknown_emit callable for Html2CreoleEmitter
+    
     All unknown tags should be escaped.
     """
     attrs = node.get_attrs_as_string()
@@ -609,7 +617,14 @@ def escape_unknown_nodes(emitter, node):
 
     return start_tag + content + end_tag
 
+
 def transparent_unknown_nodes(emitter, node):
+    """
+    unknown_emit callable for Html2CreoleEmitter 
+    
+    Remove all unknown html tags and show only
+    their child nodes' content.
+    """
     return emitter._emit_content(node)
 
 
@@ -866,7 +881,7 @@ class Html2CreoleEmitter(object):
             content = emit_method(node)
         else:
             content = self._unknown_emit(self, node)
-            
+
         if not isinstance(content, unicode):
             raise AssertionError(
                 "Method '%s' returns no unicode (returns: %r)" % (

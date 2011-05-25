@@ -56,6 +56,8 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             <i>italic</i></p>
         """)
 
+    #--------------------------------------------------------------------------
+
     def test_raise_unknown_node(self):
         """
         Test creole.html2creole.raise_unknown_node callable:
@@ -65,6 +67,25 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             html2creole,
             html_string=u"<unknwon>",
             unknown_emit=raise_unknown_node
+        )
+
+    def test_use_html_macro(self):
+        """
+        Test creole.html2creole.use_html_macro callable:
+        Use the <<html>> macro to mask unknown tags.
+        """
+        self.assertCreole(r"""
+            111 <<html>><unknown><</html>>foo<<html>></unknown><</html>> 222
+            333<<html>><unknown foo1="bar1" foo2="bar2"><</html>>foobar<<html>></unknown><</html>>444
+
+            555<<html>><unknown /><</html>>666
+        """, """
+            <p>111 <unknown>foo</unknown> 222<br />
+            333<unknown foo1="bar1" foo2="bar2">foobar</unknown>444</p>
+
+            <p>555<unknown />666</p>
+        """,
+            unknown_emit=use_html_macro
         )
 
     def test_escape_unknown_nodes(self):
@@ -85,7 +106,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         """,
             unknown_emit=escape_unknown_nodes
         )
-    
+
     def test_transparent_unknown_nodes(self):
         """
         Test creole.html2creole.transparent_unknown_nodes callable:
@@ -96,7 +117,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             //baz//, **quux**
         """, """
             <form class="foo" id="bar"><label><em>baz</em></label>, <strong>quux</strong></form>
-        """, unknown_emit = transparent_unknown_nodes)
+        """, unknown_emit=transparent_unknown_nodes)
 
     def test_transparent_unknown_nodes_block_elements(self):
         """
@@ -111,8 +132,10 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         """, """
             <div><em>baz</em>,</div> <fieldset><strong>quux</strong></fieldset>
             <span>spam, </span><label>ham, </label>and eggs
-        """, unknown_emit = transparent_unknown_nodes)    
-        
+        """, unknown_emit=transparent_unknown_nodes)
+
+    #--------------------------------------------------------------------------        
+
     def test_entities(self):
         """
         Test html entities.

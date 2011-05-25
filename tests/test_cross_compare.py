@@ -12,7 +12,7 @@
     Note: This only works fine if there is no problematic whitespace handling.
         In this case, we must test in test_creole2html.py or test_html2creole.py
 
-    :copyleft: 2008-2009 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2008-2011 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -20,9 +20,6 @@
 import unittest
 
 from tests.utils.base_unittest import BaseCreoleTest
-
-from creole.html2creole import RAISE_UNKNOWN_NODES, HTML_MACRO_UNKNOWN_NODES, \
-                                                        ESCAPE_UNKNOWN_NODES
 
 
 class CrossCompareTests(BaseCreoleTest):
@@ -135,6 +132,7 @@ class CrossCompareTests(BaseCreoleTest):
     def test_pre_contains_braces(self):
         self.assertCreole(r"""
             === Closing braces in nowiki:
+            
             {{{
             if (x != NULL) {
               for (i = 0; i < size; i++) {
@@ -144,6 +142,7 @@ class CrossCompareTests(BaseCreoleTest):
             }}}
         """, """
             <h3>Closing braces in nowiki:</h3>
+            
             <pre>
             if (x != NULL) {
               for (i = 0; i &lt; size; i++) {
@@ -217,21 +216,35 @@ class CrossCompareTests(BaseCreoleTest):
     def test_headlines(self):
         self.assertCreole(r"""
             = Level 1 (largest)
+            
             == Level 2
+            
             === Level 3
+            
             ==== Level 4
+            
             ===== Level 5
+            
             ====== Level 6
+            
             === **not** \\ //parsed//
+            
             No == headline == or?
         """, r"""
             <h1>Level 1 (largest)</h1>
+            
             <h2>Level 2</h2>
+            
             <h3>Level 3</h3>
+            
             <h4>Level 4</h4>
+            
             <h5>Level 5</h5>
+            
             <h6>Level 6</h6>
+            
             <h3>**not** \\ //parsed//</h3>
+            
             <p>No == headline == or?</p>
         """)
 
