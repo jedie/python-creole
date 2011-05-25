@@ -60,5 +60,6 @@ setup(
         "Topic :: Documentation",
         "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
         "Operating System :: OS Independent",
-    ]
+    ],
+    test_suite="tests.run_all_tests",
 )
