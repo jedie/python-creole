@@ -14,8 +14,9 @@ import re
 import sys
 import traceback
 
-import default_macros
+
 from creole_parser import Parser
+from creole import default_macros
 
 
 class HtmlEmitter:

@@ -17,6 +17,10 @@
     :copyleft: 2008-2011 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
+from creole.creole2html.creole_parser import BlockRules, Parser
+from creole.creole2html.creole2html import HtmlEmitter
+from creole.html2creole.parser import Html2CreoleParser
+from creole.html2creole.emitter import Html2CreoleEmitter
 
 
 __version__ = (0, 5, 0, "pre")
@@ -26,11 +30,11 @@ __api__ = (1, 0) # Creole 1.0 spec - http://wikicreole.org/
 import os
 import sys
 
-from creole_parser import BlockRules, Parser
-from creole2html import HtmlEmitter
-from html2creole import Html2CreoleParser, Html2CreoleEmitter
-from html2creole import raise_unknown_node, use_html_macro, \
-                            escape_unknown_nodes, transparent_unknown_nodes
+#from creole_parser import BlockRules, Parser
+#from creole2html import HtmlEmitter
+#from html2creole import Html2CreoleParser, Html2CreoleEmitter
+#from html2creole import raise_unknown_node, use_html_macro, \
+#                            escape_unknown_nodes, transparent_unknown_nodes
 
 
 try:
@@ -87,5 +91,4 @@ def html2creole(html_string, debug=False, **kwargs):
 if __name__ == '__main__':
     print "runing local doctest..."
     import doctest
-    doctest.testmod()#verbose=True)
-    print "--END--"
+    print doctest.testmod()#verbose=True)

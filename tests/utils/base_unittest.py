@@ -18,7 +18,7 @@ import unittest
 from utils import MarkupTest
 
 from creole import creole2html, html2creole
-from creole.html2creole import use_html_macro
+from creole.html2creole.unknown_tags import use_html_macro
 
 
 class BaseCreoleTest(MarkupTest):

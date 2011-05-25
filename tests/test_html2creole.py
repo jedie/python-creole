@@ -20,7 +20,7 @@ import unittest
 from tests.utils.base_unittest import BaseCreoleTest
 
 from creole import html2creole
-from creole.html2creole import raise_unknown_node, use_html_macro, \
+from creole.html2creole.unknown_tags import raise_unknown_node, use_html_macro, \
                             escape_unknown_nodes, transparent_unknown_nodes
 
 
