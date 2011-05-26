@@ -1,12 +1,29 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+
+"""
+    html -> creole Emitter
+    ~~~~~~~~~~~~~~~~~~~~~~
+
+
+    :copyleft: 2008-2011 by python-creole team, see AUTHORS for more details.
+    :license: GNU GPL v3 or above, see LICENSE for more details.
+"""
+
+import posixpath
+
 from creole.html2creole.unknown_tags import transparent_unknown_nodes
 from creole.html2creole.deentity import Deentity
-import posixpath
 from creole.html2creole.config import BLOCK_TAGS
-from creole.html2creole.parser import Html2CreoleParser
+from creole.html2creole.parser import HtmlParser
 
 
-class Html2CreoleEmitter(object):
-
+class CreoleEmitter(object):
+    """
+    Build from a document_tree (html2creole.parser.HtmlParser instance) a
+    creole markup text.
+    """
     def __init__(self, document_tree, unknown_emit=transparent_unknown_nodes, debug=False):
         self.root = document_tree
 
@@ -362,13 +379,13 @@ if __name__ == '__main__':
 """
 
 #    print data.strip()
-    h2c = Html2CreoleParser(
+    h2c = HtmlParser(
         debug=True
     )
     document_tree = h2c.feed(data)
     h2c.debug()
 
-    e = Html2CreoleEmitter(document_tree,
+    e = CreoleEmitter(document_tree,
         debug=True
     )
     content = e.emit()

@@ -13,7 +13,6 @@
 
 
 import sys
-import unittest
 
 from utils import MarkupTest
 

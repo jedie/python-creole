@@ -10,13 +10,12 @@
 
 
 from xml.sax.saxutils import escape
-import re
 import sys
 import traceback
 
 
-from creole_parser import Parser
-from creole import default_macros
+from creole.creole2html import default_macros
+from creole.creole2html.parser import CreoleParser
 
 
 class HtmlEmitter:
@@ -24,7 +23,6 @@ class HtmlEmitter:
     Generate HTML output for the document
     tree consisting of DocNodes.
     """
-
     def __init__(self, root, macros=default_macros, verbose=1, stderr=sys.stderr):
         self.root = root
         self.macros = macros
@@ -256,8 +254,8 @@ if __name__ == "__main__":
             for example ** this sentence"""
 
     print "-" * 80
-#    from creole_alt.creole import Parser
-    p = Parser(txt)
+#    from creole_alt.creole import CreoleParser
+    p = CreoleParser(txt)
     document = p.parse()
     p.debug()
 

@@ -17,10 +17,6 @@
     :copyleft: 2008-2011 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
-from creole.creole2html.creole_parser import BlockRules, Parser
-from creole.creole2html.creole2html import HtmlEmitter
-from creole.html2creole.parser import Html2CreoleParser
-from creole.html2creole.emitter import Html2CreoleEmitter
 
 
 __version__ = (0, 5, 0, "pre")
@@ -30,23 +26,14 @@ __api__ = (1, 0) # Creole 1.0 spec - http://wikicreole.org/
 import os
 import sys
 
-#from creole_parser import BlockRules, Parser
-#from creole2html import HtmlEmitter
-#from html2creole import Html2CreoleParser, Html2CreoleEmitter
-#from html2creole import raise_unknown_node, use_html_macro, \
-#                            escape_unknown_nodes, transparent_unknown_nodes
+
+from creole.creole2html.parser import BlockRules, CreoleParser
+from creole.creole2html.emitter import HtmlEmitter
+from creole.html2creole.parser import HtmlParser
+from creole.html2creole.emitter import CreoleEmitter
 
 
-try:
-    from django.utils.version import get_svn_revision
-except ImportError:
-    pass
-else:
-    path = os.path.split(os.path.abspath(__file__))[0]
-    svn_revision = get_svn_revision(path)
-    if svn_revision != u'SVN-unknown':
-        svn_revision = svn_revision.replace("-", "").lower()
-        __version__ += (svn_revision,)
+# TODO: Add git date to __version__
 
 
 VERSION_STRING = '.'.join(str(part) for part in __version__)
@@ -60,8 +47,10 @@ def creole2html(markup_string, debug=False, blog_line_breaks=True, **kwargs):
     >>> creole2html(u'This is **creole //markup//**!')
     u'<p>This is <strong>creole <i>markup</i></strong>!</p>\\n'
     """
+    assert isinstance(markup_string, unicode)
+
     # Create document tree from creole markup
-    document = Parser(markup_string, BlockRules(blog_line_breaks)).parse()
+    document = CreoleParser(markup_string, BlockRules(blog_line_breaks)).parse()
     if debug:
         document.debug()
 
@@ -77,14 +66,16 @@ def html2creole(html_string, debug=False, **kwargs):
     >>> html2creole(u'<p>This is <strong>creole <i>markup</i></strong>!</p>')
     u'This is **creole //markup//**!'
     """
+    assert isinstance(html_string, unicode)
+
     # create the document tree from html code
-    h2c = Html2CreoleParser(debug)
+    h2c = HtmlParser(debug)
     document_tree = h2c.feed(html_string)
     if debug:
         h2c.debug()
 
     # create creole markup from the document tree
-    emitter = Html2CreoleEmitter(document_tree, debug=debug, **kwargs)
+    emitter = CreoleEmitter(document_tree, debug=debug, **kwargs)
     return emitter.emit()
 
 

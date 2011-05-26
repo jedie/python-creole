@@ -65,6 +65,7 @@ Contributers should take a look at this page:
 
   - API changed: Html2CreoleEmitter optinal argument 'unknown_emit' taks now a callable for handle unknown html tags.
   - remove unknown html tags is default behaviour in html2creole converting.
+  - restructure and cleanup sourcecode files.
 
 - v0.4
 

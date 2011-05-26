@@ -14,7 +14,6 @@
 """
 
 
-import sys
 import unittest
 
 from tests.utils.base_unittest import BaseCreoleTest
