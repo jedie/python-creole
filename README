@@ -63,7 +63,12 @@ Contributers should take a look at this page:
 
 - v0.5
 
-  - API changed: Html2CreoleEmitter optinal argument 'unknown_emit' taks now a callable for handle unknown html tags.
+  - API changed:
+
+	- Html2CreoleEmitter optinal argument 'unknown_emit' taks now a callable for handle unknown html tags.
+    - No macros used as default in creole2html converting.
+    - We remove the support for callable macros. Only dict and modules are allowed.
+
   - remove unknown html tags is default behaviour in html2creole converting.
   - restructure and cleanup sourcecode files.
 

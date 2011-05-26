@@ -14,8 +14,8 @@ import sys
 import traceback
 
 
-from creole.creole2html import default_macros
 from creole.creole2html.parser import CreoleParser
+from creole.creole2html.str2dict import str2dict
 
 
 class HtmlEmitter:
@@ -23,7 +23,7 @@ class HtmlEmitter:
     Generate HTML output for the document
     tree consisting of DocNodes.
     """
-    def __init__(self, root, macros=default_macros, verbose=1, stderr=sys.stderr):
+    def __init__(self, root, macros=None, verbose=1, stderr=sys.stderr):
         self.root = root
         self.macros = macros
         self.verbose = verbose
@@ -154,11 +154,18 @@ class HtmlEmitter:
     def macro_emit(self, node):
         #print node.debug()
         macro_name = node.macro_name
+        text = node.content
         macro = None
 
-        if callable(self.macros):
-            macro = lambda args, text: self.macros(macro_name, args=args, text=text)
-        elif isinstance(self.macros, dict):
+        args = node.macro_args
+        macro_kwargs = str2dict(args)
+        macro_kwargs["text"] = text
+
+        if callable(self.macros) == True:
+            raise DeprecationWarning("Callable macros are not supported anymore!")
+            return
+
+        if isinstance(self.macros, dict):
             try:
                 macro = self.macros[macro_name]
             except KeyError, e:
@@ -176,7 +183,7 @@ class HtmlEmitter:
             )
 
         try:
-            result = macro(args=node.macro_args, text=node.content)
+            result = macro(**macro_kwargs)
         except Exception, err:
             return self.error(
                 u"Macro '%s' error: %s" % (macro_name, err),

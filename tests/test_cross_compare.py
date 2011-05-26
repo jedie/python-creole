@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
+from creole.creole2html import example_macros
 
 
 """
@@ -482,7 +483,9 @@ class CrossCompareTests(BaseCreoleTest):
             333<x foo1="bar1">foobar</x>444</p>
 
             <p>555<x />666</p>
-        """)
+        """,
+            macros=example_macros
+        )
 
     def test_entities(self):
         self.assertCreole(u"""

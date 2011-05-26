@@ -36,7 +36,7 @@ class BaseCreoleTest(MarkupTest):
         print "-" * 79
 
     def assert_Creole2html(self, source_string, should_string, \
-                                    verbose=1, stderr=sys.stderr, debug=False):
+                        verbose=1, stderr=sys.stderr, debug=False, macros=None):
         """
         compare the generated html code from the markup string >source_string<
         with the >should_string< reference.
@@ -54,7 +54,8 @@ class BaseCreoleTest(MarkupTest):
 
         # convert creole markup into html code
         out_string = creole2html(
-            markup_string, verbose=verbose, stderr=stderr, debug=debug
+            markup_string, verbose=verbose, stderr=stderr, \
+                                                debug=debug, macros=macros
         )
         if debug:
             self._debug_text("assert_Creole2html() creole2html", out_string)
@@ -93,7 +94,7 @@ class BaseCreoleTest(MarkupTest):
         # compare
         self.assertEqual(out_string, markup)
 
-    def assertCreole(self, source_string, should_string, debug=False):
+    def assertCreole(self, source_string, should_string, debug=False, macros=None):
         """
         Cross compare with creol2html _and_ html2creole with the same given
         refenrece strings.
@@ -103,7 +104,11 @@ class BaseCreoleTest(MarkupTest):
         source_string = unicode(source_string)
         should_string = unicode(should_string)
         self.assertNotEqual(source_string, should_string)
-        self.assert_Creole2html(source_string, should_string, debug)
+
+        self.assert_Creole2html(
+            source_string, should_string, debug, macros=macros
+        )
+
         self.assert_html2Creole(
             source_string, should_string, debug,
             unknown_emit=use_html_macro
