@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 # coding: utf-8
-from creole.creole2html import example_macros
-
 
 """
-    cross compare unittest
-    ~~~~~~~~~~~~~~~~~~~~~~
-
-    Here we test both ways creol2html _and_ html2creole with the same given
-    refenrece strings.
+    cross compare creole unittest
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    Compare all similarities between:
+        * creole2html
+        * html2creole
 
     Note: This only works fine if there is no problematic whitespace handling.
         In this case, we must test in test_creole2html.py or test_html2creole.py
@@ -20,90 +19,86 @@ from creole.creole2html import example_macros
 
 import unittest
 
+from creole.shared import example_macros
+from creole.shared.unknown_tags import use_html_macro
 from tests.utils.base_unittest import BaseCreoleTest
 
 
-class CrossCompareTests(BaseCreoleTest):
-    """
-    Cross compare tests for creol2html _and_ html2creole with the same test
-    strings. Used BaseCreoleTest.assertCreole()
-    """
+class CrossCompareCreoleTests(BaseCreoleTest):
     def test_typeface(self):
-        self.assertCreole(r"""
-            basics:
-            **//bold italics//**
-            //**bold italics**//
-            //This is **also** good.//
-
-            Creole 1.0 optional:
-            This is ##monospace## text.
-            This is ^^superscripted^^ text.
-            This is ,,subscripted,, text.
-            This is __underlined__ text.
-
-            own additions:
-            This is --small-- and this ~~strikeout~~ ;)
-        """, """
-            <p>basics:<br />
-            <strong><i>bold italics</i></strong><br />
-            <i><strong>bold italics</strong></i><br />
-            <i>This is <strong>also</strong> good.</i></p>
-
-            <p>Creole 1.0 optional:<br />
-            This is <tt>monospace</tt> text.<br />
-            This is <sup>superscripted</sup> text.<br />
-            This is <sub>subscripted</sub> text.<br />
-            This is <u>underlined</u> text.</p>
-
-            <p>own additions:<br />
-            This is <small>small</small> and this <del>strikeout</del> ;)</p>
-        """)
+        self.cross_compare_creole(
+            creole_string=r"""
+                basics:
+                **//bold italics//**
+                //**bold italics**//
+                //This is **also** good.//
+    
+                Creole 1.0 optional:
+                This is ##monospace## text.
+                This is ^^superscripted^^ text.
+                This is ,,subscripted,, text.
+                This is __underlined__ text.
+    
+                own additions:
+                This is --small-- and this ~~strikeout~~ ;)
+            """,
+            html_string="""
+                <p>basics:<br />
+                <strong><i>bold italics</i></strong><br />
+                <i><strong>bold italics</strong></i><br />
+                <i>This is <strong>also</strong> good.</i></p>
+    
+                <p>Creole 1.0 optional:<br />
+                This is <tt>monospace</tt> text.<br />
+                This is <sup>superscripted</sup> text.<br />
+                This is <sub>subscripted</sub> text.<br />
+                This is <u>underlined</u> text.</p>
+    
+                <p>own additions:<br />
+                This is <small>small</small> and this <del>strikeout</del> ;)</p>
+            """
+        )
 
     def test_small(self):
         """
         http://code.google.com/p/python-creole/issues/detail?id=12#c0
         """
-        self.assertCreole(r"""
-            no -- small
-            no // italics
-            no ** bold
-            no ## monospace
-            no ^^ superscripted
-            no ,, subscripted
-            no __ underline
-        """, """
-            <p>no -- small<br />
-            no // italics<br />
-            no ** bold<br />
-            no ## monospace<br />
-            no ^^ superscripted<br />
-            no ,, subscripted<br />
-            no __ underline</p>
-        """, debug=False)
+        self.cross_compare_creole(
+            creole_string=r"""
+                no -- small
+                no // italics
+                no ** bold
+                no ## monospace
+                no ^^ superscripted
+                no ,, subscripted
+                no __ underline
+            """,
+            html_string="""
+                <p>no -- small<br />
+                no // italics<br />
+                no ** bold<br />
+                no ## monospace<br />
+                no ^^ superscripted<br />
+                no ,, subscripted<br />
+                no __ underline</p>
+            """,
+            debug=False
+        )
 
-    def test_links(self):
-        self.assertCreole(r"""
-            A [[internal]] link...
-            ...and [[/a internal]] link.
-        
-            With pipe separator:
-            1 [[internal links|link A]] test.
-            2 [[http://domain.tld|link B]] test.
-            3 [[http://de.wikipedia.org/wiki/Creole_(Markup)|Creole@wikipedia]]
-            4 [[Foo://bar|unknown protocol]]
-        """, """
-            <p>A <a href="internal">internal</a> link...<br />
-            ...and <a href="/a internal">/a internal</a> link.</p>
-            
-            <p>With pipe separator:<br />
-            1 <a href="internal links">link A</a> test.<br />
-            2 <a href="http://domain.tld">link B</a> test.<br />
-            3 <a href="http://de.wikipedia.org/wiki/Creole_(Markup)">Creole@wikipedia</a><br />
-            4 <a href="Foo://bar">unknown protocol</a></p>
-        """)
+    def test_link(self):
+        self.cross_compare_creole(
+            creole_string=r"""
+                this is [[/a internal]] link.
+                1 [[internal links|link A]] test.
+            """,
+            html_string="""
+                <p>this is <a href="/a internal">/a internal</a> link.<br />
+                1 <a href="internal links">link A</a> test.</p>
+            """
+        )
 
     def test_bolditalic_links(self):
-        self.assertCreole(r"""
+        self.cross_compare_creole(r"""
             //[[a internal]]//
             **[[Shortcut2|a page2]]**
             //**[[Shortcut3|a page3]]**//
@@ -113,48 +108,36 @@ class CrossCompareTests(BaseCreoleTest):
             <i><strong><a href="Shortcut3">a page3</a></strong></i></p>
         """)
 
-    def test_image(self):
-        self.assertCreole(r"""
-            a {{/image.jpg|JPG pictures}} and
-            a {{/image.jpeg|JPEG pictures}} and
-            a {{/image.gif|GIF pictures}} and
-            a {{/image.png|PNG pictures}} !
-            {{/path1/path2/image|Image without files ext?}}
-            [[http://example.com/|{{myimage.jpg|example site}}]]
-        """, """
-            <p>a <img src="/image.jpg" alt="JPG pictures" /> and<br />
-            a <img src="/image.jpeg" alt="JPEG pictures" /> and<br />
-            a <img src="/image.gif" alt="GIF pictures" /> and<br />
-            a <img src="/image.png" alt="PNG pictures" /> !<br />
-            <img src="/path1/path2/image" alt="Image without files ext?" /><br />
-            <a href="http://example.com/"><img src="myimage.jpg" alt="example site" /></a></p>
-        """)
-
     def test_pre_contains_braces(self):
-        self.assertCreole(r"""
-            === Closing braces in nowiki:
-            
-            {{{
-            if (x != NULL) {
-              for (i = 0; i < size; i++) {
-                if (x[i] > 0) {
-                  x[i]--;
-              }}}
-            }}}
-        """, """
-            <h3>Closing braces in nowiki:</h3>
-            
-            <pre>
-            if (x != NULL) {
-              for (i = 0; i &lt; size; i++) {
-                if (x[i] &gt; 0) {
-                  x[i]--;
-              }}}
-            </pre>
-        """)
+        """
+        braces, &gt and %lt in a pre area.
+        """
+        self.cross_compare_creole(
+            creole_string=r"""
+                === Closing braces in nowiki:
+                
+                {{{
+                if (x != NULL) {
+                  for (i = 0; i < size; i++) {
+                    if (x[i] > 0) {
+                      x[i]--;
+                  }}}
+                }}}
+                """,
+            html_string="""
+                <h3>Closing braces in nowiki:</h3>
+                
+                <pre>
+                if (x != NULL) {
+                  for (i = 0; i &lt; size; i++) {
+                    if (x[i] &gt; 0) {
+                      x[i]--;
+                  }}}
+                </pre>
+            """)
 
     def test_pre2(self):
-        self.assertCreole(r"""
+        self.cross_compare_creole(r"""
             111
             
             {{{
@@ -189,7 +172,7 @@ class CrossCompareTests(BaseCreoleTest):
         """)
 
     def test_pre(self):
-        self.assertCreole(r"""
+        self.cross_compare_creole(r"""
             start
             
             {{{
@@ -208,49 +191,32 @@ class CrossCompareTests(BaseCreoleTest):
         """)
 
     def test_tt(self):
-        self.assertCreole(r"""
+        self.cross_compare_creole(r"""
             this is ##**strong** Teletyper## ;)
         """, """
             <p>this is <tt><strong>strong</strong> Teletyper</tt> ;)</p>
         """)
 
-    def test_headlines(self):
-        self.assertCreole(r"""
-            = Level 1 (largest)
-            
-            == Level 2
-            
-            === Level 3
-            
-            ==== Level 4
-            
-            ===== Level 5
-            
-            ====== Level 6
-            
-            === **not** \\ //parsed//
-            
-            No == headline == or?
-        """, r"""
-            <h1>Level 1 (largest)</h1>
-            
-            <h2>Level 2</h2>
-            
-            <h3>Level 3</h3>
-            
-            <h4>Level 4</h4>
-            
-            <h5>Level 5</h5>
-            
-            <h6>Level 6</h6>
-            
-            <h3>**not** \\ //parsed//</h3>
-            
-            <p>No == headline == or?</p>
-        """)
+    def test_no_inline_headline(self):
+        self.cross_compare_creole(
+            creole_string=r"""
+                = Headline
+                
+                === **not** //parsed//
+                
+                No == headline == or?
+            """,
+            html_string="""
+                <h1>Headline</h1>
+                
+                <h3>**not** //parsed//</h3>
+                
+                <p>No == headline == or?</p>
+            """
+        )
 
     def test_horizontal_rule(self):
-        self.assertCreole(r"""
+        self.cross_compare_creole(r"""
             one
 
             ----
@@ -265,7 +231,7 @@ class CrossCompareTests(BaseCreoleTest):
         """)
 
     def test_bullet_list(self):
-        self.assertCreole(r"""
+        self.cross_compare_creole(r"""
             * Item 1
             ** Item 1.1
             ** a **bold** Item 1.2
@@ -322,7 +288,7 @@ class CrossCompareTests(BaseCreoleTest):
         """)
 
     def test_number_list(self):
-        self.assertCreole(r"""
+        self.cross_compare_creole(r"""
             # Item 1
             ## Item 1.1
             ## a **bold** Item 1.2
@@ -380,48 +346,8 @@ class CrossCompareTests(BaseCreoleTest):
 #        debug = True
         )
 
-    def test_list(self):
-        """ Bold, Italics, Links, Pre in Lists """
-        self.assertCreole(r"""
-            * **bold** item
-            * //italic// item
-
-            # item about a [[certain_page]]
-        """, """
-            <ul>
-                <li><strong>bold</strong> item</li>
-                <li><i>italic</i> item</li>
-            </ul>
-            <ol>
-                <li>item about a <a href="certain_page">certain_page</a></li>
-            </ol>
-        """)
-
-    def test_simple_table(self):
-        self.assertCreole(r"""
-            A simple table:
-
-            |= Headline 1 |= Headline 2 |
-            | cell one    | cell two    |
-            ...end
-        """, """
-            <p>A simple table:</p>
-
-            <table>
-            <tr>
-                <th>Headline 1</th>
-                <th>Headline 2</th>
-            </tr>
-            <tr>
-                <td>cell one</td>
-                <td>cell two</td>
-            </tr>
-            </table>
-            <p>...end</p>
-        """)
-
     def test_big_table(self):
-        self.assertCreole(r"""
+        self.cross_compare_creole(r"""
             A Table...
 
             |= Headline  |= a other\\headline    |= the **big end**     |
@@ -471,24 +397,32 @@ class CrossCompareTests(BaseCreoleTest):
         """
         use the <<html>> macro to mask unknown tags.
         Note:
-            All cross compare teste use html2creole.HTML_MACRO_UNKNOWN_NODES
+            All cross compare tests use html2creole.HTML_MACRO_UNKNOWN_NODES
         """
-        self.assertCreole(r"""
+        self.cross_compare_creole(u"""
             111 <<html>><x><</html>>foo<<html>></x><</html>> 222
             333<<html>><x foo1="bar1"><</html>>foobar<<html>></x><</html>>444
 
             555<<html>><x /><</html>>666
-        """, """
+        """, u"""
             <p>111 <x>foo</x> 222<br />
             333<x foo1="bar1">foobar</x>444</p>
 
             <p>555<x />666</p>
         """,
-            macros=example_macros
+            # use macro in creole2html emitter
+            html_emitter_kwargs={
+                "macros":example_macros,
+
+            },
+            # escape unknown tags with <<html>> in html2creole emitter
+            creole_emitter_kwargs={
+                "unknown_emit":use_html_macro,
+            }
         )
 
     def test_entities(self):
-        self.assertCreole(u"""
+        self.cross_compare_creole(u"""
             less-than sign: <
             greater-than sign: >
         """, """
@@ -497,7 +431,7 @@ class CrossCompareTests(BaseCreoleTest):
         """)
 
 #    def test_macro_html1(self):
-#        self.assertCreole(r"""
+#        self.cross_compare_creole(r"""
 #            <<a_not_existing_macro>>
 #
 #            <<code>>
@@ -526,7 +460,7 @@ class CrossCompareTests(BaseCreoleTest):
 
 
 #    def test_macro_pygments_code(self):
-#        self.assertCreole(r"""
+#        self.cross_compare_creole(r"""
 #            a macro:
 #            <<code ext=.css>>
 #            /* Stylesheet */

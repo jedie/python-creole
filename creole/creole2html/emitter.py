@@ -146,10 +146,10 @@ class HtmlEmitter:
 
     def image_emit(self, node):
         target = node.content
-        text = self.get_text(node)
+        text = self.attr_escape(self.get_text(node))
 
-        return u'<img src="%s" alt="%s" />' % (
-            self.attr_escape(target), self.attr_escape(text))
+        return u'<img src="%s" title="%s" alt="%s" />' % (
+            self.attr_escape(target), text, text)
 
     def macro_emit(self, node):
         #print node.debug()
@@ -238,7 +238,7 @@ class HtmlEmitter:
 
     def emit(self):
         """Emit the document represented by self.root DOM tree."""
-        return self.emit_node(self.root)
+        return self.emit_node(self.root).strip()
 
     def error(self, text, handle_traceback=False):
         """

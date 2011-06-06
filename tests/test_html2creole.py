@@ -19,7 +19,7 @@ import unittest
 from tests.utils.base_unittest import BaseCreoleTest
 
 from creole import html2creole
-from creole.html2creole.unknown_tags import raise_unknown_node, use_html_macro, \
+from creole.shared.unknown_tags import raise_unknown_node, use_html_macro, \
                             escape_unknown_nodes, transparent_unknown_nodes
 
 
@@ -34,8 +34,8 @@ class TestHtml2Creole(unittest.TestCase):
 
 class TestHtml2CreoleMarkup(BaseCreoleTest):
 
-    def assertCreole(self, raw_markup, raw_html, debug=False, **kwargs):
-        self.assert_html2Creole(raw_markup, raw_html, debug=debug, **kwargs)
+#    def assertCreole(self, raw_markup, raw_html, debug=False, **kwargs):
+#        self.assert_html2creole(raw_markup, raw_html, debug=debug, **kwargs)
 
     #--------------------------------------------------------------------------
 
@@ -43,7 +43,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         """
         Some other html tags -> convert.
         """
-        self.assertCreole(r"""
+        self.assert_html2creole(r"""
             **Bold text**
             **Big text**
             //em tag//
@@ -65,7 +65,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         self.assertRaises(NotImplementedError,
             html2creole,
             html_string=u"<unknwon>",
-            unknown_emit=raise_unknown_node
+            emitter_kwargs={"unknown_emit":raise_unknown_node}
         )
 
     def test_use_html_macro(self):
@@ -73,7 +73,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         Test creole.html2creole.use_html_macro callable:
         Use the <<html>> macro to mask unknown tags.
         """
-        self.assertCreole(r"""
+        self.assert_html2creole(r"""
             111 <<html>><unknown><</html>>foo<<html>></unknown><</html>> 222
             333<<html>><unknown foo1="bar1" foo2="bar2"><</html>>foobar<<html>></unknown><</html>>444
 
@@ -84,7 +84,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 
             <p>555<unknown />666</p>
         """,
-            unknown_emit=use_html_macro
+            emitter_kwargs={"unknown_emit":use_html_macro}
         )
 
     def test_escape_unknown_nodes(self):
@@ -92,7 +92,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         Test creole.html2creole.escape_unknown_nodes callable:
         All unknown tags should be escaped.
         """
-        self.assertCreole(r"""
+        self.assert_html2creole(r"""
             111 &lt;unknown&gt;foo&lt;/unknown&gt; 222
             333&lt;unknown foo1="bar1" foo2="bar2"&gt;foobar&lt;/unknown&gt;444
 
@@ -103,7 +103,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 
             <p>555<unknown />666</p>
         """,
-            unknown_emit=escape_unknown_nodes
+            emitter_kwargs={"unknown_emit":escape_unknown_nodes}
         )
 
     def test_transparent_unknown_nodes(self):
@@ -112,17 +112,18 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         All unknown tags should be "transparent" and show only
         their child nodes' content.
         """
-        self.assertCreole(r"""
+        self.assert_html2creole(r"""
             //baz//, **quux**
         """, """
             <form class="foo" id="bar"><label><em>baz</em></label>, <strong>quux</strong></form>
-        """, unknown_emit=transparent_unknown_nodes)
+        """, emitter_kwargs={"unknown_emit":transparent_unknown_nodes}
+        )
 
     def test_transparent_unknown_nodes_block_elements(self):
         """
         Test that block elements insert linefeeds into the stream.
         """
-        self.assertCreole(r"""
+        self.assert_html2creole(r"""
             //baz//,
 
             **quux**
@@ -131,7 +132,8 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         """, """
             <div><em>baz</em>,</div> <fieldset><strong>quux</strong></fieldset>
             <span>spam, </span><label>ham, </label>and eggs
-        """, unknown_emit=transparent_unknown_nodes)
+        """, emitter_kwargs={"unknown_emit":transparent_unknown_nodes}
+        )
 
     #--------------------------------------------------------------------------        
 
@@ -144,7 +146,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         Box Drawing:
             http://pylucid.org/_command/144/DecodeUnicode/display/66/
         """
-        self.assertCreole(u"""
+        self.assert_html2creole(u"""
             * less-than sign: < < <
             * greater-than sign: > > >
             * copyright sign: © ©
@@ -162,14 +164,14 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 
     def test_html_entity_nbsp(self):
         """ Non breaking spaces is not in htmlentitydefs """
-        self.assertCreole(r"""
+        self.assert_html2creole(r"""
             a non braking space: [ ] !
         """, """
             <p>a non braking space: [&nbsp;] !</p>
         """)
 
     def test_html_entity_in_pre(self):
-        self.assertCreole(r"""
+        self.assert_html2creole(r"""
             {{{<code>{% lucidTag RSS url="http url" %}</code>}}}
         """, """
             <pre><code>&#x7B;% lucidTag RSS url="http url" %&#x7D;</code></pre>
@@ -180,19 +182,19 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         Test a unknown html entity.
         FIXME: What sould happend?
         """
-        self.assertCreole(r"""
+        self.assert_html2creole(r"""
             copy&paste
         """, """
             <p>copy&paste</p>
         """)
-        self.assertCreole(r"""
+        self.assert_html2creole(r"""
             [[/url/|Search & Destroy]]
         """, """
             <a href="/url/">Search & Destroy</a>
         """)
 
     def test_tbody_table(self):
-        self.assertCreole(r"""
+        self.assert_html2creole(r"""
             Ignore 'tbody' tag in tables:
             
             |= Headline 1 |= Headline 2 |
@@ -217,7 +219,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 
     def test_p_table(self):
         """ strip <p> tags in table cells """
-        self.assertCreole(r"""
+        self.assert_html2creole(r"""
             | cell one | cell two\\new line |
         """, """
             <table>
@@ -230,7 +232,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 
     def test_image(self):
         """ test image tag with different alt/title attribute """
-        self.assertCreole(r"""
+        self.assert_html2creole(r"""
             {{foobar1.jpg|foobar1.jpg}}
             {{/foobar2.jpg|foobar2.jpg}}
             {{/path1/path2/foobar3.jpg|foobar3.jpg}}
@@ -250,7 +252,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         """)
 
     def test_non_closed_br(self):
-        self.assertCreole(r"""
+        self.assert_html2creole(r"""
             one
             two
         """, """
@@ -259,7 +261,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         """)
 
     def test_explicit_closed_br(self):
-        self.assertCreole(r"""
+        self.assert_html2creole(r"""
             one
             two
         """, """
@@ -271,7 +273,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         """
         http://code.google.com/p/python-creole/issues/detail?id=16
         """
-        self.assertCreole(r"""
+        self.assert_html2creole(r"""
             **foo**
             
             * one
@@ -280,7 +282,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         """)
 
     def test_empty_tags_are_not_escaped(self):
-        self.assertCreole(r"""
+        self.assert_html2creole(r"""
             //baz//, **quux**
         """, """
             <div class="foo" id="bar"><span><em>baz</em></span>, <strong>quux</strong></div>
@@ -292,7 +294,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 
     def test_newline_before_headline(self):
         """ TODO: http://code.google.com/p/python-creole/issues/detail?id=16#c5 """
-        self.assertCreole(r"""
+        self.assert_html2creole(r"""
             **foo**
             
             = one
@@ -302,7 +304,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         """)#, debug=True)
 
     def test_newlines_after_headlines(self):
-        self.assertCreole(r"""
+        self.assert_html2creole(r"""
             = Headline news
 
             [[http://google.com|The googlezor]] is a big bad mother.
@@ -316,7 +318,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         """ TODO: bold/italics cross lines
         see: http://code.google.com/p/python-creole/issues/detail?id=13 
         """
-        self.assertCreole(r"""
+        self.assert_html2creole(r"""
             Bold and italics should //be
             able// to **cross
             lines.**
@@ -329,7 +331,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 
     def test_no_space_before_blocktag(self):
         """ TODO: Bug in html2creole.strip_html(): Don't add a space before/after block tags """
-        self.assertCreole(r"""
+        self.assert_html2creole(r"""
             **foo**
             
             * one
@@ -341,7 +343,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 
     def test_format_in_a_text(self):
         """ TODO: http://code.google.com/p/python-creole/issues/detail?id=4 """
-        self.assertCreole(r"""
+        self.assert_html2creole(r"""
             **[[/url/|title]]**
         """, """
             <a href="/url/"><strong>title</strong></a>
@@ -349,7 +351,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 
 
 #    def test_links(self):
-#        self.assertCreole(r"""
+#        self.assert_html2creole(r"""
 #            test link: '[[internal links|link A]]' 1 and
 #            test link: '[[http://domain.tld|link B]]' 2.
 #        """, """
@@ -358,7 +360,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 #        """)
 #
 #    def test_images(self):
-#        self.assertCreole(r"""
+#        self.assert_html2creole(r"""
 #            a {{/image.jpg|JPG pictures}} and
 #            a {{/image.jpeg|JPEG pictures}} and
 #            a {{/image.gif|GIF pictures}} and
@@ -375,7 +377,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 #        """)
 #
 #    def test_nowiki1(self):
-#        self.assertCreole(r"""
+#        self.assert_html2creole(r"""
 #            this:
 #            {{{
 #            //This// does **not** get [[formatted]]
@@ -410,7 +412,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 
 #
 #    def test_horizontal_rule(self):
-#        self.assertCreole(r"""
+#        self.assert_html2creole(r"""
 #            one
 #            ----
 #            two
@@ -424,7 +426,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 #        """
 #        FIXME: Two newlines between a list and the next paragraph :(
 #        """
-#        self.assertCreole(r"""
+#        self.assert_html2creole(r"""
 #            ==== List a:
 #            * a1 item
 #            ** a1.1 Force\\linebreak
@@ -485,7 +487,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 #
 #    def test_list2(self):
 #        """ Bold, Italics, Links, Pre in Lists """
-#        self.assertCreole(r"""
+#        self.assert_html2creole(r"""
 #            * **bold** item
 #            * //italic// item
 #
@@ -508,7 +510,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 #    # TODO:
 #
 #    def test_escape_char(self):
-#        self.assertCreole(r"""
+#        self.assert_html2creole(r"""
 #            ~#1
 #            http://domain.tld/~bar/
 #            ~http://domain.tld/

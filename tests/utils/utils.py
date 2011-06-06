@@ -158,7 +158,7 @@ class MarkupTest(unittest.TestCase):
         """
         txt = unicode(txt)
         txt = txt.splitlines()
-        assert txt[0] == "", "First must be empty!"
+        assert txt[0] == "", "First must be empty! Is: %s" % repr(txt[0])
         txt = txt[1:] # Skip the first line
 
         # get the indentation level from the first line

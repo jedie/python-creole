@@ -8,6 +8,8 @@ Python lib for:
 
  - html -> creole markup 
 
+ - html -> textile markup (not completed yet)
+
 python-creole is pure python. No external libs needed.
 
 The creole2html part based on the creole markup parser and emitter from the MoinMoin project by Radomir Dopieralski and Thomas Waldmann.
@@ -60,6 +62,11 @@ Contributers should take a look at this page:
 =========
  history
 =========
+
+- v0.6
+
+  - *NEW*: html2textile converter
+  - some API changed!
 
 - v0.5
 

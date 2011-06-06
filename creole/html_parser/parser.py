@@ -16,9 +16,9 @@ import re
 import warnings
 from HTMLParser import HTMLParser
 
-from creole.document_tree import DocNode, DebugList
-from creole.html2creole.config import BLOCK_TAGS, IGNORE_TAGS
-from creole.html2creole.strip_html import strip_html
+from creole.html_parser.config import BLOCK_TAGS, IGNORE_TAGS
+from creole.html_tools.strip_html import strip_html
+from creole.shared.document_tree import DocNode, DebugList
 
 #------------------------------------------------------------------------------
 
@@ -46,6 +46,22 @@ headline_tag_re = re.compile(r"h(\d)", re.UNICODE)
 
 
 class HtmlParser(HTMLParser):
+    """
+    parse html code and create a document tree.
+    
+    >>> p = HtmlParser()
+    >>> p.feed(u"<p>html <strong>code</strong></p>")
+    <DocNode document: None>
+    >>> p.debug()
+    ________________________________________________________________________________
+      document tree:
+    ================================================================================
+    p
+        data: u'html '
+        strong
+            data: u'code'
+    ********************************************************************************
+    """
     # placeholder html tag for pre cutout areas:
     _block_placeholder = "blockdata"
     _inline_placeholder = "inlinedata"
@@ -264,3 +280,10 @@ class HtmlParser(HTMLParser):
 if __name__ == '__main__':
     import doctest
     print doctest.testmod()
+
+    p = HtmlParser(debug=True)
+    p.feed(u"""\
+<p><span>in span</span><br />
+<code>in code</code></p>
+""")
+    p.debug()

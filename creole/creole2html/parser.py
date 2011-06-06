@@ -27,7 +27,7 @@ import re
 
 from creole.creole2html.rules import BlockRules, INLINE_FLAGS, INLINE_RULES, \
     SpecialRules, InlineRules
-from creole.document_tree import DocNode, DebugList
+from creole.shared.document_tree import DocNode, DebugList
 
 
 class CreoleParser:
@@ -57,13 +57,12 @@ class CreoleParser:
     inline_re = re.compile('|'.join(INLINE_RULES), INLINE_FLAGS)
 
 
-    def __init__(self, raw, block_rules=None):
+    def __init__(self, raw, block_rules=BlockRules, blog_line_breaks=True):
         assert isinstance(raw, unicode)
         self.raw = raw
 
         # setup block element rules:
-        if not block_rules:
-            block_rules = BlockRules()
+        block_rules = block_rules(blog_line_breaks=blog_line_breaks)
         self.block_re = re.compile('|'.join(block_rules.rules), block_rules.re_flags)
 
         self.root = DocNode('document', None)

@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # coding: utf-8
-from creole.html2creole.config import BLOCK_TAGS
 
 
 """
@@ -15,6 +14,7 @@ from creole.html2creole.config import BLOCK_TAGS
 
 import re
 
+from creole.html_parser.config import BLOCK_TAGS
 
 
 strip_html_regex = re.compile(

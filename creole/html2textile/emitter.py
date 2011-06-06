@@ -2,7 +2,7 @@
 # coding: utf-8
 
 """
-    html -> creole Emitter
+    html -> textile Emitter
     ~~~~~~~~~~~~~~~~~~~~~~
 
 
@@ -16,68 +16,72 @@ from creole.shared.base_emitter import BaseEmitter
 
 
 
-class CreoleEmitter(BaseEmitter):
+class TextileEmitter(BaseEmitter):
     """
     Build from a document_tree (html2creole.parser.HtmlParser instance) a
     creole markup text.
     """
-    def __init__(self, *args, **kwargs):
-        super(CreoleEmitter, self).__init__(*args, **kwargs)
 
-        self.table_head_prefix = "= "
-        self.table_auto_width = True
+    def __init__(self, *args, **kwargs):
+        super(TextileEmitter, self).__init__(*args, **kwargs)
+
+        self.table_head_prefix = "_. "
+        self.table_auto_width = False
 
     #--------------------------------------------------------------------------
 
     def blockdata_pre_emit(self, node):
         """ pre block -> with newline at the end """
-        return u"{{{%s}}}\n" % self.deentity.replace_all(node.content)
+        return u"<pre>%s</pre>\n" % self.deentity.replace_all(node.content)
     def inlinedata_pre_emit(self, node):
         """ a pre inline block -> no newline at the end """
-        return u"{{{%s}}}" % self.deentity.replace_all(node.content)
+        return u"<pre>%s</pre>" % self.deentity.replace_all(node.content)
 
     def blockdata_pass_emit(self, node):
         return u"%s\n\n" % node.content
         return node.content
+
 
     #--------------------------------------------------------------------------
 
     def p_emit(self, node):
         return u"%s\n\n" % self.emit_children(node)
 
-    def br_emit(self, node):
-        if self._inner_list != "":
-            return u"\\\\"
-        else:
-            return u"\n"
-
     def headline_emit(self, node):
-        return u"%s %s\n\n" % (u"=" * node.level, self.emit_children(node))
+        return u"h%i. %s\n\n" % (node.level, self.emit_children(node))
 
     #--------------------------------------------------------------------------
 
+    def _typeface(self, node, key):
+        return key + self.emit_children(node) + key
+
     def strong_emit(self, node):
+        return self._typeface(node, key="*")
+    def b_emit(self, node):
         return self._typeface(node, key="**")
-    b_emit = strong_emit
     big_emit = strong_emit
 
     def i_emit(self, node):
-        return self._typeface(node, key="//")
-    em_emit = i_emit
-
-    def tt_emit(self, node):
-        return self._typeface(node, key="##")
-    def sup_emit(self, node):
-        return self._typeface(node, key="^^")
-    def sub_emit(self, node):
-        return self._typeface(node, key=",,")
-    def u_emit(self, node):
         return self._typeface(node, key="__")
-    def small_emit(self, node):
-        return self._typeface(node, key="--")
+    def em_emit(self, node):
+        return self._typeface(node, key="_")
+
+    def sup_emit(self, node):
+        return self._typeface(node, key="^")
+    def sub_emit(self, node):
+        return self._typeface(node, key="~")
     def del_emit(self, node):
-        return self._typeface(node, key="~~")
-    strike_emit = del_emit
+        return self._typeface(node, key="-")
+
+    def cite_emit(self, node):
+        return self._typeface(node, key="??")
+    def ins_emit(self, node):
+        return self._typeface(node, key="+")
+
+    def span_emit(self, node):
+        return self._typeface(node, key="%")
+    def code_emit(self, node):
+        return self._typeface(node, key="@")
 
     #--------------------------------------------------------------------------
 
@@ -87,10 +91,7 @@ class CreoleEmitter(BaseEmitter):
     def a_emit(self, node):
         link_text = self.emit_children(node)
         url = node.attrs["href"]
-        if link_text == url:
-            return u"[[%s]]" % url
-        else:
-            return u"[[%s|%s]]" % (url, link_text)
+        return u'"%s":%s' % (link_text, url)
 
     def img_emit(self, node):
         src = node.attrs["src"]
@@ -108,7 +109,7 @@ class CreoleEmitter(BaseEmitter):
         if text == "": # Use filename as picture text
             text = posixpath.basename(src)
 
-        return u"{{%s|%s}}" % (src, text)
+        return u"!%s(%s)!" % (src, text)
 
     #--------------------------------------------------------------------------
 
@@ -118,13 +119,7 @@ class CreoleEmitter(BaseEmitter):
     def ol_emit(self, node):
         return self._list_emit(node, list_type="#")
 
-    #--------------------------------------------------------------------------
 
-    def div_emit(self, node):
-        return self._emit_content(node)
-
-    def span_emit(self, node):
-        return self._emit_content(node)
 
 
 
@@ -139,8 +134,7 @@ if __name__ == '__main__':
     from creole.html_parser.parser import HtmlParser
 
     data = u"""
-<p>A simple table:</p>
-
+<h1>Textile</h1>
 <table>
 <tr>
     <th>Headline 1</th>
@@ -160,7 +154,7 @@ if __name__ == '__main__':
     document_tree = h2c.feed(data)
     h2c.debug()
 
-    e = CreoleEmitter(document_tree,
+    e = TextileEmitter(document_tree,
         debug=True
     )
     content = e.emit()

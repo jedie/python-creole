@@ -15,6 +15,29 @@
 from xml.sax.saxutils import escape
 
 
+def _mask_content(emitter, node, mask_tag):
+    attrs = node.get_attrs_as_string()
+    if attrs:
+        attrs = " " + attrs
+
+    tag_data = {
+        "tag": node.kind,
+        "attrs": attrs,
+        "mask_tag": mask_tag,
+    }
+
+    content = emitter.emit_children(node)
+    if not content:
+        # single tag
+        return u"<<%(mask_tag)s>><%(tag)s%(attrs)s /><</%(mask_tag)s>>" % tag_data
+
+    start_tag = u"<<%(mask_tag)s>><%(tag)s%(attrs)s><</%(mask_tag)s>>" % tag_data
+    end_tag = u"<<%(mask_tag)s>></%(tag)s><</%(mask_tag)s>>" % tag_data
+
+    return start_tag + content + end_tag
+
+
+
 def raise_unknown_node(emitter, node):
     """
     unknown_emit callable for Html2CreoleEmitter
@@ -32,24 +55,16 @@ def use_html_macro(emitter, node):
     
     Use the <<html>> macro to mask unknown tags.
     """
-    attrs = node.get_attrs_as_string()
-    if attrs:
-        attrs = " " + attrs
+    return _mask_content(emitter, node, mask_tag="html")
 
-    tag_data = {
-        "tag": node.kind,
-        "attrs": attrs,
-    }
 
-    content = emitter.emit_children(node)
-    if not content:
-        # single tag
-        return u"<<html>><%(tag)s%(attrs)s /><</html>>" % tag_data
-
-    start_tag = u"<<html>><%(tag)s%(attrs)s><</html>>" % tag_data
-    end_tag = u"<<html>></%(tag)s><</html>>" % tag_data
-
-    return start_tag + content + end_tag
+def preformat_unknown_nodes(emitter, node):
+    """
+    Put unknown tags in a <pre> area.
+    
+    Usefull for html2textile.emitter.TextileEmitter()
+    """
+    return _mask_content(emitter, node, mask_tag="pre")
 
 
 def escape_unknown_nodes(emitter, node):
