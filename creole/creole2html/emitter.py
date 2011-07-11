@@ -184,6 +184,13 @@ class HtmlEmitter:
 
         try:
             result = macro(**macro_kwargs)
+        except TypeError, err:
+            msg = u"Macro '%s' error: %s" % (macro_name, err)
+            if self.verbose > 1:
+                import inspect
+                sourceline = inspect.getsourcelines(macro)[0][0].strip()
+                msg += u" (sourceline: %r)" % sourceline
+            return self.error(msg, handle_traceback=True)
         except Exception, err:
             return self.error(
                 u"Macro '%s' error: %s" % (macro_name, err),

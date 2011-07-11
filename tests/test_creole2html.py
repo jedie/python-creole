@@ -130,6 +130,52 @@ class TestCreole2html(unittest.TestCase):
             }
         )
 
+    def test_macro_wrong_arguments_with_error_report(self):
+        """
+        simple test for the "macro API"
+        """
+        def test(text, foo):
+            pass
+        my_stderr = StringIO.StringIO()
+
+        html = creole2html(
+            markup_string=u"<<test bar='foo'>>c<</test>>",
+            emitter_kwargs={
+                "verbose":2,
+                "macros":{"test":test},
+                "stderr":my_stderr,
+            }
+        )
+        self.assertEqual(html,
+            "[Error: Macro 'test' error: test() got an unexpected keyword argument 'bar' (sourceline: 'def test(text, foo):')]"
+        )
+        error_msg = my_stderr.getvalue()
+        self.assertIn(
+            "TypeError: test() got an unexpected keyword argument 'bar'",
+            error_msg
+        )
+
+    def test_macro_wrong_arguments_quite(self):
+        """
+        simple test for the "macro API"
+        """
+        def test(text, foo):
+            pass
+        my_stderr = StringIO.StringIO()
+
+        html = creole2html(
+            markup_string=u"<<test bar='foo'>>c<</test>>",
+            emitter_kwargs={
+                "verbose":1,
+                "macros":{"test":test},
+                "stderr":my_stderr,
+            }
+        )
+        self.assertEqual(html,
+            "[Error: Macro 'test' error: test() got an unexpected keyword argument 'bar']"
+        )
+        error_msg = my_stderr.getvalue()
+        self.assertEqual(error_msg, "")
 
 
 
