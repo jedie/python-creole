@@ -106,6 +106,20 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             emitter_kwargs={"unknown_emit":escape_unknown_nodes}
         )
 
+    def test_escape_unknown_nodes2(self):
+        """
+        TODO: Seems that <script> would not be handled right.
+        """
+        self.assert_html2creole(r"""
+            &lt;script&gt;var js_sha_link='&lt;p&gt;***&lt;/p&gt;&lt;/script&gt;';
+        """, """
+            <script>
+            var js_sha_link='<p>***</p>';
+            </script>
+        """,
+            emitter_kwargs={"unknown_emit":escape_unknown_nodes}
+        )
+
     def test_transparent_unknown_nodes(self):
         """
         Test creole.html2creole.transparent_unknown_nodes callable:
@@ -116,6 +130,22 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             //baz//, **quux**
         """, """
             <form class="foo" id="bar"><label><em>baz</em></label>, <strong>quux</strong></form>
+        """, emitter_kwargs={"unknown_emit":transparent_unknown_nodes}
+        )
+
+    def test_transparent_unknown_nodes2(self):
+        """
+        TODO: Seems that <script> would not be handled right.
+        """
+        self.assert_html2creole(r"""
+            FOO
+            BAR
+        """, """
+            <p>FOO</p>
+            <script>
+            var js_sha_link='<em>STRONG</em>';
+            </script>
+            <p>BAR</p>
         """, emitter_kwargs={"unknown_emit":transparent_unknown_nodes}
         )
 
