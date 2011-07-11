@@ -48,17 +48,14 @@ class TestCreole2html(unittest.TestCase):
 
         # Check if we get a traceback information into our stderr handler
         must_have = (
-            "<pre>", "</pre>",
             "Traceback",
             "AttributeError:",
             "has no attribute 'notexist1'",
             "has no attribute 'notexist2'",
         )
+
         for part in must_have:
-            self.failUnless(
-                part in error_msg,
-                "String %r not found in:\n******\n%s******" % (part, error_msg)
-            )
+            self.assertIn(part, error_msg)
 
     def test_example_macros1(self):
         """
@@ -147,13 +144,19 @@ class TestCreole2html(unittest.TestCase):
             }
         )
         self.assertEqual(html,
-            "[Error: Macro 'test' error: test() got an unexpected keyword argument 'bar' (sourceline: 'def test(text, foo):')]"
+            "[Error: Macro 'test' error: test() got an unexpected keyword argument 'bar']"
         )
         error_msg = my_stderr.getvalue()
-        self.assertIn(
+
+        # Check traceback information into our stderr handler
+        must_have = (
             "TypeError: test() got an unexpected keyword argument 'bar'",
-            error_msg
+            "sourceline: 'def test(text, foo):' from",
+            "tests/test_creole2html.py",
         )
+        for part in must_have:
+            self.assertIn(part, error_msg)
+
 
     def test_macro_wrong_arguments_quite(self):
         """

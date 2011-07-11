@@ -125,7 +125,7 @@ class HtmlEmitter:
     def delete_emit(self, node):
         return self._typeface(node, tag="del")
 
-    #-------------------------------------------------------------------------- 
+    #--------------------------------------------------------------------------
 
     def header_emit(self, node):
         return u'<h%d>%s</h%d>\n' % (
@@ -165,40 +165,47 @@ class HtmlEmitter:
             raise DeprecationWarning("Callable macros are not supported anymore!")
             return
 
+        exc_info = None
         if isinstance(self.macros, dict):
             try:
                 macro = self.macros[macro_name]
             except KeyError, e:
-                pass
+                exc_info = sys.exc_info()
         else:
             try:
                 macro = getattr(self.macros, macro_name)
             except AttributeError, e:
-                pass
+                exc_info = sys.exc_info()
 
         if macro == None:
             return self.error(
                 u"Macro '%s' doesn't exist" % macro_name,
-                handle_traceback=True
+                exc_info
             )
 
         try:
             result = macro(**macro_kwargs)
         except TypeError, err:
             msg = u"Macro '%s' error: %s" % (macro_name, err)
+            exc_info = sys.exc_info()
             if self.verbose > 1:
+                # Inject more information about the macro in traceback
+                etype, evalue, etb = exc_info
                 import inspect
+                filename = inspect.getfile(macro)
                 try:
                     sourceline = inspect.getsourcelines(macro)[0][0].strip()
                 except IOError, err:
-                    msg += u" (error getting sourceline: %s)" % err
+                    evalue = etype("%s (error getting sourceline: %s from %s)" % (evalue, err, filename))
                 else:
-                    msg += u" (sourceline: %r)" % sourceline
-            return self.error(msg, handle_traceback=True)
+                    evalue = etype("%s (sourceline: %r from %s)" % (evalue, sourceline, filename))
+                exc_info = etype, evalue, etb
+
+            return self.error(msg, exc_info)
         except Exception, err:
             return self.error(
                 u"Macro '%s' error: %s" % (macro_name, err),
-                handle_traceback=True
+                exc_info=sys.exc_info()
             )
 
         if not isinstance(result, unicode):
@@ -251,14 +258,14 @@ class HtmlEmitter:
         """Emit the document represented by self.root DOM tree."""
         return self.emit_node(self.root).strip()
 
-    def error(self, text, handle_traceback=False):
+    def error(self, text, exc_info=None):
         """
         Error Handling.
         """
-        if self.verbose > 1 and handle_traceback:
-            self.stderr.write(
-                "<pre>%s</pre>\n" % traceback.format_exc()
-            )
+        if self.verbose > 1 and exc_info:
+            exc_type, exc_value, exc_traceback = exc_info
+            exception = "".join(traceback.format_exception(exc_type, exc_value, exc_traceback))
+            self.stderr.write(exception)
 
         if self.verbose > 0:
             return u"[Error: %s]\n" % text
