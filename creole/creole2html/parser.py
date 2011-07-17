@@ -395,7 +395,7 @@ class CreoleParser:
 
     def _char_repl(self, groups):
         if self.text is None:
-            self.text = DocNode('text', self.cur, u"")
+            self.text = DocNode('text', self.cur, u" ")
         self.text.content += groups.get('char', u"")
 
     #--------------------------------------------------------------------------
