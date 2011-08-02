@@ -20,7 +20,7 @@
 from creole.html2textile.emitter import TextileEmitter
 
 
-__version__ = (0, 6, 0)
+__version__ = (0, 6, 1)
 __api__ = (1, 0) # Creole 1.0 spec - http://wikicreole.org/
 
 

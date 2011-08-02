@@ -63,6 +63,10 @@ Contributers should take a look at this page:
  history
 =========
 
+- v0.6.1
+
+  - Bugfix: seperate lines with one space in "wiki style line breaks" mode
+
 - v0.6
 
   - *NEW*: html2textile converter
