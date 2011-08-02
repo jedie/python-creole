@@ -65,6 +65,8 @@ class CreoleParser:
         block_rules = block_rules(blog_line_breaks=blog_line_breaks)
         self.block_re = re.compile('|'.join(block_rules.rules), block_rules.re_flags)
 
+        self.blog_line_breaks = blog_line_breaks
+
         self.root = DocNode('document', None)
         self.cur = self.root        # The most recent document node
         self.text = None            # The node to add inline characters to
@@ -106,15 +108,22 @@ class CreoleParser:
     # same method needs several names, because of group names in regexps.
 
     def _text_repl(self, groups):
-#        print "_text_repl()", self.cur.kind, groups.get('break') != None
-        if self.cur.kind in ('table', 'table_row', 'bullet_list',
-                                                                'number_list'):
+#        print "_text_repl()", self.cur.kind
+#        self.debug_groups(groups)
+
+        if self.cur.kind in ('table', 'table_row', 'bullet_list', 'number_list'):
             self._upto_block()
 
         if self.cur.kind in ('document', 'section', 'blockquote'):
             self.cur = DocNode('paragraph', self.cur)
 
-        self.parse_inline(groups.get('text', u""))
+        text = groups.get('text', u"")
+
+        if groups.get('space'):
+            # use wiki style line breaks and seperate a new line with one space
+            text = " " + text
+
+        self.parse_inline(text)
 
         if groups.get('break') and self.cur.kind in ('paragraph',
             'emphasis', 'strong', 'pre_inline'):
@@ -122,6 +131,7 @@ class CreoleParser:
 
         self.text = None
     _break_repl = _text_repl
+    _space_repl = _text_repl
 
     def _url_repl(self, groups):
         """Handle raw urls in text."""
@@ -473,21 +483,24 @@ if __name__ == "__main__":
 
     print "-" * 80
 
-    txt = u"""
-Bold and italics should //be
-able// to cross lines.
+    txt = u"""one **line** and //jo//
+second line
+**third**
 
-But, should //not be...
-
-...able// to cross paragraphs.
-"""
+block 2a
+block 2b
+block 2c"""
 
     print txt
     print "-" * 80
 
-    p = CreoleParser(txt)
+    blog_line_breaks = False
+
+    p = CreoleParser(txt, blog_line_breaks=blog_line_breaks)
     document = p.parse()
     p.debug()
+
+    sys.exit()
 
     def display_match(match):
         groups = match.groupdict()
@@ -496,7 +509,7 @@ But, should //not be...
                 print "%20s: %r" % (name, text)
 
 
-    parser = CreoleParser(u"")
+    parser = CreoleParser(u"", blog_line_breaks=blog_line_breaks)
 
     print "_" * 80
     print "merged block rules test:"

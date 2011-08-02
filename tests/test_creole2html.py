@@ -441,26 +441,62 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             <a href="http://de.wikipedia.org/wiki/Creole_(Markup)">Creole@wikipedia</a></p>
         """)
 
-    def test_wiki_style_line_breaks(self):
+    def test_wiki_style_line_breaks1(self):
         html = creole2html(
             markup_string=self._prepare_text(u"""
-                with blog line breaks, every line break would be convertet into <br />
+                wiki style
+                linebreaks
+                
+                ...and not blog styled.
+            """),
+            parser_kwargs={"blog_line_breaks":False},
+        )
+        self.assertEqual(html, self._prepare_text(u"""
+            <p>wiki style linebreaks</p>
+            
+            <p>...and not blog styled.</p>
+        """))
+
+    def test_wiki_style_line_breaks2(self):
+        html = creole2html(
+            markup_string=self._prepare_text(u"""
+                **one**
+                //two//
+                
+                * one
+                * two
+            """),
+            parser_kwargs={"blog_line_breaks":False},
+        )
+        self.assertEqual(html, self._prepare_text(u"""
+            <p><strong>one</strong> <i>two</i></p>
+            
+            <ul>
+            \t<li>one</li>
+            \t<li>two</li>
+            </ul>
+        """))
+
+    def test_wiki_style_line_breaks3(self):
+        html = creole2html(
+            markup_string=self._prepare_text(u"""
+                with blog line breaks, every line break would be convertet into<br />
                 with wiki style not.
                 
                 This is the first line,\\\\and this is the second.
                 
                 new line
-                 block 1
+                block 1
                 
                 new line
-                 block 2
+                block 2
                 
                 end
             """),
             parser_kwargs={"blog_line_breaks":False},
         )
         self.assertEqual(html, self._prepare_text(u"""
-            <p>with blog line breaks, every line break would be convertet into &lt;br /&gt;with wiki style not.</p>
+            <p>with blog line breaks, every line break would be convertet into&lt;br /&gt; with wiki style not.</p>
             
             <p>This is the first line,<br />
             and this is the second.</p>

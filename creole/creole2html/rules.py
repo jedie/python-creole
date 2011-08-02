@@ -155,8 +155,8 @@ class BlockRules(object):
             # use blog style line breaks (every line break would be convertet into <br />) 
             self.text = r'(?P<text> .+ ) (?P<break> (?<!\\)$\n(?!\s*$) )?'
         else:
-            # use wiki style line breaks
-            self.text = r'(?P<text> .+ )'
+            # use wiki style line breaks, seperate lines with one space
+            self.text = r'(?P<space> (?<!\\)$\n(?!\s*$) )? (?P<text> .+ )'
 
         self.rules = (
             self.macro_block,
