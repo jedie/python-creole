@@ -107,9 +107,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         )
 
     def test_escape_unknown_nodes2(self):
-        """
-        TODO: Seems that <script> would not be handled right.
-        """
+        """ TODO: Seems that <script> would not be handled right. """
         self.assert_html2creole(r"""
             &lt;script&gt;var js_sha_link='&lt;p&gt;***&lt;/p&gt;&lt;/script&gt;';
         """, """
@@ -134,9 +132,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         )
 
     def test_transparent_unknown_nodes2(self):
-        """
-        TODO: Seems that <script> would not be handled right.
-        """
+        """ TODO: Seems that <script> would not be handled right. """
         self.assert_html2creole(r"""
             FOO
             BAR
