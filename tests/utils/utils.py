@@ -73,6 +73,11 @@ class MarkupDiffFailure(Exception):
         ('', 'bar')
         >>> MarkupDiffFailure()._split_message('''u'foo' != u""''')
         ('foo', '')
+        
+        >>> MarkupDiffFailure()._split_message("u'foo [truncated]... != u'bar'")
+        ('foo', 'bar')
+        >>> MarkupDiffFailure()._split_message("u'foo [truncated]... != 'bar'")
+        ('foo', 'bar')
 
         With and without a 'u' ;)
         """
@@ -85,19 +90,25 @@ class MarkupDiffFailure(Exception):
         second_quote = msg[-1]
         #print "quote chars: [%s] [%s]" % (first_quote, second_quote)
 
-        split_string = "%s != %s" % (first_quote, second_quote)
-        #print "split string1:", split_string
+        split_strings = (
+            " [truncated]... != u'",
+            " [truncated]... != '",
+            ' [truncated]... != u"',
+            ' [truncated]... != "',
+            "%s != u%s" % (first_quote, second_quote),
+            "%s != %s" % (first_quote, second_quote),
+        )
+        split_string = None
+        for test_string in split_strings:
+            if test_string in msg:
+                split_string = test_string
+                break
 
-        if split_string not in msg:
-            # Second part is unicode?
-            split_string = "%s != u%s" % (first_quote, second_quote)
-            #print "split string2:", split_string
-
-        if split_string not in msg:
+        if split_string == None:
             msg = (
                 "Split error output failed!"
-                " - split string >%s< not in message: %s"
-            ) % (split_string, raw_msg)
+                " - split strings (%s) not in message: %s"
+            ) % (", ".join([">%s<" % s for s in split_strings]), raw_msg)
             raise AssertionError(msg)
 
         try:
