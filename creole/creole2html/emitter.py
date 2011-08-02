@@ -158,7 +158,17 @@ class HtmlEmitter:
         macro = None
 
         args = node.macro_args
-        macro_kwargs = str2dict(args)
+        try:
+            macro_kwargs = str2dict(args)
+        except ValueError, e:
+            exc_info = sys.exc_info()
+            return self.error(
+                u"Wrong macro arguments: %r for macro '%s' (maybe wrong macro tag syntax?)" % (
+                    args, macro_name
+                ),
+                exc_info
+            )
+
         macro_kwargs["text"] = text
 
         if callable(self.macros) == True:

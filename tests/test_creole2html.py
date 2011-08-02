@@ -371,6 +371,17 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
         #----------------------------------------------------------------------
         # Test with verbose=2 ans a StringIO stderr handler
 
+    def test_wrong_macro_syntax(self):
+        self.assert_creole2html(r"""
+                wrong macro line:
+                <<summary>Some funky page summary.<</summary>>
+            """, r"""
+                <p>wrong macro line:<br />
+                [Error: Wrong macro arguments: u'>Some funky page summary.<</summary' for macro 'summary' (maybe wrong macro tag syntax?)]
+                </p>
+            """,
+        )
+
     def test_macro_not_exist2(self):
         """
         not existing macro with creole2html.HtmlEmitter(verbose=0):
@@ -485,6 +496,3 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
 
 if __name__ == '__main__':
     unittest.main()
-#if __name__ == '__main__':
-#    suite = unittest.TestLoader().loadTestsFromTestCase(TestCreole2html)
-#    unittest.TextTestRunner().run(suite)
