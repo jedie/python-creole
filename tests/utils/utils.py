@@ -48,7 +48,7 @@ class MarkupDiffFailure(Exception):
         result = ["%2s %s\n" % (line, i) for line, i in enumerate(diff)]
         return "".join(result)
 
-    def _split_message(self, raw_msg):
+    def _split_message(self, msg):
         """
         Get the right split_string is not easy. There are many variants. Every
         part of the string can be used ' oder " and can be marked with the
@@ -68,6 +68,8 @@ class MarkupDiffFailure(Exception):
         ('foo', 'bar')
         >>> MarkupDiffFailure()._split_message(''''foo' != u"bar"''')
         ('foo', 'bar')
+        >>> MarkupDiffFailure()._split_message("'foo' != u'bar'")
+        ('foo', 'bar')
 
         >>> MarkupDiffFailure()._split_message('''u"" != u"bar"''')
         ('', 'bar')
@@ -75,40 +77,18 @@ class MarkupDiffFailure(Exception):
         ('foo', '')
         
         >>> MarkupDiffFailure()._split_message("u'foo [truncated]... != u'bar'")
-        ('foo', 'bar')
+        ('foo [truncated]...', 'bar')
         >>> MarkupDiffFailure()._split_message("u'foo [truncated]... != 'bar'")
-        ('foo', 'bar')
+        ('foo [truncated]...', 'bar')
 
         With and without a 'u' ;)
         """
-#        print repr(raw_msg)
-
-        msg = raw_msg.lstrip("u")
-#        print repr(msg)
-
-        first_quote = msg[0]
-        second_quote = msg[-1]
-        #print "quote chars: [%s] [%s]" % (first_quote, second_quote)
-
-        split_strings = (
-            " [truncated]... != u'",
-            " [truncated]... != '",
-            ' [truncated]... != u"',
-            ' [truncated]... != "',
-            "%s != u%s" % (first_quote, second_quote),
-            "%s != %s" % (first_quote, second_quote),
-        )
-        split_string = None
-        for test_string in split_strings:
-            if test_string in msg:
-                split_string = test_string
-                break
-
-        if split_string == None:
+        split_string = " != "
+        if not split_string in msg:
             msg = (
                 "Split error output failed!"
-                " - split strings (%s) not in message: %s"
-            ) % (", ".join([">%s<" % s for s in split_strings]), raw_msg)
+                " - split string >%s< not in message: %s"
+            ) % (split_string, msg)
             raise AssertionError(msg)
 
         try:
@@ -117,23 +97,21 @@ class MarkupDiffFailure(Exception):
             msg = self._format_output(msg)
             return (
                 "Can't split error output: %r\n"
-                "Info:\n%s\n"
-                "raw split: %r"
-            ) % (err, msg, msg.split(split_string))
+                "message: %s"
+            ) % (err, msg)
 
-        block1 = block1.strip("'\"")
-        block2 = block2.strip("'\"")
+        block1 = block1.lstrip("u")
+        block1 = block1.strip("\"'")
+
+        block2 = block2.lstrip("u")
+        block2 = block2.strip("\"'")
 
         return block1, block2
 
     def _build_errormsg(self):
         raw_msg = self.args[0]
 
-        """
-
-        """
         block1, block2 = self._split_message(raw_msg)
-
 
         #~ block1 = block1.rstrip("\\n")
         #~ block2 = block2.rstrip("\\n")
