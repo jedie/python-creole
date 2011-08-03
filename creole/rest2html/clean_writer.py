@@ -47,6 +47,9 @@ class CleanHTMLTranslator(html4css1.HTMLTranslator):
     It will produce a minimal set of html output.
     (No extry divs, classes oder ids.)
     """
+    def _do_nothing(self, node, *args, **kwargs):
+        pass
+
     def starttag(self, node, tagname, suffix='\n', empty=0, **attributes):
         if DEBUG:
             print "ids: %r" % getattr(node, "ids", "-")
@@ -66,15 +69,25 @@ class CleanHTMLTranslator(html4css1.HTMLTranslator):
     def depart_section(self, node):
         self.section_level -= 1
 
+    set_class_on_child = _do_nothing
+    set_first_last = _do_nothing
+
+    def visit_list_item(self, node):
+        # FIXME: How to remove class="first" in: <li><p class="first">item 1</p>
+        #        in a generally way?
+        self.body.append(self.starttag(node, 'li', ''))
+
+    # remove <blockquote> (e.g. in nested lists)
+    visit_block_quote = _do_nothing
+    depart_block_quote = _do_nothing
+
     #__________________________________________________________________________
     # Clean table:
 
-    def do_nothing(self, node):
-        pass
-    visit_thead = do_nothing
-    depart_thead = do_nothing
-    visit_tbody = do_nothing
-    depart_tbody = do_nothing
+    visit_thead = _do_nothing
+    depart_thead = _do_nothing
+    visit_tbody = _do_nothing
+    depart_tbody = _do_nothing
 
     def visit_table(self, node):
         self.body.append(self.starttag(node, 'table'))
@@ -82,8 +95,11 @@ class CleanHTMLTranslator(html4css1.HTMLTranslator):
     def visit_tgroup(self, node):
         node.stubs = []
 
+
 def rest2html(content):
     """
+    Convert reStructuredText markup to clean html code: No extra div, class or ids.
+    
     >>> rest2html(u"- bullet list")
     u'<ul>\\n<li>bullet list</li>\\n</ul>\\n'
     """
@@ -103,10 +119,22 @@ if __name__ == '__main__':
     import doctest
     print doctest.testmod()
 
+#    print rest2html(u"""
+#+------------+------------+
+#| Headline 1 | Headline 2 |
+#+============+============+
+#| cell one   | cell two   |
+#+------------+------------+
+#    """)
+
     print rest2html(u"""
-+------------+------------+
-| Headline 1 | Headline 2 |
-+============+============+
-| cell one   | cell two   |
-+------------+------------+
+- item 1
+
+    - subitem 1.1
+
+    - subitem 1.2
+
+- item 2
+
+    - subitem 2.1
     """)

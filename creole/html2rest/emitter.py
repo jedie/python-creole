@@ -32,6 +32,10 @@ class ReStructuredTextEmitter(BaseEmitter):
         self._unknown_emit = raise_unknown_node
         self._block_data = []
 
+    def emit(self):
+        """Emit the document represented by self.root DOM tree."""
+        return self.emit_node(self.root).rstrip()
+
     #--------------------------------------------------------------------------
 
     def blockdata_pre_emit(self, node):
@@ -98,6 +102,9 @@ class ReStructuredTextEmitter(BaseEmitter):
     def em_emit(self, node):
         return self._typeface(node, key="*")
 
+    def tt_emit(self, node):
+        return self._typeface(node, key="``")
+
 #    def sup_emit(self, node):
 #        return self._typeface(node, key="^")
 #    def sub_emit(self, node):
@@ -155,15 +162,18 @@ class ReStructuredTextEmitter(BaseEmitter):
     #--------------------------------------------------------------------------
 
     def li_emit(self, node):
-        content = self.emit_children(node)
-        return u"\n%s %s\n" % (self._inner_list, content)
+        content = u"%s- %s\n\n" % (
+            "    " * (node.level - 1),
+            self.emit_children(node)
+        )
+        return content
 
     def ul_emit(self, node):
-        return self._list_emit(node, list_type="-")
+        result = u"%s" % self.emit_children(node).rstrip()
+        return result
 
 #    def ol_emit(self, node):
 #        return self._list_emit(node, list_type="#")
-
 
     def table_emit(self, node):
         """
@@ -192,16 +202,23 @@ if __name__ == '__main__':
 #    import sys;sys.exit()
     from creole.html_parser.parser import HtmlParser
 
-    data = u"""
-<p>Preformatting text:</p>
-<pre>
-Here some performatting
-text... end.
-</pre>
-<p>Under pre block</p>
+    data = u"""<p>TEST:</p>
+<ul>
+    <li><p>item 1</p>
+        <ul>
+            <li>subitem 1.1</li>
+            <li>subitem 1.2</li>
+        </ul>
+    </li>
+    <li><p>item 2</p>
+        <ul>
+            <li>subitem 2.1</li>
+        </ul>
+    </li>
+</ul>
 """
 
-    print data.strip()
+    print data
     h2c = HtmlParser(
 #        debug=True
     )

@@ -27,6 +27,10 @@ class CreoleEmitter(BaseEmitter):
         self.table_head_prefix = "= "
         self.table_auto_width = True
 
+    def emit(self):
+        """Emit the document represented by self.root DOM tree."""
+        return self.emit_node(self.root).strip() # FIXME
+
     #--------------------------------------------------------------------------
 
     def blockdata_pre_emit(self, node):

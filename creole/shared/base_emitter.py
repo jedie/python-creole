@@ -222,10 +222,11 @@ class BaseEmitter(object):
         self.last = node
         return content
 
-    def emit(self):
-        """Emit the document represented by self.root DOM tree."""
-        result = self.emit_node(self.root)
-        return result.strip() # FIXME
+#    def emit(self):
+#        """Emit the document represented by self.root DOM tree."""
+#        result = self.emit_node(self.root)
+##        return result.strip() # FIXME
+#        return result.rstrip() # FIXME
 
     #-------------------------------------------------------------------------
 

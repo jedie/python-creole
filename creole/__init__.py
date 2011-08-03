@@ -33,7 +33,7 @@ from creole.html2creole.emitter import CreoleEmitter
 from creole.html2rest.emitter import ReStructuredTextEmitter
 from creole.html2textile.emitter import TextileEmitter
 from creole.html_parser.parser import HtmlParser
-
+from creole.rest2html.clean_writer import rest2html
 
 # TODO: Add git date to __version__
 
@@ -106,12 +106,17 @@ def html2rest(html_string, debug=False, parser_kwargs={}, emitter_kwargs={}):
     
     >>> html2rest(u'<p>This is <strong>ReStructuredText</strong> <em>markup</em>!</p>')
     u'This is **ReStructuredText** *markup*!'
+    
+    rest2html from creole.rest2html.clean_writer should be also available here:
+    >>> rest2html(u"A ReSt link to `PyLucid CMS <http://www.pylucid.org>`_ :)")
+    u'<p>A ReSt link to <a href="http://www.pylucid.org">PyLucid CMS</a> :)</p>\\n'
     """
     document_tree = parse_html(html_string, debug, **parser_kwargs)
 
     # create creole markup from the document tree
     emitter = ReStructuredTextEmitter(document_tree, debug=debug, **emitter_kwargs)
     return emitter.emit()
+
 
 
 if __name__ == '__main__':

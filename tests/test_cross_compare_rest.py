@@ -37,6 +37,8 @@ class CrossCompareReStTests(BaseCreoleTest):
     def test_bullet_lists_basic(self):
         self.cross_compare_rest(
             rest_string=u"""
+                A list:
+                
                 - item 1
                 
                 - item 2
@@ -44,10 +46,45 @@ class CrossCompareReStTests(BaseCreoleTest):
                 - item 3
             """,
             html_string="""
+                <p>A list:</p>
                 <ul>
                 <li>item 1</li>
                 <li>item 2</li>
                 <li>item 3</li>
+                </ul>
+            """,
+#            debug=True
+        )
+
+    def test_bullet_lists_nested(self):
+        self.cross_compare_rest(
+            rest_string=u"""
+                A nested bullet lists:
+                
+                - item 1
+                
+                    - subitem 1.1
+                    
+                    - subitem 1.2
+                
+                - item 2
+                
+                    - subitem 2.1
+            """,
+            html_string="""
+                <p>A nested bullet lists:</p>
+                <ul>
+                <li><p>item 1</p>
+                <ul>
+                <li>subitem 1.1</li>
+                <li>subitem 1.2</li>
+                </ul>
+                </li>
+                <li><p>item 2</p>
+                <ul>
+                <li>subitem 2.1</li>
+                </ul>
+                </li>
                 </ul>
             """,
 #            debug=True

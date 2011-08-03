@@ -70,6 +70,50 @@ class ReStTests(BaseCreoleTest):
             """
         )
 
+    def test_pre_code1(self):
+        self.assert_html2rest(
+            rest_string="""
+                ::
+                
+                    >>> from creole import creole2html
+                    >>> creole2html("This is **creole //markup//**")
+                    u'<p>This is <strong>creole <i>markup</i></strong></p>
+            """,
+            html_string="""
+                <pre>
+                &gt;&gt;&gt; from creole import creole2html
+                &gt;&gt;&gt; creole2html(&quot;This is **creole //markup//**&quot;)
+                u'&lt;p&gt;This is &lt;strong&gt;creole &lt;i&gt;markup&lt;/i&gt;&lt;/strong&gt;&lt;/p&gt;\n'
+                </pre>
+            """
+        )
+
+    def test_escape(self):
+        self.assert_html2rest(
+            rest_string="""
+                - Use <tt> when {{{ ... }}} is inline and not <pre>, or not?
+            """,
+            html_string="""
+                <ul>
+                <li>Use &lt;tt&gt; when {{{ ... }}} is inline and not &lt;pre&gt;, or not?</li>
+                </ul>
+            """
+        )
+
+    def test_inline_literals(self):
+        self.assert_html2rest(
+            rest_string="""
+                This text is an example of ``inline literals``.
+            """,
+            html_string="""
+                <ul>
+                <p>This text is an example of <tt>inline literals</tt>.</p>
+                </ul>
+            """
+        )
+
+
+
 #    def test_preformat_unknown_nodes(self):
 #        """
 #        Put unknown tags in a <pre> area.

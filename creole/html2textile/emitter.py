@@ -28,6 +28,10 @@ class TextileEmitter(BaseEmitter):
         self.table_head_prefix = "_. "
         self.table_auto_width = False
 
+    def emit(self):
+        """Emit the document represented by self.root DOM tree."""
+        return self.emit_node(self.root).strip() # FIXME
+
     #--------------------------------------------------------------------------
 
     def blockdata_pre_emit(self, node):

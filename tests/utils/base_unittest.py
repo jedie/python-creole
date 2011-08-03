@@ -30,10 +30,8 @@ else:
 
 
 from utils import MarkupTest
-
 from creole import creole2html, html2creole, html2textile, html2rest
-from creole.shared.rest import rest2html, REST_INSTALLED
-
+from creole.rest2html.clean_writer import REST_INSTALLED, rest2html
 
 tabs2spaces_re = re.compile(r"^(\t*)(.*?)$", re.M)
 

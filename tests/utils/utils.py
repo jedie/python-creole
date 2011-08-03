@@ -23,6 +23,18 @@ VERBOSE = 1
 #VERBOSE = 2
 
 
+def make_diff(block1, block2):
+    d = difflib.Differ()
+
+    block1 = block1.replace("\\n", "\\n\n").split("\n")
+    block2 = block2.replace("\\n", "\\n\n").split("\n")
+
+    diff = d.compare(block1, block2)
+
+    result = ["%2s %s\n" % (line, i) for line, i in enumerate(diff)]
+    return "".join(result)
+
+
 class MarkupTest(unittest.TestCase):
     """
     Special error class: Try to display markup errors in a better way.
@@ -35,17 +47,6 @@ class MarkupTest(unittest.TestCase):
             txt = "".join(['%s\n' % i for i in txt])
         return txt
 
-    def _diff(self, block1, block2):
-        d = difflib.Differ()
-
-        block1 = block1.replace("\\n", "\\n\n").split("\n")
-        block2 = block2.replace("\\n", "\\n\n").split("\n")
-
-        diff = d.compare(block1, block2)
-
-        result = ["%2s %s\n" % (line, i) for line, i in enumerate(diff)]
-        return "".join(result)
-
     def assertEqual(self, first, second, msg=""):
         if not first == second:
             if VERBOSE >= 2:
@@ -54,7 +55,7 @@ class MarkupTest(unittest.TestCase):
 
             #~ first = first.rstrip("\\n")
             #~ second = second.rstrip("\\n")
-            diff = self._diff(first, second)
+            diff = make_diff(first, second)
 
             if VERBOSE >= 2:
                 print "diff: %r" % diff
