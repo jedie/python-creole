@@ -26,22 +26,22 @@ You can convert from:
 
 More info on our [[http://code.google.com/p/python-creole/|Homepage]]."""
 
-
-print "*" * 79
-print " Source creole markup text:"
-print "-" * 79
-print source
-
-
-print "*" * 79
-print " Convert it into html:"
-print "-" * 79
-html = creole2html(source)
-print html
+if __name__ == "__main__":
+    print "*" * 79
+    print " Source creole markup text:"
+    print "-" * 79
+    print source
 
 
-print "*" * 79
-print " Convert the html code back into creole:"
-print "-" * 79
-creole = html2creole(html)
-print creole
+    print "*" * 79
+    print " Convert it into html:"
+    print "-" * 79
+    html = creole2html(source)
+    print html
+
+
+    print "*" * 79
+    print " Convert the html code back into creole:"
+    print "-" * 79
+    creole = html2creole(html)
+    print creole
