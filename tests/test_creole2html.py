@@ -441,6 +441,14 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             <a href="http://de.wikipedia.org/wiki/Creole_(Markup)">Creole@wikipedia</a></p>
         """)
 
+    def test_standalone_hyperlink(self):
+        self.assert_creole2html(r"""
+                a link to the http://www.pylucid.org page. 
+            """, """
+                <p>a link to the <a href="http://www.pylucid.org">http://www.pylucid.org</a> page.</p>
+            """
+        )
+
     def test_wiki_style_line_breaks1(self):
         html = creole2html(
             markup_string=self._prepare_text(u"""

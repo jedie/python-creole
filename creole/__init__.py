@@ -17,10 +17,9 @@
     :copyleft: 2008-2011 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
-from creole.html2textile.emitter import TextileEmitter
 
 
-__version__ = (0, 6, 1)
+__version__ = (0, 7, 0, "pre")
 __api__ = (1, 0) # Creole 1.0 spec - http://wikicreole.org/
 
 
@@ -28,10 +27,12 @@ import os
 import sys
 
 
-from creole.creole2html.parser import BlockRules, CreoleParser
 from creole.creole2html.emitter import HtmlEmitter
-from creole.html_parser.parser import HtmlParser
+from creole.creole2html.parser import BlockRules, CreoleParser
 from creole.html2creole.emitter import CreoleEmitter
+from creole.html2rest.emitter import ReStructuredTextEmitter
+from creole.html2textile.emitter import TextileEmitter
+from creole.html_parser.parser import HtmlParser
 
 
 # TODO: Add git date to __version__
@@ -46,7 +47,7 @@ def creole2html(markup_string, debug=False, parser_kwargs={}, emitter_kwargs={})
     convert creole markup into html code
 
     >>> creole2html(u'This is **creole //markup//**!')
-    u'<p>This is <strong>creole <i>markup</i></strong>!</p>\\n'
+    u'<p>This is <strong>creole <i>markup</i></strong>!</p>'
     """
     assert isinstance(markup_string, unicode)
 
@@ -96,6 +97,20 @@ def html2textile(html_string, debug=False, parser_kwargs={}, emitter_kwargs={}):
 
     # create creole markup from the document tree
     emitter = TextileEmitter(document_tree, debug=debug, **emitter_kwargs)
+    return emitter.emit()
+
+
+def html2rest(html_string, debug=False, parser_kwargs={}, emitter_kwargs={}):
+    """
+    convert html code into textile markup
+    
+    >>> html2rest(u'<p>This is <strong>ReStructuredText</strong> <em>markup</em>!</p>')
+    u'This is **ReStructuredText** *markup*!'
+    """
+    document_tree = parse_html(html_string, debug, **parser_kwargs)
+
+    # create creole markup from the document tree
+    emitter = ReStructuredTextEmitter(document_tree, debug=debug, **emitter_kwargs)
     return emitter.emit()
 
 

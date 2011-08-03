@@ -63,6 +63,10 @@ Contributers should take a look at this page:
  history
 =========
 
+- v0.7pre
+
+  - NEW: Add a html2reStructuredText converter
+
 - v0.6.1
 
   - Bugfix: seperate lines with one space in "wiki style line breaks" mode

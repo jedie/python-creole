@@ -1,0 +1,112 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+"""
+    cross compare reStructuredText unittest
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    Compare all similarities between:
+        * rest2html (used docutils)
+        * html2rest
+
+    :copyleft: 2011 by python-creole team, see AUTHORS for more details.
+    :license: GNU GPL v3 or above, see LICENSE for more details.
+"""
+
+
+import unittest
+
+from tests.utils.base_unittest import BaseCreoleTest
+
+
+class CrossCompareReStTests(BaseCreoleTest):
+    def test_entities(self):
+        self.cross_compare_rest(
+            rest_string=u"""
+                less-than sign: <
+                
+                greater-than sign: >
+            """,
+            html_string="""
+                <p>less-than sign: &lt;</p>
+                <p>greater-than sign: &gt;</p>
+            """,
+#            debug=True
+        )
+
+    def test_bullet_lists_basic(self):
+        self.cross_compare_rest(
+            rest_string=u"""
+                - item 1
+                
+                - item 2
+                
+                - item 3
+            """,
+            html_string="""
+                <ul>
+                <li>item 1</li>
+                <li>item 2</li>
+                <li>item 3</li>
+                </ul>
+            """,
+#            debug=True
+        )
+
+    def test_typeface_basic(self):
+        """
+        http://docutils.sourceforge.net/docs/user/rst/quickref.html#inline-markup
+        """
+        self.cross_compare_rest(
+            rest_string="""
+                *emphasis* **strong**
+            """,
+            html_string="""
+                <p><em>emphasis</em> <strong>strong</strong></p>
+            """
+        )
+
+    def test_substitution_image_with_alt(self):
+        self.cross_compare_rest(
+            rest_string="""
+                A inline |substitution text| image.
+
+                .. |substitution text| image:: /url/to/image.png
+
+                ...and some text below.
+            """,
+            html_string="""
+                <p>A inline <img alt="substitution text" src="/url/to/image.png" /> image.</p>
+                <p>...and some text below.</p>
+            """
+        )
+
+#    def test_inline_literal(self):
+#        """ TODO
+#        http://docutils.sourceforge.net/docs/user/rst/quickref.html#inline-markup
+#        """
+#        self.cross_compare_rest(
+#            rest_string="""
+#                ``inline literal``
+#            """,
+#            html_string="""
+#                <p><code>inline&nbsp;literal</code></p>
+#            """
+#        )
+
+#    def test_escape_in_pre(self):
+#        self.cross_compare_rest(
+#            textile_string="""
+#                <pre>
+#                <html escaped>
+#                </pre>
+#            """,
+#            html_string="""
+#                <pre>
+#                &#60;html escaped&#62;
+#                </pre>
+#            """)
+
+
+if __name__ == '__main__':
+    unittest.main()

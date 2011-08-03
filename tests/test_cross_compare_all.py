@@ -34,6 +34,34 @@ class CrossCompareTests(BaseCreoleTest):
     def test_bold_italics(self):
         self.cross_compare(
             creole_string=r"""
+                **bold** //italics//
+                //italics and **bold**.//
+                **bold and //italics//.**
+            """,
+            textile_string="""
+                *bold* __italics__
+                __italics and *bold*.__
+                *bold and __italics__.*
+            """,
+            html_string="""
+                <p><strong>bold</strong> <i>italics</i><br />
+                <i>italics and <strong>bold</strong>.</i><br />
+                <strong>bold and <i>italics</i>.</strong></p>
+            """,
+        )
+        # Note: In ReSt inline markup may not be nested.
+        self.cross_compare(
+            html_string="""
+                <p><strong>bold</strong> <em>italics</em></p>
+            """,
+            rest_string="""
+                **bold** *italics*
+            """,
+        )
+
+    def test_bold_italics2(self):
+        self.cross_compare(
+            creole_string=r"""
                 **//bold italics//**
                 //**bold italics**//
                 //This is **also** good.//
@@ -47,71 +75,149 @@ class CrossCompareTests(BaseCreoleTest):
                 <p><strong><i>bold italics</i></strong><br />
                 <i><strong>bold italics</strong></i><br />
                 <i>This is <strong>also</strong> good.</i></p>
-            """
+            """,
         )
 
     def test_headlines1(self):
         self.cross_compare(
             creole_string=r"""
-                = Level 1 (largest)
+                = Section Title 1
                 
-                == Level 2
+                == Section Title 2
                 
-                === Level 3
+                === Section Title 3
                 
-                ==== Level 4
+                ==== Section Title 4
                 
-                ===== Level 5
+                ===== Section Title 5
                 
-                ====== Level 6
+                ====== Section Title 6
             """,
             textile_string="""
-                h1. Level 1 (largest)
+                h1. Section Title 1
                 
-                h2. Level 2
+                h2. Section Title 2
                 
-                h3. Level 3
+                h3. Section Title 3
                 
-                h4. Level 4
+                h4. Section Title 4
                 
-                h5. Level 5
+                h5. Section Title 5
                 
-                h6. Level 6
+                h6. Section Title 6
             """,
             html_string="""
-                <h1>Level 1 (largest)</h1>
+                <h1>Section Title 1</h1>
                 
-                <h2>Level 2</h2>
+                <h2>Section Title 2</h2>
                 
-                <h3>Level 3</h3>
+                <h3>Section Title 3</h3>
                 
-                <h4>Level 4</h4>
+                <h4>Section Title 4</h4>
                 
-                <h5>Level 5</h5>
+                <h5>Section Title 5</h5>
                 
-                <h6>Level 6</h6>
+                <h6>Section Title 6</h6>
+            """
+        )
+        self.cross_compare(
+            rest_string="""
+                ===============
+                Section Title 1
+                ===============
+                
+                ---------------
+                Section Title 2
+                ---------------
+                
+                Section Title 3
+                ===============
+                
+                Section Title 4
+                ---------------
+                
+                Section Title 5
+                ```````````````
+                
+                Section Title 6
+                '''''''''''''''
+            """,
+            html_string="""
+                <h1>Section Title 1</h1>
+                <h2>Section Title 2</h2>
+                <h3>Section Title 3</h3>
+                <h4>Section Title 4</h4>
+                <h5>Section Title 5</h5>
+                <h6>Section Title 6</h6>
             """
         )
 
-    def test_links(self):
+    def test_link(self):
         self.cross_compare(
             creole_string=r"""
-                1 [[internal]] link.                
-                2 [[http://domain.tld|link B]] test.
-                3 [[http://de.wikipedia.org/wiki/Creole_(Markup)|Creole@wikipedia]]
-                4 [[Foo://bar|unknown protocol]]
+                X [[http://domain.tld|link B]] test.
             """,
             textile_string="""
-                1 "internal":internal link.
-                2 "link B":http://domain.tld test.
-                3 "Creole@wikipedia":http://de.wikipedia.org/wiki/Creole_(Markup)
-                4 "unknown protocol":Foo://bar
+                X "link B":http://domain.tld test.
+            """,
+            rest_string="""
+                X `link B <http://domain.tld>`_ test.
             """,
             html_string="""
-                <p>1 <a href="internal">internal</a> link.<br />
-                2 <a href="http://domain.tld">link B</a> test.<br />
-                3 <a href="http://de.wikipedia.org/wiki/Creole_(Markup)">Creole@wikipedia</a><br />
-                4 <a href="Foo://bar">unknown protocol</a></p>
+                <p>X <a href="http://domain.tld">link B</a> test.</p>
+            """
+        )
+
+    def test_link_without_title(self):
+        self.cross_compare(
+            creole_string=r"""
+                [[http://www.pylucid.org]]
+            """,
+            textile_string="""
+                "http://www.pylucid.org":http://www.pylucid.org
+            """,
+            rest_string="""
+                `http://www.pylucid.org <http://www.pylucid.org>`_
+            """,
+            html_string="""
+                <p><a href="http://www.pylucid.org">http://www.pylucid.org</a></p>
+            """
+        )
+
+    def test_link_with_unknown_protocol(self):
+        self.cross_compare(
+            creole_string=r"""
+                X [[Foo://bar|unknown protocol]] Y
+            """,
+            textile_string="""
+                X "unknown protocol":Foo://bar Y
+            """,
+            rest_string="""
+                X `unknown protocol <Foo://bar>`_ Y
+            """,
+            html_string="""
+                <p>X <a href="Foo://bar">unknown protocol</a> Y</p>
+            """
+        )
+
+    def test_link_with_at_sign(self):
+        self.cross_compare(
+            creole_string=r"""
+                X [[http://de.wikipedia.org/wiki/Creole_(Markup)|Creole@wikipedia]]
+            """,
+            textile_string="""
+                X "Creole@wikipedia":http://de.wikipedia.org/wiki/Creole_(Markup)
+            """,
+            html_string="""
+                <p>X <a href="http://de.wikipedia.org/wiki/Creole_(Markup)">Creole@wikipedia</a></p>
+            """
+        )
+        self.cross_compare(
+            rest_string="""
+                X `Creole@wikipedia <http://de.wikipedia.org/wiki/Creole_(Markup)>`_
+            """,
+            html_string="""
+                <p>X <a href="http://de.wikipedia.org/wiki/Creole_(Markup)">Creole&#64;wikipedia</a></p>
             """
         )
 
@@ -123,7 +229,6 @@ class CrossCompareTests(BaseCreoleTest):
                 a {{/image.gif|GIF pictures}} and
                 a {{/image.png|PNG pictures}} !
                 {{/path1/path2/image|Image without files ext?}}
-                [[http://example.com/|{{myimage.jpg|example site}}]]
             """,
             textile_string="""
                 a !/image.jpg(JPG pictures)! and
@@ -131,17 +236,70 @@ class CrossCompareTests(BaseCreoleTest):
                 a !/image.gif(GIF pictures)! and
                 a !/image.png(PNG pictures)! !
                 !/path1/path2/image(Image without files ext?)!
-                "!myimage.jpg(example site)!":http://example.com/
             """,
             html_string="""
                 <p>a <img src="/image.jpg" title="JPG pictures" alt="JPG pictures" /> and<br />
                 a <img src="/image.jpeg" title="JPEG pictures" alt="JPEG pictures" /> and<br />
                 a <img src="/image.gif" title="GIF pictures" alt="GIF pictures" /> and<br />
                 a <img src="/image.png" title="PNG pictures" alt="PNG pictures" /> !<br />
-                <img src="/path1/path2/image" title="Image without files ext?" alt="Image without files ext?" /><br />
-                <a href="http://example.com/"><img src="myimage.jpg" title="example site" alt="example site" /></a></p>
+                <img src="/path1/path2/image" title="Image without files ext?" alt="Image without files ext?" /></p>
             """
         )
+        self.cross_compare(
+            rest_string="""
+                1 |JPG pictures| one
+                
+                .. |JPG pictures| image:: /image.jpg
+                
+                2 |JPEG pictures| two
+                
+                .. |JPEG pictures| image:: /image.jpeg
+                
+                3 |GIF pictures| tree
+                
+                .. |GIF pictures| image:: /image.gif
+                
+                4 |PNG pictures| four
+                
+                .. |PNG pictures| image:: /image.png
+                
+                5 |Image without files ext?| five
+                
+                .. |Image without files ext?| image:: /path1/path2/image
+            """,
+            html_string="""
+                <p>1 <img alt="JPG pictures" src="/image.jpg" /> one</p>
+                <p>2 <img alt="JPEG pictures" src="/image.jpeg" /> two</p>
+                <p>3 <img alt="GIF pictures" src="/image.gif" /> tree</p>
+                <p>4 <img alt="PNG pictures" src="/image.png" /> four</p>
+                <p>5 <img alt="Image without files ext?" src="/path1/path2/image" /> five</p>
+            """
+        )
+
+    def test_link_image(self):
+        """ FIXME: ReSt. and linked images """
+        self.cross_compare(
+            creole_string=r"""
+                Linked [[http://example.com/|{{myimage.jpg|example site}} image]]
+            """,
+            textile_string="""
+                Linked "!myimage.jpg(example site)! image":http://example.com/
+            """,
+            html_string="""
+                <p>Linked <a href="http://example.com/"><img src="myimage.jpg" title="example site" alt="example site" /> image</a></p>
+            """
+        )
+#        self.cross_compare(# FIXME: ReSt
+#            rest_string="""
+#                I recommend you try |PyLucid CMS|_.
+#                
+#                .. |PyLucid CMS| image:: /images/pylucid.png
+#                .. _PyLucid CMS: http://www.pylucid.org/
+#            """,
+#            html_string="""
+#                <p>I recommend you try <a href="http://www.pylucid.org/"><img alt="PyLucid CMS" src="/images/pylucid.png" /></a>.</p>
+#            """
+#        )
 
     def test_pre1(self):
         self.cross_compare(
@@ -160,44 +318,65 @@ class CrossCompareTests(BaseCreoleTest):
                 * no list
                 </pre>
             """)
-
-    def test_pre2(self):
-        """ TODO: html2creole: wrong lineendings """
-        self.cross_compare(
-            creole_string=r"""
-                start
+        self.cross_compare(# FIXME: Not the best html2rest output
+            rest_string="""
+                Preformatting text:
                 
-                {{{
-                * no list
-                }}}
+                ::
                 
-                end
-                """,
-            textile_string="""
-                start
+                    Here some performatting with
+                    no `link <http://domain.tld>`_ here.
+                    text... end.
                 
-                <pre>
-                * no list
-                </pre>
-                
-                end
-                """,
+                Under pre block
+            """,
             html_string="""
-                <p>start</p>
-                
+                <p>Preformatting text:</p>
                 <pre>
-                * no list
+                Here some performatting with
+                no `link &lt;http://domain.tld&gt;`_ here.
+                text... end.
                 </pre>
-                
-                <p>end</p>
-            """)
+                <p>Under pre block</p>
+            """
+        )
+
+#    def test_pre2(self):
+#        """ TODO: html2creole: wrong lineendings """
+#        self.cross_compare(
+#            creole_string=r"""
+#                start
+#                
+#                {{{
+#                * no list
+#                }}}
+#                
+#                end
+#                """,
+#            textile_string="""
+#                start
+#                
+#                <pre>
+#                * no list
+#                </pre>
+#                
+#                end
+#                """,
+#            html_string="""
+#                <p>start</p>
+#                
+#                <pre>
+#                * no list
+#                </pre>
+#                
+#                <p>end</p>
+#            """)
 
     def test_pre_contains_braces(self):
         self.cross_compare(
-            creole_string=r"""
-                === Closing braces in nowiki:
-                
+            creole_string=u"""
                 {{{
+                # Closing braces in nowiki:
                 if (x != NULL) {
                   for (i = 0) {
                     if (x = 1) {
@@ -205,10 +384,9 @@ class CrossCompareTests(BaseCreoleTest):
                   }}}
                 }}}
                 """,
-            textile_string="""
-                h3. Closing braces in nowiki:
-                
+            textile_string=u"""
                 <pre>
+                # Closing braces in nowiki:
                 if (x != NULL) {
                   for (i = 0) {
                     if (x = 1) {
@@ -216,10 +394,19 @@ class CrossCompareTests(BaseCreoleTest):
                   }}}
                 </pre>
                 """,
-            html_string="""
-                <h3>Closing braces in nowiki:</h3>
+            rest_string=u"""
+                ::
                 
+                    # Closing braces in nowiki:
+                    if (x != NULL) {
+                      for (i = 0) {
+                        if (x = 1) {
+                          x[i]--;
+                      }}}
+                """,
+            html_string=u"""
                 <pre>
+                # Closing braces in nowiki:
                 if (x != NULL) {
                   for (i = 0) {
                     if (x = 1) {
@@ -257,21 +444,15 @@ class CrossCompareTests(BaseCreoleTest):
 
     def test_simple_table(self):
         self.cross_compare(
-            creole_string=r"""
-                A simple table:
-    
+            creole_string=u"""
                 |= Headline 1 |= Headline 2 |
                 | cell one    | cell two    |
                 """,
-            textile_string="""
-                A simple table:
-                
+            textile_string=u"""
                 |_. Headline 1|_. Headline 2|
                 |cell one|cell two|
                 """,
-            html_string="""
-                <p>A simple table:</p>
-    
+            html_string=u"""
                 <table>
                 <tr>
                     <th>Headline 1</th>
@@ -283,9 +464,29 @@ class CrossCompareTests(BaseCreoleTest):
                 </tr>
                 </table>
             """,
-            strip_lines=True
             #debug=True
         )
+        self.cross_compare(
+            rest_string=u"""
+                +------------+------------+
+                | Headline 1 | Headline 2 |
+                +============+============+
+                | cell one   | cell two   |
+                +------------+------------+
+                """,
+            html_string=u"""
+                <table>
+                <tr><th>Headline 1</th>
+                <th>Headline 2</th>
+                </tr>
+                <tr><td>cell one</td>
+                <td>cell two</td>
+                </tr>
+                </table>
+            """,
+            #debug=True
+        )
+
 
 if __name__ == '__main__':
     unittest.main()

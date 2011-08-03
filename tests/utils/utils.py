@@ -7,25 +7,23 @@
 
     Generic utils useable for a markup test.
 
-    :copyleft: 2008-2009 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2008-2011 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 
-import sys
 import difflib
 import unittest
-import traceback
 
 
 ## error output format:
 # =1 -> via repr()
 # =2 -> raw
-#VERBOSE = 1
-VERBOSE = 2
+VERBOSE = 1
+#VERBOSE = 2
 
 
-class MarkupDiffFailure(Exception):
+class MarkupTest(unittest.TestCase):
     """
     Special error class: Try to display markup errors in a better way.
     """
@@ -48,98 +46,28 @@ class MarkupDiffFailure(Exception):
         result = ["%2s %s\n" % (line, i) for line, i in enumerate(diff)]
         return "".join(result)
 
-    def _split_message(self, msg):
-        """
-        Get the right split_string is not easy. There are many variants. Every
-        part of the string can be used ' oder " and can be marked with the
-        'u' (unicode) character.
-        Here some tests:
+    def assertEqual(self, first, second, msg=""):
+        if not first == second:
+            if VERBOSE >= 2:
+                print "first: %r" % first
+                print "second: %r" % second
 
-        >>> MarkupDiffFailure()._split_message('''"foo" != "bar"''')
-        ('foo', 'bar')
+            #~ first = first.rstrip("\\n")
+            #~ second = second.rstrip("\\n")
+            diff = self._diff(first, second)
 
-        >>> MarkupDiffFailure()._split_message('''u"foo" != "bar"''')
-        ('foo', 'bar')
-        >>> MarkupDiffFailure()._split_message('''"foo" != u"bar"''')
-        ('foo', 'bar')
-        >>> MarkupDiffFailure()._split_message('''u"foo" != u"bar"''')
-        ('foo', 'bar')
-        >>> MarkupDiffFailure()._split_message('''u'foo' != "bar"''')
-        ('foo', 'bar')
-        >>> MarkupDiffFailure()._split_message(''''foo' != u"bar"''')
-        ('foo', 'bar')
-        >>> MarkupDiffFailure()._split_message("'foo' != u'bar'")
-        ('foo', 'bar')
+            if VERBOSE >= 2:
+                print "diff: %r" % diff
 
-        >>> MarkupDiffFailure()._split_message('''u"" != u"bar"''')
-        ('', 'bar')
-        >>> MarkupDiffFailure()._split_message('''u'foo' != u""''')
-        ('foo', '')
-        
-        >>> MarkupDiffFailure()._split_message("u'foo [truncated]... != u'bar'")
-        ('foo [truncated]...', 'bar')
-        >>> MarkupDiffFailure()._split_message("u'foo [truncated]... != 'bar'")
-        ('foo [truncated]...', 'bar')
+            first = self._format_output(first)
+            second = self._format_output(second)
 
-        With and without a 'u' ;)
-        """
-        split_string = " != "
-        if not split_string in msg:
-            msg = (
-                "Split error output failed!"
-                " - split string >%s< not in message: %s"
-            ) % (split_string, msg)
-            raise AssertionError(msg)
-
-        try:
-            block1, block2 = msg.split(split_string)
-        except ValueError, err:
-            msg = self._format_output(msg)
-            return (
-                "Can't split error output: %r\n"
-                "message: %s"
-            ) % (err, msg)
-
-        block1 = block1.lstrip("u")
-        block1 = block1.strip("\"'")
-
-        block2 = block2.lstrip("u")
-        block2 = block2.strip("\"'")
-
-        return block1, block2
-
-    def _build_errormsg(self):
-        raw_msg = self.args[0]
-
-        block1, block2 = self._split_message(raw_msg)
-
-        #~ block1 = block1.rstrip("\\n")
-        #~ block2 = block2.rstrip("\\n")
-        diff = self._diff(block1, block2)
-
-        block1 = self._format_output(block1)
-        block2 = self._format_output(block2)
-
-        return (
-            "%r\n\n---[Output:]---\n%s\n"
-            "---[not equal to:]---\n%s"
-            "\n---[diff:]---\n%s"
-        ) % (raw_msg, block1, block2, diff)
-
-    def __str__(self):
-        try:
-            return self._build_errormsg()
-        except:
-            etype, value, tb = sys.exc_info()
-            return traceback.format_exc(tb)
-
-
-
-
-class MarkupTest(unittest.TestCase):
-
-    # Use the own error class from above
-    failureException = MarkupDiffFailure
+            msg += (
+                "\n---[Output:]---\n%s\n"
+                "---[not equal to:]---\n%s"
+                "\n---[diff:]---\n%s"
+            ) % (first, second, diff)
+            raise self.failureException(msg)
 
     def _prepare_text(self, txt):
         """
@@ -147,7 +75,7 @@ class MarkupTest(unittest.TestCase):
         """
         txt = unicode(txt)
         txt = txt.splitlines()
-        assert txt[0] == "", "First must be empty! Is: %s" % repr(txt[0])
+        assert txt[0] == "", "First assertion line must be empty! Is: %s" % repr(txt[0])
         txt = txt[1:] # Skip the first line
 
         # get the indentation level from the first line
@@ -213,14 +141,13 @@ class MarkupTest(unittest.TestCase):
         self.assertEqual(out5, "one line\n    line two\ndritte Zeile")
 
         self.assertRaises(
-            MarkupDiffFailure, self.assertEqual, "foo", "bar"
+            AssertionError, self.assertEqual, "foo", "bar"
         )
 
 
 
 if __name__ == '__main__':
     import doctest
-    doctest.testmod()
-    print "doc test done."
+    print "DocTest:", doctest.testmod()
 
     unittest.main()

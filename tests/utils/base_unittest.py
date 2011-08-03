@@ -13,23 +13,31 @@
 
 
 import re
+import sys
 import warnings
+
 
 try:
     import textile
 except ImportError:
-    textile = False
+    test_textile = False
     warnings.warn(
         "Markup error: The Python textile library isn't installed."
-        " Download: http://cheeseshop.python.org/pypi/textile"
+        " Download: http://pypi.python.org/pypi/textile"
     )
+else:
+    test_textile = True
+
 
 from utils import MarkupTest
 
-from creole import creole2html, html2creole, html2textile
+from creole import creole2html, html2creole, html2textile, html2rest
+from creole.shared.rest import rest2html, REST_INSTALLED
 
 
 tabs2spaces_re = re.compile(r"^(\t*)(.*?)$", re.M)
+
+
 
 def tabs2spaces(html):
     """ form reformating textile html code
@@ -108,11 +116,7 @@ class BaseCreoleTest(MarkupTest):
             out_string = out_string.replace("\t", "    ")
 
         # compare
-        try:
-            self.assertEqual(out_string, html_string)
-        except:
-            print " *** Error in creole2html:"
-            raise
+        self.assertEqual(out_string, html_string, msg="creole2html")
 
     def assert_html2creole(self, raw_creole, raw_html, \
                 strip_lines=False, debug=False, parser_kwargs={}, emitter_kwargs={}):
@@ -141,11 +145,7 @@ class BaseCreoleTest(MarkupTest):
             self._debug_text("assert_html2creole() html2creole", out_string)
 
         # compare
-        try:
-            self.assertEqual(out_string, markup)
-        except:
-            print " *** Error in html2creole:"
-            raise
+        self.assertEqual(out_string, markup, msg="html2creole")
 
     def cross_compare_creole(self, creole_string, html_string,
                         strip_lines=False, debug=False,
@@ -175,6 +175,9 @@ class BaseCreoleTest(MarkupTest):
 
     def assert_html2textile(self, textile_string, html_string, \
                         strip_lines=False, debug=False, parser_kwargs={}, emitter_kwargs={}):
+        """
+        Check html2textile
+        """
         self.assertNotEqual(textile_string, html_string)
 
         textile_string = self._prepare_text(textile_string)
@@ -190,57 +193,122 @@ class BaseCreoleTest(MarkupTest):
             print textile_string2
             print "-" * 79
 
-        try:
-            self.assertEqual(textile_string2, textile_string)
-        except:
-            print " *** Error in html2textile:"
-            raise
+        self.assertEqual(textile_string2, textile_string, msg="html2textile")
 
         return textile_string, html_string
 
     def cross_compare_textile(self, textile_string, html_string, \
                         strip_lines=False, debug=False, parser_kwargs={}, emitter_kwargs={}):
+        """
+            Checks:
+                * html2textile
+                * textile2html
+        """
 #        assert isinstance(textile_string, unicode)
 #        assert isinstance(html_string, unicode)
         self.assertNotEqual(textile_string, html_string)
 
+        # compare html -> textile
         textile_string, html_string = self.assert_html2textile(
             textile_string, html_string,
             strip_lines, debug, parser_kwargs, emitter_kwargs
         )
 
         # compare textile -> html
-        if not textile:
+        if not test_textile:
             warnings.warn("Skip textile test. Please install python textile module.")
-        else:
-            html = textile.textile(textile_string)
-            html = html.replace("<br />", "<br />\n")
-            html = tabs2spaces(html)
-            if strip_lines:
-                html = strip_html_lines(html, strip_lines)
-            try:
-                self.assertEqual(html_string, html)
-            except:
-                print " *** Error in compare textile -> html:"
-                raise
+            return
 
-    def cross_compare(self, creole_string, textile_string, html_string, \
+        html = textile.textile(textile_string)
+        html = html.replace("<br />", "<br />\n")
+        html = tabs2spaces(html)
+        if strip_lines:
+            html = strip_html_lines(html, strip_lines)
+
+        self.assertEqual(html_string, html, msg="textile2html")
+
+    def assert_html2rest(self, rest_string, html_string, \
+                        strip_lines=False, debug=False, parser_kwargs={}, emitter_kwargs={}):
+        """
+        Check html2rest
+        """
+        self.assertNotEqual(rest_string, html_string)
+
+        rest_string = self._prepare_text(rest_string)
+        html_string = self._prepare_text(html_string)
+
+        if strip_lines:
+            html_string = strip_html_lines(html_string, strip_lines)
+
+        # compare html -> textile
+        rest_string2 = html2rest(html_string, debug, parser_kwargs, emitter_kwargs)
+        if debug:
+            print "-" * 79
+            print rest_string2
+            print "-" * 79
+
+        self.assertEqual(rest_string2, rest_string, msg="html2rest")
+
+        return rest_string, html_string
+
+    def cross_compare_rest(self, rest_string, html_string, \
+                        strip_lines=False, debug=False, parser_kwargs={}, emitter_kwargs={}):
+#        assert isinstance(textile_string, unicode)
+#        assert isinstance(html_string, unicode)
+        self.assertNotEqual(rest_string, html_string)
+
+        rest_string, html_string = self.assert_html2rest(
+            rest_string, html_string,
+            strip_lines, debug, parser_kwargs, emitter_kwargs
+        )
+
+        # compare rest -> html
+        if not REST_INSTALLED:
+            warnings.warn("Skip ReSt test. Please install Dicutils.")
+            return
+
+        html = rest2html(rest_string)
+
+        if debug:
+            print rest_string
+            print html_string
+            print html
+
+        html = html.strip()
+#        html = html.replace("<br />", "<br />\n")
+#        html = tabs2spaces(html)
+        if strip_lines:
+            html = strip_html_lines(html, strip_lines)
+
+        self.assertEqual(html_string, html, msg="rest2html")
+
+    def cross_compare(self,
+            html_string,
+            creole_string=None,
+            textile_string=None,
+            rest_string=None,
             strip_lines=False, debug=False, parser_kwargs={}, emitter_kwargs={}):
         """
         Cross compare with:
             * creole2html
             * html2creole
             * html2textile
-
-        This only works fine if there is no problematic whitespace handling.
+            * html2ReSt
         """
-        self.cross_compare_creole(
-            creole_string, html_string, strip_lines, debug, parser_kwargs, emitter_kwargs
-        )
+        if creole_string:
+            self.cross_compare_creole(
+                creole_string, html_string, strip_lines, debug, parser_kwargs, emitter_kwargs
+            )
 
-        self.cross_compare_textile(
-            textile_string, html_string, strip_lines, debug, parser_kwargs, emitter_kwargs
-        )
+        if textile_string:
+            self.cross_compare_textile(
+                textile_string, html_string, strip_lines, debug, parser_kwargs, emitter_kwargs
+            )
+
+        if rest_string:
+            self.cross_compare_rest(
+                rest_string, html_string, strip_lines, debug, parser_kwargs, emitter_kwargs
+            )
 
 if __name__ == '__main__':
     import doctest
