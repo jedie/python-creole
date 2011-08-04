@@ -228,7 +228,7 @@ class BaseCreoleTest(MarkupTest):
     def assert_html2rest(self, rest_string, html_string, \
                         strip_lines=False, debug=False, parser_kwargs={}, emitter_kwargs={}):
         """
-        Check html2rest
+        Check html to reStructuredText converter
         """
         self.assertNotEqual(rest_string, html_string)
 
@@ -238,7 +238,7 @@ class BaseCreoleTest(MarkupTest):
         if strip_lines:
             html_string = strip_html_lines(html_string, strip_lines)
 
-        # compare html -> textile
+        # compare html -> reStructuredText
         rest_string2 = html2rest(html_string, debug, parser_kwargs, emitter_kwargs)
         if debug:
             print "-" * 79
@@ -249,21 +249,17 @@ class BaseCreoleTest(MarkupTest):
 
         return rest_string, html_string
 
-    def cross_compare_rest(self, rest_string, html_string, \
-                        strip_lines=False, debug=False, parser_kwargs={}, emitter_kwargs={}):
-#        assert isinstance(textile_string, unicode)
-#        assert isinstance(html_string, unicode)
-        self.assertNotEqual(rest_string, html_string)
-
-        rest_string, html_string = self.assert_html2rest(
-            rest_string, html_string,
-            strip_lines, debug, parser_kwargs, emitter_kwargs
-        )
+    def assert_rest2html(self, rest_string, html_string, \
+            strip_lines=False, debug=False, prepare_strings=True):
 
         # compare rest -> html
         if not REST_INSTALLED:
-            warnings.warn("Skip ReSt test. Please install Dicutils.")
+            warnings.warn("Skip ReSt test. Please install Docutils.")
             return
+
+        if prepare_strings:
+            rest_string = self._prepare_text(rest_string)
+            html_string = self._prepare_text(html_string)
 
         html = rest2html(rest_string)
 
@@ -278,7 +274,25 @@ class BaseCreoleTest(MarkupTest):
         if strip_lines:
             html = strip_html_lines(html, strip_lines)
 
-        self.assertEqual(html_string, html, msg="rest2html")
+        self.assertEqual(html, html_string, msg="rest2html")
+
+    def cross_compare_rest(self, rest_string, html_string, \
+                        strip_lines=False, debug=False, parser_kwargs={}, emitter_kwargs={}):
+#        assert isinstance(textile_string, unicode)
+#        assert isinstance(html_string, unicode)
+        self.assertNotEqual(rest_string, html_string)
+
+        rest_string, html_string = self.assert_html2rest(
+            rest_string, html_string,
+            strip_lines, debug, parser_kwargs, emitter_kwargs
+        )
+
+        # compare rest -> html
+        self.assert_rest2html(
+            rest_string, html_string,
+            strip_lines=strip_lines, debug=debug,
+            prepare_strings=False,
+        )
 
     def cross_compare(self,
             html_string,

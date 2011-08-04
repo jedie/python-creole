@@ -20,12 +20,14 @@ from tests.test_cross_compare_creole import CrossCompareCreoleTests
 from tests.test_cross_compare_rest import CrossCompareReStTests
 from tests.test_cross_compare_textile import CrossCompareTextileTests
 from tests.test_html2creole import TestHtml2Creole, TestHtml2CreoleMarkup
+from tests.test_rest2html import ReSt2HtmlTests
 from tests.test_utils import UtilsTests
 from tests.utils.utils import MarkupTest
 
 
 SKIP_DIRS = (".settings", ".git", "dist", "python_creole.egg-info")
 SKIP_FILES = ("setup.py", "test.py")
+
 
 def run_all_doctests():
     print
@@ -62,7 +64,9 @@ if __name__ == '__main__':
     print "_" * 79
     print "Running Unittests:\n"
 
-    unittest.main()
+    unittest.main(
+        #verbosity=99
+    )
 #elif len(sys.argv) > 1 and sys.argv[1] == "test":
 #    # e.g.: .../python-creole$ ./setup.py test
 #    run_all_doctests()
