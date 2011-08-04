@@ -47,7 +47,10 @@ class CreoleEmitter(BaseEmitter):
     #--------------------------------------------------------------------------
 
     def p_emit(self, node):
-        return u"%s\n\n" % self.emit_children(node)
+        result = self.emit_children(node)
+        if self._inner_list == "":
+            result += "\n\n"
+        return result
 
     def br_emit(self, node):
         if self._inner_list != "":
@@ -143,18 +146,20 @@ if __name__ == '__main__':
     from creole.html_parser.parser import HtmlParser
 
     data = u"""
-<p>A simple table:</p>
+<ul>
+    <li><p>item 1</p>
+        <ul>
+            <li><p>subsubitem 1.1.1</p></li>
+            <li>subsubitem 1.1.2</li>
+        </ul>
+    </li>
+    <li><p>item 2</p>
+        <ul>
+            <li>subitem 2.1</li>
+        </ul>
+    </li>
+</ul>
 
-<table>
-<tr>
-    <th>Headline 1</th>
-    <th>Headline 2</th>
-</tr>
-<tr>
-    <td>cell one</td>
-    <td>cell two</td>
-</tr>
-</table>
 """
 
 #    print data.strip()

@@ -314,6 +314,36 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             <div class="foo" id="bar"><span><em>baz</em></span>, <strong>quux</strong></div>
         """)
 
+    def test_nested_listsitems_with_paragraph(self):
+        self.assert_html2creole(u"""
+            * item 1
+            ** subitem 1.1
+            *** subsubitem 1.1.1
+            *** subsubitem 1.1.2
+            ** subitem 1.2
+            * item 2
+            ** subitem 2.1
+            """, """
+            <ul>
+                <li><p>item 1</p>
+                    <ul>
+                        <li><p>subitem 1.1</p>
+                            <ul>
+                                <li>subsubitem 1.1.1</li>
+                                <li>subsubitem 1.1.2</li>
+                            </ul>
+                        </li>
+                            <li><p>subitem 1.2</p></li>
+                    </ul>
+                </li>
+                <li><p>item 2</p>
+                    <ul>
+                        <li>subitem 2.1</li>
+                    </ul>
+                </li>
+            </ul>
+        """)
+
     #--------------------------------------------------------------------------
     # TODOs:
 
@@ -536,7 +566,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 #        """)
 
 if __name__ == '__main__':
-    unittest.main()
-#if __name__ == '__main__':
-#    suite = unittest.TestLoader().loadTestsFromTestCase(TestHtml2Creole)
-#    unittest.TextTestRunner().run(suite)
+    unittest.main(
+#        defaultTest="TestHtml2CreoleMarkup.test_nested_listsitems_with_paragraph"
+    )
+
