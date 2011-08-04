@@ -41,11 +41,9 @@ def get_long_description():
         desc_html = creole2html(desc_creole)
         long_description = html2rest(desc_html)
     except Exception, err:
+        if len(sys.argv) > 1 and sys.argv[1] in ("--long-description", "sdist"):
+            raise
         long_description = "[Error: %s]" % err
-        if len(sys.argv) > 1:
-            print sys.argv
-            if sys.argv[1] in ("--long-description", "sdist"):
-                raise
 
     return long_description
 
@@ -53,7 +51,7 @@ def get_long_description():
 setup(
     name='python-creole',
     version=VERSION_STRING,
-    description='python-creole is an open-source creole2html and html2creole converter in pure Python.',
+    description='python-creole is an open-source (GPL) markup converter in pure Python for: creole2html, html2creole, html2ReSt, html2textile',
     long_description=get_long_description(),
     author=get_authors(),
     maintainer="Jens Diemer",
