@@ -5,6 +5,9 @@
     html -> reStructuredText Emitter
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    Links about reStructuredText:
+    
+    http://openalea.gforge.inria.fr/doc/openalea/doc/_build/html/source/sphinx/rest_syntax.html
 
     :copyleft: 2011 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
