@@ -5,15 +5,16 @@
     distutils setup
     ~~~~~~~~~~~~~~~
 
-    :copyleft: 2009-2010 by the python-creole team, see AUTHORS for more details.
+    :copyleft: 2009-2011 by the python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 import os
+import sys
 
 from setuptools import setup, find_packages
 
-from creole import VERSION_STRING
+from creole import VERSION_STRING, creole2html, html2rest
 
 
 PACKAGE_ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -31,11 +32,21 @@ def get_authors():
 
 def get_long_description():
     try:
-        f = file(os.path.join(PACKAGE_ROOT, "README"), "r")
-        long_description = f.read().strip()
+        f = file(os.path.join(PACKAGE_ROOT, "README.creole"), "r")
+        desc_creole = f.read()
         f.close()
+
+        desc_creole = unicode(desc_creole, 'utf-8').strip()
+
+        desc_html = creole2html(desc_creole)
+        long_description = html2rest(desc_html)
     except Exception, err:
         long_description = "[Error: %s]" % err
+        if len(sys.argv) > 1:
+            print sys.argv
+            if sys.argv[1] in ("--long-description", "sdist"):
+                raise
+
     return long_description
 
 

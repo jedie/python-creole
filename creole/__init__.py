@@ -49,7 +49,7 @@ def creole2html(markup_string, debug=False, parser_kwargs={}, emitter_kwargs={})
     >>> creole2html(u'This is **creole //markup//**!')
     u'<p>This is <strong>creole <i>markup</i></strong>!</p>'
     """
-    assert isinstance(markup_string, unicode)
+    assert isinstance(markup_string, unicode), "given markup should be unicode!"
 
     # Create document tree from creole markup
     document = CreoleParser(markup_string, **parser_kwargs).parse()

@@ -1,0 +1,140 @@
+= about
+
+python-creole is a OpenSource (GPL) Python lib for converting markup:
+
+This converter exists:
+
+* creole markup -> html
+* html -> creole markup
+* html -> reStructuredText markup (subset of reSt)
+* html -> textile markup (not completed yet)
+
+python-creole is pure python. No external libs needed.
+
+The creole2html part based on the creole markup parser and emitter from the MoinMoin project by Radomir Dopieralski and Thomas Waldmann.
+
+
+= install
+
+Python packages available on: [[http://pypi.python.org/pypi/python-creole/]]
+
+{{{
+~$ easy_install python-creole
+}}}
+
+
+= example
+
+Convert creole markup to html code:
+{{{
+>>> from creole import creole2html
+>>> creole2html("This is **creole //markup//**")
+u'<p>This is <strong>creole <i>markup</i></strong></p>\n'
+}}}
+
+Convert html code back into creole markup:
+{{{
+>>> from creole import html2creole
+>>> html2creole(u'<p>This is <strong>creole <i>markup</i></strong></p>\n')
+u'This is **creole //markup//**'
+}}}
+
+Convert html code into ReStructuredText markup:
+{{{
+>>> from creole import html2rest
+>>> html2rest(u'<p>This is <strong>ReStructuredText</strong> <em>markup</em>!</p>')
+u'This is **ReStructuredText** *markup*!'
+}}}
+
+Convert html code into textile markup
+{{{
+>>> from creole import html2textile
+>>> html2textile(u'<p>This is <strong>textile <i>markup</i></strong>!</p>')
+u'This is *textile __markup__*!'
+}}}
+
+See also: [[http://github.com/jedie/python-creole/blob/master/demo.py]]
+
+
+= documentation
+
+We store documentation/exmplate into the project wiki:
+
+* [[http://code.google.com/p/python-creole/w/list]]
+
+How to handle unknown html tags in html2creole:
+
+* [[http://code.google.com/p/python-creole/wiki/UnknownHtmlTags]]
+
+Contributers should take a look at this page:
+
+* [[http://code.google.com/p/python-creole/wiki/DeveloperInfo]]
+
+
+= history
+
+* v0.7pre
+** NEW: Add a html2reStructuredText converter
+* v0.6.1
+** Bugfix: seperate lines with one space in "wiki style line breaks" mode
+* v0.6
+** //NEW//: html2textile converter
+** some API changed!
+* v0.5
+** API changed:
+*** Html2CreoleEmitter optinal argument 'unknown_emit' taks now a callable for handle unknown html tags.
+*** No macros used as default in creole2html converting.
+*** We remove the support for callable macros. Only dict and modules are allowed.
+** remove unknown html tags is default behaviour in html2creole converting.
+** restructure and cleanup sourcecode files.
+* v0.4
+** only emit children of empty tags like div and span (contributed by Eric O'Connell)
+** remove inter wiki links and doen't check the protocol
+* v0.3.3
+** Use <tt> when {{{ ... }}} is inline and not <pre>, see: [[http://forum.pylucid.org/viewtopic.php?f=3&t=320]]
+** Bugfix in html2creole: insert newline before new list. TODO: apply to all block tags: [[http://code.google.com/p/python-creole/issues/detail?id=16#c5]]
+* v0.3.2
+** Bugfix for spaces after Headline: [[https://code.google.com/p/python-creole/issues/detail?id=15]]
+* v0.3.1
+** Make argument 'block_rules' in Parser() optional
+* v0.3.0
+** creole2html() has the optinal parameter 'blog_line_breaks' to switch from default blog to wiki line breaks
+* v0.2.8
+** bugfix in setup.py
+* v0.2.7
+** handle obsolete non-closed <br> tag
+* v0.2.6
+** bugfix in setup.py
+** Cleanup DocStrings
+** add unittests
+* v0.2.5
+** creole2html: Bugfix if "--", "//" etc. stands alone, see also: [[http://code.google.com/p/python-creole/issues/detail?id=12]]
+** Note: bold, italic etc. can't cross line anymore.
+* v0.2.4
+** creole2html: ignore file extensions in image tag
+*** see also: [[http://code.google.com/p/python-creole/issues/detail?id=7]]
+* v0.2.3
+** html2creole bugfix/enhanced: convert image tag without alt attribute:
+*** see also: [[http://code.google.com/p/python-creole/issues/detail?id=6]]
+*** Thanks Betz Stefan alias 'encbladexp'
+* v0.2.2
+** html2creole bugfix: convert '''<a href="/url/">Search & Destroy</a>'''
+* v0.2.1
+** html2creole bugfixes in:
+*** converting tables: ignore tbody tag and better handling p and a tags in td
+*** converting named entity
+* v0.2
+** remove all django template tag stuff: [[http://code.google.com/p/python-creole/issues/detail?id=3]]
+** html code always escaped
+* v0.1.1
+** improve macros stuff, patch by Vitja Makarov: [[http://code.google.com/p/python-creole/issues/detail?id=2]]
+* v0.1.0
+** first version cut out from PyLucid CMS - [[http://www.pylucid.org]]
+
+
+= links
+
+| homepage:    | [[http://code.google.com/p/python-creole/]]      |
+| sourcecode:  | [[http://github.com/jedie/python-creole]]        |
+| PyPi:        | [[http://pypi.python.org/pypi/python-creole/]]   |
+| flattr this: | [[http://flattr.com/thing/181554/python-creole]] |
