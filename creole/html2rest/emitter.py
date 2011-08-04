@@ -170,6 +170,8 @@ class ReStructuredTextEmitter(BaseEmitter):
 
     def ul_emit(self, node):
         result = u"%s" % self.emit_children(node).rstrip()
+        if node.level == 1:
+            result += "\n\n"
         return result
 
 #    def ol_emit(self, node):
@@ -202,20 +204,21 @@ if __name__ == '__main__':
 #    import sys;sys.exit()
     from creole.html_parser.parser import HtmlParser
 
-    data = u"""<p>TEST:</p>
+    data = u"""<p>A nested bullet lists:</p>
 <ul>
-    <li><p>item 1</p>
-        <ul>
-            <li>subitem 1.1</li>
-            <li>subitem 1.2</li>
-        </ul>
-    </li>
-    <li><p>item 2</p>
-        <ul>
-            <li>subitem 2.1</li>
-        </ul>
-    </li>
+<li><p>item 1</p>
+<ul>
+<li>subitem 1.1</li>
+<li>subitem 1.2</li>
 </ul>
+</li>
+<li><p>item 2</p>
+<ul>
+<li>subitem 2.1</li>
+</ul>
+</li>
+</ul>
+<p>Text under list.</p>
 """
 
     print data

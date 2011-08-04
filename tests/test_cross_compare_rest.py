@@ -37,8 +37,6 @@ class CrossCompareReStTests(BaseCreoleTest):
     def test_bullet_lists_basic(self):
         self.cross_compare_rest(
             rest_string=u"""
-                A list:
-                
                 - item 1
                 
                 - item 2
@@ -46,7 +44,6 @@ class CrossCompareReStTests(BaseCreoleTest):
                 - item 3
             """,
             html_string="""
-                <p>A list:</p>
                 <ul>
                 <li>item 1</li>
                 <li>item 2</li>
@@ -70,6 +67,8 @@ class CrossCompareReStTests(BaseCreoleTest):
                 - item 2
                 
                     - subitem 2.1
+                    
+                Text under list.
             """,
             html_string="""
                 <p>A nested bullet lists:</p>
@@ -86,6 +85,7 @@ class CrossCompareReStTests(BaseCreoleTest):
                 </ul>
                 </li>
                 </ul>
+                <p>Text under list.</p>
             """,
 #            debug=True
         )
