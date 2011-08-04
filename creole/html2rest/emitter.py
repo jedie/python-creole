@@ -54,12 +54,20 @@ class ReStructuredTextEmitter(BaseEmitter):
 
     #--------------------------------------------------------------------------
 
-    def p_emit(self, node):
-        result = u"%s\n\n" % self.emit_children(node)
-        if self._block_data:
-            result += u"%s\n\n" % "\n".join(self._block_data)
+    def emit_children(self, node):
+        """Emit all the children of a node."""
+
+        result = u"".join(self.emit_children_list(node))
+
+        if self._block_data and node.parent == self.root:
+            # insert last bock data e.g.: .. |substitution| image:: /image.png
+            result += "\n\n%s" % "\n".join(self._block_data)
             self._block_data = []
+
         return result
+
+    def p_emit(self, node):
+        return u"%s\n\n" % self.emit_children(node)
 
     HEADLINE_DATA = {
         1:("=", True),
@@ -162,17 +170,22 @@ class ReStructuredTextEmitter(BaseEmitter):
     #--------------------------------------------------------------------------
 
     def li_emit(self, node):
-        content = u"%s- %s\n\n" % (
+        content = self.emit_children(node).strip("\n")
+        result = u"\n%s- %s\n" % (
             "    " * (node.level - 1),
-            self.emit_children(node)
+            content
         )
-        return content
+        return result
 
     def ul_emit(self, node):
-        result = u"%s" % self.emit_children(node).rstrip()
+        content = self.emit_children(node)
+
         if node.level == 1:
-            result += "\n\n"
-        return result
+            # FIXME: This should be made ​​easier and better
+            complete_list = "\n\n".join([i.strip("\n") for i in content.split("\n") if i])
+            content = "%s\n\n" % complete_list
+
+        return content
 
 #    def ol_emit(self, node):
 #        return self._list_emit(node, list_type="#")
@@ -208,8 +221,14 @@ if __name__ == '__main__':
 <ul>
 <li><p>item 1</p>
 <ul>
-<li>subitem 1.1</li>
-<li>subitem 1.2</li>
+<li><p>A <strong>bold subitem 1.1</strong> here.</p>
+<ul>
+<li>subsubitem 1.1.1</li>
+<li>subsubitem 1.1.2 with inline <img alt="substitution text" src="/url/to/image.png" /> image.</li>
+</ul>
+</li>
+<li><p>subitem 1.2</p>
+</li>
 </ul>
 </li>
 <li><p>item 2</p>
@@ -219,6 +238,8 @@ if __name__ == '__main__':
 </li>
 </ul>
 <p>Text under list.</p>
+<p>4 <img alt="PNG pictures" src="/image.png" /> four</p>
+<p>5 <img alt="Image without files ext?" src="/path1/path2/image" /> five</p>
 """
 
     print data
@@ -236,3 +257,4 @@ if __name__ == '__main__':
     print content
     print "*" * 79
     print content.replace(" ", ".").replace("\n", "\\n\n")
+

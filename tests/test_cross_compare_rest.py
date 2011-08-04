@@ -60,14 +60,20 @@ class CrossCompareReStTests(BaseCreoleTest):
                 
                 - item 1
                 
-                    - subitem 1.1
-                    
+                    - A **bold subitem 1.1** here.
+                
+                        - subsubitem 1.1.1
+                
+                        - subsubitem 1.1.2 with inline |substitution text| image.
+                
                     - subitem 1.2
                 
                 - item 2
                 
                     - subitem 2.1
-                    
+                
+                .. |substitution text| image:: /url/to/image.png
+                
                 Text under list.
             """,
             html_string="""
@@ -75,8 +81,14 @@ class CrossCompareReStTests(BaseCreoleTest):
                 <ul>
                 <li><p>item 1</p>
                 <ul>
-                <li>subitem 1.1</li>
-                <li>subitem 1.2</li>
+                <li><p>A <strong>bold subitem 1.1</strong> here.</p>
+                <ul>
+                <li>subsubitem 1.1.1</li>
+                <li>subsubitem 1.1.2 with inline <img alt="substitution text" src="/url/to/image.png" /> image.</li>
+                </ul>
+                </li>
+                <li><p>subitem 1.2</p>
+                </li>
                 </ul>
                 </li>
                 <li><p>item 2</p>

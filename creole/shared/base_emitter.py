@@ -110,7 +110,6 @@ class BaseEmitter(object):
         if self._inner_list == "": # Start a new list
             self._inner_list = list_type
         else:
-            start = False
             self._inner_list += list_type
 
         content = u"%s" % self.emit_children(node)
@@ -139,7 +138,7 @@ class BaseEmitter(object):
 
     def tr_emit(self, node):
         self._table.add_tr()
-        content = self.emit_children(node)
+        self.emit_children(node)
         return u""
 
     def _escape_linebreaks(self, text):
@@ -186,14 +185,17 @@ class BaseEmitter(object):
 
     def emit_children(self, node):
         """Emit all the children of a node."""
+        return u"".join(self.emit_children_list(node))
+
+    def emit_children_list(self, node):
+        """Emit all the children of a node."""
         self.last = node
         result = []
         for child in node.children:
             content = self.emit_node(child)
             assert isinstance(content, unicode)
             result.append(content)
-        return u"".join(result)
-        #~ return u''.join([self.emit_node(child) for child in node.children])
+        return result
 
     def emit_node(self, node):
         """Emit a single node."""
@@ -205,7 +207,10 @@ class BaseEmitter(object):
                 )
             )
 
-        self.debug_msg("emit_node", "%s: %r" % (node.kind, node.content))
+        if node.level:
+            self.debug_msg("emit_node", "%s (level: %i): %r" % (node.kind, node.level, node.content))
+        else:
+            self.debug_msg("emit_node", "%s: %r" % (node.kind, node.content))
 
         method_name = "%s_emit" % node.kind
         emit_method = getattr(self, method_name, None)

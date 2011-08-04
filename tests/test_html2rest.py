@@ -112,6 +112,53 @@ class ReStTests(BaseCreoleTest):
             """
         )
 
+    def test_list_without_p(self):
+        self.assert_html2rest(
+            rest_string="""
+                A nested bullet lists:
+                
+                - item 1 without p-tag
+                
+                    - A **`subitem 1.1 </1.1/url/>`_ link** here.
+                    
+                        - subsubitem 1.1.1
+                        
+                        - subsubitem 1.1.2
+                    
+                    - subitem 1.2
+                
+                - item 2 without p-tag
+                
+                    - subitem 2.1
+                    
+                Text under list.
+            """,
+            html_string="""
+                <p>A nested bullet lists:</p>
+                <ul>
+                    <li>item 1 without p-tag
+                        <ul>
+                            <li>A <strong><a href="/1.1/url/">subitem 1.1</a> link</strong> here.
+                                <ul>
+                                    <li>subsubitem 1.1.1</li>
+                                    <li>subsubitem 1.1.2</li>
+                                </ul>
+                            </li>
+                            <li>subitem 1.2</li>
+                        </ul>
+                    </li>
+                    <li>item 2 without p-tag
+                        <ul>
+                            <li>subitem 2.1</li>
+                        </ul>
+                    </li>
+                </ul>
+                <p>Text under list.</p>
+            """
+        )
+
+
+
 
 
 #    def test_preformat_unknown_nodes(self):
