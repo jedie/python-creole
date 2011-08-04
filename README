@@ -20,22 +20,26 @@ The creole2html part based on the creole markup parser and emitter from the Moin
 
 Python packages available on: http://pypi.python.org/pypi/python-creole/
 
-~$ easy_install python-creole
+::
+
+	~$ easy_install python-creole
 
 
 =========
  example
 =========
 
->>> from creole import creole2html
->>> creole2html("This is **creole //markup//**")
-u'<p>This is <strong>creole <i>markup</i></strong></p>\n'
+::
 
+	>>> from creole import creole2html
+	>>> creole2html("This is **creole //markup//**")
+	u'<p>This is <strong>creole <i>markup</i></strong></p>\n'
 
->>> from creole import html2creole
->>> html2creole(u'<p>This is <strong>creole <i>markup</i></strong></p>\n')
-u'This is **creole //markup//**'
+::
 
+	>>> from creole import html2creole
+	>>> html2creole(u'<p>This is <strong>creole <i>markup</i></strong></p>\n')
+	u'This is **creole //markup//**'
 
 See also: http://github.com/jedie/python-creole/blob/master/demo.py
 
@@ -48,11 +52,9 @@ We store documentation/exmplate into the project wiki:
 
   - http://code.google.com/p/python-creole/w/list
 
-
 How to handle unknown html tags in html2creole:
 
   - http://code.google.com/p/python-creole/wiki/UnknownHtmlTags
-
 
 Contributers should take a look at this page:
 
