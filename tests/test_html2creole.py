@@ -340,21 +340,6 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             <p><a href="http://google.com">The googlezor</a> is a big bad mother.</p>
         """)
 
-    def test_cross_lines(self):
-        """ TODO: bold/italics cross lines
-        see: http://code.google.com/p/python-creole/issues/detail?id=13 
-        """
-        self.assert_html2creole(r"""
-            Bold and italics should //be
-            able// to **cross
-            lines.**
-        """, """
-            <p>Bold and italics should <i>be<br />
-            able</i> to <strong>cross<br />
-            lines.</strong></p>
-        """)
-
-
     def test_no_space_before_blocktag(self):
         """ TODO: Bug in html2creole.strip_html(): Don't add a space before/after block tags """
         self.assert_html2creole(r"""
