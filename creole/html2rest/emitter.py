@@ -31,6 +31,7 @@ class ReStructuredTextEmitter(BaseEmitter):
         from creole.shared.unknown_tags import raise_unknown_node
         self._unknown_emit = raise_unknown_node
         self._block_data = []
+        self._list_markup = ""
 
     def emit(self):
         """Emit the document represented by self.root DOM tree."""
@@ -171,13 +172,13 @@ class ReStructuredTextEmitter(BaseEmitter):
 
     def li_emit(self, node):
         content = self.emit_children(node).strip("\n")
-        result = u"\n%s- %s\n" % (
-            "    " * (node.level - 1),
-            content
+        result = u"\n%s%s %s\n" % (
+            "    " * (node.level - 1), self._list_markup, content
         )
         return result
 
-    def ul_emit(self, node):
+    def _list_emit(self, node, list_type):
+        self._list_markup = list_type
         content = self.emit_children(node)
 
         if node.level == 1:
@@ -187,8 +188,11 @@ class ReStructuredTextEmitter(BaseEmitter):
 
         return content
 
-#    def ol_emit(self, node):
-#        return self._list_emit(node, list_type="#")
+    def ul_emit(self, node):
+        return self._list_emit(node, "*")
+
+    def ol_emit(self, node):
+        return self._list_emit(node, "#.")
 
     def table_emit(self, node):
         """

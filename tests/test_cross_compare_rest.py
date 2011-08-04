@@ -37,11 +37,11 @@ class CrossCompareReStTests(BaseCreoleTest):
     def test_bullet_lists_basic(self):
         self.cross_compare_rest(
             rest_string=u"""
-                - item 1
+                * item 1
                 
-                - item 2
+                * item 2
                 
-                - item 3
+                * item 3
             """,
             html_string="""
                 <ul>
@@ -53,24 +53,56 @@ class CrossCompareReStTests(BaseCreoleTest):
 #            debug=True
         )
 
+    def test_numbered_lists(self):
+        self.cross_compare_rest(
+            rest_string=u"""
+            #. item 1
+            
+            #. item 2
+            
+                #. item 2.1
+            
+                #. item 2.2
+            
+            #. item 3
+            """,
+            html_string="""
+            <ol>
+            <li><p>item 1</p>
+            </li>
+            <li><p>item 2</p>
+            <ol>
+            <li>item 2.1</li>
+            <li>item 2.2</li>
+            </ol>
+            </li>
+            <li><p>item 3</p>
+            </li>
+            </ol>
+            """,
+#            debug=True
+        )
+
     def test_bullet_lists_nested(self):
         self.cross_compare_rest(
             rest_string=u"""
                 A nested bullet lists:
                 
-                - item 1
+                * item 1
                 
-                    - A **bold subitem 1.1** here.
+                    * A **bold subitem 1.1** here.
                 
-                        - subsubitem 1.1.1
+                        * subsubitem 1.1.1
                 
-                        - subsubitem 1.1.2 with inline |substitution text| image.
+                        * subsubitem 1.1.2 with inline |substitution text| image.
                 
-                    - subitem 1.2
+                    * subitem 1.2
                 
-                - item 2
+                * item 2
                 
-                    - subitem 2.1
+                    * subitem 2.1
+                    
+                    * *bold 2.2*
                 
                 .. |substitution text| image:: /url/to/image.png
                 
@@ -94,6 +126,7 @@ class CrossCompareReStTests(BaseCreoleTest):
                 <li><p>item 2</p>
                 <ul>
                 <li>subitem 2.1</li>
+                <li><em>bold 2.2</em></li>
                 </ul>
                 </li>
                 </ul>
