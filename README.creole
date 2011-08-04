@@ -6,6 +6,7 @@ Existing converters:
 
 * creole markup -> html
 * html -> creole markup
+* reStructuredText -> html (for clean html code)
 * html -> reStructuredText markup (only a subset of reSt supported)
 * html -> textile markup (not completed yet)
 
@@ -25,6 +26,7 @@ Python packages available on: [[http://pypi.python.org/pypi/python-creole/]]
 
 = example
 
+== creole2html
 Convert creole markup to html code:
 {{{
 >>> from creole import creole2html
@@ -32,6 +34,8 @@ Convert creole markup to html code:
 u'<p>This is <strong>creole <i>markup</i></strong></p>\n'
 }}}
 
+
+== html2creole
 Convert html code back into creole markup:
 {{{
 >>> from creole import html2creole
@@ -39,6 +43,18 @@ Convert html code back into creole markup:
 u'This is **creole //markup//**'
 }}}
 
+
+== rest2html
+Convert ReStructuredText into clean html code:
+{{{
+>>> from creole import rest2html
+>>> rest2html(u"A ReSt link to `PyLucid CMS <http://www.pylucid.org>`_ :)")
+u'<p>A ReSt link to <a href="http://www.pylucid.org">PyLucid CMS</a> :)</p>\\n'
+}}}
+(more information: [[https://code.google.com/p/python-creole/wiki/rest2html|rest2html wiki page]])
+
+
+== html2rest
 Convert html code into ReStructuredText markup:
 {{{
 >>> from creole import html2rest
@@ -46,6 +62,8 @@ Convert html code into ReStructuredText markup:
 u'This is **ReStructuredText** *markup*!'
 }}}
 
+
+== html2textile
 Convert html code into textile markup
 {{{
 >>> from creole import html2textile
