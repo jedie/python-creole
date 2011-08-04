@@ -2,11 +2,11 @@
 
 python-creole is a OpenSource (GPL) Python lib for converting markup:
 
-This converter exists:
+Existing converters:
 
 * creole markup -> html
 * html -> creole markup
-* html -> reStructuredText markup (subset of reSt)
+* html -> reStructuredText markup (only a subset of reSt supported)
 * html -> textile markup (not completed yet)
 
 python-creole is pure python. No external libs needed.
@@ -74,31 +74,31 @@ Contributers should take a look at this page:
 = history
 
 * v0.7pre
-** NEW: Add a html2reStructuredText converter
+** **NEW**: Add a html2reStructuredText converter (only a subset of reSt supported)
 * v0.6.1
-** Bugfix: seperate lines with one space in "wiki style line breaks" mode
+** Bugfix: separate lines with one space in "wiki style line breaks" mode
 * v0.6
-** //NEW//: html2textile converter
-** some API changed!
+** **NEW**: html2textile converter
+** some **API changed**!
 * v0.5
-** API changed:
-*** Html2CreoleEmitter optinal argument 'unknown_emit' taks now a callable for handle unknown html tags.
+** **API changed**:
+*** Html2CreoleEmitter optional argument 'unknown_emit' takes now a callable for handle unknown html tags.
 *** No macros used as default in creole2html converting.
 *** We remove the support for callable macros. Only dict and modules are allowed.
 ** remove unknown html tags is default behaviour in html2creole converting.
 ** restructure and cleanup sourcecode files.
 * v0.4
 ** only emit children of empty tags like div and span (contributed by Eric O'Connell)
-** remove inter wiki links and doen't check the protocol
+** remove inter wiki links and doesn't check the protocol
 * v0.3.3
-** Use <tt> when ~{~{~{ ... ~}~}~} is inline and not <pre>, see: [[http://forum.pylucid.org/viewtopic.php?f=3&t=320]]
-** Bugfix in html2creole: insert newline before new list. TODO: apply to all block tags: [[http://code.google.com/p/python-creole/issues/detail?id=16#c5]]
+** Use <tt> when ~{~{~{ ... ~}~}~} is inline and not <pre>, see: [[http://forum.pylucid.org/viewtopic.php?f=3&t=320|PyLucid Forum Thread]]
+** Bugfix in html2creole: insert newline before new list. TODO: apply to all block tags: [[http://code.google.com/p/python-creole/issues/detail?id=16#c5|issues 16]]
 * v0.3.2
-** Bugfix for spaces after Headline: [[https://code.google.com/p/python-creole/issues/detail?id=15]]
+** Bugfix for spaces after Headline: [[https://code.google.com/p/python-creole/issues/detail?id=15|issues 15]]
 * v0.3.1
 ** Make argument 'block_rules' in Parser() optional
 * v0.3.0
-** creole2html() has the optinal parameter 'blog_line_breaks' to switch from default blog to wiki line breaks
+** creole2html() has the optional parameter 'blog_line_breaks' to switch from default blog to wiki line breaks
 * v0.2.8
 ** bugfix in setup.py
 * v0.2.7
@@ -109,27 +109,27 @@ Contributers should take a look at this page:
 ** add unittests
 * v0.2.5
 ** creole2html: Bugfix if "--", "~/~/" etc. stands alone, see also: [[http://code.google.com/p/python-creole/issues/detail?id=12|issues 12]]
-** Note: bold, italic etc. can't cross line anymore.
+** Note: bold, italic etc. can't cross line any more.
 * v0.2.4
 ** creole2html: ignore file extensions in image tag
-*** see also: [[http://code.google.com/p/python-creole/issues/detail?id=7]]
+*** see also: [[http://code.google.com/p/python-creole/issues/detail?id=7|issues 7]]
 * v0.2.3
 ** html2creole bugfix/enhanced: convert image tag without alt attribute:
-*** see also: [[http://code.google.com/p/python-creole/issues/detail?id=6]]
+*** see also: [[http://code.google.com/p/python-creole/issues/detail?id=6|issues 6]]
 *** Thanks Betz Stefan alias 'encbladexp'
 * v0.2.2
-** html2creole bugfix: convert '''<a href="/url/">Search & Destroy</a>'''
+** html2creole bugfix: convert {{{<a href="/url/">Search & Destroy</a>}}}
 * v0.2.1
 ** html2creole bugfixes in:
 *** converting tables: ignore tbody tag and better handling p and a tags in td
 *** converting named entity
 * v0.2
-** remove all django template tag stuff: [[http://code.google.com/p/python-creole/issues/detail?id=3]]
+** remove all django template tag stuff: [[http://code.google.com/p/python-creole/issues/detail?id=3|issues 3]]
 ** html code always escaped
 * v0.1.1
-** improve macros stuff, patch by Vitja Makarov: [[http://code.google.com/p/python-creole/issues/detail?id=2]]
+** improve macros stuff, patch by Vitja Makarov: [[http://code.google.com/p/python-creole/issues/detail?id=2|issues 2]]
 * v0.1.0
-** first version cut out from PyLucid CMS - [[http://www.pylucid.org]]
+** first version cut out from [[http://www.pylucid.org|PyLucid CMS]]
 
 
 = links
