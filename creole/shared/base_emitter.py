@@ -94,7 +94,6 @@ class BaseEmitter(object):
     def _typeface(self, node, key):
         return key + self.emit_children(node) + key
 
-
     #--------------------------------------------------------------------------
 
     def li_emit(self, node):
