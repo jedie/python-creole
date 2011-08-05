@@ -32,6 +32,10 @@ class TestCreole2html(unittest.TestCase):
     """
     Tests around creole2html API and macro function.
     """
+    def assertIn(self, src, dst):
+        # assertIn is new in Python 2.7 ;)
+        self.failIf(src not in dst, "%r not found in %r" % (src, dst))
+
     def test_stderr(self):
         """
         Test if the traceback information send to a stderr handler.
