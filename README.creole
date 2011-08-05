@@ -45,7 +45,7 @@ u'This is **creole //markup//**'
 
 
 == rest2html
-Convert ReStructuredText into clean html code (needs [[http://pypi.python.org/pypi/docutils docutils]]):
+Convert ReStructuredText into clean html code (needs [[http://pypi.python.org/pypi/docutils|docutils]]):
 {{{
 >>> from creole.rest2html.clean_writer import rest2html
 >>> rest2html(u"A ReSt link to `PyLucid CMS <http://www.pylucid.org>`_ :)")
