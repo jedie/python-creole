@@ -8,40 +8,43 @@
 """
 
 
-from creole import creole2html, html2creole
+from creole import creole2html, html2creole, html2rest, html2textile
 
 
-source = u"""\
+source_creole = u"""\
 == simple demo
+
 You can convert from:
 
-* from //creole// to **html**
-* from **html** back to //creole//
+* **creole2html**, **html2creole**, **html2rest**, //html2textile//
 
-=== e.g. a table:
+=== a table:
+
 |=headline 1 |= headline 2 |
 | 1.1. cell  | 1.2. cell   |
 | 2.1. cell  | 2.2. cell   |
+
 ----
 
 More info on our [[http://code.google.com/p/python-creole/|Homepage]]."""
 
+
 if __name__ == "__main__":
-    print "*" * 79
-    print " Source creole markup text:"
-    print "-" * 79
-    print source
-
-
-    print "*" * 79
-    print " Convert it into html:"
-    print "-" * 79
-    html = creole2html(source)
+    print "_" * 79 + "\n*** Convert creole into html: ***\n\n"
+    html = creole2html(source_creole)
     print html
 
 
-    print "*" * 79
-    print " Convert the html code back into creole:"
-    print "-" * 79
+    print "\n\n" + "_" * 79 + "\n*** Convert html back into creole: ***\n\n"
     creole = html2creole(html)
     print creole
+
+
+    print "\n\n" + "_" * 79 + "\n*** Convert html into ReStructuredText: ***\n\n"
+    rest = html2rest(html)
+    print rest
+
+
+    print "\n\n" + "_" * 79 + "\n*** Convert html into textile: ***\n\n"
+    textile = html2textile(html)
+    print textile
