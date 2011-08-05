@@ -14,7 +14,7 @@ import sys
 
 from setuptools import setup, find_packages
 
-from creole import VERSION_STRING, creole2html, html2rest
+from creole import VERSION_STRING
 
 
 PACKAGE_ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -32,6 +32,8 @@ def get_authors():
 
 def get_long_description():
     try:
+        from creole import creole2html, html2rest
+
         f = file(os.path.join(PACKAGE_ROOT, "README.creole"), "r")
         desc_creole = f.read()
         f.close()
@@ -43,6 +45,7 @@ def get_long_description():
     except Exception, err:
         if len(sys.argv) > 1 and sys.argv[1] in ("--long-description", "sdist"):
             raise
+        # Don't raise the error e.g. in ./setup install process
         long_description = "[Error: %s]" % err
 
     return long_description

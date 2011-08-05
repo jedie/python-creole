@@ -46,15 +46,19 @@ def run_all_doctests():
                 continue
 
             sys.path.insert(0, root)
-            m = __import__(filename[:-3])
-            del sys.path[0]
-
-            failed, attempted = testmod(m)
-            if attempted and not failed:
-                filepath = os.path.join(root, filename)
-                print "DocTest in %s OK (failed=%i, attempted=%i)" % (
-                    filepath, failed, attempted
-                )
+            try:
+                m = __import__(filename[:-3])
+            except ImportError, err:
+                print "***DocTest import %s error*** %s" % (filename, err)
+            else:
+                failed, attempted = testmod(m)
+                if attempted and not failed:
+                    filepath = os.path.join(root, filename)
+                    print "DocTest in %s OK (failed=%i, attempted=%i)" % (
+                        filepath, failed, attempted
+                    )
+            finally:
+                del sys.path[0]
 
 
 if __name__ == '__main__':

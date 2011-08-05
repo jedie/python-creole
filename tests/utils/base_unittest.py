@@ -30,8 +30,16 @@ else:
 
 
 from utils import MarkupTest
+from creole.exceptions import DocutilsImportError
 from creole import creole2html, html2creole, html2textile, html2rest
-from creole.rest2html.clean_writer import REST_INSTALLED, rest2html
+
+try:
+    from creole.rest2html.clean_writer import rest2html
+except DocutilsImportError, err:
+    REST_INSTALLED = False
+    warnings.warn("Can't run all ReSt unittests: %s" % err)
+else:
+    REST_INSTALLED = True
 
 tabs2spaces_re = re.compile(r"^(\t*)(.*?)$", re.M)
 

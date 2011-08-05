@@ -17,22 +17,25 @@
 """
 
 
-import warnings
+#import warnings
+import sys
 
+from creole.exceptions import DocutilsImportError
 
 try:
+    import docutils
     from docutils.core import publish_parts
+    from docutils.writers import html4css1
 except ImportError:
-    REST_INSTALLED = False
-    warnings.warn(
-        "Markup error: 'Python Documentation Utilities' isn't installed. Can't use reStructuredText."
-        " Download: http://pypi.python.org/pypi/docutils"
-    )
-else:
-    REST_INSTALLED = True
-
-
-from docutils.writers import html4css1
+    etype, evalue, etb = sys.exc_info()
+    msg = (
+        "%s - You can't use rest2html!"
+        " Please install: http://pypi.python.org/pypi/docutils"
+    ) % evalue
+    evalue = etype(msg)
+#    evalue.docutils = False #
+    raise DocutilsImportError, evalue, etb
+#    raise etype, evalue, etb
 
 
 DEBUG = False
@@ -164,6 +167,9 @@ def rest2html(content):
     
     >>> rest2html(u"- bullet list")
     u'<ul>\\n<li>bullet list</li>\\n</ul>\\n'
+    
+    >>> rest2html(u"A ReSt link to `PyLucid CMS <http://www.pylucid.org>`_ :)")
+    u'<p>A ReSt link to <a href="http://www.pylucid.org">PyLucid CMS</a> :)</p>\\n'
     """
     parts = publish_parts(
         source=content,

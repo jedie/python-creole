@@ -45,9 +45,9 @@ u'This is **creole //markup//**'
 
 
 == rest2html
-Convert ReStructuredText into clean html code:
+Convert ReStructuredText into clean html code (needs [[http://pypi.python.org/pypi/docutils docutils]]):
 {{{
->>> from creole import rest2html
+>>> from creole.rest2html.clean_writer import rest2html
 >>> rest2html(u"A ReSt link to `PyLucid CMS <http://www.pylucid.org>`_ :)")
 u'<p>A ReSt link to <a href="http://www.pylucid.org">PyLucid CMS</a> :)</p>\\n'
 }}}
@@ -91,7 +91,10 @@ Contributers should take a look at this page:
 
 = history
 
-* v0.7pre
+* v0.7.1
+** Bugfix if docutils are not installed
+** API change: rest2html is now here: {{{ from creole.rest2html.clean_writer import rest2html }}}
+* v0.7.0
 ** **NEW**: Add a html2reStructuredText converter (only a subset of reSt supported)
 * v0.6.1
 ** Bugfix: separate lines with one space in "wiki style line breaks" mode
