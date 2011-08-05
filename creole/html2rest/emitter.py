@@ -136,8 +136,8 @@ class ReStructuredTextEmitter(BaseEmitter):
 
     #--------------------------------------------------------------------------
 
-#    def hr_emit(self, node):
-#        return u"----\n\n"
+    def hr_emit(self, node):
+        return u"----\n\n"
 
     def a_emit(self, node):
         link_text = self.emit_children(node)

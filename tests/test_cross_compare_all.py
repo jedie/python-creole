@@ -152,6 +152,34 @@ class CrossCompareTests(BaseCreoleTest):
             """
         )
 
+    def test_horizontal_rule(self):
+        all_markups = u"""
+            Text before horizontal rule.
+            
+            ----
+            
+            Text after the line.
+        """
+        self.cross_compare(
+            creole_string=all_markups,
+            #textile_string=all_markups, # FIXME: textile and <hr> ?
+            html_string=u"""
+                <p>Text before horizontal rule.</p>
+                
+                <hr />
+                
+                <p>Text after the line.</p>
+            """
+        )
+        self.cross_compare(
+            rest_string=all_markups,
+            html_string=u"""
+                <p>Text before horizontal rule.</p>
+                <hr />
+                <p>Text after the line.</p>
+            """
+        )
+
     def test_link(self):
         self.cross_compare(
             creole_string=r"""
@@ -465,6 +493,7 @@ class CrossCompareTests(BaseCreoleTest):
                 </table>
             """,
             #debug=True
+            strip_lines=True,
         )
         self.cross_compare(
             rest_string=u"""
