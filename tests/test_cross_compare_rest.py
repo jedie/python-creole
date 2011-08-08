@@ -204,21 +204,72 @@ class CrossCompareReStTests(BaseCreoleTest):
     def test_link_in_table2(self):
         self.cross_compare(
             rest_string="""
-                +---------------+
-                | `table item`_ |
-                +---------------+
-                
+                +-----------------------+
+                | foo `table item`_ bar |
+                +-----------------------+
+
                 .. _table item: foo/bar
+            """,
+            html_string="""
+                <table>
+                <tr><td>foo <a href="foo/bar">table item</a> bar</td>
+                </tr>
+                </table>
+            """
+        )
+
+    def test_link_in_table3(self):
+        self.cross_compare(
+            rest_string="""
+                +-----------------------------+
+                | * foo `table item 1`_ bar 1 |
+                +-----------------------------+
+                | * foo `table item 2`_ bar 2 |
+                +-----------------------------+
+                
+                .. _table item 1: foo/bar/1/
+                .. _table item 2: foo/bar/2/
+            """,
+            html_string="""
+                <table>
+                <tr><td><ul>
+                <li>foo <a href="foo/bar/1/">table item 1</a> bar 1</li>
+                </ul>
+                </td>
+                </tr>
+                <tr><td><ul>                
+                <li>foo <a href="foo/bar/2/">table item 2</a> bar 2</li>
+                </ul>
+                </td>
+                </tr>
+                </table>
+            """
+        )
+
+    def test_paragraph_bwlow_table_links(self):
+        self.cross_compare(
+            rest_string="""
+                +-----------------+
+                | `table item 1`_ |
+                +-----------------+
+                | `table item 2`_ |
+                +-----------------+
+                
+                .. _table item 1: foo/bar/1/
+                .. _table item 2: foo/bar/2/
                 
                 Text after table.
             """,
             html_string="""
                 <table>
-                <tr><td><a href="foo/bar">table item</a></td>
+                <tr><td><a href="foo/bar/1/">table item 1</a></td>
+                </tr>
+                <tr><td><a href="foo/bar/2/">table item 2</a></td>
                 </tr>
                 </table>
                 <p>Text after table.</p>
-            """
+            """,
+#            debug=True
         )
 
 #    def test_inline_literal(self):
@@ -249,4 +300,6 @@ class CrossCompareReStTests(BaseCreoleTest):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(
+#        defaultTest="CrossCompareReStTests.test_paragraph_bwlow_table_links",
+    )

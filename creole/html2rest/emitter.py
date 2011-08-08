@@ -15,6 +15,7 @@
 
 import posixpath
 
+from creole.html_parser.config import BLOCK_TAGS
 from creole.shared.base_emitter import BaseEmitter
 from creole.shared.markup_table import MarkupTable
 
@@ -39,7 +40,7 @@ class ReStructuredTextEmitter(BaseEmitter):
         self._substitution_data = []
         self._list_markup = ""
 
-    def _get_block_data(self, node=None):
+    def _get_block_data(self):
         """
         return substitution bock data
         e.g.:
@@ -70,21 +71,24 @@ class ReStructuredTextEmitter(BaseEmitter):
 
     def emit_children(self, node):
         """Emit all the children of a node."""
-        result = u"".join(self.emit_children_list(node))
-        return result
+        return u"".join(self.emit_children_list(node))
 
     def emit(self):
         """Emit the document represented by self.root DOM tree."""
-        node = self.root
-        result = self.emit_node(node).rstrip()
+        return self.emit_node(self.root).rstrip()
+
+    def document_emit(self, node):
+        self.last = node
+        result = self.emit_children(node)
         if self._substitution_data:
-            result += "\n\n%s" % self._get_block_data() # add rest at the end
+            # add rest at the end
+            result += u"%s\n\n" % self._get_block_data()
         return result
 
     def emit_node(self, node):
         result = u""
         if self._substitution_data and node.parent == self.root:
-            result += u"%s\n\n" % self._get_block_data(node)
+            result += u"%s\n\n" % self._get_block_data()
 
         result += super(ReStructuredTextEmitter, self).emit_node(node)
         return result
@@ -158,10 +162,21 @@ class ReStructuredTextEmitter(BaseEmitter):
     def hr_emit(self, node):
         return u"----\n\n"
 
+    def _should_do_substitution(self, node):
+        node = node.parent
+
+        if node.kind in DO_SUBSTITUTION:
+            return True
+
+        if node is not self.root:
+            return self._should_do_substitution(node)
+        else:
+            return False
+
     def a_emit(self, node):
         link_text = self.emit_children(node)
         url = node.attrs["href"]
-        if node.parent.kind in DO_SUBSTITUTION:
+        if self._should_do_substitution(node):
             # make a hyperlink reference
             self._substitution_data.append(
                 u".. _%s: %s" % (link_text, url)
