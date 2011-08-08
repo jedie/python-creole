@@ -50,6 +50,8 @@ def run_all_doctests():
                 m = __import__(filename[:-3])
             except ImportError, err:
                 print "***DocTest import %s error*** %s" % (filename, err)
+            except Exception, err:
+                print "***DocTest %s error*** %s" % (filename, err)
             else:
                 failed, attempted = testmod(m)
                 if attempted and not failed:

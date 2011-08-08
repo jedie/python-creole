@@ -15,6 +15,7 @@ class MarkupTable(object):
 
         self.rows = []
         self.row_index = None
+        self.has_header = False
 
     def _non_debug(self, *args):
         pass
@@ -25,6 +26,7 @@ class MarkupTable(object):
         self.row_index = len(self.rows) - 1
 
     def add_th(self, text):
+        self.has_header = True
         self.add_td(self.head_prefix + text)
 
     def add_td(self, text):
@@ -84,7 +86,7 @@ class MarkupTable(object):
 
         lines = []
         for no, row in enumerate(cells):
-            if no == 1:
+            if no == 1 and self.has_header:
                 lines.append(headline_separator)
             else:
                 lines.append(separator_line)
