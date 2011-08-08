@@ -369,6 +369,27 @@ class CrossCompareTests(BaseCreoleTest):
             """
         )
 
+    def test_table(self):
+        self.cross_compare(# FIXME: Not the best html2rest output
+            rest_string="""
+                before table.
+                
+                +------------+
+                | table item |
+                +------------+
+                
+                After table.
+            """,
+            html_string="""
+                <p>before table.</p>
+                <table>
+                <tr><td>table item</td>
+                </tr>
+                </table>
+                <p>After table.</p>
+            """
+        )
+
 #    def test_pre2(self):
 #        """ TODO: html2creole: wrong lineendings """
 #        self.cross_compare(

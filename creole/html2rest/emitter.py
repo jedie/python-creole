@@ -6,7 +6,7 @@
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     Links about reStructuredText:
-    
+
     http://openalea.gforge.inria.fr/doc/openalea/doc/_build/html/source/sphinx/rest_syntax.html
 
     :copyleft: 2011 by python-creole team, see AUTHORS for more details.
@@ -208,13 +208,7 @@ class ReStructuredTextEmitter(BaseEmitter):
         )
         self.emit_children(node)
         content = self._table.get_rest_table()
-        return u"%s\n" % content
-
-
-
-
-
-
+        return u"%s\n\n" % content
 
 
 if __name__ == '__main__':

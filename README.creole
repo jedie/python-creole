@@ -92,7 +92,9 @@ Contributers should take a look at this page:
 = history
 
 * v0.7.3pre
-** Bugfix in html2rest if a table has no {{{<th>}}} header
+** Bugfix in html2rest:
+*** table without {{{<th>}}} header
+*** new line after table
 * v0.7.2
 ** Activate {{{----}}} to {{{<hr>}}} in html2rest
 ** Update demo.py
