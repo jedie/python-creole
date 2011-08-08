@@ -62,7 +62,7 @@ class CrossCompareReStTests(BaseCreoleTest):
             
                 #. item 2.1
             
-                #. item 2.2
+                #. a `link in </url/>`_ list item 2.2
             
             #. item 3
             """,
@@ -73,7 +73,7 @@ class CrossCompareReStTests(BaseCreoleTest):
             <li><p>item 2</p>
             <ol>
             <li>item 2.1</li>
-            <li>item 2.2</li>
+            <li>a <a href="/url/">link in</a> list item 2.2</li>
             </ol>
             </li>
             <li><p>item 3</p>
@@ -181,6 +181,43 @@ class CrossCompareReStTests(BaseCreoleTest):
                 </tr>
                 </table>
                 <p>After table.</p>
+            """
+        )
+
+    def test_link_in_table1(self):
+        self.cross_compare(
+            rest_string="""
+                +---------------+
+                | `table item`_ |
+                +---------------+
+                
+                .. _table item: foo/bar
+            """,
+            html_string="""
+                <table>
+                <tr><td><a href="foo/bar">table item</a></td>
+                </tr>
+                </table>
+            """
+        )
+
+    def test_link_in_table2(self):
+        self.cross_compare(
+            rest_string="""
+                +---------------+
+                | `table item`_ |
+                +---------------+
+                
+                .. _table item: foo/bar
+                
+                Text after table.
+            """,
+            html_string="""
+                <table>
+                <tr><td><a href="foo/bar">table item</a></td>
+                </tr>
+                </table>
+                <p>Text after table.</p>
             """
         )
 

@@ -19,6 +19,9 @@ from creole.shared.base_emitter import BaseEmitter
 from creole.shared.markup_table import MarkupTable
 
 
+# Kink of nodes in which hyperlinks are stored in references intead of embedded urls.
+DO_SUBSTITUTION = ("th", "td",) # TODO: In witch kind of node must we also substitude links?
+
 
 class ReStructuredTextEmitter(BaseEmitter):
     """
@@ -33,12 +36,19 @@ class ReStructuredTextEmitter(BaseEmitter):
 
         from creole.shared.unknown_tags import raise_unknown_node
         self._unknown_emit = raise_unknown_node
-        self._block_data = []
+        self._substitution_data = []
         self._list_markup = ""
 
-    def emit(self):
-        """Emit the document represented by self.root DOM tree."""
-        return self.emit_node(self.root).rstrip()
+    def _get_block_data(self, node=None):
+        """
+        return substitution bock data
+        e.g.:
+        .. _link text: /link/url/
+        .. |substitution| image:: /image.png
+        """
+        content = "\n".join(self._substitution_data)
+        self._substitution_data = []
+        return content
 
     #--------------------------------------------------------------------------
 
@@ -60,14 +70,23 @@ class ReStructuredTextEmitter(BaseEmitter):
 
     def emit_children(self, node):
         """Emit all the children of a node."""
-
         result = u"".join(self.emit_children_list(node))
+        return result
 
-        if self._block_data and node.parent == self.root:
-            # insert last bock data e.g.: .. |substitution| image:: /image.png
-            result += "\n\n%s" % "\n".join(self._block_data)
-            self._block_data = []
+    def emit(self):
+        """Emit the document represented by self.root DOM tree."""
+        node = self.root
+        result = self.emit_node(node).rstrip()
+        if self._substitution_data:
+            result += "\n\n%s" % self._get_block_data() # add rest at the end
+        return result
 
+    def emit_node(self, node):
+        result = u""
+        if self._substitution_data and node.parent == self.root:
+            result += u"%s\n\n" % self._get_block_data(node)
+
+        result += super(ReStructuredTextEmitter, self).emit_node(node)
         return result
 
     def p_emit(self, node):
@@ -142,6 +161,14 @@ class ReStructuredTextEmitter(BaseEmitter):
     def a_emit(self, node):
         link_text = self.emit_children(node)
         url = node.attrs["href"]
+        if node.parent.kind in DO_SUBSTITUTION:
+            # make a hyperlink reference
+            self._substitution_data.append(
+                u".. _%s: %s" % (link_text, url)
+            )
+            return "`%s`_" % link_text
+
+        # create a inline hyperlink
         return u"`%s <%s>`_" % (link_text, url)
 
     def img_emit(self, node):
@@ -160,7 +187,7 @@ class ReStructuredTextEmitter(BaseEmitter):
         if substitution_text == "": # Use filename as picture text
             substitution_text = posixpath.basename(src)
 
-        self._block_data.append(
+        self._substitution_data.append(
             u".. |%s| image:: %s" % (substitution_text, src)
         )
 
