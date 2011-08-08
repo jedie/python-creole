@@ -244,6 +244,25 @@ class CrossCompareCreoleTests(BaseCreoleTest):
             <p>this is <tt><strong>strong</strong> Teletyper</tt> ;)</p>
         """)
 
+    def test_escape_inline(self):
+        """ TODO: different pre/code syntax?
+        """
+        self.cross_compare_creole(r"""
+            this is {{{**escaped** inline}}}, isn't it?
+            
+            {{{
+            a **code**
+            block
+            }}}
+        """, """
+            <p>this is <tt>**escaped** inline</tt>, isn't it?</p>
+            
+            <pre>
+            a **code**
+            block
+            </pre>
+        """)
+
     def test_no_inline_headline(self):
         self.cross_compare_creole(
             creole_string=r"""
