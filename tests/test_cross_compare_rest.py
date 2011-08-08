@@ -163,6 +163,27 @@ class CrossCompareReStTests(BaseCreoleTest):
             """
         )
 
+    def test_table(self):
+        self.cross_compare(
+            rest_string="""
+                before table.
+                
+                +------------+
+                | table item |
+                +------------+
+                
+                After table.
+            """,
+            html_string="""
+                <p>before table.</p>
+                <table>
+                <tr><td>table item</td>
+                </tr>
+                </table>
+                <p>After table.</p>
+            """
+        )
+
 #    def test_inline_literal(self):
 #        """ TODO
 #        http://docutils.sourceforge.net/docs/user/rst/quickref.html#inline-markup
