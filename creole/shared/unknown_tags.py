@@ -44,8 +44,11 @@ def raise_unknown_node(emitter, node):
     
     Raise NotImplementedError on unknown tags.
     """
+    content = emitter.emit_children(node)
     raise NotImplementedError(
-        "Node from type '%s' is not implemented!" % node.kind
+        "Node from type '%s' is not implemented! (child content: %r)" % (
+            node.kind, content
+        )
     )
 
 
