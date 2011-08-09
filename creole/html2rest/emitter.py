@@ -35,8 +35,6 @@ class ReStructuredTextEmitter(BaseEmitter):
         self.table_head_prefix = "_. "
         self.table_auto_width = False
 
-        from creole.shared.unknown_tags import raise_unknown_node
-        self._unknown_emit = raise_unknown_node
         self._substitution_data = []
         self._list_markup = ""
 
