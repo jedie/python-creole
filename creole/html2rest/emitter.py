@@ -138,6 +138,10 @@ class ReStructuredTextEmitter(BaseEmitter):
     def tt_emit(self, node):
         return self._typeface(node, key="``")
 
+    def small_emit(self, node):
+        # FIXME: Is there no small in ReSt???
+        return self.emit_children(node)
+
 #    def sup_emit(self, node):
 #        return self._typeface(node, key="^")
 #    def sub_emit(self, node):
