@@ -19,7 +19,7 @@
 """
 
 
-__version__ = (0, 7, 3, "pre")
+__version__ = (0, 7, 3)
 __api__ = (1, 0) # Creole 1.0 spec - http://wikicreole.org/
 
 
