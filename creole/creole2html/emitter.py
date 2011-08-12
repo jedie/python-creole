@@ -8,6 +8,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+from __future__ import division, absolute_import
 
 from xml.sax.saxutils import escape
 import sys

@@ -18,6 +18,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+from __future__ import division, absolute_import
 
 __version__ = (0, 7, 3)
 __api__ = (1, 0) # Creole 1.0 spec - http://wikicreole.org/

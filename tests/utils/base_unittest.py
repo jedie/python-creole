@@ -11,10 +11,13 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+from __future__ import division, absolute_import
 
 import re
 import sys
 import warnings
+
+from tests.utils.utils import MarkupTest
 
 
 try:
@@ -29,7 +32,6 @@ else:
     test_textile = True
 
 
-from utils import MarkupTest
 from creole.exceptions import DocutilsImportError
 from creole import creole2html, html2creole, html2textile, html2rest
 

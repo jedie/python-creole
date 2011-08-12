@@ -11,6 +11,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+from __future__ import division, absolute_import
 
 BLOCK_TAGS = (
     "address", "blockquote", "center", "dir", "div", "dl", "fieldset",
