@@ -16,6 +16,7 @@ import os
 import sys
 import unittest
 
+import creole
 from tests.test_creole2html import TestCreole2html, TestCreole2htmlMarkup
 from tests.test_cross_compare_all import CrossCompareTests
 from tests.test_cross_compare_creole import CrossCompareCreoleTests
@@ -32,11 +33,16 @@ SKIP_FILES = ("setup.py", "test.py")
 
 
 def run_all_doctests():
+    path = os.path.abspath(os.path.dirname(creole.__file__))
     print
     print "_" * 79
-    print "Running DocTests:\n"
+    print "Running %r DocTests:\n" % path
 
-    for root, dirs, filelist in os.walk("../", followlinks=True):
+    total_files = 0
+    total_doctests = 0
+    total_attempted = 0
+    total_failed = 0
+    for root, dirs, filelist in os.walk(path, followlinks=True):
         for skip_dir in SKIP_DIRS:
             if skip_dir in dirs:
                 dirs.remove(skip_dir) # don't visit this directories
@@ -47,6 +53,8 @@ def run_all_doctests():
             if filename in SKIP_FILES:
                 continue
 
+            total_files += 1
+
             sys.path.insert(0, root)
             try:
                 m = __import__(filename[:-3])
@@ -56,6 +64,11 @@ def run_all_doctests():
                 print "***DocTest %s error*** %s" % (filename, err)
             else:
                 failed, attempted = testmod(m)
+                total_attempted += attempted
+                total_failed += failed
+                if attempted or failed:
+                    total_doctests += 1
+
                 if attempted and not failed:
                     filepath = os.path.join(root, filename)
                     print "DocTest in %s OK (failed=%i, attempted=%i)" % (
@@ -63,6 +76,9 @@ def run_all_doctests():
                     )
             finally:
                 del sys.path[0]
+    print "*** %i files readed, runs %i doctests: failed=%i, attempted=%i" % (
+        total_files, total_doctests, total_failed, total_attempted
+    )
 
 
 if __name__ == '__main__':
@@ -73,8 +89,8 @@ if __name__ == '__main__':
     print "Running Unittests:\n"
 
     unittest.main(
-        #verbosity=99
+#        verbosity=99
     )
-#elif len(sys.argv) > 1 and sys.argv[1] == "test":
-#    # e.g.: .../python-creole$ ./setup.py test
-#    run_all_doctests()
+elif "test" in sys.argv:
+    # e.g.: .../python-creole$ ./setup.py test
+    run_all_doctests()
