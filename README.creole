@@ -174,4 +174,3 @@ Contributers should take a look at this page:
 | homepage:    | [[http://code.google.com/p/python-creole/]]      |
 | sourcecode:  | [[http://github.com/jedie/python-creole]]        |
 | PyPi:        | [[http://pypi.python.org/pypi/python-creole/]]   |
-| flattr this: | [[http://flattr.com/thing/181554/python-creole]] |
