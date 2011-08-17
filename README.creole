@@ -163,6 +163,12 @@ Contributers should take a look at this page:
 ** first version cut out from [[http://www.pylucid.org|PyLucid CMS]]
 
 
+= donation
+
+* [[http://flattr.com/thing/181554/python-creole|Flattr this!]]
+* Send [[http://www.bitcoin.org/|Bitcoins]] to [[https://blockexplorer.com/address/12QK6o7sGw7Dp3Fdfm2qKvyRqzuY2w5da9|12QK6o7sGw7Dp3Fdfm2qKvyRqzuY2w5da9]]
+
+
 = links
 
 | homepage:    | [[http://code.google.com/p/python-creole/]]      |
