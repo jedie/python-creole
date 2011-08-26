@@ -18,6 +18,8 @@
     import sys
     from setuptools import setup, find_packages
     
+    PACKAGE_ROOT = os.path.dirname(os.path.abspath(__file__))
+    
     try:
         from creole.setup_utils import GetLongDescription
     except ImportError:
@@ -25,13 +27,13 @@
             etype, evalue, etb = sys.exc_info()
             evalue = etype("%s - Please install python-creole >= v0.8 -  e.g.: pip install python-creole" % evalue)
             raise etype, evalue, etb
-        GetLongDescription = None
-    
-    PACKAGE_ROOT = os.path.dirname(os.path.abspath(__file__))
+        long_description = None
+    else:
+        long_description = GetLongDescription(PACKAGE_ROOT)
     
     setup(
         ...
-        long_description=GetLongDescription(PACKAGE_ROOT),
+        long_description = long_description,
         ...
     )
     ---------------------------------------------------------------------------
