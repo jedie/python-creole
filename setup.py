@@ -54,6 +54,7 @@ def get_long_description():
 
         desc_html = creole2html(desc_creole)
         long_description = html2rest(desc_html)
+        long_description = long_description.encode("utf-8")
     except Exception, err:
         if raise_errors:
             raise
