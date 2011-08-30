@@ -1,16 +1,15 @@
 = about
 
-python-creole is a OpenSource (GPL) Python lib for converting markup:
+python-creole is a OpenSource (GPL) Python lib for converting markups.
+python-creole is pure python. No external libs needed.
 
 Existing converters:
 
-* creole markup -> html
+* creole -> html
 * html -> creole markup
-* reStructuredText -> html (for clean html code)
+* reSt -> html (for clean html code)
 * html -> reStructuredText markup (only a subset of reSt supported)
 * html -> textile markup (not completed yet)
-
-python-creole is pure python. No external libs needed.
 
 The creole2html part based on the creole markup parser and emitter from the MoinMoin project by Radomir Dopieralski and Thomas Waldmann.
 
@@ -20,7 +19,7 @@ The creole2html part based on the creole markup parser and emitter from the Moin
 Python packages available on: [[http://pypi.python.org/pypi/python-creole/]]
 
 {{{
-~$ easy_install python-creole
+~$ pip install python-creole
 }}}
 
 
@@ -179,6 +178,7 @@ How to do this, read: https://code.google.com/p/python-creole/wiki/UseInSetup
 
 = links
 
-| homepage:    | [[http://code.google.com/p/python-creole/]]      |
-| sourcecode:  | [[http://github.com/jedie/python-creole]]        |
-| PyPi:        | [[http://pypi.python.org/pypi/python-creole/]]   |
+| Google code | [[http://code.google.com/p/python-creole/]]
+| GitHub      | [[http://github.com/jedie/python-creole]]
+| PyPi        | [[http://pypi.python.org/pypi/python-creole/]]
+| IRC         | [[http://www.pylucid.org/permalink/304/irc-channel|#pylucid on freenode.net]]
