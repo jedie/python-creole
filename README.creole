@@ -96,6 +96,8 @@ How to do this, read: https://code.google.com/p/python-creole/wiki/UseInSetup
 
 = history
 
+* v0.8.1
+** Bugfix for installation under python 2.5
 * v0.8
 ** New GetLongDescription() helper for setup.py, see: https://code.google.com/p/python-creole/wiki/UseInSetup
 * v0.7.3
