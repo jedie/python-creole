@@ -36,7 +36,7 @@ setup(
     name='python-creole',
     version=VERSION_STRING,
     description='python-creole is an open-source (GPL) markup converter in pure Python for: creole2html, html2creole, html2ReSt, html2textile',
-    long_description=GetLongDescription(PACKAGE_ROOT),
+    long_description=str(GetLongDescription(PACKAGE_ROOT)),
     author=get_authors(),
     maintainer="Jens Diemer",
     url='http://code.google.com/p/python-creole/',
