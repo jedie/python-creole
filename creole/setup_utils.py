@@ -83,6 +83,7 @@ def get_long_description(package_root, filename="README.creole", raise_errors=No
         unknown_emit = transparent_unknown_nodes
 
     filepath = os.path.join(package_root, filename)
+    long_description_origin = ""
     try:
         # Read creole README
         f = codecs.open(filepath, "r", encoding="utf-8")

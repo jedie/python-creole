@@ -96,6 +96,8 @@ How to do this, read: https://code.google.com/p/python-creole/wiki/UseInSetup
 
 = history
 
+* v0.8.2
+** Bugfix in get_long_description() error handling (//local variable 'long_description_origin' referenced before assignment//)
 * v0.8.1
 ** Bugfix for installation under python 2.5
 ** Note: [[https://code.google.com/p/python-creole/wiki/UseInSetup|setup helper]] changed: rename {{{GetLongDescription(...)}}} to {{{get_long_description(...)}}}
