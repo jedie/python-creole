@@ -96,6 +96,8 @@ How to do this, read: https://code.google.com/p/python-creole/wiki/UseInSetup
 
 = history
 
+* v0.8.4
+** Bugfix in html parser if list tag has attributes: https://code.google.com/p/python-creole/issues/detail?id=19#c4
 * v0.8.3
 ** Better error message if given string is not unicode: https://code.google.com/p/python-creole/issues/detail?id=19
 * v0.8.2

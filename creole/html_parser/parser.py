@@ -182,7 +182,7 @@ class HtmlParser(HTMLParser):
         if tag in ("li", "ul", "ol"):
             if tag in ("ul", "ol"):
                 self.__list_level += 1
-            self.cur = DocNode(tag, self.cur, attrs, level=self.__list_level)
+            self.cur = DocNode(tag, self.cur, None, attrs, level=self.__list_level)
         elif tag in ("img", "br"):
             # Work-a-round if img or br  tag is not marked as startendtag:
             # wrong: <img src="/image.jpg"> doesn't work if </img> not exist

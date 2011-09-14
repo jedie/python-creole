@@ -345,6 +345,15 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             </ul>
         """)
 
+    def test_class_in_list(self):
+        """https://code.google.com/p/python-creole/issues/detail?id=19#c4"""
+
+        self.assert_html2creole(r"""
+            # foo
+        """, """
+            <ol class=gbtc><li>foo</li></ol>
+        """)#, debug=True)
+
     #--------------------------------------------------------------------------
     # TODOs:
 
