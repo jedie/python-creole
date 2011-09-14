@@ -347,11 +347,18 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 
     def test_class_in_list(self):
         """https://code.google.com/p/python-creole/issues/detail?id=19#c4"""
-
         self.assert_html2creole(r"""
             # foo
         """, """
             <ol class=gbtc><li>foo</li></ol>
+        """)#, debug=True)
+
+    def test_ignore_links_without_href(self):
+        """https://code.google.com/p/python-creole/issues/detail?id=19#c4"""
+        self.assert_html2creole(r"""
+            bar
+        """, """
+            <a class="foo">bar</a>
         """)#, debug=True)
 
     #--------------------------------------------------------------------------

@@ -94,7 +94,11 @@ class CreoleEmitter(BaseEmitter):
 
     def a_emit(self, node):
         link_text = self.emit_children(node)
-        url = node.attrs["href"]
+        try:
+            url = node.attrs["href"]
+        except KeyError:
+            # e.g.: <a name="anchor-one">foo</a>
+            return link_text
         if link_text == url:
             return u"[[%s]]" % url
         else:
