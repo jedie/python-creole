@@ -20,7 +20,7 @@
 
 from __future__ import division, absolute_import
 
-__version__ = (0, 8, 2)
+__version__ = (0, 8, 3)
 __api__ = (1, 0) # Creole 1.0 spec - http://wikicreole.org/
 
 
@@ -50,7 +50,7 @@ def creole2html(markup_string, debug=False, parser_kwargs={}, emitter_kwargs={})
     >>> creole2html(u'This is **creole //markup//**!')
     u'<p>This is <strong>creole <i>markup</i></strong>!</p>'
     """
-    assert isinstance(markup_string, unicode), "given markup should be unicode!"
+    assert isinstance(markup_string, unicode), "given markup_string must be unicode!"
 
     # Create document tree from creole markup
     document = CreoleParser(markup_string, **parser_kwargs).parse()
@@ -64,7 +64,7 @@ def creole2html(markup_string, debug=False, parser_kwargs={}, emitter_kwargs={})
 
 def parse_html(html_string, debug=False, **parser_kwargs):
     """ create the document tree from html code """
-    assert isinstance(html_string, unicode)
+    assert isinstance(html_string, unicode), "given html_string must be unicode!"
 
     h2c = HtmlParser(debug, **parser_kwargs)
     document_tree = h2c.feed(html_string)
