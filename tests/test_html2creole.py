@@ -362,21 +362,6 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             <a class="foo">bar</a>
         """)#, debug=True)
 
-    #--------------------------------------------------------------------------
-    # TODOs:
-
-
-    def test_newline_before_headline(self):
-        """ TODO: http://code.google.com/p/python-creole/issues/detail?id=16#c5 """
-        self.assert_html2creole(r"""
-            **foo**
-            
-            = one
-        """, """
-            <b>foo</b>
-            <h1>one</h1>
-        """)#, debug=True)
-
     def test_newlines_after_headlines(self):
         self.assert_html2creole(r"""
             = Headline news
@@ -388,53 +373,29 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             <p><a href="http://google.com">The googlezor</a> is a big bad mother.</p>
         """)
 
-    def test_no_space_before_blocktag(self):
-        """ TODO: Bug in html2creole.strip_html(): Don't add a space before/after block tags """
+    def test_links(self):
         self.assert_html2creole(r"""
-            **foo**
+            test link: '[[internal links|link A]]' 1 and
+            test link: '[[http://domain.tld|link B]]' 2.
+        """, """
+            <p>test link: '<a href="internal links">link A</a>' 1 and<br />
+            test link: '<a href="http://domain.tld">link B</a>' 2.</p>
+        """)
+
+    def test_horizontal_rule(self):
+        self.assert_html2creole(r"""
+            one
             
-            * one
+            ----
+            
+            two
         """, """
-            <b>foo</b>
-            <ul><li>one</li></ul>
-        """)#, debug=True)
-
-
-    def test_format_in_a_text(self):
-        """ TODO: http://code.google.com/p/python-creole/issues/detail?id=4 """
-        self.assert_html2creole(r"""
-            **[[/url/|title]]**
-        """, """
-            <a href="/url/"><strong>title</strong></a>
+            <p>one</p>
+            <hr />
+            <p>two</p>
         """)
 
 
-#    def test_links(self):
-#        self.assert_html2creole(r"""
-#            test link: '[[internal links|link A]]' 1 and
-#            test link: '[[http://domain.tld|link B]]' 2.
-#        """, """
-#            <p>test link: '<a href="internal links">link A</a>' 1 and<br />
-#            test link: '<a href="http://domain.tld">link B</a>' 2.</p>
-#        """)
-#
-#    def test_images(self):
-#        self.assert_html2creole(r"""
-#            a {{/image.jpg|JPG pictures}} and
-#            a {{/image.jpeg|JPEG pictures}} and
-#            a {{/image.gif|GIF pictures}} and
-#            a {{/image.png|PNG pictures}} !
-#
-#            picture [[www.domain.tld|{{foo.JPG|Foo}}]] as a link
-#        """, """
-#            <p>a <img src="/image.jpg" alt="JPG pictures"> and<br />
-#            a <img src="/image.jpeg" alt="JPEG pictures"> and<br />
-#            a <img src="/image.gif" alt="GIF pictures" /> and<br />
-#            a <img src="/image.png" alt="PNG pictures" /> !</p>
-#
-#            <p>picture <a href="www.domain.tld"><img src="foo.JPG" alt="Foo"></a> as a link</p>
-#        """)
-#
 #    def test_nowiki1(self):
 #        self.assert_html2creole(r"""
 #            this:
@@ -466,19 +427,6 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 #                  x[i]--;
 #              }}}
 #            </pre>
-#        """)
-#
-
-#
-#    def test_horizontal_rule(self):
-#        self.assert_html2creole(r"""
-#            one
-#            ----
-#            two
-#        """, """
-#            <p>one</p>
-#            <hr />
-#            <p>two</p>
 #        """)
 #
 #    def test_list1(self):
@@ -564,24 +512,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 #        """,
 ##            debug=True
 #        )
-#
-#    #__________________________________________________________________________
-#    # TODO:
-#
-#    def test_escape_char(self):
-#        self.assert_html2creole(r"""
-#            ~#1
-#            http://domain.tld/~bar/
-#            ~http://domain.tld/
-#            [[Link]]
-#            ~[[Link]]
-#        """, """
-#            <p>#1<br />
-#            <a href="http://domain.tld/~bar/">http://domain.tld/~bar/</a><br />
-#            http://domain.tld/<br />
-#            <a href="Link">Link</a><br />
-#            [[Link]]</p>
-#        """)
+
 
 if __name__ == '__main__':
     unittest.main(

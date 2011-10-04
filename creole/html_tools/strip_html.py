@@ -55,10 +55,11 @@ def strip_html(html_code):
 
     >>> strip_html(u'<p>a <pre> preformated area </pre> foo </p>')
     u'<p>a<pre>preformated area</pre>foo</p>'
-    
-    FIXME:
-    >>> strip_html(u'<strong>foo</strong>\\n<ul><li>one</li></ul>')
-    u'<strong>foo</strong><ul><li>one</li></ul>'
+
+    >>> strip_html(u'<p>a <img src="/image.jpg" /> image.</p>')
+    u'<p>a <img src="/image.jpg" /> image.</p>'
+
+
     """
 
     def strip_tag(match):

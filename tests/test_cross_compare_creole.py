@@ -76,37 +76,6 @@ class CrossCompareCreoleTests(BaseCreoleTest):
         """)
 
 
-    def test_cross_lines_creole2html(self):
-        """ TODO: bold/italics cross lines in creole2html
-        see: http://code.google.com/p/python-creole/issues/detail?id=13
-        Info: The way html2creole works, see above
-        """
-        self.cross_compare_creole(
-            creole_string=r"""
-                Bold and italics should //be
-                able// to **cross
-                lines.**
-            """,
-            html_string="""
-                <p>Bold and italics should <i>be<br />
-                able</i> to <strong>cross<br />
-                lines.</strong></p>
-            """
-        )
-
-    def test_cross_paragraphs(self):
-        """ TODO: bold/italics cross paragraphs in creole2html
-        see: http://code.google.com/p/python-creole/issues/detail?id=13 
-        """
-        self.assert_creole2html(u"""
-            But, should //not be...
-
-            ...able// to cross paragraphs.
-        """, u"""
-            <p>But, should <em>not be...</em></p>
-            <p>...able<em> to cross paragraphs.</em></p>
-        """)
-
     def test_small(self):
         """
         http://code.google.com/p/python-creole/issues/detail?id=12#c0
@@ -245,24 +214,6 @@ class CrossCompareCreoleTests(BaseCreoleTest):
             <p>this is <tt><strong>strong</strong> Teletyper</tt> ;)</p>
         """)
 
-    def test_escape_inline(self):
-        """ TODO: different pre/code syntax?
-        """
-        self.cross_compare_creole(r"""
-            this is {{{**escaped** inline}}}, isn't it?
-            
-            {{{
-            a **code**
-            block
-            }}}
-        """, """
-            <p>this is <tt>**escaped** inline</tt>, isn't it?</p>
-            
-            <pre>
-            a **code**
-            block
-            </pre>
-        """)
 
     def test_no_inline_headline(self):
         self.cross_compare_creole(
