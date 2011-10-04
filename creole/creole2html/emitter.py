@@ -121,7 +121,7 @@ class HtmlEmitter:
     def subscript_emit(self, node):
         return self._typeface(node, tag="sub")
     def underline_emit(self, node):
-        return self._typeface(node, tag="")
+        return self._typeface(node, tag="u")
     def small_emit(self, node):
         return self._typeface(node, tag="small")
     def delete_emit(self, node):
@@ -287,8 +287,7 @@ class HtmlEmitter:
 
 
 if __name__ == "__main__":
-    txt = """this is **bold** ok?
-            for example ** this sentence"""
+    txt = """This is __underlined__ text."""
 
     print("-" * 80)
 #    from creole_alt.creole import CreoleParser
