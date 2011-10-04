@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-
 """
     python-creole
     ~~~~~~~~~~~~~
@@ -20,6 +19,7 @@ from HTMLParser import HTMLParser
 from creole.html_parser.config import BLOCK_TAGS, IGNORE_TAGS
 from creole.html_tools.strip_html import strip_html
 from creole.shared.document_tree import DocNode, DebugList
+from creole.shared.html_parser import HTMLParser2
 
 #------------------------------------------------------------------------------
 
@@ -46,7 +46,7 @@ headline_tag_re = re.compile(r"h(\d)", re.UNICODE)
 #------------------------------------------------------------------------------
 
 
-class HtmlParser(HTMLParser):
+class HtmlParser(HTMLParser2):
     """
     parse html code and create a document tree.
     
@@ -62,13 +62,29 @@ class HtmlParser(HTMLParser):
         strong
             data: u'code'
     ********************************************************************************
+    
+    >>> p = HtmlParser()
+    >>> p.feed(u"<p>html1 <script>var foo='<em>BAR</em>';</script> html2</p>")
+    <DocNode document: None>
+    >>> p.debug()
+    ________________________________________________________________________________
+      document tree:
+    ================================================================================
+    p
+        data: u'html1 '
+        script
+            data: u"var foo='<em>BAR"
+            data: u'</em>'
+            data: u"';"
+        data: u' html2'
+    ********************************************************************************
     """
     # placeholder html tag for pre cutout areas:
     _block_placeholder = "blockdata"
     _inline_placeholder = "inlinedata"
 
     def __init__(self, debug=False):
-        HTMLParser.__init__(self)
+        HTMLParser2.__init__(self)
 
         self.debugging = debug
         if self.debugging:
@@ -282,9 +298,9 @@ if __name__ == '__main__':
     import doctest
     print doctest.testmod()
 
-    p = HtmlParser(debug=True)
-    p.feed(u"""\
-<p><span>in span</span><br />
-<code>in code</code></p>
-""")
-    p.debug()
+#    p = HtmlParser(debug=True)
+#    p.feed(u"""\
+#<p><span>in span</span><br />
+#<code>in code</code></p>
+#""")
+#    p.debug()

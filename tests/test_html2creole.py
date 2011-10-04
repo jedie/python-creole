@@ -108,9 +108,12 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         )
 
     def test_escape_unknown_nodes2(self):
-        """ TODO: Seems that <script> would not be handled right. """
+        """
+        HTMLParser has problems with <script> tags.
+        See: http://bugs.python.org/issue670664
+        """
         self.assert_html2creole(r"""
-            &lt;script&gt;var js_sha_link='&lt;p&gt;***&lt;/p&gt;&lt;/script&gt;';
+            &lt;script&gt;var js_sha_link='<p>***</p>';&lt;/script&gt;
         """, """
             <script>
             var js_sha_link='<p>***</p>';
@@ -133,16 +136,14 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         )
 
     def test_transparent_unknown_nodes2(self):
-        """ TODO: Seems that <script> would not be handled right. """
+        """ 
+        HTMLParser has problems with <script> tags.
+        See: http://bugs.python.org/issue670664
+        """
         self.assert_html2creole(r"""
-            FOO
-            BAR
+            FOO var a='<em>STRONG</em>'; BAR
         """, """
-            <p>FOO</p>
-            <script>
-            var js_sha_link='<em>STRONG</em>';
-            </script>
-            <p>BAR</p>
+            <p>FOO <script>var a='<em>STRONG</em>';</script> BAR</p>
         """, emitter_kwargs={"unknown_emit":transparent_unknown_nodes}
         )
 
