@@ -9,7 +9,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 import re
 
@@ -229,22 +229,22 @@ def _verify_rules(rules, flags):
     rule_list = []
     for rule in rules:
         try:
-#            print rule
+#            print(rule)
             re.compile(rule, flags)
 
             # Try to merge the rules. e.g. Check if group named double used.
             rule_list.append(rule)
             re.compile('|'.join(rule_list), flags)
-        except Exception, err:
-            print " *** Error with rule:"
-            print rule
-            print " -" * 39
+        except Exception as err:
+            print(" *** Error with rule:")
+            print(rule)
+            print(" -" * 39)
             raise
-    print "Rule test ok."
+    print("Rule test ok.")
 
 
 if __name__ == "__main__":
     import doctest
-    print doctest.testmod()
+    print(doctest.testmod())
 
-    print "-" * 80
+    print("-" * 80)

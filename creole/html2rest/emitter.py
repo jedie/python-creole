@@ -13,7 +13,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, print_function, unicode_literals
 import posixpath
 
 from creole.html_parser.config import BLOCK_TAGS
@@ -60,17 +60,17 @@ class ReStructuredTextEmitter(BaseEmitter):
 
     def inlinedata_pre_emit(self, node):
         """ a pre inline block -> no newline at the end """
-        return u"<pre>%s</pre>" % self.deentity.replace_all(node.content)
+        return "<pre>%s</pre>" % self.deentity.replace_all(node.content)
 
     def blockdata_pass_emit(self, node):
-        return u"%s\n\n" % node.content
+        return "%s\n\n" % node.content
         return node.content
 
     #--------------------------------------------------------------------------
 
     def emit_children(self, node):
         """Emit all the children of a node."""
-        return u"".join(self.emit_children_list(node))
+        return "".join(self.emit_children_list(node))
 
     def emit(self):
         """Emit the document represented by self.root DOM tree."""
@@ -81,19 +81,19 @@ class ReStructuredTextEmitter(BaseEmitter):
         result = self.emit_children(node)
         if self._substitution_data:
             # add rest at the end
-            result += u"%s\n\n" % self._get_block_data()
+            result += "%s\n\n" % self._get_block_data()
         return result
 
     def emit_node(self, node):
-        result = u""
+        result = ""
         if self._substitution_data and node.parent == self.root:
-            result += u"%s\n\n" % self._get_block_data()
+            result += "%s\n\n" % self._get_block_data()
 
         result += super(ReStructuredTextEmitter, self).emit_node(node)
         return result
 
     def p_emit(self, node):
-        return u"%s\n\n" % self.emit_children(node)
+        return "%s\n\n" % self.emit_children(node)
 
     HEADLINE_DATA = {
         1:("=", True),
@@ -163,7 +163,7 @@ class ReStructuredTextEmitter(BaseEmitter):
     #--------------------------------------------------------------------------
 
     def hr_emit(self, node):
-        return u"----\n\n"
+        return "----\n\n"
 
     def _should_do_substitution(self, node):
         node = node.parent
@@ -182,18 +182,18 @@ class ReStructuredTextEmitter(BaseEmitter):
         if self._should_do_substitution(node):
             # make a hyperlink reference
             self._substitution_data.append(
-                u".. _%s: %s" % (link_text, url)
+                ".. _%s: %s" % (link_text, url)
             )
             return "`%s`_" % link_text
 
         # create a inline hyperlink
-        return u"`%s <%s>`_" % (link_text, url)
+        return "`%s <%s>`_" % (link_text, url)
 
     def img_emit(self, node):
         src = node.attrs["src"]
 
         if src.split(':')[0] == 'data':
-            return u""
+            return ""
 
         title = node.attrs.get("title", "")
         alt = node.attrs.get("alt", "")
@@ -206,21 +206,21 @@ class ReStructuredTextEmitter(BaseEmitter):
             substitution_text = posixpath.basename(src)
 
         self._substitution_data.append(
-            u".. |%s| image:: %s" % (substitution_text, src)
+            ".. |%s| image:: %s" % (substitution_text, src)
         )
 
-        return u"|%s|" % substitution_text
+        return "|%s|" % substitution_text
 
     #--------------------------------------------------------------------------
 
     def code_emit(self, node):
-        return u"``%s``" % self._emit_content(node)
+        return "``%s``" % self._emit_content(node)
 
     #--------------------------------------------------------------------------
 
     def li_emit(self, node):
         content = self.emit_children(node).strip("\n")
-        result = u"\n%s%s %s\n" % (
+        result = "\n%s%s %s\n" % (
             "    " * (node.level - 1), self._list_markup, content
         )
         return result
@@ -253,17 +253,17 @@ class ReStructuredTextEmitter(BaseEmitter):
         )
         self.emit_children(node)
         content = self._table.get_rest_table()
-        return u"%s\n\n" % content
+        return "%s\n\n" % content
 
 
 if __name__ == '__main__':
     import doctest
-    print doctest.testmod()
+    print(doctest.testmod())
 
 #    import sys;sys.exit()
     from creole.html_parser.parser import HtmlParser
 
-    data = u"""<p>A nested bullet lists:</p>
+    data = """<p>A nested bullet lists:</p>
 <ul>
 <li><p>item 1</p>
 <ul>
@@ -288,7 +288,7 @@ if __name__ == '__main__':
 <p>5 <img alt="Image without files ext?" src="/path1/path2/image" /> five</p>
 """
 
-    print data
+    print(data)
     h2c = HtmlParser(
 #        debug=True
     )
@@ -299,8 +299,8 @@ if __name__ == '__main__':
         debug=True
     )
     content = e.emit()
-    print "*" * 79
-    print content
-    print "*" * 79
-    print content.replace(" ", ".").replace("\n", "\\n\n")
+    print("*" * 79)
+    print(content)
+    print("*" * 79)
+    print(content.replace(" ", ".").replace("\n", "\\n\n"))
 

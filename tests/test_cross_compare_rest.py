@@ -13,7 +13,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 import unittest
 
@@ -23,7 +23,7 @@ from tests.utils.base_unittest import BaseCreoleTest
 class CrossCompareReStTests(BaseCreoleTest):
     def test_entities(self):
         self.cross_compare_rest(
-            rest_string=u"""
+            rest_string="""
                 less-than sign: <
                 
                 greater-than sign: >
@@ -37,7 +37,7 @@ class CrossCompareReStTests(BaseCreoleTest):
 
     def test_bullet_lists_basic(self):
         self.cross_compare_rest(
-            rest_string=u"""
+            rest_string="""
                 * item 1
                 
                 * item 2
@@ -56,7 +56,7 @@ class CrossCompareReStTests(BaseCreoleTest):
 
     def test_numbered_lists(self):
         self.cross_compare_rest(
-            rest_string=u"""
+            rest_string="""
             #. item 1
             
             #. item 2
@@ -86,7 +86,7 @@ class CrossCompareReStTests(BaseCreoleTest):
 
     def test_bullet_lists_nested(self):
         self.cross_compare_rest(
-            rest_string=u"""
+            rest_string="""
                 A nested bullet lists:
                 
                 * item 1

@@ -13,7 +13,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 import unittest
 
@@ -65,7 +65,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         """
         self.assertRaises(NotImplementedError,
             html2creole,
-            html_string=u"<unknwon>",
+            html_string="<unknwon>",
             emitter_kwargs={"unknown_emit":raise_unknown_node}
         )
 
@@ -174,7 +174,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         Box Drawing:
             http://pylucid.org/_command/144/DecodeUnicode/display/66/
         """
-        self.assert_html2creole(u"""
+        self.assert_html2creole("""
             * less-than sign: < < <
             * greater-than sign: > > >
             * copyright sign: © ©
@@ -317,7 +317,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         """)
 
     def test_nested_listsitems_with_paragraph(self):
-        self.assert_html2creole(u"""
+        self.assert_html2creole("""
             * item 1
             ** subitem 1.1
             *** subsubitem 1.1.1

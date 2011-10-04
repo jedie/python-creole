@@ -96,6 +96,8 @@ How to do this, read: https://code.google.com/p/python-creole/wiki/UseInSetup
 
 = history
 
+* v0.9pre
+** Add Python v3 support (like http://python3porting.com/noconv.html strategy)
 * v0.8.5
 ** Bugfix in html2creole: ignore links without href
 * v0.8.4

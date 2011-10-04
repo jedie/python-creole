@@ -9,7 +9,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, print_function, unicode_literals
 import os
 import sys
 
@@ -27,7 +27,7 @@ def get_authors():
         f = file(os.path.join(PACKAGE_ROOT, "AUTHORS"), "r")
         authors = [l.strip(" *\r\n") for l in f if l.strip().startswith("*")]
         f.close()
-    except Exception, err:
+    except Exception as err:
         authors = "[Error: %s]" % err
     return authors
 

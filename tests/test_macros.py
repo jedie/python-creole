@@ -11,30 +11,30 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 def test_macro1(**kwargs):
     """
     >>> test_macro1(foo="bar")
-    u"[test macro1 - kwargs: foo='bar']"
+    "[test macro1 - kwargs: foo='bar']"
     
     >>> test_macro1()
-    u'[test macro1 - kwargs: ]'
+    '[test macro1 - kwargs: ]'
     
     >>> test_macro1(a=1,b=2)
-    u'[test macro1 - kwargs: a=1,b=2]'
+    '[test macro1 - kwargs: a=1,b=2]'
     """
-    kwargs = u','.join([u'%s=%r' % (k, v) for k, v in sorted(kwargs.items())])
-    return u"[test macro1 - kwargs: %s]" % kwargs
+    kwargs = ','.join(['%s=%r' % (k, v) for k, v in sorted(kwargs.items())])
+    return "[test macro1 - kwargs: %s]" % kwargs
 
 def test_macro2(char, text):
     """
-    >>> test_macro2(char=u"|", text=u"a\\nb")
-    u'a|b'
+    >>> test_macro2(char="|", text="a\\nb")
+    'a|b'
     """
     return char.join(text.split())
 
 
 if __name__ == "__main__":
     import doctest
-    print doctest.testmod()
+    print(doctest.testmod())

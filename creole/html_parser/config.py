@@ -11,13 +11,13 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 BLOCK_TAGS = (
     "address", "blockquote", "center", "dir", "div", "dl", "fieldset",
     "form",
     "h1", "h2", "h3", "h4", "h5", "h6",
-    "hr", "ins", "isindex", "menu", "noframes", "noscript",
+    "hr", "ins", "isindex", "men", "noframes", "noscript",
     "ul", "ol", "li", "table", "th", "tr", "td",
     "p", "pre",
     "br"

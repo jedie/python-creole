@@ -10,7 +10,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, print_function, unicode_literals
 import posixpath
 
 from creole.shared.base_emitter import BaseEmitter
@@ -36,13 +36,13 @@ class CreoleEmitter(BaseEmitter):
 
     def blockdata_pre_emit(self, node):
         """ pre block -> with newline at the end """
-        return u"{{{%s}}}\n" % self.deentity.replace_all(node.content)
+        return "{{{%s}}}\n" % self.deentity.replace_all(node.content)
     def inlinedata_pre_emit(self, node):
         """ a pre inline block -> no newline at the end """
-        return u"{{{%s}}}" % self.deentity.replace_all(node.content)
+        return "{{{%s}}}" % self.deentity.replace_all(node.content)
 
     def blockdata_pass_emit(self, node):
-        return u"%s\n\n" % node.content
+        return "%s\n\n" % node.content
         return node.content
 
     #--------------------------------------------------------------------------
@@ -55,12 +55,12 @@ class CreoleEmitter(BaseEmitter):
 
     def br_emit(self, node):
         if self._inner_list != "":
-            return u"\\\\"
+            return "\\\\"
         else:
-            return u"\n"
+            return "\n"
 
     def headline_emit(self, node):
-        return u"%s %s\n\n" % (u"=" * node.level, self.emit_children(node))
+        return "%s %s\n\n" % ("=" * node.level, self.emit_children(node))
 
     #--------------------------------------------------------------------------
 
@@ -90,7 +90,7 @@ class CreoleEmitter(BaseEmitter):
     #--------------------------------------------------------------------------
 
     def hr_emit(self, node):
-        return u"----\n\n"
+        return "----\n\n"
 
     def a_emit(self, node):
         link_text = self.emit_children(node)
@@ -100,15 +100,15 @@ class CreoleEmitter(BaseEmitter):
             # e.g.: <a name="anchor-one">foo</a>
             return link_text
         if link_text == url:
-            return u"[[%s]]" % url
+            return "[[%s]]" % url
         else:
-            return u"[[%s|%s]]" % (url, link_text)
+            return "[[%s|%s]]" % (url, link_text)
 
     def img_emit(self, node):
         src = node.attrs["src"]
 
         if src.split(':')[0] == 'data':
-            return u""
+            return ""
 
         title = node.attrs.get("title", "")
         alt = node.attrs.get("alt", "")
@@ -120,7 +120,7 @@ class CreoleEmitter(BaseEmitter):
         if text == "": # Use filename as picture text
             text = posixpath.basename(src)
 
-        return u"{{%s|%s}}" % (src, text)
+        return "{{%s|%s}}" % (src, text)
 
     #--------------------------------------------------------------------------
 
@@ -145,12 +145,12 @@ class CreoleEmitter(BaseEmitter):
 
 if __name__ == '__main__':
     import doctest
-    print doctest.testmod()
+    print(doctest.testmod())
 
 #    import sys;sys.exit()
     from creole.html_parser.parser import HtmlParser
 
-    data = u"""
+    data = """
 <ul>
     <li><p>item 1</p>
         <ul>
@@ -167,7 +167,7 @@ if __name__ == '__main__':
 
 """
 
-#    print data.strip()
+#    print(data.strip())
     h2c = HtmlParser(
         debug=True
     )
@@ -178,7 +178,7 @@ if __name__ == '__main__':
         debug=True
     )
     content = e.emit()
-    print "*" * 79
-    print content
-    print "*" * 79
-    print content.replace(" ", ".").replace("\n", "\\n\n")
+    print("*" * 79)
+    print(content)
+    print("*" * 79)
+    print(content.replace(" ", ".").replace("\n", "\\n\n"))

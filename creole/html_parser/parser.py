@@ -10,14 +10,15 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 import re
+import sys
 import warnings
-from HTMLParser import HTMLParser
 
 from creole.html_parser.config import BLOCK_TAGS, IGNORE_TAGS
 from creole.html_tools.strip_html import strip_html
+from creole.py3compat import TEXT_TYPE, BINARY_TYPE
 from creole.shared.document_tree import DocNode, DebugList
 from creole.shared.html_parser import HTMLParser2
 
@@ -51,32 +52,32 @@ class HtmlParser(HTMLParser2):
     parse html code and create a document tree.
     
     >>> p = HtmlParser()
-    >>> p.feed(u"<p>html <strong>code</strong></p>")
+    >>> p.feed("<p>html <strong>code</strong></p>")
     <DocNode document: None>
     >>> p.debug()
     ________________________________________________________________________________
       document tree:
     ================================================================================
     p
-        data: u'html '
+        data: 'html '
         strong
-            data: u'code'
+            data: 'code'
     ********************************************************************************
     
     >>> p = HtmlParser()
-    >>> p.feed(u"<p>html1 <script>var foo='<em>BAR</em>';</script> html2</p>")
+    >>> p.feed("<p>html1 <script>var foo='<em>BAR</em>';</script> html2</p>")
     <DocNode document: None>
     >>> p.debug()
     ________________________________________________________________________________
       document tree:
     ================================================================================
     p
-        data: u'html1 '
+        data: 'html1 '
         script
-            data: u"var foo='<em>BAR"
-            data: u'</em>'
-            data: u"';"
-        data: u' html2'
+            data: "var foo='<em>BAR"
+            data: '</em>'
+            data: "';"
+        data: ' html2'
     ********************************************************************************
     """
     # placeholder html tag for pre cutout areas:
@@ -104,11 +105,11 @@ class HtmlParser(HTMLParser2):
 
     def _pre_cut(self, data, type, placeholder):
         if self.debugging:
-            print "append blockdata: %r" % data
-        assert isinstance(data, unicode), "blockdata is not unicode"
+            print("append blockdata: %r" % data)
+        assert isinstance(data, TEXT_TYPE), "blockdata is not unicode"
         self.blockdata.append(data)
         id = len(self.blockdata) - 1
-        return u'<%s type="%s" id="%s" />' % (placeholder, type, id)
+        return '<%s type="%s" id="%s" />' % (placeholder, type, id)
 
     def _pre_pre_inline_cut(self, groups):
         return self._pre_cut(groups["pre_inline"], "pre", self._inline_placeholder)
@@ -124,17 +125,17 @@ class HtmlParser(HTMLParser2):
 
     def _pre_cut_out(self, match):
         groups = match.groupdict()
-        for name, text in groups.iteritems():
+        for name, text in groups.items():
             if text is not None:
                 if self.debugging:
-                    print "%15s: %r (%r)" % (name, text, match.group(0))
+                    print("%15s: %r (%r)" % (name, text, match.group(0)))
                 method = getattr(self, '_pre_%s_cut' % name)
                 return method(groups)
 
 #        data = match.group("data")
 
     def feed(self, raw_data):
-        assert isinstance(raw_data, unicode), "feed data must be unicode!"
+        assert isinstance(raw_data, TEXT_TYPE), "feed data must be unicode!"
         data = raw_data.strip()
 
         # cut out <pre> and <tt> areas block tag areas
@@ -145,17 +146,17 @@ class HtmlParser(HTMLParser2):
         data = strip_html(data)
 
         if self.debugging:
-            print "_" * 79
-            print "raw data:"
-            print repr(raw_data)
-            print " -" * 40
-            print "cleaned data:"
-            print data
-            print "-" * 79
-#            print clean_data.replace(">", ">\n")
-#            print "-"*79
+            print("_" * 79)
+            print("raw data:")
+            print(repr(raw_data))
+            print(" -" * 40)
+            print("cleaned data:")
+            print(data)
+            print("-" * 79)
+#            print(clean_data.replace(">", ">\n"))
+#            print("-"*79)
 
-        HTMLParser.feed(self, data)
+        HTMLParser2.feed(self, data)
 
         return self.root
 
@@ -209,7 +210,7 @@ class HtmlParser(HTMLParser2):
 
     def handle_data(self, data):
         self.debug_msg("data", "%r" % data)
-        if isinstance(data, str):
+        if isinstance(data, BINARY_TYPE):
             data = unicode(data)
         DocNode("data", self.cur, content=data)
 
@@ -260,24 +261,24 @@ class HtmlParser(HTMLParser2):
     def debug_msg(self, method, txt):
         if not self.debugging:
             return
-        print "%-8s %8s: %s" % (self.getpos(), method, txt)
+        print("%-8s %8s: %s" % (self.getpos(), method, txt))
 
     def debug(self, start_node=None):
         """
         Display the current document tree
         """
-        print "_" * 80
+        print("_" * 80)
 
         if start_node == None:
             start_node = self.root
-            print "  document tree:"
+            print("  document tree:")
         else:
-            print "  tree from %s:" % start_node
+            print("  tree from %s:" % start_node)
 
-        print "=" * 80
+        print("=" * 80)
         def emit(node, ident=0):
             for child in node.children:
-                txt = u"%s%s" % (u" " * ident, child.kind)
+                txt = "%s%s" % (" " * ident, child.kind)
 
                 if child.content:
                     txt += ": %r" % child.content
@@ -288,18 +289,18 @@ class HtmlParser(HTMLParser2):
                 if child.level != None:
                     txt += " - level: %r" % child.level
 
-                print txt
+                print(txt)
                 emit(child, ident + 4)
         emit(start_node)
-        print "*" * 80
+        print("*" * 80)
 
 
 if __name__ == '__main__':
     import doctest
-    print doctest.testmod()
+    print(doctest.testmod())
 
 #    p = HtmlParser(debug=True)
-#    p.feed(u"""\
+#    p.feed("""\
 #<p><span>in span</span><br />
 #<code>in code</code></p>
 #""")

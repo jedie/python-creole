@@ -13,7 +13,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 import unittest
 
@@ -78,13 +78,13 @@ class ReStTests(BaseCreoleTest):
                 
                     >>> from creole import creole2html
                     >>> creole2html("This is **creole //markup//**")
-                    u'<p>This is <strong>creole <i>markup</i></strong></p>
+                    '<p>This is <strong>creole <i>markup</i></strong></p>
             """,
             html_string="""
                 <pre>
                 &gt;&gt;&gt; from creole import creole2html
                 &gt;&gt;&gt; creole2html(&quot;This is **creole //markup//**&quot;)
-                u'&lt;p&gt;This is &lt;strong&gt;creole &lt;i&gt;markup&lt;/i&gt;&lt;/strong&gt;&lt;/p&gt;\n'
+                '&lt;p&gt;This is &lt;strong&gt;creole &lt;i&gt;markup&lt;/i&gt;&lt;/strong&gt;&lt;/p&gt;\n'
                 </pre>
             """
         )
@@ -205,7 +205,7 @@ class ReStTests(BaseCreoleTest):
 #        Put unknown tags in a <pre> area.
 #        """
 #        self.assert_html2rest(
-#            rest_string=u"""
+#            rest_string="""
 #                111 <<pre>><x><</pre>>foo<<pre>></x><</pre>> 222
 #                333<<pre>><x foo1="bar1"><</pre>>foobar<<pre>></x><</pre>>444
 #                
@@ -228,7 +228,7 @@ class ReStTests(BaseCreoleTest):
 #        their child nodes' content.
 #        """
 #        self.assert_html2rest(
-#            rest_string=u"""
+#            rest_string="""
 #                111 <<pre>><x><</pre>>foo<<pre>></x><</pre>> 222
 #                333<<pre>><x foo1="bar1"><</pre>>foobar<<pre>></x><</pre>>444
 #                

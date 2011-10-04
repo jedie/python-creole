@@ -9,7 +9,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 import unittest
 
@@ -29,14 +29,14 @@ class UtilsTests(MarkupTest):
     def test_markup_table_creole(self):
         t = MarkupTable(head_prefix="* ")
         t.add_tr()
-        t.add_th(u"head1")
-        t.add_th(u"head2")
+        t.add_th("head1")
+        t.add_th("head2")
         t.add_tr()
-        t.add_td(u"1.1.")
-        t.add_td(u"1.2.")
+        t.add_td("1.1.")
+        t.add_td("1.2.")
         t.add_tr()
-        t.add_td(u"2.1.")
-        t.add_td(u"2.2.")
+        t.add_td("2.1.")
+        t.add_td("2.2.")
         table = t.get_table_markup()
 
         self.assertEqual2(
@@ -51,14 +51,14 @@ class UtilsTests(MarkupTest):
     def test_markup_table_textile(self):
         t = MarkupTable(head_prefix="_. ", auto_width=False)
         t.add_tr()
-        t.add_th(u"head1")
-        t.add_th(u"head2")
+        t.add_th("head1")
+        t.add_th("head2")
         t.add_tr()
-        t.add_td(u"1.1.")
-        t.add_td(u"1.2.")
+        t.add_td("1.1.")
+        t.add_td("1.2.")
         t.add_tr()
-        t.add_td(u"2.1.")
-        t.add_td(u"2.2.")
+        t.add_td("2.1.")
+        t.add_td("2.2.")
         table = t.get_table_markup()
 
         self.assertEqual2(
@@ -73,14 +73,14 @@ class UtilsTests(MarkupTest):
     def test_markup_table_rest(self):
         t = MarkupTable(head_prefix="")
         t.add_tr()
-        t.add_th(u"head1")
-        t.add_th(u"head2")
+        t.add_th("head1")
+        t.add_th("head2")
         t.add_tr()
-        t.add_td(u"1.1.")
-        t.add_td(u"1.2.")
+        t.add_td("1.1.")
+        t.add_td("1.2.")
         t.add_tr()
-        t.add_td(u"2.1.")
-        t.add_td(u"2.2.")
+        t.add_td("2.1.")
+        t.add_td("2.2.")
         table = t.get_rest_table()
 
         self.assertEqual2(

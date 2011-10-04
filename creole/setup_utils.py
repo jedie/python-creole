@@ -99,7 +99,7 @@ def get_long_description(package_root, filename="README.creole", raise_errors=No
             emitter_kwargs={"unknown_emit":unknown_emit}
         )
         long_description_rest = long_description_rest_unicode.encode("utf-8")
-    except Exception, err:
+    except Exception as err:
         if raise_errors:
             raise
         # Don't raise the error e.g. in ./setup install process
@@ -128,4 +128,4 @@ GetLongDescription = _get_long_description # for backward-compatibility
 if __name__ == "__main__":
     package_root = os.path.abspath("../")
     long_description = get_long_description(package_root)
-    print long_description
+    print(long_description)

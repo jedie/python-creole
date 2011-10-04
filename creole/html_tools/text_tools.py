@@ -11,7 +11,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 import re
 
@@ -21,17 +21,17 @@ def clean_whitespace(txt):
     """
     Special whitespaces cleanup
 
-    >>> clean_whitespace(u"\\n\\nfoo bar\\n\\n")
-    u'foo bar\\n'
+    >>> clean_whitespace("\\n\\nfoo bar\\n\\n")
+    'foo bar\\n'
 
-    >>> clean_whitespace(u"   foo bar  \\n  \\n")
-    u' foo bar\\n'
+    >>> clean_whitespace("   foo bar  \\n  \\n")
+    ' foo bar\\n'
 
-    >>> clean_whitespace(u" \\n \\n  foo bar   ")
-    u' foo bar '
+    >>> clean_whitespace(" \\n \\n  foo bar   ")
+    ' foo bar '
 
-    >>> clean_whitespace(u"foo   bar")
-    u'foo   bar'
+    >>> clean_whitespace("foo   bar")
+    'foo   bar'
     """
     def cleanup(match):
         start, txt, end = match.groups()
@@ -53,4 +53,4 @@ def clean_whitespace(txt):
 
 if __name__ == '__main__':
     import doctest
-    print doctest.testmod()
+    print(doctest.testmod())

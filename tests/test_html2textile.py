@@ -13,7 +13,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 import unittest
 
@@ -27,7 +27,7 @@ class TextileTests(BaseCreoleTest):
         can't be cross tested, because textile would convert < to &#60; and > to &#62;
         """
         self.assert_html2textile(
-            textile_string=u"""
+            textile_string="""
                 less-than sign: <
                 greater-than sign: >
             """,
@@ -43,7 +43,7 @@ class TextileTests(BaseCreoleTest):
         Put unknown tags in a <pre> area.
         """
         self.assert_html2textile(
-            textile_string=u"""
+            textile_string="""
                 111 <<pre>><x><</pre>>foo<<pre>></x><</pre>> 222
                 333<<pre>><x foo1="bar1"><</pre>>foobar<<pre>></x><</pre>>444
                 
@@ -66,7 +66,7 @@ class TextileTests(BaseCreoleTest):
         their child nodes' content.
         """
         self.assert_html2textile(
-            textile_string=u"""
+            textile_string="""
                 111 <<pre>><x><</pre>>foo<<pre>></x><</pre>> 222
                 333<<pre>><x foo1="bar1"><</pre>>foobar<<pre>></x><</pre>>444
                 

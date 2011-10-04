@@ -11,7 +11,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 from xml.sax.saxutils import escape
 
@@ -30,10 +30,10 @@ def _mask_content(emitter, node, mask_tag):
     content = emitter.emit_children(node)
     if not content:
         # single tag
-        return u"<<%(mask_tag)s>><%(tag)s%(attrs)s /><</%(mask_tag)s>>" % tag_data
+        return "<<%(mask_tag)s>><%(tag)s%(attrs)s /><</%(mask_tag)s>>" % tag_data
 
-    start_tag = u"<<%(mask_tag)s>><%(tag)s%(attrs)s><</%(mask_tag)s>>" % tag_data
-    end_tag = u"<<%(mask_tag)s>></%(tag)s><</%(mask_tag)s>>" % tag_data
+    start_tag = "<<%(mask_tag)s>><%(tag)s%(attrs)s><</%(mask_tag)s>>" % tag_data
+    end_tag = "<<%(mask_tag)s>></%(tag)s><</%(mask_tag)s>>" % tag_data
 
     return start_tag + content + end_tag
 
@@ -89,10 +89,10 @@ def escape_unknown_nodes(emitter, node):
     content = emitter.emit_children(node)
     if not content:
         # single tag
-        return escape(u"<%(tag)s%(attrs)s />" % tag_data)
+        return escape("<%(tag)s%(attrs)s />" % tag_data)
 
-    start_tag = escape(u"<%(tag)s%(attrs)s>" % tag_data)
-    end_tag = escape(u"</%(tag)s>" % tag_data)
+    start_tag = escape("<%(tag)s%(attrs)s>" % tag_data)
+    end_tag = escape("</%(tag)s>" % tag_data)
 
     return start_tag + content + end_tag
 

@@ -11,13 +11,14 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 import re
 import sys
 import warnings
 
 from tests.utils.utils import MarkupTest
+from creole.py3compat import TEXT_TYPE
 
 
 try:
@@ -37,7 +38,7 @@ from creole import creole2html, html2creole, html2textile, html2rest
 
 try:
     from creole.rest2html.clean_writer import rest2html
-except DocutilsImportError, err:
+except DocutilsImportError as err:
     REST_INSTALLED = False
     warnings.warn("Can't run all ReSt unittests: %s" % err)
 else:
@@ -49,8 +50,8 @@ tabs2spaces_re = re.compile(r"^(\t*)(.*?)$", re.M)
 
 def tabs2spaces(html):
     """ form reformating textile html code
-    >>> tabs2spaces(u"\\t<p>one<br />\\n\\t\\ttwo<br />\\n\\t\\t\\ttree</p>")
-    u'<p>one<br />\\n  two<br />\\n    tree</p>'
+    >>> tabs2spaces("\\t<p>one<br />\\n\\t\\ttwo<br />\\n\\t\\t\\ttree</p>")
+    '<p>one<br />\\n  two<br />\\n    tree</p>'
     """
     def reformat_tabs(match):
         tabs = match.group(1)
@@ -60,15 +61,15 @@ def tabs2spaces(html):
         if indent < 0:
             indent = 0
 
-#        print len(tabs), indent, repr(tabs), text
-        return u"  " * indent + text
+#        print(len(tabs), indent, repr(tabs), text)
+        return "  " * indent + text
     return tabs2spaces_re.sub(reformat_tabs, html)
 
 
 def strip_html_lines(html, strip_lines=False):
     """
-    >>> strip_html_lines(u"\t<p>foo   \\n\\n\t\t  bar</p>", strip_lines=True)
-    u'<p>foo\\nbar</p>'
+    >>> strip_html_lines("\t<p>foo   \\n\\n\t\t  bar</p>", strip_lines=True)
+    '<p>foo\\nbar</p>'
     """
     html = "\n".join(
         [line.strip(" \t") for line in html.splitlines() if line]
@@ -87,10 +88,10 @@ class BaseCreoleTest(MarkupTest):
         text = text.replace("\t", "\\t")
 
         print
-        print "_" * 79
-        print " Debug Text: %s" % msg
-        print text
-        print "-" * 79
+        print("_" * 79)
+        print(" Debug Text: %s" % msg)
+        print(text)
+        print("-" * 79)
 
     def assert_creole2html(self, raw_creole, raw_html, \
             strip_lines=False, debug=False, parser_kwargs={}, emitter_kwargs={}):
@@ -102,10 +103,10 @@ class BaseCreoleTest(MarkupTest):
 
         # prepare whitespace on test strings
         markup_string = self._prepare_text(raw_creole)
-        assert isinstance(markup_string, unicode)
+        assert isinstance(markup_string, TEXT_TYPE)
 
         html_string = self._prepare_text(raw_html)
-        assert isinstance(html_string, unicode)
+        assert isinstance(html_string, TEXT_TYPE)
         if strip_lines:
             html_string = strip_html_lines(html_string, strip_lines)
         if debug:
@@ -132,7 +133,7 @@ class BaseCreoleTest(MarkupTest):
         Compare the genereted markup from the given >raw_html< html code, with
         the given >creole_string< reference string.
         """
-#        assert isinstance(raw_html, unicode)
+#        assert isinstance(raw_html, TEXT_TYPE)
 #        creole_string = unicode(creole_string, encoding="utf8")
 #        raw_html = unicode(raw_html, "utf8")
 
@@ -140,12 +141,12 @@ class BaseCreoleTest(MarkupTest):
 
         # prepare whitespace on test strings
         markup = self._prepare_text(raw_creole)
-        assert isinstance(markup, unicode)
+        assert isinstance(markup, TEXT_TYPE)
         if debug:
             self._debug_text("assert_creole2html() markup", markup)
 
         html = self._prepare_text(raw_html)
-        assert isinstance(html, unicode)
+        assert isinstance(html, TEXT_TYPE)
 
         # convert html code into creole markup
         out_string = html2creole(html, debug, parser_kwargs, emitter_kwargs)
@@ -167,8 +168,8 @@ class BaseCreoleTest(MarkupTest):
             * creole2html
             * html2creole
         """
-        creole_string = unicode(creole_string)
-        html_string = unicode(html_string)
+        assert isinstance(creole_string, TEXT_TYPE)
+        assert isinstance(html_string, TEXT_TYPE)
         self.assertNotEqual(creole_string, html_string)
 
         self.assert_creole2html(
@@ -197,9 +198,9 @@ class BaseCreoleTest(MarkupTest):
         # compare html -> textile
         textile_string2 = html2textile(html_string, debug, parser_kwargs, emitter_kwargs)
         if debug:
-            print "-" * 79
-            print textile_string2
-            print "-" * 79
+            print("-" * 79)
+            print(textile_string2)
+            print("-" * 79)
 
         self.assertEqual(textile_string2, textile_string, msg="html2textile")
 
@@ -212,8 +213,8 @@ class BaseCreoleTest(MarkupTest):
                 * html2textile
                 * textile2html
         """
-#        assert isinstance(textile_string, unicode)
-#        assert isinstance(html_string, unicode)
+#        assert isinstance(textile_string, TEXT_TYPE)
+#        assert isinstance(html_string, TEXT_TYPE)
         self.assertNotEqual(textile_string, html_string)
 
         # compare html -> textile
@@ -251,9 +252,9 @@ class BaseCreoleTest(MarkupTest):
         # compare html -> reStructuredText
         rest_string2 = html2rest(html_string, debug, parser_kwargs, emitter_kwargs)
         if debug:
-            print "-" * 79
-            print rest_string2
-            print "-" * 79
+            print("-" * 79)
+            print(rest_string2)
+            print("-" * 79)
 
         self.assertEqual(rest_string2, rest_string, msg="html2rest")
 
@@ -274,9 +275,9 @@ class BaseCreoleTest(MarkupTest):
         html = rest2html(rest_string)
 
         if debug:
-            print rest_string
-            print html_string
-            print html
+            print(rest_string)
+            print(html_string)
+            print(html)
 
         html = html.strip()
 #        html = html.replace("<br />", "<br />\n")
@@ -288,8 +289,8 @@ class BaseCreoleTest(MarkupTest):
 
     def cross_compare_rest(self, rest_string, html_string, \
                         strip_lines=False, debug=False, parser_kwargs={}, emitter_kwargs={}):
-#        assert isinstance(textile_string, unicode)
-#        assert isinstance(html_string, unicode)
+#        assert isinstance(textile_string, TEXT_TYPE)
+#        assert isinstance(html_string, TEXT_TYPE)
         self.assertNotEqual(rest_string, html_string)
 
         rest_string, html_string = self.assert_html2rest(
@@ -334,4 +335,4 @@ class BaseCreoleTest(MarkupTest):
 
 if __name__ == '__main__':
     import doctest
-    print doctest.testmod()
+    print(doctest.testmod())

@@ -16,7 +16,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 import unittest
 
@@ -417,12 +417,12 @@ class CrossCompareCreoleTests(BaseCreoleTest):
         Note:
             All cross compare tests use html2creole.HTML_MACRO_UNKNOWN_NODES
         """
-        self.cross_compare_creole(u"""
+        self.cross_compare_creole("""
             111 <<html>><x><</html>>foo<<html>></x><</html>> 222
             333<<html>><x foo1="bar1"><</html>>foobar<<html>></x><</html>>444
 
             555<<html>><x /><</html>>666
-        """, u"""
+        """, """
             <p>111 <x>foo</x> 222<br />
             333<x foo1="bar1">foobar</x>444</p>
 
@@ -440,7 +440,7 @@ class CrossCompareCreoleTests(BaseCreoleTest):
         )
 
     def test_entities(self):
-        self.cross_compare_creole(u"""
+        self.cross_compare_creole("""
             less-than sign: <
             greater-than sign: >
         """, """

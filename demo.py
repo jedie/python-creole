@@ -7,11 +7,12 @@
     ~~~~~~~~~~~
 """
 
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 from creole import creole2html, html2creole, html2rest, html2textile
 
 
-source_creole = u"""\
+source_creole = """\
 == simple demo
 
 You can convert from:
@@ -30,21 +31,21 @@ More info on our [[http://code.google.com/p/python-creole/|Homepage]]."""
 
 
 if __name__ == "__main__":
-    print "_" * 79 + "\n*** Convert creole into html: ***\n\n"
+    print("_" * 79 + "\n*** Convert creole into html: ***\n\n")
     html = creole2html(source_creole)
-    print html
+    print(html)
 
 
-    print "\n\n" + "_" * 79 + "\n*** Convert html back into creole: ***\n\n"
+    print("\n\n" + "_" * 79 + "\n*** Convert html back into creole: ***\n\n")
     creole = html2creole(html)
-    print creole
+    print(creole)
 
 
-    print "\n\n" + "_" * 79 + "\n*** Convert html into ReStructuredText: ***\n\n"
+    print("\n\n" + "_" * 79 + "\n*** Convert html into ReStructuredText: ***\n\n")
     rest = html2rest(html)
-    print rest
+    print(rest)
 
 
-    print "\n\n" + "_" * 79 + "\n*** Convert html into textile: ***\n\n"
+    print("\n\n" + "_" * 79 + "\n*** Convert html into textile: ***\n\n")
     textile = html2textile(html)
-    print textile
+    print(textile)

@@ -11,9 +11,11 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 import shlex
+
+from creole.py3compat import TEXT_TYPE, PY3
 
 
 # For str2dict()
@@ -30,16 +32,16 @@ def str2dict(raw_content, encoding="utf-8"):
     >>> str2dict('key1="value1" key2="value2"')
     {'key2': 'value2', 'key1': 'value1'}
 
-    >>> str2dict(u'A="B" C=1 D=1.1 E=True F=False G=None')
+    >>> str2dict('A="B" C=1 D=1.1 E=True F=False G=None')
     {'A': 'B', 'C': 1, 'E': True, 'D': '1.1', 'G': None, 'F': False}
     
     >>> str2dict('''key1="'1'" key2='"2"' key3="""'3'""" ''')
     {'key3': 3, 'key2': 2, 'key1': 1}
 
-    >>> str2dict(u'unicode=True')
+    >>> str2dict('unicode=True')
     {'unicode': True}
     """
-    if isinstance(raw_content, unicode):
+    if not PY3 and isinstance(raw_content, TEXT_TYPE):
         # shlex.split doesn't work with unicode?!?
         raw_content = raw_content.encode(encoding)
 
@@ -66,4 +68,4 @@ def str2dict(raw_content, encoding="utf-8"):
 
 if __name__ == "__main__":
     import doctest
-    print doctest.testmod()
+    print(doctest.testmod())

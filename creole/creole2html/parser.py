@@ -22,12 +22,13 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 import re
 
 from creole.creole2html.rules import BlockRules, INLINE_FLAGS, INLINE_RULES, \
     SpecialRules, InlineRules
+from creole.py3compat import TEXT_TYPE
 from creole.shared.document_tree import DocNode, DebugList
 
 
@@ -59,7 +60,7 @@ class CreoleParser:
 
 
     def __init__(self, raw, block_rules=BlockRules, blog_line_breaks=True):
-        assert isinstance(raw, unicode)
+        assert isinstance(raw, TEXT_TYPE)
         self.raw = raw
 
         # setup block element rules:
@@ -109,7 +110,7 @@ class CreoleParser:
     # same method needs several names, because of group names in regexps.
 
     def _text_repl(self, groups):
-#        print "_text_repl()", self.cur.kind
+#        print("_text_repl()", self.cur.kind)
 #        self.debug_groups(groups)
 
         if self.cur.kind in ('table', 'table_row', 'bullet_list', 'number_list'):
@@ -118,7 +119,7 @@ class CreoleParser:
         if self.cur.kind in ('document', 'section', 'blockquote'):
             self.cur = DocNode('paragraph', self.cur)
 
-        text = groups.get('text', u"")
+        text = groups.get('text', "")
 
         if groups.get('space'):
             # use wiki style line breaks and seperate a new line with one space
@@ -128,7 +129,7 @@ class CreoleParser:
 
         if groups.get('break') and self.cur.kind in ('paragraph',
             'emphasis', 'strong', 'pre_inline'):
-            self.last_text_break = DocNode('break', self.cur, u"")
+            self.last_text_break = DocNode('break', self.cur, "")
 
         self.text = None
     _break_repl = _text_repl
@@ -138,7 +139,7 @@ class CreoleParser:
         """Handle raw urls in text."""
         if not groups.get('escaped_url'):
             # this url is NOT escaped
-            target = groups.get('url_target', u"")
+            target = groups.get('url_target', "")
             node = DocNode('link', self.cur)
             node.content = target
             DocNode('text', node, node.content)
@@ -146,7 +147,7 @@ class CreoleParser:
         else:
             # this url is escaped, we render it as text
             if self.text is None:
-                self.text = DocNode('text', self.cur, u"")
+                self.text = DocNode('text', self.cur, "")
             self.text.content += groups.get('url_target')
     _url_target_repl = _url_repl
     _url_proto_repl = _url_repl
@@ -154,8 +155,8 @@ class CreoleParser:
 
     def _link_repl(self, groups):
         """Handle all kinds of links."""
-        target = groups.get('link_target', u"")
-        text = (groups.get('link_text', u"") or u"").strip()
+        target = groups.get('link_target', "")
+        text = (groups.get('link_text', "") or "").strip()
         parent = self.cur
         self.cur = DocNode('link', self.cur)
         self.cur.content = target
@@ -177,13 +178,13 @@ class CreoleParser:
         assert macro_type in ("macro_inline", "macro_block")
 
         if text_key:
-            macro_text = groups.get(text_key, u"").strip()
+            macro_text = groups.get(text_key, "").strip()
         else:
             macro_text = None
 
         node = DocNode(macro_type, self.cur, macro_text)
         node.macro_name = groups[name_key]
-        node.macro_args = groups.get(args_key, u"").strip()
+        node.macro_args = groups.get(args_key, "").strip()
 
         self.text = None
 
@@ -199,10 +200,10 @@ class CreoleParser:
         self.cur = self.root
         self._add_macro(
             groups,
-            macro_type=u"macro_block",
-            name_key=u"macro_block_start",
-            args_key=u"macro_block_args",
-            text_key=u"macro_block_text",
+            macro_type="macro_block",
+            name_key="macro_block_start",
+            args_key="macro_block_args",
+            text_key="macro_block_text",
         )
     _macro_block_start_repl = _macro_block_repl
     _macro_block_args_repl = _macro_block_repl
@@ -214,9 +215,9 @@ class CreoleParser:
         """
         self._add_macro(
             groups,
-            macro_type=u"macro_inline",
-            name_key=u"macro_tag_name",
-            args_key=u"macro_tag_args",
+            macro_type="macro_inline",
+            name_key="macro_tag_name",
+            args_key="macro_tag_args",
             text_key=None,
         )
     _macro_tag_name_repl = _macro_tag_repl
@@ -229,10 +230,10 @@ class CreoleParser:
         """
         self._add_macro(
             groups,
-            macro_type=u"macro_inline",
-            name_key=u"macro_inline_start",
-            args_key=u"macro_inline_args",
-            text_key=u"macro_inline_text",
+            macro_type="macro_inline",
+            name_key="macro_inline_start",
+            args_key="macro_inline_args",
+            text_key="macro_inline_text",
         )
     _macro_inline_start_repl = _macro_inline_repl
     _macro_inline_args_repl = _macro_inline_repl
@@ -242,8 +243,8 @@ class CreoleParser:
 
     def _image_repl(self, groups):
         """Handles images and attachemnts included in the page."""
-        target = groups.get('image_target', u"").strip()
-        text = (groups.get('image_text', u"") or u"").strip()
+        target = groups.get('image_target', "").strip()
+        text = (groups.get('image_text', "") or "").strip()
         node = DocNode("image", self.cur, target)
         DocNode('text', node, text or node.content)
         self.text = None
@@ -256,8 +257,8 @@ class CreoleParser:
 
     def _item_repl(self, groups):
         """ List item """
-        bullet = groups.get('item_head', u"")
-        text = groups.get('item_text', u"")
+        bullet = groups.get('item_head', "")
+        text = groups.get('item_text', "")
         if bullet[-1] == '#':
             kind = 'number_list'
         else:
@@ -315,7 +316,7 @@ class CreoleParser:
             else:
                 text = m.group('head').strip('= ')
                 self.cur = DocNode('table_head', tr)
-                self.text = DocNode('text', self.cur, u"")
+                self.text = DocNode('text', self.cur, "")
             self.parse_inline(text)
 
         self.cur = tb
@@ -324,7 +325,7 @@ class CreoleParser:
     def _pre_block_repl(self, groups):
         self._upto_block()
         kind = groups.get('pre_block_kind', None)
-        text = groups.get('pre_block_text', u"")
+        text = groups.get('pre_block_text', "")
         def remove_tilde(m):
             return m.group('indent') + m.group('rest')
         text = self.pre_escape_re.sub(remove_tilde, text)
@@ -338,10 +339,10 @@ class CreoleParser:
     def _line_repl(self, groups):
         """ Transfer newline from the original markup into the html code """
         self._upto_block()
-        DocNode('line', self.cur, u"")
+        DocNode('line', self.cur, "")
 
     def _pre_inline_repl(self, groups):
-        text = groups.get('pre_inline_text', u"")
+        text = groups.get('pre_inline_text', "")
         DocNode('pre_inline', self.cur, text)
         self.text = None
     _pre_inline_text_repl = _pre_inline_repl
@@ -401,13 +402,13 @@ class CreoleParser:
 
     def _escape_repl(self, groups):
         if self.text is None:
-            self.text = DocNode('text', self.cur, u"")
-        self.text.content += groups.get('escaped_char', u"")
+            self.text = DocNode('text', self.cur, "")
+        self.text.content += groups.get('escaped_char', "")
 
     def _char_repl(self, groups):
         if self.text is None:
-            self.text = DocNode('text', self.cur, u"")
-        self.text.content += groups.get('char', u"")
+            self.text = DocNode('text', self.cur, "")
+        self.text.content += groups.get('char', "")
 
     #--------------------------------------------------------------------------
 
@@ -415,14 +416,14 @@ class CreoleParser:
         """Invoke appropriate _*_repl method. Called for every matched group."""
 
 #        def debug(groups):
-#            from pprint import pformat
+#            from pprint(import pformat)
 #            data = dict([
-#                group for group in groups.iteritems() if group[1] is not None
+#                group for group in groups.items() if group[1] is not None
 #            ])
-#            print "%s\n" % pformat(data)
+#            print("%s\n" % pformat(data))
 
         groups = match.groupdict()
-        for name, text in groups.iteritems():
+        for name, text in groups.items():
             if text is not None:
                 #if name != "char": debug(groups)
                 replace_method = getattr(self, '_%s_repl' % name)
@@ -450,29 +451,29 @@ class CreoleParser:
         """
         Display the current document tree
         """
-        print "_" * 80
+        print("_" * 80)
 
         if start_node == None:
             start_node = self.root
-            print "  document tree:"
+            print("  document tree:")
         else:
-            print "  tree from %s:" % start_node
+            print("  tree from %s:" % start_node)
 
-        print "=" * 80
+        print("=" * 80)
         def emit(node, ident=0):
             for child in node.children:
-                print u"%s%s: %r" % (u" " * ident, child.kind, child.content)
+                print("%s%s: %r" % (" " * ident, child.kind, child.content))
                 emit(child, ident + 4)
         emit(start_node)
-        print "*" * 80
+        print("*" * 80)
 
     def debug_groups(self, groups):
-        print "_" * 80
-        print "  debug groups:"
-        for name, text in groups.iteritems():
+        print("_" * 80)
+        print("  debug groups:")
+        for name, text in groups.items():
             if text is not None:
-                print "%15s: %r" % (name, text)
-        print "-" * 80
+                print("%15s: %r" % (name, text))
+        print("-" * 80)
 
 
 
@@ -480,11 +481,11 @@ class CreoleParser:
 
 if __name__ == "__main__":
     import doctest
-    print doctest.testmod()
+    print(doctest.testmod())
 
-    print "-" * 80
+    print("-" * 80)
 
-    txt = u"""one **line** and //jo//
+    txt = """one **line** and //jo//
 second line
 **third**
 
@@ -492,8 +493,8 @@ block 2a
 block 2b
 block 2c"""
 
-    print txt
-    print "-" * 80
+    print(txt)
+    print("-" * 80)
 
     blog_line_breaks = False
 
@@ -505,19 +506,19 @@ block 2c"""
 
     def display_match(match):
         groups = match.groupdict()
-        for name, text in groups.iteritems():
+        for name, text in groups.items():
             if name != "char" and text != None:
-                print "%20s: %r" % (name, text)
+                print("%20s: %r" % (name, text))
 
 
-    parser = CreoleParser(u"", blog_line_breaks=blog_line_breaks)
+    parser = CreoleParser("", blog_line_breaks=blog_line_breaks)
 
-    print "_" * 80
-    print "merged block rules test:"
+    print("_" * 80)
+    print("merged block rules test:")
     re.sub(parser.block_re, display_match, txt)
 
-    print "_" * 80
-    print "merged inline rules test:"
+    print("_" * 80)
+    print("merged inline rules test:")
     re.sub(parser.inline_re, display_match, txt)
 
 
@@ -526,14 +527,14 @@ block 2c"""
             rexp = re.compile(rule, flags)
             rexp.sub(display_match, txt)
 
-    print "_" * 80
-    print "single block rules match test:"
+    print("_" * 80)
+    print("single block rules match test:")
     block_rules = BlockRules()
     test_single(block_rules.rules, block_rules.re_flags, txt)
 
-    print "_" * 80
-    print "single inline rules match test:"
+    print("_" * 80)
+    print("single inline rules match test:")
     test_single(INLINE_RULES, INLINE_FLAGS, txt)
 
 
-    print "---END---"
+    print("---END---")

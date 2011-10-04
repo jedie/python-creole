@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-
 """
     python-creole
     ~~~~~~~~~~~~~
@@ -11,10 +10,12 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 import warnings
 import inspect
+
+from creole.py3compat import TEXT_TYPE
 
 
 class DocNode:
@@ -33,7 +34,7 @@ class DocNode:
 
         self.attrs = dict(attrs)
         if content:
-            assert isinstance(content, unicode), "Given content %r is not unicode, it's type: %s" % (
+            assert isinstance(content, TEXT_TYPE), "Given content %r is not unicode, it's type: %s" % (
                 content, type(content)
             )
 
@@ -44,38 +45,38 @@ class DocNode:
         """
         FIXME: Find a better was to do this.
 
-        >>> node = DocNode(attrs={'foo':"bar", u"no":123})
+        >>> node = DocNode(attrs={'foo':"bar", "no":123})
         >>> node.get_attrs_as_string()
-        u'foo="bar" no="123"'
+        'foo="bar" no="123"'
 
-        >>> node = DocNode(attrs={"foo":'bar', "no":u"ABC"})
+        >>> node = DocNode(attrs={"foo":'bar', "no":"ABC"})
         >>> node.get_attrs_as_string()
-        u'foo="bar" no="ABC"'
+        'foo="bar" no="ABC"'
         """
         attr_list = []
-        for key, value in self.attrs.iteritems():
-            if not isinstance(value, unicode):
+        for key, value in self.attrs.items():
+            if not isinstance(value, TEXT_TYPE):
                 value = unicode(value)
-            value_string = repr(value).lstrip("u").replace(u"'", u'"')
-            attr_list.append(u"%s=%s" % (key, value_string))
-        return u" ".join(attr_list)
+            value_string = repr(value).lstrip("").replace("'", '"')
+            attr_list.append("%s=%s" % (key, value_string))
+        return " ".join(attr_list)
 
     def __str__(self):
         return str(self.__repr__())
 
     def __repr__(self):
-        return u"<DocNode %s: %r>" % (self.kind, self.content)
-#        return u"<DocNode %s (parent: %r): %r>" % (self.kind, self.parent, self.content)
+        return "<DocNode %s: %r>" % (self.kind, self.content)
+#        return "<DocNode %s (parent: %r): %r>" % (self.kind, self.parent, self.content)
 
     def debug(self):
-        print "_" * 80
-        print "\tDocNode - debug:"
-        print "str(): %s" % self
-        print "attributes:"
+        print("_" * 80)
+        print("\tDocNode - debug:")
+        print("str(): %s" % self)
+        print("attributes:")
         for i in dir(self):
             if i.startswith("_") or i == "debug":
                 continue
-            print "%20s: %r" % (i, getattr(self, i, "---"))
+            print("%20s: %r" % (i, getattr(self, i, "---")))
 
 
 class DebugList(list):
@@ -84,7 +85,7 @@ class DebugList(list):
         super(DebugList, self).__init__()
 
     def append(self, item):
-#        for stack_frame in inspect.stack(): print stack_frame
+#        for stack_frame in inspect.stack(): print(stack_frame)
 
         line, method = inspect.stack()[1][2:4]
         msg = "%-8s   append: %-35r (%-15s line:%s)" % (
@@ -97,4 +98,4 @@ class DebugList(list):
 
 if __name__ == '__main__':
     import doctest
-    print doctest.testmod()
+    print(doctest.testmod())

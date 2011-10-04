@@ -18,15 +18,14 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, print_function, unicode_literals
 
-__version__ = (0, 8, 5)
+__version__ = (0, 9, 0, "pre")
 __api__ = (1, 0) # Creole 1.0 spec - http://wikicreole.org/
 
 
 import os
 import sys
-
 
 from creole.creole2html.emitter import HtmlEmitter
 from creole.creole2html.parser import BlockRules, CreoleParser
@@ -34,6 +33,7 @@ from creole.html2creole.emitter import CreoleEmitter
 from creole.html2rest.emitter import ReStructuredTextEmitter
 from creole.html2textile.emitter import TextileEmitter
 from creole.html_parser.parser import HtmlParser
+from creole.py3compat import TEXT_TYPE
 
 
 # TODO: Add git date to __version__
@@ -47,10 +47,10 @@ def creole2html(markup_string, debug=False, parser_kwargs={}, emitter_kwargs={})
     """
     convert creole markup into html code
 
-    >>> creole2html(u'This is **creole //markup//**!')
-    u'<p>This is <strong>creole <i>markup</i></strong>!</p>'
+    >>> creole2html('This is **creole //markup//**!')
+    '<p>This is <strong>creole <i>markup</i></strong>!</p>'
     """
-    assert isinstance(markup_string, unicode), "given markup_string must be unicode!"
+    assert isinstance(markup_string, TEXT_TYPE), "given markup_string must be unicode!"
 
     # Create document tree from creole markup
     document = CreoleParser(markup_string, **parser_kwargs).parse()
@@ -58,13 +58,13 @@ def creole2html(markup_string, debug=False, parser_kwargs={}, emitter_kwargs={})
         document.debug()
 
     # Build html code from document tree
-    #print "creole2html HtmlEmitter kwargs:", emitter_kwargs
+    #print("creole2html HtmlEmitter kwargs:", emitter_kwargs)
     return HtmlEmitter(document, **emitter_kwargs).emit()
 
 
 def parse_html(html_string, debug=False, **parser_kwargs):
     """ create the document tree from html code """
-    assert isinstance(html_string, unicode), "given html_string must be unicode!"
+    assert isinstance(html_string, TEXT_TYPE), "given html_string must be unicode!"
 
     h2c = HtmlParser(debug, **parser_kwargs)
     document_tree = h2c.feed(html_string)
@@ -77,8 +77,8 @@ def html2creole(html_string, debug=False, parser_kwargs={}, emitter_kwargs={}):
     """
     convert html code into creole markup
 
-    >>> html2creole(u'<p>This is <strong>creole <i>markup</i></strong>!</p>')
-    u'This is **creole //markup//**!'
+    >>> html2creole('<p>This is <strong>creole <i>markup</i></strong>!</p>')
+    'This is **creole //markup//**!'
     """
     document_tree = parse_html(html_string, debug, **parser_kwargs)
 
@@ -91,8 +91,8 @@ def html2textile(html_string, debug=False, parser_kwargs={}, emitter_kwargs={}):
     """
     convert html code into textile markup
     
-    >>> html2textile(u'<p>This is <strong>textile <i>markup</i></strong>!</p>')
-    u'This is *textile __markup__*!'
+    >>> html2textile('<p>This is <strong>textile <i>markup</i></strong>!</p>')
+    'This is *textile __markup__*!'
     """
     document_tree = parse_html(html_string, debug, **parser_kwargs)
 
@@ -105,8 +105,8 @@ def html2rest(html_string, debug=False, parser_kwargs={}, emitter_kwargs={}):
     """
     convert html code into textile markup
     
-    >>> html2rest(u'<p>This is <strong>ReStructuredText</strong> <em>markup</em>!</p>')
-    u'This is **ReStructuredText** *markup*!'
+    >>> html2rest('<p>This is <strong>ReStructuredText</strong> <em>markup</em>!</p>')
+    'This is **ReStructuredText** *markup*!'
     """
     document_tree = parse_html(html_string, debug, **parser_kwargs)
 
@@ -117,6 +117,8 @@ def html2rest(html_string, debug=False, parser_kwargs={}, emitter_kwargs={}):
 
 
 if __name__ == '__main__':
-    print "runing local doctest..."
+    print("runing local doctest...")
     import doctest
-    print doctest.testmod()#verbose=True)
+    print(
+        doctest.testmod()#verbose=True
+    )

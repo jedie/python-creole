@@ -11,7 +11,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 import unittest
 
@@ -20,7 +20,7 @@ from tests.utils.base_unittest import BaseCreoleTest
 
 class ReSt2HtmlTests(BaseCreoleTest):
     def test_clean_link_table(self):
-        self.assert_rest2html(u"""
+        self.assert_rest2html("""
             :homepage:
               http://code.google.com/p/python-creole/
             
@@ -36,7 +36,7 @@ class ReSt2HtmlTests(BaseCreoleTest):
         """)
 
     def test_clean_table(self):
-        self.assert_rest2html(u"""
+        self.assert_rest2html("""
             +------------+------------+
             | Headline 1 | Headline 2 |
             +============+============+
@@ -54,7 +54,7 @@ class ReSt2HtmlTests(BaseCreoleTest):
         """)
 
     def test_clean_list(self):
-        self.assert_rest2html(u"""
+        self.assert_rest2html("""
             * item 1
             
                 * item 1.1
@@ -87,7 +87,7 @@ class ReSt2HtmlTests(BaseCreoleTest):
         """)
 
     def test_clean_headline(self):
-        self.assert_rest2html(u"""
+        self.assert_rest2html("""
             ======
             head 1
             ======

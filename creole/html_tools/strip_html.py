@@ -11,7 +11,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 import re
 
@@ -38,42 +38,42 @@ def strip_html(html_code):
     """
     Delete whitespace from html code. Doesn't recordnize preformatted blocks!
 
-    >>> strip_html(u' <p>  one  \\n two  </p>')
-    u'<p>one two</p>'
+    >>> strip_html(' <p>  one  \\n two  </p>')
+    '<p>one two</p>'
 
-    >>> strip_html(u'<p><strong><i>bold italics</i></strong></p>')
-    u'<p><strong><i>bold italics</i></strong></p>'
+    >>> strip_html('<p><strong><i>bold italics</i></strong></p>')
+    '<p><strong><i>bold italics</i></strong></p>'
 
-    >>> strip_html(u'<li>  Force  <br /> \\n linebreak </li>')
-    u'<li>Force<br />linebreak</li>'
+    >>> strip_html('<li>  Force  <br /> \\n linebreak </li>')
+    '<li>Force<br />linebreak</li>'
 
-    >>> strip_html(u'one  <i>two \\n <strong>   \\n  three  \\n  </strong></i>')
-    u'one <i>two <strong>three</strong> </i>'
+    >>> strip_html('one  <i>two \\n <strong>   \\n  three  \\n  </strong></i>')
+    'one <i>two <strong>three</strong> </i>'
 
-    >>> strip_html(u'<p>a <unknown tag /> foobar  </p>')
-    u'<p>a <unknown tag /> foobar</p>'
+    >>> strip_html('<p>a <unknown tag /> foobar  </p>')
+    '<p>a <unknown tag /> foobar</p>'
 
-    >>> strip_html(u'<p>a <pre> preformated area </pre> foo </p>')
-    u'<p>a<pre>preformated area</pre>foo</p>'
+    >>> strip_html('<p>a <pre> preformated area </pre> foo </p>')
+    '<p>a<pre>preformated area</pre>foo</p>'
 
-    >>> strip_html(u'<p>a <img src="/image.jpg" /> image.</p>')
-    u'<p>a <img src="/image.jpg" /> image.</p>'
+    >>> strip_html('<p>a <img src="/image.jpg" /> image.</p>')
+    '<p>a <img src="/image.jpg" /> image.</p>'
 
 
     """
 
     def strip_tag(match):
         block = match.group(0)
-        end_tag = match.group("end") in ("/", u"/")
-        startend_tag = match.group("startend") in ("/", u"/")
+        end_tag = match.group("end") in ("/", "/")
+        startend_tag = match.group("startend") in ("/", "/")
         tag = match.group("tag")
 
-#        print "_"*40
-#        print match.groupdict()
-#        print "block.......: %r" % block
-#        print "end_tag.....:", end_tag
-#        print "startend_tag:", startend_tag
-#        print "tag.........: %r" % tag
+#        print("_"*40)
+#        print(match.groupdict())
+#        print("block.......: %r" % block)
+#        print("end_tag.....:", end_tag)
+#        print("startend_tag:", startend_tag)
+#        print("tag.........: %r" % tag)
 
         if tag in BLOCK_TAGS:
             return block.strip()
@@ -110,4 +110,4 @@ def strip_html(html_code):
 
 if __name__ == '__main__':
     import doctest
-    print doctest.testmod()
+    print(doctest.testmod())

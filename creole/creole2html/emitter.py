@@ -8,15 +8,16 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import
+
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 from xml.sax.saxutils import escape
 import sys
 import traceback
 
-
 from creole.creole2html.parser import CreoleParser
 from creole.creole2html.str2dict import str2dict
+from creole.py3compat import TEXT_TYPE
 
 
 class HtmlEmitter:
@@ -52,25 +53,25 @@ class HtmlEmitter:
         return self.html_escape(node.content)
 
     def separator_emit(self, node):
-        return u'<hr />\n\n'
+        return '<hr />\n\n'
 
     def paragraph_emit(self, node):
-        return u'<p>%s</p>\n' % self.emit_children(node)
+        return '<p>%s</p>\n' % self.emit_children(node)
 
     def _list_emit(self, node, list_type):
         if node.parent.kind in ("document",):
             # The first list item
-            formatter = u''
+            formatter = ''
         else:
-            formatter = u'\n'
+            formatter = '\n'
 
         if list_type == "li":
             formatter += (
-                u'%(i)s<%(t)s>%(c)s</%(t)s>'
+                '%(i)s<%(t)s>%(c)s</%(t)s>'
             )
         else:
             formatter += (
-                u'%(i)s<%(t)s>%(c)s\n'
+                '%(i)s<%(t)s>%(c)s\n'
                 '%(i)s</%(t)s>'
             )
         return formatter % {
@@ -80,30 +81,30 @@ class HtmlEmitter:
         }
 
     def bullet_list_emit(self, node):
-        return self._list_emit(node, list_type=u"ul")
+        return self._list_emit(node, list_type="ul")
 
     def number_list_emit(self, node):
-        return self._list_emit(node, list_type=u"ol")
+        return self._list_emit(node, list_type="ol")
 
     def list_item_emit(self, node):
-        return self._list_emit(node, list_type=u"li")
+        return self._list_emit(node, list_type="li")
 
     def table_emit(self, node):
-        return u'<table>\n%s</table>\n' % self.emit_children(node)
+        return '<table>\n%s</table>\n' % self.emit_children(node)
 
     def table_row_emit(self, node):
-        return u'<tr>\n%s</tr>\n' % self.emit_children(node)
+        return '<tr>\n%s</tr>\n' % self.emit_children(node)
 
     def table_cell_emit(self, node):
-        return u'\t<td>%s</td>\n' % self.emit_children(node)
+        return '\t<td>%s</td>\n' % self.emit_children(node)
 
     def table_head_emit(self, node):
-        return u'\t<th>%s</th>\n' % self.emit_children(node)
+        return '\t<th>%s</th>\n' % self.emit_children(node)
 
     #--------------------------------------------------------------------------
 
     def _typeface(self, node, tag):
-        return u'<%(tag)s>%(data)s</%(tag)s>' % {
+        return '<%(tag)s>%(data)s</%(tag)s>' % {
             "tag": tag,
             "data": self.emit_children(node),
         }
@@ -120,7 +121,7 @@ class HtmlEmitter:
     def subscript_emit(self, node):
         return self._typeface(node, tag="sub")
     def underline_emit(self, node):
-        return self._typeface(node, tag="u")
+        return self._typeface(node, tag="")
     def small_emit(self, node):
         return self._typeface(node, tag="small")
     def delete_emit(self, node):
@@ -129,11 +130,11 @@ class HtmlEmitter:
     #--------------------------------------------------------------------------
 
     def header_emit(self, node):
-        return u'<h%d>%s</h%d>\n' % (
+        return '<h%d>%s</h%d>\n' % (
             node.level, self.html_escape(node.content), node.level)
 
     def preformatted_emit(self, node):
-        return u'<pre>%s</pre>' % self.html_escape(node.content)
+        return '<pre>%s</pre>' % self.html_escape(node.content)
 
     def link_emit(self, node):
         target = node.content
@@ -142,18 +143,18 @@ class HtmlEmitter:
         else:
             inside = self.html_escape(target)
 
-        return u'<a href="%s">%s</a>' % (
+        return '<a href="%s">%s</a>' % (
             self.attr_escape(target), inside)
 
     def image_emit(self, node):
         target = node.content
         text = self.attr_escape(self.get_text(node))
 
-        return u'<img src="%s" title="%s" alt="%s" />' % (
+        return '<img src="%s" title="%s" alt="%s" />' % (
             self.attr_escape(target), text, text)
 
     def macro_emit(self, node):
-        #print node.debug()
+        #print(node.debug())
         macro_name = node.macro_name
         text = node.content
         macro = None
@@ -161,10 +162,10 @@ class HtmlEmitter:
         args = node.macro_args
         try:
             macro_kwargs = str2dict(args)
-        except ValueError, e:
+        except ValueError as e:
             exc_info = sys.exc_info()
             return self.error(
-                u"Wrong macro arguments: %r for macro '%s' (maybe wrong macro tag syntax?)" % (
+                "Wrong macro arguments: %r for macro '%s' (maybe wrong macro tag syntax?)" % (
                     args, macro_name
                 ),
                 exc_info
@@ -180,24 +181,24 @@ class HtmlEmitter:
         if isinstance(self.macros, dict):
             try:
                 macro = self.macros[macro_name]
-            except KeyError, e:
+            except KeyError as e:
                 exc_info = sys.exc_info()
         else:
             try:
                 macro = getattr(self.macros, macro_name)
-            except AttributeError, e:
+            except AttributeError as e:
                 exc_info = sys.exc_info()
 
         if macro == None:
             return self.error(
-                u"Macro '%s' doesn't exist" % macro_name,
+                "Macro '%s' doesn't exist" % macro_name,
                 exc_info
             )
 
         try:
             result = macro(**macro_kwargs)
-        except TypeError, err:
-            msg = u"Macro '%s' error: %s" % (macro_name, err)
+        except TypeError as err:
+            msg = "Macro '%s' error: %s" % (macro_name, err)
             exc_info = sys.exc_info()
             if self.verbose > 1:
                 # Inject more information about the macro in traceback
@@ -206,21 +207,21 @@ class HtmlEmitter:
                 filename = inspect.getfile(macro)
                 try:
                     sourceline = inspect.getsourcelines(macro)[0][0].strip()
-                except IOError, err:
+                except IOError as err:
                     evalue = etype("%s (error getting sourceline: %s from %s)" % (evalue, err, filename))
                 else:
                     evalue = etype("%s (sourceline: %r from %s)" % (evalue, sourceline, filename))
                 exc_info = etype, evalue, etb
 
             return self.error(msg, exc_info)
-        except Exception, err:
+        except Exception as err:
             return self.error(
-                u"Macro '%s' error: %s" % (macro_name, err),
+                "Macro '%s' error: %s" % (macro_name, err),
                 exc_info=sys.exc_info()
             )
 
-        if not isinstance(result, unicode):
-            msg = u"Macro '%s' doesn't return a unicode string!" % macro_name
+        if not isinstance(result, TEXT_TYPE):
+            msg = "Macro '%s' doesn't return a unicode string!" % macro_name
             if self.verbose > 1:
                 msg += " - returns: %r, type %r" % (result, type(result))
             return self.error(msg)
@@ -234,22 +235,22 @@ class HtmlEmitter:
 
     def break_emit(self, node):
         if node.parent.kind == "list_item":
-            return u"<br />\n" + "\t" * node.parent.level
+            return "<br />\n" + "\t" * node.parent.level
         elif node.parent.kind in ("table_head", "table_cell"):
-            return u"<br />\n\t\t"
+            return "<br />\n\t\t"
         else:
-            return u"<br />\n"
+            return "<br />\n"
 
     def line_emit(self, node):
-        return u"\n"
+        return "\n"
 
     def pre_block_emit(self, node):
         """ pre block, with newline at the end """
-        return u"<pre>%s</pre>\n" % self.html_escape(node.content)
+        return "<pre>%s</pre>\n" % self.html_escape(node.content)
 
     def pre_inline_emit(self, node):
         """ pre without newline at the end """
-        return u"<tt>%s</tt>" % self.html_escape(node.content)
+        return "<tt>%s</tt>" % self.html_escape(node.content)
 
     def default_emit(self, node):
         """Fallback function for emitting unknown nodes."""
@@ -257,11 +258,11 @@ class HtmlEmitter:
 
     def emit_children(self, node):
         """Emit all the children of a node."""
-        return u''.join([self.emit_node(child) for child in node.children])
+        return ''.join([self.emit_node(child) for child in node.children])
 
     def emit_node(self, node):
         """Emit a single node."""
-        #print "%s_emit: %r" % (node.kind, node.content)
+        #print("%s_emit: %r" % (node.kind, node.content))
         emit = getattr(self, '%s_emit' % node.kind, self.default_emit)
         return emit(node)
 
@@ -279,23 +280,23 @@ class HtmlEmitter:
             self.stderr.write(exception)
 
         if self.verbose > 0:
-            return u"[Error: %s]\n" % text
+            return "[Error: %s]\n" % text
         else:
             # No error output
-            return u""
+            return ""
 
 
 if __name__ == "__main__":
-    txt = u"""this is **bold** ok?
+    txt = """this is **bold** ok?
             for example ** this sentence"""
 
-    print "-" * 80
+    print("-" * 80)
 #    from creole_alt.creole import CreoleParser
     p = CreoleParser(txt)
     document = p.parse()
     p.debug()
 
     html = HtmlEmitter(document).emit()
-    print html
-    print "-" * 79
-    print html.replace(" ", ".").replace("\n", "\\n\n")
+    print(html)
+    print("-" * 79)
+    print(html.replace(" ", ".").replace("\n", "\\n\n"))

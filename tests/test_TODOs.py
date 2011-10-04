@@ -12,12 +12,12 @@ from creole.html_tools.strip_html import strip_html
 
 class StripHtml(unittest.TestCase):
     def test_not_closed_image_tag(self):
-        output = strip_html(u'<p>a <img src="/image.jpg"> image.</p>')
-        self.assertEqual(output, u'<p>a <img src="/image.jpg"> image.</p>')
+        output = strip_html('<p>a <img src="/image.jpg"> image.</p>')
+        self.assertEqual(output, '<p>a <img src="/image.jpg"> image.</p>')
 
     def test_remove_linebreak(self):
-        output = strip_html(u'<strong>foo</strong>\n<ul><li>one</li></ul>')
-        self.assertEqual(output, u'<strong>foo</strong><ul><li>one</li></ul>')
+        output = strip_html('<strong>foo</strong>\n<ul><li>one</li></ul>')
+        self.assertEqual(output, '<strong>foo</strong><ul><li>one</li></ul>')
 
 
 
@@ -44,11 +44,11 @@ class CrossCompareCreoleTests(BaseCreoleTest):
         """ TODO: bold/italics cross paragraphs in creole2html
         see: http://code.google.com/p/python-creole/issues/detail?id=13 
         """
-        self.assert_creole2html(u"""
+        self.assert_creole2html("""
             But, should //not be...
 
             ...able// to cross paragraphs.
-        """, u"""
+        """, """
             <p>But, should <em>not be...</em></p>
             <p>...able<em> to cross paragraphs.</em></p>
         """)

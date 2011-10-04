@@ -16,7 +16,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 #import warnings
 import sys
@@ -34,9 +34,13 @@ except ImportError:
         " Please install: http://pypi.python.org/pypi/docutils"
     ) % evalue
     evalue = etype(msg)
-#    evalue.docutils = False #
-    raise DocutilsImportError, evalue, etb
-#    raise etype, evalue, etb
+
+    # Doesn't work with Python 3:
+    # http://www.python-forum.de/viewtopic.php?f=1&t=27507
+    # raise DocutilsImportError, evalue, etb
+
+    raise DocutilsImportError(msg)
+
 
 
 DEBUG = False
@@ -75,7 +79,7 @@ class CleanHTMLTranslator(html4css1.HTMLTranslator, object):
 
         if tagname in IGNORE_TAGS:
             if DEBUG:
-                print "ignore tag %r" % tagname
+                print("ignore tag %r" % tagname)
             return ""
 
         parts = [tagname]
@@ -98,9 +102,9 @@ class CleanHTMLTranslator(html4css1.HTMLTranslator, object):
                                           self.attval(unicode(value))))
 
         if DEBUG:
-            print "Tag %r - ids: %r - attributes: %r - parts: %r" % (
+            print("Tag %r - ids: %r - attributes: %r - parts: %r" % (
                 tagname, getattr(node, "ids", "-"), attributes, parts
-            )
+            ))
 
         if empty:
             infix = ' /'
@@ -108,7 +112,7 @@ class CleanHTMLTranslator(html4css1.HTMLTranslator, object):
             infix = ''
         html = '<%s%s>%s' % (' '.join(parts), infix, suffix)
         if DEBUG:
-            print "startag html: %r" % html
+            print("startag html: %r" % html)
         return html
 
     def visit_section(self, node):
@@ -166,11 +170,11 @@ def rest2html(content):
     """
     Convert reStructuredText markup to clean html code: No extra div, class or ids.
     
-    >>> rest2html(u"- bullet list")
-    u'<ul>\\n<li>bullet list</li>\\n</ul>\\n'
+    >>> rest2html("- bullet list")
+    '<ul>\\n<li>bullet list</li>\\n</ul>\\n'
     
-    >>> rest2html(u"A ReSt link to `PyLucid CMS <http://www.pylucid.org>`_ :)")
-    u'<p>A ReSt link to <a href="http://www.pylucid.org">PyLucid CMS</a> :)</p>\\n'
+    >>> rest2html("A ReSt link to `PyLucid CMS <http://www.pylucid.org>`_ :)")
+    '<p>A ReSt link to <a href="http://www.pylucid.org">PyLucid CMS</a> :)</p>\\n'
     """
     parts = publish_parts(
         source=content,
@@ -187,9 +191,9 @@ def rest2html(content):
 
 if __name__ == '__main__':
     import doctest
-    print doctest.testmod()
+    print(doctest.testmod())
 
-#    print rest2html(u"""
+#    print(rest2html(""")
 #+------------+------------+
 #| Headline 1 | Headline 2 |
 #+============+============+
@@ -197,7 +201,7 @@ if __name__ == '__main__':
 #+------------+------------+
 #    """)
 
-#    print rest2html(u"""
+#    print(rest2html(""")
 #:homepage:
 #  http://code.google.com/p/python-creole/
 #
@@ -205,7 +209,7 @@ if __name__ == '__main__':
 #  http://github.com/jedie/python-creole
 #    """)
 
-    print rest2html(u"""
+    print(rest2html("""
 ===============
 Section Title 1
 ===============
@@ -225,4 +229,4 @@ Section Title 5
 
 Section Title 6
 '''''''''''''''
-    """)
+    """))

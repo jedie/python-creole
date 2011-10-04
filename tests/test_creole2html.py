@@ -16,11 +16,14 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 import sys
 import unittest
-import StringIO
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO # python 3
 
 from tests.utils.base_unittest import BaseCreoleTest
 from tests import test_macros
@@ -41,9 +44,9 @@ class TestCreole2html(unittest.TestCase):
         """
         Test if the traceback information send to a stderr handler.
         """
-        my_stderr = StringIO.StringIO()
+        my_stderr = StringIO()
         creole2html(
-            markup_string=u"<<notexist1>><<notexist2>><</notexist2>>",
+            markup_string="<<notexist1>><<notexist2>><</notexist2>>",
             emitter_kwargs={
                 "verbose":2,
                 "stderr":my_stderr,
@@ -67,53 +70,53 @@ class TestCreole2html(unittest.TestCase):
         Test the default "html" macro, found in ./creole/default_macros.py
         """
         html = creole2html(
-            markup_string=u"<<html>><p>foo</p><</html>><bar?>",
+            markup_string="<<html>><p>foo</p><</html>><bar?>",
             emitter_kwargs={
                 "verbose":1,
                 "macros":example_macros,
                 "stderr":sys.stderr,
             }
         )
-        self.assertEqual(html, u'<p>foo</p>\n<p>&lt;bar?&gt;</p>')
+        self.assertEqual(html, '<p>foo</p>\n<p>&lt;bar?&gt;</p>')
 
     def test_example_macros2(self):
         html = creole2html(
-            markup_string=u"<<html>>{{{&lt;nocode&gt;}}}<</html>>",
+            markup_string="<<html>>{{{&lt;nocode&gt;}}}<</html>>",
             emitter_kwargs={
                 "verbose":1,
                 "macros":example_macros,
                 "stderr":sys.stderr,
             }
         )
-        self.assertEqual(html, u'{{{&lt;nocode&gt;}}}')
+        self.assertEqual(html, '{{{&lt;nocode&gt;}}}')
 
     def test_example_macros3(self):
         html = creole2html(
-            markup_string=u"<<html>>1<</html>><<html>>2<</html>>",
+            markup_string="<<html>>1<</html>><<html>>2<</html>>",
             emitter_kwargs={
                 "verbose":1,
                 "macros":example_macros,
                 "stderr":sys.stderr,
             }
         )
-        self.assertEqual(html, u'1\n2')
+        self.assertEqual(html, '1\n2')
 
     def test_macro_dict(self):
         """
         simple test for the "macro API"
         """
         def test(text, foo, bar):
-            return u"|".join([foo, bar, text])
+            return "|".join([foo, bar, text])
 
         html = creole2html(
-            markup_string=u"<<test bar='b' foo='a'>>c<</test>>",
+            markup_string="<<test bar='b' foo='a'>>c<</test>>",
             emitter_kwargs={
                 "verbose":1,
                 "macros":{"test":test},
                 "stderr":sys.stderr,
             }
         )
-        self.assertEqual(html, u'a|b|c')
+        self.assertEqual(html, 'a|b|c')
 
     def test_macro_callable(self):
         """
@@ -124,7 +127,7 @@ class TestCreole2html(unittest.TestCase):
 
         self.failUnlessRaises(DeprecationWarning,
             creole2html,
-            markup_string=u"<<test no=1 arg2='foo'>>bar<</test>>",
+            markup_string="<<test no=1 arg2='foo'>>bar<</test>>",
             emitter_kwargs={
                 "verbose":1,
                 "macros":testmacro,
@@ -138,10 +141,10 @@ class TestCreole2html(unittest.TestCase):
         """
         def test(text, foo):
             pass
-        my_stderr = StringIO.StringIO()
+        my_stderr = StringIO()
 
         html = creole2html(
-            markup_string=u"<<test bar='foo'>>c<</test>>",
+            markup_string="<<test bar='foo'>>c<</test>>",
             emitter_kwargs={
                 "verbose":2,
                 "macros":{"test":test},
@@ -169,10 +172,10 @@ class TestCreole2html(unittest.TestCase):
         """
         def test(text, foo):
             pass
-        my_stderr = StringIO.StringIO()
+        my_stderr = StringIO()
 
         html = creole2html(
-            markup_string=u"<<test bar='foo'>>c<</test>>",
+            markup_string="<<test bar='foo'>>c<</test>>",
             emitter_kwargs={
                 "verbose":1,
                 "macros":{"test":test},
@@ -193,19 +196,19 @@ class TestCreole2html(unittest.TestCase):
 class TestCreole2htmlMarkup(BaseCreoleTest):
 
     def test_creole_basic(self):
-        out_string = creole2html(u"a text line.")
+        out_string = creole2html("a text line.")
         self.assertEqual(out_string, "<p>a text line.</p>")
 
     def test_lineendings(self):
         """ Test all existing lineending version """
-        out_string = creole2html(u"first\nsecond")
-        self.assertEqual(out_string, u"<p>first<br />\nsecond</p>")
+        out_string = creole2html("first\nsecond")
+        self.assertEqual(out_string, "<p>first<br />\nsecond</p>")
 
-        out_string = creole2html(u"first\rsecond")
-        self.assertEqual(out_string, u"<p>first<br />\nsecond</p>")
+        out_string = creole2html("first\rsecond")
+        self.assertEqual(out_string, "<p>first<br />\nsecond</p>")
 
-        out_string = creole2html(u"first\r\nsecond")
-        self.assertEqual(out_string, u"<p>first<br />\nsecond</p>")
+        out_string = creole2html("first\r\nsecond")
+        self.assertEqual(out_string, "<p>first<br />\nsecond</p>")
 
     #--------------------------------------------------------------------------
 
@@ -313,7 +316,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             the end
         """, r"""
             <p>There exist three different macro types:<br />
-            A [test macro1 - kwargs: args='foo1',text=u'bar1'] in a line...<br />
+            A [test macro1 - kwargs: args='foo1',text='bar1'] in a line...<br />
             ...a single [test macro1 - kwargs: foo='bar',text=None] tag,<br />
             or: [test macro1 - kwargs: a=1,b=2,text=None] closed...</p>
             
@@ -382,7 +385,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
                 <<summary>Some funky page summary.<</summary>>
             """, r"""
                 <p>wrong macro line:<br />
-                [Error: Wrong macro arguments: u'>Some funky page summary.<</summary' for macro 'summary' (maybe wrong macro tag syntax?)]
+                [Error: Wrong macro arguments: '>Some funky page summary.<</summary' for macro 'summary' (maybe wrong macro tag syntax?)]
                 </p>
             """,
         )
@@ -456,7 +459,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
 
     def test_wiki_style_line_breaks1(self):
         html = creole2html(
-            markup_string=self._prepare_text(u"""
+            markup_string=self._prepare_text("""
                 wiki style
                 linebreaks
                 
@@ -464,7 +467,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             """),
             parser_kwargs={"blog_line_breaks":False},
         )
-        self.assertEqual(html, self._prepare_text(u"""
+        self.assertEqual(html, self._prepare_text("""
             <p>wiki style linebreaks</p>
             
             <p>...and not blog styled.</p>
@@ -472,7 +475,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
 
     def test_wiki_style_line_breaks2(self):
         html = creole2html(
-            markup_string=self._prepare_text(u"""
+            markup_string=self._prepare_text("""
                 **one**
                 //two//
                 
@@ -481,7 +484,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             """),
             parser_kwargs={"blog_line_breaks":False},
         )
-        self.assertEqual(html, self._prepare_text(u"""
+        self.assertEqual(html, self._prepare_text("""
             <p><strong>one</strong> <i>two</i></p>
             
             <ul>
@@ -492,7 +495,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
 
     def test_wiki_style_line_breaks3(self):
         html = creole2html(
-            markup_string=self._prepare_text(u"""
+            markup_string=self._prepare_text("""
                 with blog line breaks, every line break would be convertet into<br />
                 with wiki style not.
                 
@@ -508,7 +511,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             """),
             parser_kwargs={"blog_line_breaks":False},
         )
-        self.assertEqual(html, self._prepare_text(u"""
+        self.assertEqual(html, self._prepare_text("""
             <p>with blog line breaks, every line break would be convertet into&lt;br /&gt; with wiki style not.</p>
             
             <p>This is the first line,<br />
@@ -526,8 +529,8 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
         """
         https://code.google.com/p/python-creole/issues/detail?id=15
         """
-        html = creole2html(markup_string=u"== Headline1 == \n== Headline2== ")
-        self.assertEqual(html, self._prepare_text(u"""
+        html = creole2html(markup_string="== Headline1 == \n== Headline2== ")
+        self.assertEqual(html, self._prepare_text("""
             <h2>Headline1</h2>
             <h2>Headline2</h2>
         """))

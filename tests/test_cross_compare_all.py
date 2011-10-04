@@ -18,7 +18,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 import unittest
 
@@ -154,7 +154,7 @@ class CrossCompareTests(BaseCreoleTest):
         )
 
     def test_horizontal_rule(self):
-        all_markups = u"""
+        all_markups = """
             Text before horizontal rule.
             
             ----
@@ -164,7 +164,7 @@ class CrossCompareTests(BaseCreoleTest):
         self.cross_compare(
             creole_string=all_markups,
             #textile_string=all_markups, # FIXME: textile and <hr> ?
-            html_string=u"""
+            html_string="""
                 <p>Text before horizontal rule.</p>
                 
                 <hr />
@@ -174,7 +174,7 @@ class CrossCompareTests(BaseCreoleTest):
         )
         self.cross_compare(
             rest_string=all_markups,
-            html_string=u"""
+            html_string="""
                 <p>Text before horizontal rule.</p>
                 <hr />
                 <p>Text after the line.</p>
@@ -404,7 +404,7 @@ class CrossCompareTests(BaseCreoleTest):
 
     def test_pre_contains_braces(self):
         self.cross_compare(
-            creole_string=u"""
+            creole_string="""
                 {{{
                 # Closing braces in nowiki:
                 if (x != NULL) {
@@ -414,7 +414,7 @@ class CrossCompareTests(BaseCreoleTest):
                   }}}
                 }}}
                 """,
-            textile_string=u"""
+            textile_string="""
                 <pre>
                 # Closing braces in nowiki:
                 if (x != NULL) {
@@ -424,7 +424,7 @@ class CrossCompareTests(BaseCreoleTest):
                   }}}
                 </pre>
                 """,
-            rest_string=u"""
+            rest_string="""
                 ::
                 
                     # Closing braces in nowiki:
@@ -434,7 +434,7 @@ class CrossCompareTests(BaseCreoleTest):
                           x[i]--;
                       }}}
                 """,
-            html_string=u"""
+            html_string="""
                 <pre>
                 # Closing braces in nowiki:
                 if (x != NULL) {
@@ -474,15 +474,15 @@ class CrossCompareTests(BaseCreoleTest):
 
     def test_simple_table(self):
         self.cross_compare(
-            creole_string=u"""
+            creole_string="""
                 |= Headline 1 |= Headline 2 |
                 | cell one    | cell two    |
                 """,
-            textile_string=u"""
+            textile_string="""
                 |_. Headline 1|_. Headline 2|
                 |cell one|cell two|
                 """,
-            html_string=u"""
+            html_string="""
                 <table>
                 <tr>
                     <th>Headline 1</th>
@@ -498,14 +498,14 @@ class CrossCompareTests(BaseCreoleTest):
             strip_lines=True,
         )
         self.cross_compare(
-            rest_string=u"""
+            rest_string="""
                 +------------+------------+
                 | Headline 1 | Headline 2 |
                 +============+============+
                 | cell one   | cell two   |
                 +------------+------------+
                 """,
-            html_string=u"""
+            html_string="""
                 <table>
                 <tr><th>Headline 1</th>
                 <th>Headline 2</th>

@@ -10,11 +10,12 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, print_function, unicode_literals
 import posixpath
 
 from creole.html_parser.config import BLOCK_TAGS
 from creole.html_tools.deentity import Deentity
+from creole.py3compat import TEXT_TYPE
 from creole.shared.markup_table import MarkupTable
 from creole.shared.unknown_tags import transparent_unknown_nodes
 
@@ -39,7 +40,7 @@ class BaseEmitter(object):
     #--------------------------------------------------------------------------
 
     def blockdata_pass_emit(self, node):
-        return u"%s\n\n" % node.content
+        return "%s\n\n" % node.content
         return node.content
 
     #--------------------------------------------------------------------------
@@ -56,11 +57,11 @@ class BaseEmitter(object):
 
         try:
             return self.deentity.replace_named(entity)
-        except KeyError, err:
+        except KeyError as err:
             if self.debugging:
-                print "unknown html entity found: %r" % entity
+                print("unknown html entity found: %r" % entity)
             return "&%s" % entity # FIXME
-        except UnicodeDecodeError, err:
+        except UnicodeDecodeError as err:
             raise UnicodeError(
                 "Error handling entity %r: %s" % (entity, err)
             )
@@ -82,13 +83,13 @@ class BaseEmitter(object):
     #--------------------------------------------------------------------------
 
     def p_emit(self, node):
-        return u"%s\n\n" % self.emit_children(node)
+        return "%s\n\n" % self.emit_children(node)
 
     def br_emit(self, node):
         if self._inner_list != "":
-            return u"\\\\"
+            return "\\\\"
         else:
-            return u"\n"
+            return "\n"
 
     #--------------------------------------------------------------------------
 
@@ -99,7 +100,7 @@ class BaseEmitter(object):
 
     def li_emit(self, node):
         content = self.emit_children(node)
-        return u"\n%s %s" % (self._inner_list, content)
+        return "\n%s %s" % (self._inner_list, content)
 
     def _list_emit(self, node, list_type):
         start_newline = False
@@ -112,7 +113,7 @@ class BaseEmitter(object):
         else:
             self._inner_list += list_type
 
-        content = u"%s" % self.emit_children(node)
+        content = "%s" % self.emit_children(node)
 
         self._inner_list = self._inner_list[:-1]
 
@@ -134,19 +135,19 @@ class BaseEmitter(object):
         )
         self.emit_children(node)
         content = self._table.get_table_markup()
-        return u"%s\n" % content
+        return "%s\n" % content
 
     def tr_emit(self, node):
         self._table.add_tr()
         self.emit_children(node)
-        return u""
+        return ""
 
     def _escape_linebreaks(self, text):
         text = text.strip()
         text = text.split("\n")
         lines = [line.strip() for line in text]
         lines = [line for line in lines if line]
-        content = u"\\\\".join(lines)
+        content = "\\\\".join(lines)
         content = content.strip("\\")
         return content
 
@@ -154,13 +155,13 @@ class BaseEmitter(object):
         content = self.emit_children(node)
         content = self._escape_linebreaks(content)
         self._table.add_th(content)
-        return u""
+        return ""
 
     def td_emit(self, node):
         content = self.emit_children(node)
         content = self._escape_linebreaks(content)
         self._table.add_td(content)
-        return u""
+        return ""
 
     #--------------------------------------------------------------------------
 
@@ -168,7 +169,7 @@ class BaseEmitter(object):
         content = self.emit_children(node)
         content = self._escape_linebreaks(content)
         if node.kind in BLOCK_TAGS:
-            content = u"%s\n\n" % content
+            content = "%s\n\n" % content
         return content
 
     def div_emit(self, node):
@@ -185,7 +186,7 @@ class BaseEmitter(object):
 
     def emit_children(self, node):
         """Emit all the children of a node."""
-        return u"".join(self.emit_children_list(node))
+        return "".join(self.emit_children_list(node))
 
     def emit_children_list(self, node):
         """Emit all the children of a node."""
@@ -193,7 +194,7 @@ class BaseEmitter(object):
         result = []
         for child in node.children:
             content = self.emit_node(child)
-            assert isinstance(content, unicode)
+            assert isinstance(content, TEXT_TYPE)
             result.append(content)
         return result
 
@@ -217,11 +218,11 @@ class BaseEmitter(object):
 
         if emit_method:
             content = emit_method(node)
-            if not isinstance(content, unicode):
+            if not isinstance(content, TEXT_TYPE):
                 unicode_error(method_name, emit_method, node, content)
         else:
             content = self._unknown_emit(self, node)
-            if not isinstance(content, unicode):
+            if not isinstance(content, TEXT_TYPE):
                 unicode_error(method_name, self._unknown_emit, node, content)
 
         self.last = node
@@ -238,4 +239,4 @@ class BaseEmitter(object):
     def debug_msg(self, method, txt):
         if not self.debugging:
             return
-        print "%13s: %s" % (method, txt)
+        print("%13s: %s" % (method, txt))

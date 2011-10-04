@@ -1,16 +1,19 @@
 # coding: utf-8
 
 """
-    Patched version of HTMLParser.HTMLParser with patch from:
+    Patched version of HTMLParser with patch from:
         http://bugs.python.org/issue670664
     See also:
         https://github.com/gregmuellegger/django/issues/1
 """
 
-import HTMLParser
+try:
+    import HTMLParser
+except ImportError:
+    from html import parser as HTMLParser # python 3
 
 class HTMLParser2(HTMLParser.HTMLParser):
-    """ Patched version of HTMLParser.HTMLParser """
+    """ Patched version of HTMLParser """
     def __init__(self):
         HTMLParser.HTMLParser.__init__(self)
         self.cdata_tag = None

@@ -11,7 +11,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 import difflib
 import unittest
@@ -51,15 +51,15 @@ class MarkupTest(unittest.TestCase):
     def assertEqual(self, first, second, msg=""):
         if not first == second:
             if VERBOSE >= 2:
-                print "first: %r" % first
-                print "second: %r" % second
+                print("first: %r" % first)
+                print("second: %r" % second)
 
             #~ first = first.rstrip("\\n")
             #~ second = second.rstrip("\\n")
             diff = make_diff(first, second)
 
             if VERBOSE >= 2:
-                print "diff: %r" % diff
+                print("diff: %r" % diff)
 
             first = self._format_output(first)
             second = self._format_output(second)
@@ -75,7 +75,7 @@ class MarkupTest(unittest.TestCase):
         """
         prepare the multiline, indentation text.
         """
-        txt = unicode(txt)
+        #txt = unicode(txt)
         txt = txt.splitlines()
         assert txt[0] == "", "First assertion line must be empty! Is: %s" % repr(txt[0])
         txt = txt[1:] # Skip the first line
@@ -98,8 +98,8 @@ class MarkupTest(unittest.TestCase):
         if txt.startswith("\n"): txt = txt[1:]
         # and strip *one* newline at the end of the text
         if txt.endswith("\n"): txt = txt[:-1]
-        #~ print repr(txt)
-        #~ print "-"*79
+        #~ print(repr(txt))
+        #~ print("-"*79)
 
         return txt
 
@@ -150,6 +150,6 @@ class MarkupTest(unittest.TestCase):
 
 if __name__ == '__main__':
     import doctest
-    print "DocTest:", doctest.testmod()
+    print("DocTest:", doctest.testmod())
 
     unittest.main()
