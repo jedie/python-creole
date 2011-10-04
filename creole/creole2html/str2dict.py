@@ -31,15 +31,8 @@ def str2dict(raw_content, encoding="utf-8"):
 
     >>> str2dict('key1="value1" key2="value2"')
     {'key2': 'value2', 'key1': 'value1'}
-
-    >>> str2dict('A="B" C=1 D=1.1 E=True F=False G=None')
-    {'A': 'B', 'C': 1, 'E': True, 'D': '1.1', 'G': None, 'F': False}
     
-    >>> str2dict('''key1="'1'" key2='"2"' key3="""'3'""" ''')
-    {'key3': 3, 'key2': 2, 'key1': 1}
-
-    >>> str2dict('unicode=True')
-    {'unicode': True}
+    See test_creole2html.TestStr2Dict()
     """
     if not PY3 and isinstance(raw_content, TEXT_TYPE):
         # shlex.split doesn't work with unicode?!?

@@ -20,6 +20,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import sys
 import unittest
+from creole.creole2html.str2dict import str2dict
 try:
     from StringIO import StringIO
 except ImportError:
@@ -545,6 +546,33 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
         """)
 
 
+class TestStr2Dict(unittest.TestCase):
+    def test_basic(self):
+        self.assertEqual(
+            str2dict('key1="value1" key2="value2"'),
+            {'key2': 'value2', 'key1': 'value1'}
+        )
+
+    def test_bool(self):
+        self.assertEqual(
+            str2dict('unicode=True'),
+            {'unicode': True}
+        )
+
+    def test_mixed1(self):
+        self.assertEqual(
+            str2dict('A="B" C=1 D=1.1 E=True F=False G=None'),
+            {'A': 'B', 'C': 1, 'E': True, 'D': '1.1', 'G': None, 'F': False}
+        )
+
+    def test_mixed2(self):
+        self.assertEqual(
+            str2dict('''key1="'1'" key2='"2"' key3="""'3'""" '''),
+            {'key3': 3, 'key2': 2, 'key1': 1}
+        )
+
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(
+        verbosity=2
+    )
