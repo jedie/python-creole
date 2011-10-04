@@ -16,6 +16,7 @@ import warnings
 import inspect
 
 from creole.py3compat import TEXT_TYPE
+from creole.shared.utils import dict2string
 
 
 class DocNode:
@@ -53,13 +54,7 @@ class DocNode:
         >>> node.get_attrs_as_string()
         'foo="bar" no="ABC"'
         """
-        attr_list = []
-        for key, value in self.attrs.items():
-            if not isinstance(value, TEXT_TYPE):
-                value = unicode(value)
-            value_string = repr(value).lstrip("").replace("'", '"')
-            attr_list.append("%s=%s" % (key, value_string))
-        return " ".join(attr_list)
+        return dict2string(self.attrs)
 
     def __str__(self):
         return str(self.__repr__())

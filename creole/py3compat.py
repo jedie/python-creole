@@ -15,9 +15,20 @@ import sys
 # True if we are running on Python 3.
 PY3 = sys.version_info[0] == 3
 
+
 if PY3:
     TEXT_TYPE = str
     BINARY_TYPE = bytes
 else:
     TEXT_TYPE = unicode
     BINARY_TYPE = str
+
+
+def repr2(obj):
+    """
+    Don't mark unicode strings with u in Python 2
+    """
+    if not PY3:
+        return repr(obj).lstrip("u")
+    else:
+        return repr(obj)

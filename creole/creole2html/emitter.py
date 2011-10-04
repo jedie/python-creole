@@ -16,8 +16,8 @@ import sys
 import traceback
 
 from creole.creole2html.parser import CreoleParser
-from creole.creole2html.str2dict import str2dict
-from creole.py3compat import TEXT_TYPE
+from creole.py3compat import TEXT_TYPE, repr2
+from creole.shared.utils import string2dict
 
 
 class HtmlEmitter:
@@ -161,12 +161,12 @@ class HtmlEmitter:
 
         args = node.macro_args
         try:
-            macro_kwargs = str2dict(args)
+            macro_kwargs = string2dict(args)
         except ValueError as e:
             exc_info = sys.exc_info()
             return self.error(
-                "Wrong macro arguments: %r for macro '%s' (maybe wrong macro tag syntax?)" % (
-                    args, macro_name
+                "Wrong macro arguments: %s for macro '%s' (maybe wrong macro tag syntax?)" % (
+                    repr2(args), macro_name
                 ),
                 exc_info
             )
@@ -287,7 +287,7 @@ class HtmlEmitter:
 
 
 if __name__ == "__main__":
-    txt = """This is __underlined__ text."""
+    txt = """A <<test_macro1 args="foo1">>bar1<</test_macro1>> in a line..."""
 
     print("-" * 80)
 #    from creole_alt.creole import CreoleParser
@@ -295,7 +295,10 @@ if __name__ == "__main__":
     document = p.parse()
     p.debug()
 
-    html = HtmlEmitter(document).emit()
+    from creole.shared.unknown_tags import escape_unknown_nodes
+    html = HtmlEmitter(document,
+        macros=escape_unknown_nodes
+    ).emit()
     print(html)
     print("-" * 79)
     print(html.replace(" ", ".").replace("\n", "\\n\n"))

@@ -20,7 +20,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import sys
 import unittest
-from creole.creole2html.str2dict import str2dict
+
 try:
     from StringIO import StringIO
 except ImportError:
@@ -31,6 +31,7 @@ from tests import test_macros
 
 from creole import creole2html
 from creole.shared import example_macros
+from creole.shared.utils import string2dict, dict2string
 
 
 class TestCreole2html(unittest.TestCase):
@@ -549,28 +550,45 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
 class TestStr2Dict(unittest.TestCase):
     def test_basic(self):
         self.assertEqual(
-            str2dict('key1="value1" key2="value2"'),
+            string2dict('key1="value1" key2="value2"'),
             {'key2': 'value2', 'key1': 'value1'}
         )
 
     def test_bool(self):
         self.assertEqual(
-            str2dict('unicode=True'),
+            string2dict('unicode=True'),
             {'unicode': True}
         )
 
     def test_mixed1(self):
         self.assertEqual(
-            str2dict('A="B" C=1 D=1.1 E=True F=False G=None'),
+            string2dict('A="B" C=1 D=1.1 E=True F=False G=None'),
             {'A': 'B', 'C': 1, 'E': True, 'D': '1.1', 'G': None, 'F': False}
         )
 
     def test_mixed2(self):
         self.assertEqual(
-            str2dict('''key1="'1'" key2='"2"' key3="""'3'""" '''),
+            string2dict('''key1="'1'" key2='"2"' key3="""'3'""" '''),
             {'key3': 3, 'key2': 2, 'key1': 1}
         )
 
+class TestDict2String(unittest.TestCase):
+    def test_basic(self):
+        self.assertEqual(
+            dict2string({'key':'value'}),
+            "key='value'"
+        )
+
+    def test_basic2(self):
+        self.assertEqual(
+            dict2string({'foo':"bar", "no":123}),
+            "foo='bar' no=123"
+        )
+    def test_basic3(self):
+        self.assertEqual(
+            dict2string({"foo":'bar', "no":"ABC"}),
+            "foo='bar' no='ABC'"
+        )
 
 if __name__ == '__main__':
     unittest.main(

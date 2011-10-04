@@ -419,12 +419,12 @@ class CrossCompareCreoleTests(BaseCreoleTest):
         """
         self.cross_compare_creole("""
             111 <<html>><x><</html>>foo<<html>></x><</html>> 222
-            333<<html>><x foo1="bar1"><</html>>foobar<<html>></x><</html>>444
+            333<<html>><x foo1='bar1'><</html>>foobar<<html>></x><</html>>444
 
             555<<html>><x /><</html>>666
         """, """
             <p>111 <x>foo</x> 222<br />
-            333<x foo1="bar1">foobar</x>444</p>
+            333<x foo1='bar1'>foobar</x>444</p>
 
             <p>555<x />666</p>
         """,

@@ -416,7 +416,7 @@ class CreoleParser:
         """Invoke appropriate _*_repl method. Called for every matched group."""
 
 #        def debug(groups):
-#            from pprint(import pformat)
+#            from pprint import pformat
 #            data = dict([
 #                group for group in groups.items() if group[1] is not None
 #            ])
@@ -485,13 +485,7 @@ if __name__ == "__main__":
 
     print("-" * 80)
 
-    txt = """one **line** and //jo//
-second line
-**third**
-
-block 2a
-block 2b
-block 2c"""
+    txt = """A <<test_macro1 args="foo1">>bar1<</test_macro1>> in a line..."""
 
     print(txt)
     print("-" * 80)
@@ -501,8 +495,6 @@ block 2c"""
     p = CreoleParser(txt, blog_line_breaks=blog_line_breaks)
     document = p.parse()
     p.debug()
-
-    sys.exit()
 
     def display_match(match):
         groups = match.groupdict()

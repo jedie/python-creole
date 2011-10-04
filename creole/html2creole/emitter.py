@@ -150,22 +150,7 @@ if __name__ == '__main__':
 #    import sys;sys.exit()
     from creole.html_parser.parser import HtmlParser
 
-    data = """
-<ul>
-    <li><p>item 1</p>
-        <ul>
-            <li><p>subsubitem 1.1.1</p></li>
-            <li>subsubitem 1.1.2</li>
-        </ul>
-    </li>
-    <li><p>item 2</p>
-        <ul>
-            <li>subitem 2.1</li>
-        </ul>
-    </li>
-</ul>
-
-"""
+    data = """A <<test_macro1 args="foo1">>bar1<</test_macro1>> in a line..."""
 
 #    print(data.strip())
     h2c = HtmlParser(
@@ -174,8 +159,11 @@ if __name__ == '__main__':
     document_tree = h2c.feed(data)
     h2c.debug()
 
+    from creole.shared.unknown_tags import escape_unknown_nodes
+
     e = CreoleEmitter(document_tree,
-        debug=True
+        debug=True,
+        unknown_emit=escape_unknown_nodes
     )
     content = e.emit()
     print("*" * 79)

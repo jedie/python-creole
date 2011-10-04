@@ -11,7 +11,11 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+
 from __future__ import division, absolute_import, print_function, unicode_literals
+
+from creole.py3compat import repr2
+
 
 def test_macro1(**kwargs):
     """
@@ -24,8 +28,9 @@ def test_macro1(**kwargs):
     >>> test_macro1(a=1,b=2)
     '[test macro1 - kwargs: a=1,b=2]'
     """
-    kwargs = ','.join(['%s=%r' % (k, v) for k, v in sorted(kwargs.items())])
+    kwargs = ','.join(['%s=%s' % (k, repr2(v)) for k, v in sorted(kwargs.items())])
     return "[test macro1 - kwargs: %s]" % kwargs
+
 
 def test_macro2(char, text):
     """

@@ -17,7 +17,7 @@ import sys
 import unittest
 
 import creole
-from tests.test_creole2html import TestCreole2html, TestCreole2htmlMarkup
+from tests.test_creole2html import TestCreole2html, TestCreole2htmlMarkup, TestStr2Dict, TestDict2String
 from tests.test_cross_compare_all import CrossCompareTests
 from tests.test_cross_compare_creole import CrossCompareCreoleTests
 from tests.test_cross_compare_rest import CrossCompareReStTests
