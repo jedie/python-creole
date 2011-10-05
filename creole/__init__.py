@@ -20,7 +20,7 @@
 
 from __future__ import division, absolute_import, print_function, unicode_literals
 
-__version__ = (0, 9, 0, "pre")
+__version__ = (0, 9, 0)
 __api__ = (1, 0) # Creole 1.0 spec - http://wikicreole.org/
 
 
