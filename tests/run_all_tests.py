@@ -32,11 +32,19 @@ SKIP_DIRS = (".settings", ".git", "dist", "python_creole.egg-info")
 SKIP_FILES = ("setup.py", "test.py")
 
 
-def run_all_doctests():
+if "-v" in sys.argv or "--verbose" in sys.argv:
+    VERBOSE = 2
+elif "-q" in sys.argv or "--quite" in sys.argv:
+    VERBOSE = 0
+else:
+    VERBOSE = 1
+
+def run_all_doctests(verbose=VERBOSE):
     path = os.path.abspath(os.path.dirname(creole.__file__))
-    print
-    print("_" * 79)
-    print("Running %r DocTests:\n" % path)
+    if verbose >= 2:
+        print
+        print("_" * 79)
+        print("Running %r DocTests:\n" % path)
 
     total_files = 0
     total_doctests = 0
@@ -59,9 +67,11 @@ def run_all_doctests():
             try:
                 m = __import__(filename[:-3])
             except ImportError as err:
-                print("***DocTest import %s error*** %s" % (filename, err))
+                if verbose >= 2:
+                    print("***DocTest import %s error*** %s" % (filename, err))
             except Exception as err:
-                print("***DocTest %s error*** %s" % (filename, err))
+                if verbose >= 2:
+                    print("***DocTest %s error*** %s" % (filename, err))
             else:
                 failed, attempted = testmod(m)
                 total_attempted += attempted
@@ -71,9 +81,10 @@ def run_all_doctests():
 
                 if attempted and not failed:
                     filepath = os.path.join(root, filename)
-                    print("DocTest in %s OK (failed=%i, attempted=%i)" % (
-                        filepath, failed, attempted
-                    ))
+                    if verbose >= 1:
+                        print("DocTest in %s OK (failed=%i, attempted=%i)" % (
+                            filepath, failed, attempted
+                        ))
             finally:
                 del sys.path[0]
     print("*** %i files readed, runs %i doctests: failed=%i, attempted=%i" % (
@@ -82,7 +93,9 @@ def run_all_doctests():
 
 
 if __name__ == '__main__':
-    run_all_doctests()
+    run_all_doctests(
+        verbose=2
+    )
 
     print
     print("_" * 79)
