@@ -24,6 +24,7 @@ from creole.tests.test_cross_compare_rest import CrossCompareReStTests
 from creole.tests.test_cross_compare_textile import CrossCompareTextileTests
 from creole.tests.test_html2creole import TestHtml2Creole, TestHtml2CreoleMarkup
 from creole.tests.test_rest2html import ReSt2HtmlTests
+from creole.tests.test_setup_utils import SetupUtilsTests
 from creole.tests.test_utils import UtilsTests
 from creole.tests.utils.utils import MarkupTest
 
