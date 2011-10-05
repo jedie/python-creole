@@ -42,6 +42,8 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
+from __future__ import division, absolute_import, print_function, unicode_literals
+
 import codecs
 import os
 import sys
@@ -49,6 +51,7 @@ import warnings
 
 from creole import creole2html, html2rest
 from creole.shared.unknown_tags import raise_unknown_node, transparent_unknown_nodes
+from creole.py3compat import PY3
 
 
 RAISE_ERRORS_ARGS = (
@@ -98,7 +101,10 @@ def get_long_description(package_root, filename="README.creole", raise_errors=No
             long_description_html,
             emitter_kwargs={"unknown_emit":unknown_emit}
         )
-        long_description_rest = long_description_rest_unicode.encode("utf-8")
+        if PY3:
+            long_description_rest = long_description_rest_unicode
+        else:
+            long_description_rest = long_description_rest_unicode.encode("utf-8")
     except Exception as err:
         if raise_errors:
             raise

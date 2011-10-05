@@ -22,6 +22,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 import sys
 
 from creole.exceptions import DocutilsImportError
+from creole.py3compat import TEXT_TYPE, PY3
 
 try:
     import docutils
@@ -94,12 +95,9 @@ class CleanHTMLTranslator(html4css1.HTMLTranslator, object):
                 continue
 
             if isinstance(value, list):
-                values = [unicode(v) for v in value]
-                parts.append('%s="%s"' % (name.lower(),
-                                          self.attval(' '.join(values))))
+                parts.append('%s="%s"' % (name.lower(), self.attval(' '.join(value))))
             else:
-                parts.append('%s="%s"' % (name.lower(),
-                                          self.attval(unicode(value))))
+                parts.append('%s="%s"' % (name.lower(), self.attval(value)))
 
         if DEBUG:
             print("Tag %r - ids: %r - attributes: %r - parts: %r" % (
@@ -176,6 +174,11 @@ def rest2html(content):
     >>> rest2html("A ReSt link to `PyLucid CMS <http://www.pylucid.org>`_ :)")
     '<p>A ReSt link to <a href="http://www.pylucid.org">PyLucid CMS</a> :)</p>\\n'
     """
+    if not PY3:
+        content = unicode(content)
+
+    assert isinstance(content, TEXT_TYPE), "rest2html content must be %s, but it's %s" % (TEXT_TYPE, type(content))
+
     parts = publish_parts(
         source=content,
         writer=CleanHTMLWriter(),
