@@ -4,6 +4,8 @@
     Helper to support Python v2 and v3
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
+    Some ideas borrowed from six
+    
     See also:
         http://python3porting.com
         https://bitbucket.org/gutworth/six/src/tip/six.py
