@@ -24,7 +24,7 @@ import unittest
 
 
 
-from tests.utils.base_unittest import BaseCreoleTest
+from creole.tests.utils.base_unittest import BaseCreoleTest
 
 
 class CrossCompareTests(BaseCreoleTest):

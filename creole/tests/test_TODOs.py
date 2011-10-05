@@ -6,7 +6,7 @@
 
 import unittest
 
-from tests.utils.base_unittest import BaseCreoleTest
+from creole.tests.utils.base_unittest import BaseCreoleTest
 from creole.html_tools.strip_html import strip_html
 
 

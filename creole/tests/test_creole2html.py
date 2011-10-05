@@ -26,8 +26,8 @@ try:
 except ImportError:
     from io import StringIO # python 3
 
-from tests.utils.base_unittest import BaseCreoleTest
-from tests import test_macros
+from creole.tests.utils.base_unittest import BaseCreoleTest
+from creole.tests import test_macros
 
 from creole import creole2html
 from creole.shared import example_macros

@@ -20,7 +20,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import unittest
 
-from tests.utils.base_unittest import BaseCreoleTest
+from creole.tests.utils.base_unittest import BaseCreoleTest
 
 
 class CrossCompareTextileTests(BaseCreoleTest):

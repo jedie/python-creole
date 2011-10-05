@@ -17,7 +17,7 @@ import re
 import sys
 import warnings
 
-from tests.utils.utils import MarkupTest
+from creole.tests.utils.utils import MarkupTest
 from creole.py3compat import TEXT_TYPE
 
 

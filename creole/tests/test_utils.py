@@ -13,7 +13,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import unittest
 
-from tests.utils.utils import MarkupTest
+from creole.tests.utils.utils import MarkupTest
 from creole.shared.markup_table import MarkupTable
 
 

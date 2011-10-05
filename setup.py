@@ -42,7 +42,7 @@ setup(
     url='http://code.google.com/p/python-creole/',
     packages=find_packages(),
     include_package_data=True, # include package data under svn source control
-    zip_safe=True,
+    zip_safe=False,
     classifiers=[
 #        "Development Status :: 4 - Beta",
         "Development Status :: 5 - Production/Stable",
@@ -56,5 +56,5 @@ setup(
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
     ],
-    test_suite="tests.run_all_tests",
+    test_suite="creole.tests.run_all_tests",
 )

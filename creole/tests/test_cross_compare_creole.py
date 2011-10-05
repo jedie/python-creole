@@ -22,7 +22,7 @@ import unittest
 
 from creole.shared import example_macros
 from creole.shared.unknown_tags import use_html_macro
-from tests.utils.base_unittest import BaseCreoleTest
+from creole.tests.utils.base_unittest import BaseCreoleTest
 
 
 class CrossCompareCreoleTests(BaseCreoleTest):
