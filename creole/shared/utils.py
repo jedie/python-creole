@@ -62,10 +62,10 @@ def dict2string(d):
     FIXME: Find a better was to do this.
 
     >>> dict2string({'foo':"bar", "no":123})
-    'foo="bar" no="123"'
+    "foo='bar' no=123"
 
     >>> dict2string({"foo":'bar', "no":"ABC"})
-    'foo="bar" no="ABC"'
+    "foo='bar' no='ABC'"
     
     See test_creole2html.TestDict2String()
     """

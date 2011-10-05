@@ -48,11 +48,11 @@ class DocNode:
 
         >>> node = DocNode(attrs={'foo':"bar", "no":123})
         >>> node.get_attrs_as_string()
-        'foo="bar" no="123"'
+        "foo='bar' no=123"
 
         >>> node = DocNode(attrs={"foo":'bar', "no":"ABC"})
         >>> node.get_attrs_as_string()
-        'foo="bar" no="ABC"'
+        "foo='bar' no='ABC'"
         """
         return dict2string(self.attrs)
 
