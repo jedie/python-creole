@@ -1,7 +1,8 @@
-= about
+= about =
 
 python-creole is a OpenSource (GPL) Python lib for converting markups.
 python-creole is pure python. No external libs needed.
+It's compatible with Python v2, v3 and PyPy.
 
 Existing converters:
 
@@ -14,7 +15,7 @@ Existing converters:
 The creole2html part based on the creole markup parser and emitter from the MoinMoin project by Radomir Dopieralski and Thomas Waldmann.
 
 
-= install
+= install =
 
 Python packages available on: [[http://pypi.python.org/pypi/python-creole/]]
 
@@ -23,9 +24,9 @@ Python packages available on: [[http://pypi.python.org/pypi/python-creole/]]
 }}}
 
 
-= example
+= example =
 
-== creole2html
+== creole2html ==
 Convert creole markup to html code:
 {{{
 >>> from creole import creole2html
@@ -34,7 +35,7 @@ u'<p>This is <strong>creole <i>markup</i></strong></p>\n'
 }}}
 
 
-== html2creole
+== html2creole ==
 Convert html code back into creole markup:
 {{{
 >>> from creole import html2creole
@@ -43,7 +44,7 @@ u'This is **creole //markup//**'
 }}}
 
 
-== rest2html
+== rest2html ==
 Convert ReStructuredText into clean html code (needs [[http://pypi.python.org/pypi/docutils|docutils]]):
 {{{
 >>> from creole.rest2html.clean_writer import rest2html
@@ -53,7 +54,7 @@ u'<p>A ReSt link to <a href="http://www.pylucid.org">PyLucid CMS</a> :)</p>\\n'
 (more information: [[https://code.google.com/p/python-creole/wiki/rest2html|rest2html wiki page]])
 
 
-== html2rest
+== html2rest ==
 Convert html code into ReStructuredText markup:
 {{{
 >>> from creole import html2rest
@@ -62,7 +63,7 @@ u'This is **ReStructuredText** *markup*!'
 }}}
 
 
-== html2textile
+== html2textile ==
 Convert html code into textile markup
 {{{
 >>> from creole import html2textile
@@ -73,7 +74,7 @@ u'This is *textile __markup__*!'
 See also: [[http://github.com/jedie/python-creole/blob/master/demo.py]]
 
 
-= documentation
+= documentation =
 
 We store documentation/exmplate into the project wiki:
 
@@ -88,16 +89,36 @@ Contributers should take a look at this page:
 * [[http://code.google.com/p/python-creole/wiki/DeveloperInfo]]
 
 
+== run unittests ==
+
+From source package, use setup.py to run unittests:
+{{{
+.../path/to/python-creole$ python setup.py test
+}}}
+
+If you have install python-creole do this:
+{{{
+~$ cd /path/to/site-packages
+...path/to/site-packages/$ cd 
+...path/to/site-packages/python_creole-0.9.0.pre-py2.7.egg$ cd /creole/tests
+...path/to/site-packages/python_creole-0.9.0.pre-py2.7.egg/creole/tests$ python run_all_tests.py
+}}}
+
+Note: You can pass the arguments "--verbose" or "--quite" to **setup.py** and **run_all_tests.py**
+
+
 == Use creole in README ==
 
 With python-creole you can convert a README on-the-fly from creole into ReStructuredText in setup.py
 How to do this, read: https://code.google.com/p/python-creole/wiki/UseInSetup
 
 
-= history
+= history =
 
-* v0.9pre
+* v0.9.0
 ** Add Python v3 support (like http://python3porting.com/noconv.html strategy)
+** move unittests into creole/tests/
+** Tested with Python 2.7.1, 3.2 and PyPy v1.6.1 15798ab8cf48 jit
 * v0.8.5
 ** Bugfix in html2creole: ignore links without href
 * v0.8.4
@@ -183,13 +204,13 @@ How to do this, read: https://code.google.com/p/python-creole/wiki/UseInSetup
 ** first version cut out from [[http://www.pylucid.org|PyLucid CMS]]
 
 
-= donation
+= donation =
 
 * [[http://flattr.com/thing/181554/python-creole|Flattr this!]]
 * Send [[http://www.bitcoin.org/|Bitcoins]] to [[https://blockexplorer.com/address/12QK6o7sGw7Dp3Fdfm2qKvyRqzuY2w5da9|12QK6o7sGw7Dp3Fdfm2qKvyRqzuY2w5da9]]
 
 
-= links
+= links =
 
 | Google code | [[http://code.google.com/p/python-creole/]]
 | GitHub      | [[http://github.com/jedie/python-creole]]
