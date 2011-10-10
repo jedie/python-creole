@@ -106,6 +106,10 @@ If you have install python-creole do this:
 
 Note: You can pass the arguments {{{--verbose}}} or {{{--quite}}} to **setup.py** and **run_all_tests.py**
 
+We using [[https://www.shiningpanda.com|the Shining Panda Service]] for running unittests automaticly on GIT changes, see:
+
+* https://jenkins.shiningpanda.com/python-creole/view/All/builds
+
 
 == Use creole in README ==
 
@@ -115,6 +119,8 @@ How to do this, read: https://code.google.com/p/python-creole/wiki/UseInSetup
 
 = history =
 
+* v0.9.1
+** Many Bugfixes, tested with CPython 2.6, 2.7, 3.2 and PyPy v1.6
 * v0.9.0
 ** Add Python v3 support (like http://python3porting.com/noconv.html strategy)
 ** move unittests into creole/tests/
@@ -212,7 +218,8 @@ How to do this, read: https://code.google.com/p/python-creole/wiki/UseInSetup
 
 = links =
 
-| Google code | [[http://code.google.com/p/python-creole/]]
-| GitHub      | [[http://github.com/jedie/python-creole]]
-| PyPi        | [[http://pypi.python.org/pypi/python-creole/]]
-| IRC         | [[http://www.pylucid.org/permalink/304/irc-channel|#pylucid on freenode.net]]
+| Google code   | [[http://code.google.com/p/python-creole/]]
+| GitHub        | [[http://github.com/jedie/python-creole]]
+| PyPi          | [[http://pypi.python.org/pypi/python-creole/]]
+| IRC           | [[http://www.pylucid.org/permalink/304/irc-channel|#pylucid on freenode.net]]
+| Shining Panda | [[https://jenkins.shiningpanda.com/python-creole/]]
