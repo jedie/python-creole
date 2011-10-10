@@ -14,9 +14,7 @@
 from __future__ import division, absolute_import, print_function, unicode_literals
 
 import re
-import sys
 import warnings
-from unittest.util import safe_repr
 
 from creole.tests.utils.utils import MarkupTest
 from creole.py3compat import TEXT_TYPE
@@ -94,15 +92,17 @@ class BaseCreoleTest(MarkupTest):
         print(text)
         print("-" * 79)
 
-    def assertIn(self, member, container, msg=None):
+    def assertIn(self, member, container, *args, **kwargs):
         """
-        Just like self.assertTrue(a in b), but with a nicer default message.
-        New in Python 2.7
+        Assert member in container.
+        assertIn is new in Python 2.7
         """
-        if member not in container:
-            standardMsg = '%s not found in %s' % (safe_repr(member),
-                                                  safe_repr(container))
-            self.fail(self._formatMessage(msg, standardMsg))
+        try:
+            f = super(BaseCreoleTest, self).assertIn
+        except AttributeError:
+            self.assertTrue(member in container, *args, **kwargs)
+        else:
+            f(member, container, *args, **kwargs)
 
     def assert_creole2html(self, raw_creole, raw_html, \
             strip_lines=False, debug=False, parser_kwargs={}, emitter_kwargs={}):
