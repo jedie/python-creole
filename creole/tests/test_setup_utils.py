@@ -18,12 +18,13 @@ import os
 
 import creole
 from creole.setup_utils import get_long_description
+from creole.tests.utils.base_unittest import BaseCreoleTest
 
 
 CREOLE_PACKAGE_ROOT = os.path.abspath(os.path.join(os.path.dirname(creole.__file__), ".."))
 
 
-class SetupUtilsTests(unittest.TestCase):
+class SetupUtilsTests(BaseCreoleTest):
     def test_creole_package_path(self):
         self.assertTrue(
             os.path.isdir(CREOLE_PACKAGE_ROOT),
