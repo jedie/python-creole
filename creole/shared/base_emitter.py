@@ -25,10 +25,13 @@ class BaseEmitter(object):
     Build from a document_tree (html2creole.parser.HtmlParser instance) a
     creole markup text.
     """
-    def __init__(self, document_tree, unknown_emit=transparent_unknown_nodes, debug=False):
+    def __init__(self, document_tree, unknown_emit=None, debug=False):
         self.root = document_tree
 
-        self._unknown_emit = unknown_emit
+        if unknown_emit is None:
+            self._unknown_emit = transparent_unknown_nodes
+        else:
+            self._unknown_emit = unknown_emit
 
         self.last = None
         self.debugging = debug

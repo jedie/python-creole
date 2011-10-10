@@ -56,7 +56,10 @@ class MarkupTest(unittest.TestCase):
 
             #~ first = first.rstrip("\\n")
             #~ second = second.rstrip("\\n")
-            diff = make_diff(first, second)
+            try:
+                diff = make_diff(first, second)
+            except AttributeError:
+                raise self.failureException("%s is not %s" % (repr(first), repr(second)))
 
             if VERBOSE >= 2:
                 print("diff: %r" % diff)

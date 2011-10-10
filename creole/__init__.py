@@ -20,12 +20,13 @@
 
 from __future__ import division, absolute_import, print_function, unicode_literals
 
-__version__ = (0, 9, 1)
+__version__ = (1, 0, 0, "pre")
 __api__ = (1, 0) # Creole 1.0 spec - http://wikicreole.org/
 
 
 import os
 import sys
+import warnings
 
 from creole.creole2html.emitter import HtmlEmitter
 from creole.creole2html.parser import BlockRules, CreoleParser
@@ -43,47 +44,83 @@ VERSION_STRING = '.'.join(str(part) for part in __version__)
 API_STRING = '.'.join(str(integer) for integer in __api__)
 
 
-def creole2html(markup_string, debug=False, parser_kwargs={}, emitter_kwargs={}):
+def creole2html(markup_string, debug=False,
+        parser_kwargs={}, emitter_kwargs={},
+        block_rules=None, blog_line_breaks=True,
+        macros=None, verbose=None, stderr=None,
+    ):
     """
     convert creole markup into html code
 
     >>> creole2html('This is **creole //markup//**!')
     '<p>This is <strong>creole <i>markup</i></strong>!</p>'
+    
+    Info: parser_kwargs and emitter_kwargs are deprecated
     """
     assert isinstance(markup_string, TEXT_TYPE), "given markup_string must be unicode!"
 
+    parser_kwargs2 = {
+        "block_rules": block_rules,
+        "blog_line_breaks": blog_line_breaks,
+    }
+    if parser_kwargs:
+        warnings.warn("parser_kwargs argument in creole2html would be removed in the future!", PendingDeprecationWarning)
+        parser_kwargs2.update(parser_kwargs)
+
     # Create document tree from creole markup
-    document = CreoleParser(markup_string, **parser_kwargs).parse()
+    document = CreoleParser(markup_string, **parser_kwargs2).parse()
     if debug:
         document.debug()
 
+    emitter_kwargs2 = {
+        "macros": macros,
+        "verbose": verbose,
+        "stderr": stderr,
+    }
+    if emitter_kwargs:
+        warnings.warn("emitter_kwargs argument in creole2html would be removed in the future!", PendingDeprecationWarning)
+        emitter_kwargs2.update(emitter_kwargs)
+
     # Build html code from document tree
     #print("creole2html HtmlEmitter kwargs:", emitter_kwargs)
-    return HtmlEmitter(document, **emitter_kwargs).emit()
+    return HtmlEmitter(document, **emitter_kwargs2).emit()
 
 
-def parse_html(html_string, debug=False, **parser_kwargs):
+def parse_html(html_string, debug=False):
     """ create the document tree from html code """
     assert isinstance(html_string, TEXT_TYPE), "given html_string must be unicode!"
 
-    h2c = HtmlParser(debug, **parser_kwargs)
+    h2c = HtmlParser(debug=debug)
     document_tree = h2c.feed(html_string)
     if debug:
         h2c.debug()
     return document_tree
 
 
-def html2creole(html_string, debug=False, parser_kwargs={}, emitter_kwargs={}):
+def html2creole(html_string, debug=False,
+        parser_kwargs={}, emitter_kwargs={},
+        unknown_emit=None
+    ):
     """
     convert html code into creole markup
 
     >>> html2creole('<p>This is <strong>creole <i>markup</i></strong>!</p>')
     'This is **creole //markup//**!'
     """
-    document_tree = parse_html(html_string, debug, **parser_kwargs)
+    if parser_kwargs:
+        warnings.warn("parser_kwargs argument in html2creole would be removed in the future!", PendingDeprecationWarning)
+
+    document_tree = parse_html(html_string, debug=debug)
+
+    emitter_kwargs2 = {
+        "unknown_emit": unknown_emit,
+    }
+    if emitter_kwargs:
+        warnings.warn("emitter_kwargs argument in html2creole would be removed in the future!", PendingDeprecationWarning)
+        emitter_kwargs2.update(emitter_kwargs)
 
     # create creole markup from the document tree
-    emitter = CreoleEmitter(document_tree, debug=debug, **emitter_kwargs)
+    emitter = CreoleEmitter(document_tree, debug=debug, **emitter_kwargs2)
     return emitter.emit()
 
 

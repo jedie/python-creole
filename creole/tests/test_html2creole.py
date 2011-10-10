@@ -66,7 +66,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         self.assertRaises(NotImplementedError,
             html2creole,
             html_string="<unknwon>",
-            emitter_kwargs={"unknown_emit":raise_unknown_node}
+            unknown_emit=raise_unknown_node
         )
 
     def test_use_html_macro(self):
@@ -85,7 +85,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 
             <p>555<unknown />666</p>
         """,
-            emitter_kwargs={"unknown_emit":use_html_macro}
+            unknown_emit=use_html_macro
         )
 
     def test_escape_unknown_nodes(self):
@@ -104,7 +104,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 
             <p>555<unknown />666</p>
         """,
-            emitter_kwargs={"unknown_emit":escape_unknown_nodes}
+            unknown_emit=escape_unknown_nodes
         )
 
     def test_escape_unknown_nodes2(self):
@@ -119,7 +119,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             var js_sha_link='<p>***</p>';
             </script>
         """,
-            emitter_kwargs={"unknown_emit":escape_unknown_nodes}
+            unknown_emit=escape_unknown_nodes
         )
 
     def test_transparent_unknown_nodes(self):
@@ -132,7 +132,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             //baz//, **quux**
         """, """
             <form class="foo" id="bar"><label><em>baz</em></label>, <strong>quux</strong></form>
-        """, emitter_kwargs={"unknown_emit":transparent_unknown_nodes}
+        """, unknown_emit=transparent_unknown_nodes
         )
 
     def test_transparent_unknown_nodes2(self):
@@ -144,7 +144,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             FOO var a='<em>STRONG</em>'; BAR
         """, """
             <p>FOO <script>var a='<em>STRONG</em>';</script> BAR</p>
-        """, emitter_kwargs={"unknown_emit":transparent_unknown_nodes}
+        """, unknown_emit=transparent_unknown_nodes
         )
 
     def test_transparent_unknown_nodes_block_elements(self):
@@ -160,7 +160,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         """, """
             <div><em>baz</em>,</div> <fieldset><strong>quux</strong></fieldset>
             <span>spam, </span><label>ham, </label>and eggs
-        """, emitter_kwargs={"unknown_emit":transparent_unknown_nodes}
+        """, unknown_emit=transparent_unknown_nodes
         )
 
     #--------------------------------------------------------------------------        

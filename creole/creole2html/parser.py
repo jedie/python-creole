@@ -59,12 +59,14 @@ class CreoleParser:
     inline_re = re.compile('|'.join(INLINE_RULES), INLINE_FLAGS)
 
 
-    def __init__(self, raw, block_rules=BlockRules, blog_line_breaks=True):
+    def __init__(self, raw, block_rules=None, blog_line_breaks=True):
         assert isinstance(raw, TEXT_TYPE)
         self.raw = raw
 
+        if block_rules is None:
+            block_rules = BlockRules(blog_line_breaks=blog_line_breaks)
+
         # setup block element rules:
-        block_rules = block_rules(blog_line_breaks=blog_line_breaks)
         self.block_re = re.compile('|'.join(block_rules.rules), block_rules.re_flags)
 
         self.blog_line_breaks = blog_line_breaks

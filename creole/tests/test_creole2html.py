@@ -326,9 +326,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             the|text
             <p>the end</p>
         """,
-            emitter_kwargs={
-                "macros":test_macros,
-            }
+            macros=test_macros,
         )
 
     def test_macro_html1(self):
@@ -345,9 +343,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
                 
                 <p>inline: &#x7B;...&#x7D; code</p>
             """,
-            emitter_kwargs={
-                "macros":example_macros,
-            }
+            macros=example_macros,
         )
 
     def test_macro_not_exist1(self):
@@ -376,7 +372,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             </p>
         """
 
-        self.assert_creole2html(source_string, should_string, emitter_kwargs={"verbose":1})
+        self.assert_creole2html(source_string, should_string, verbose=1)
 
         #----------------------------------------------------------------------
         # Test with verbose=2 ans a StringIO stderr handler
@@ -389,7 +385,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
                 <p>wrong macro line:<br />
                 [Error: Wrong macro arguments: '>Some funky page summary.<</summary' for macro 'summary' (maybe wrong macro tag syntax?)]
                 </p>
-            """,
+            """, #verbose=True
         )
 
     def test_macro_not_exist2(self):
@@ -411,10 +407,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             
             <p>inline macro:<br />
             </p>
-        """,
-            emitter_kwargs={
-                "verbose":0,
-            }
+        """, verbose=False
         )
 
     def test_image(self):

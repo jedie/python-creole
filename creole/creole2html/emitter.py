@@ -25,11 +25,19 @@ class HtmlEmitter:
     Generate HTML output for the document
     tree consisting of DocNodes.
     """
-    def __init__(self, root, macros=None, verbose=1, stderr=sys.stderr):
+    def __init__(self, root, macros=None, verbose=None, stderr=None):
         self.root = root
         self.macros = macros
-        self.verbose = verbose
-        self.stderr = stderr
+
+        if verbose is None:
+            self.verbose = 1
+        else:
+            self.verbose = verbose
+
+        if stderr is None:
+            self.stderr = sys.stderr
+        else:
+            self.stderr = stderr
 
     def get_text(self, node):
         """Try to emit whatever text is in the node."""

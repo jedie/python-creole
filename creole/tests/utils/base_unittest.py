@@ -105,12 +105,17 @@ class BaseCreoleTest(MarkupTest):
             f(member, container, *args, **kwargs)
 
     def assert_creole2html(self, raw_creole, raw_html, \
-            strip_lines=False, debug=False, parser_kwargs={}, emitter_kwargs={}):
+            strip_lines=False, debug=False,
+            parser_kwargs={}, emitter_kwargs={},
+            block_rules=None, blog_line_breaks=True, macros=None, verbose=None, stderr=None,
+        ):
         """
         compare the generated html code from the markup string >creole_string<
         with the >html_string< reference.
         """
         self.assertNotEqual(raw_creole, raw_html)
+        self.assertEqual(parser_kwargs, {}, "parser_kwargs is deprecated!")
+        self.assertEqual(emitter_kwargs, {}, "parser_kwargs is deprecated!")
 
         # prepare whitespace on test strings
         markup_string = self._prepare_text(raw_creole)
@@ -125,7 +130,9 @@ class BaseCreoleTest(MarkupTest):
 
         # convert creole markup into html code
         out_string = creole2html(
-            markup_string, debug, parser_kwargs, emitter_kwargs
+            markup_string, debug,
+            block_rules=block_rules, blog_line_breaks=blog_line_breaks,
+            macros=macros, verbose=verbose, stderr=stderr,
         )
         if debug:
             self._debug_text("assert_creole2html() creole2html", out_string)
@@ -139,11 +146,18 @@ class BaseCreoleTest(MarkupTest):
         self.assertEqual(out_string, html_string, msg="creole2html")
 
     def assert_html2creole(self, raw_creole, raw_html, \
-                strip_lines=False, debug=False, parser_kwargs={}, emitter_kwargs={}):
+                strip_lines=False, debug=False,
+                # OLD API:
+                parser_kwargs={}, emitter_kwargs={},
+                # html2creole:
+                unknown_emit=None
+        ):
         """
         Compare the genereted markup from the given >raw_html< html code, with
         the given >creole_string< reference string.
         """
+        self.assertEqual(parser_kwargs, {}, "parser_kwargs is deprecated!")
+        self.assertEqual(emitter_kwargs, {}, "parser_kwargs is deprecated!")
 #        assert isinstance(raw_html, TEXT_TYPE)
 #        creole_string = unicode(creole_string, encoding="utf8")
 #        raw_html = unicode(raw_html, "utf8")
@@ -160,7 +174,7 @@ class BaseCreoleTest(MarkupTest):
         assert isinstance(html, TEXT_TYPE)
 
         # convert html code into creole markup
-        out_string = html2creole(html, debug, parser_kwargs, emitter_kwargs)
+        out_string = html2creole(html, debug, unknown_emit=unknown_emit)
         if debug:
             self._debug_text("assert_html2creole() html2creole", out_string)
 
@@ -169,28 +183,39 @@ class BaseCreoleTest(MarkupTest):
 
     def cross_compare_creole(self, creole_string, html_string,
                         strip_lines=False, debug=False,
-                        # creole2html:
+                        # creole2html old API:
                         creole_parser_kwargs={}, html_emitter_kwargs={},
-                        # html2creole:
+                        # html2creole old API:
                         html_parser_kwargs={}, creole_emitter_kwargs={},
-                                                                            ):
+
+                        # creole2html new API:
+                        block_rules=None, blog_line_breaks=True, macros=None, stderr=None,
+                        # html2creole:
+                        unknown_emit=None
+        ):
         """
         Cross compare with:
             * creole2html
             * html2creole
         """
+        self.assertEqual(creole_parser_kwargs, {}, "creole_parser_kwargs is deprecated!")
+        self.assertEqual(html_emitter_kwargs, {}, "html_emitter_kwargs is deprecated!")
+        self.assertEqual(html_parser_kwargs, {}, "html_parser_kwargs is deprecated!")
+        self.assertEqual(creole_emitter_kwargs, {}, "creole_emitter_kwargs is deprecated!")
+
         assert isinstance(creole_string, TEXT_TYPE)
         assert isinstance(html_string, TEXT_TYPE)
         self.assertNotEqual(creole_string, html_string)
 
         self.assert_creole2html(
             creole_string, html_string, strip_lines, debug,
-            creole_parser_kwargs, html_emitter_kwargs
+            block_rules=block_rules, blog_line_breaks=blog_line_breaks,
+            macros=macros, stderr=stderr,
         )
 
         self.assert_html2creole(
             creole_string, html_string, strip_lines, debug,
-            html_parser_kwargs, creole_emitter_kwargs
+            unknown_emit=unknown_emit,
         )
 
     def assert_html2textile(self, textile_string, html_string, \

@@ -428,15 +428,10 @@ class CrossCompareCreoleTests(BaseCreoleTest):
 
             <p>555<x />666</p>
         """,
-            # use macro in creole2html emitter
-            html_emitter_kwargs={
-                "macros":example_macros,
-
-            },
-            # escape unknown tags with <<html>> in html2creole emitter
-            creole_emitter_kwargs={
-                "unknown_emit":use_html_macro,
-            }
+            # use macro in creole2html emitter:
+            macros=example_macros,
+            # escape unknown tags with <<html>> in html2creole emitter:
+            unknown_emit=use_html_macro,
         )
 
     def test_entities(self):
