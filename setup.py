@@ -43,6 +43,7 @@ setup(
     url='http://code.google.com/p/python-creole/',
     packages=find_packages(),
     include_package_data=True, # include package data under svn source control
+    data_files=[("", ["README.creole"])], # README used in unittest test_setup_utils.py
     zip_safe=False,
     classifiers=[
 #        "Development Status :: 4 - Beta",
