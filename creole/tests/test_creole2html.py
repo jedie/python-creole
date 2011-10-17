@@ -127,7 +127,7 @@ class TestCreole2html(unittest.TestCase):
         def testmacro():
             pass
 
-        self.failUnlessRaises(DeprecationWarning,
+        self.assertRaises(DeprecationWarning,
             creole2html,
             markup_string="<<test no=1 arg2='foo'>>bar<</test>>",
             emitter_kwargs={
