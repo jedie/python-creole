@@ -96,29 +96,43 @@ From source package, use setup.py to run unittests:
 .../path/to/python-creole$ python setup.py test
 }}}
 
-If you have install python-creole do this:
+If you have install python-creole do this to run unittests:
 {{{
 ~$ cd /path/to/site-packages
 ...path/to/site-packages/$ cd 
 ...path/to/site-packages/python_creole-0.9.0.pre-py2.7.egg$ cd /creole/tests
 ...path/to/site-packages/python_creole-0.9.0.pre-py2.7.egg/creole/tests$ python all_tests.py
 }}}
-or inside python:
-{{{
->>> from creole.tests.all_tests import run_all_doctests
->>> run_all_doctests()
-.....................
-----------------------------------------------------------------------
-Ran 21 DocTests from 49 files in 0.368s: failed=0, attempted=88
+Note: You can pass the arguments {{{--verbose}}} or {{{--quite}}} to **setup.py** and **all_tests.py**
 
+
+You can also run tests inside interactive python:
+{{{
 >>> from creole.tests import run_unittests
 >>> run_unittests()
 ..............................................................................................................................
 ----------------------------------------------------------------------
 Ran 126 tests in 0.966s
+
+>>> from creole.tests.all_tests import run_all_doctests
+>>> run_all_doctests()
+.....................
+----------------------------------------------------------------------
+Ran 21 DocTests from 49 files in 0.368s: failed=0, attempted=88
 }}}
 
-Note: You can pass the arguments {{{--verbose}}} or {{{--quite}}} to **setup.py** and **run_all_tests.py**
+or do this:
+{{{
+~$ python -c "from creole.tests import run_unittests;run_unittests()"
+..............................................................................................................................
+----------------------------------------------------------------------
+Ran 126 tests in 0.917s
+
+~$ python -c "from creole.tests.all_tests import run_all_doctests;run_all_doctests()"
+.....................
+----------------------------------------------------------------------
+Ran 21 DocTests from 49 files in 0.368s: failed=0, attempted=88
+}}}
 
 We using [[https://www.shiningpanda.com|the Shining Panda Service]] for running unittests automaticly on GIT changes, see:
 
