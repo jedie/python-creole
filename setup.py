@@ -61,7 +61,7 @@ setup(
         "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Text Processing :: Markup",
-        "Topic :: Text Processing :: Markup :: HTML"
+        "Topic :: Text Processing :: Markup :: HTML",
         "Topic :: Utilities",
     ],
     test_suite="creole.tests.get_test_suite",
