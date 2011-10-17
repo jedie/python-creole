@@ -121,7 +121,10 @@ def run_unittests(verbosity=None):
         print("_" * 79)
         print("Running Unittests:\n")
 
-    unittest.main(verbosity=verbosity)
+    if sys.version_info >= (2, 7):
+        unittest.main(verbosity=verbosity)
+    else:
+        unittest.main()
 
 
 if __name__ == '__main__':
