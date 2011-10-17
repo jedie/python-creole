@@ -12,11 +12,6 @@
 from __future__ import division, absolute_import, print_function, unicode_literals
 
 import unittest
-try:
-    from unittest.runner import TextTestRunner
-except ImportError:
-    # python < 2.7
-    from unittest.runner import _TextTestRunner as TextTestRunner
 
 from creole.tests import all_tests
 
@@ -34,7 +29,7 @@ def run_unittests():
     run all python-creole unittests with TextTestRunner
     """
     suite = get_test_suite()
-    runner = TextTestRunner()
+    runner = unittest.TextTestRunner()
     runner.run(suite)
 
 
