@@ -111,7 +111,7 @@ def run_all_doctests(verbosity=None):
 
 def run_unittests(verbosity=None):
     """
-    run all python-creole unittests
+    run all python-creole unittests with unittest CLI TestProgram()
     """
     if verbosity is None:
         verbosity = VERBOSE
