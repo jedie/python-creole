@@ -12,7 +12,6 @@
 from __future__ import division, absolute_import, print_function, unicode_literals
 
 import unittest
-from unittest.runner import TextTestRunner
 
 from creole.tests import all_tests
 
@@ -26,6 +25,12 @@ def get_test_suite():
 
 
 if __name__ == '__main__':
+    try:
+        from unittest.runner import TextTestRunner
+    except ImportError:
+        # python < 2.7
+        from unittest.runner import _TextTestRunner as TextTestRunner
+
     suite = get_test_suite()
 
 #    for entry in suite:
