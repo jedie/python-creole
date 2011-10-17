@@ -40,7 +40,7 @@ class TestCreole2html(unittest.TestCase):
     """
     def assertIn(self, src, dst):
         # assertIn is new in Python 2.7 ;)
-        self.failIf(src not in dst, "%r not found in %r" % (src, dst))
+        self.assertFalse(src not in dst, "%r not found in %r" % (src, dst))
 
     def test_stderr(self):
         """
