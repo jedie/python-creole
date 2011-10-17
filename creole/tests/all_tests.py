@@ -2,8 +2,8 @@
 # coding: utf-8
 
 """
-    run all unittests
-    ~~~~~~~~~~~~~~~~~
+    collects all existing unittests
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     :copyleft: 2008-2011 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
