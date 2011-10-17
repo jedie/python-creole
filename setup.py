@@ -13,7 +13,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 import os
 import sys
 
-from setuptools import setup, find_packages
+from setuptools import setup, find_packages, Command
 
 from creole import VERSION_STRING
 from creole.setup_utils import get_long_description
@@ -44,19 +44,25 @@ setup(
     packages=find_packages(),
     include_package_data=True, # include package data under svn source control
     data_files=[("", ["README.creole"])], # README used in unittest test_setup_utils.py
-    zip_safe=False,
+    zip_safe=True, # http://packages.python.org/distribute/setuptools.html#setting-the-zip-safe-flag
+    keywords="creole markup creole2html html2creole rest2html html2rest html2textile",
     classifiers=[
+        # http://pypi.python.org/pypi?%3Aaction=list_classifiers
 #        "Development Status :: 4 - Beta",
         "Development Status :: 5 - Production/Stable",
         "Environment :: Web Environment",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: GNU General Public License (GPL)",
-        "Topic :: Documentation",
-        "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
         "Programming Language :: Python",
         "Programming Language :: Python :: 2",
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
+        "Topic :: Documentation",
+        "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+        "Topic :: Software Development :: Libraries :: Python Modules",
+        "Topic :: Text Processing :: Markup",
+        "Topic :: Text Processing :: Markup :: HTML"
+        "Topic :: Utilities",
     ],
-    test_suite="creole.tests.run_all_tests",
+    test_suite="creole.tests.get_test_suite",
 )
