@@ -82,7 +82,6 @@ def creole2html(markup_string, debug=False,
         emitter_kwargs2.update(emitter_kwargs)
 
     # Build html code from document tree
-    #print("creole2html HtmlEmitter kwargs:", emitter_kwargs)
     return HtmlEmitter(document, **emitter_kwargs2).emit()
 
 
@@ -182,6 +181,6 @@ def html2rest(html_string, debug=False,
 if __name__ == '__main__':
     print("runing local doctest...")
     import doctest
-    print(
-        doctest.testmod()#verbose=True
-    )
+    print(doctest.testmod(
+#            verbose=True
+    ))
