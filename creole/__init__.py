@@ -124,31 +124,57 @@ def html2creole(html_string, debug=False,
     return emitter.emit()
 
 
-def html2textile(html_string, debug=False, parser_kwargs={}, emitter_kwargs={}):
+def html2textile(html_string, debug=False,
+        parser_kwargs={}, emitter_kwargs={},
+        unknown_emit=None
+    ):
     """
     convert html code into textile markup
     
     >>> html2textile('<p>This is <strong>textile <i>markup</i></strong>!</p>')
     'This is *textile __markup__*!'
     """
-    document_tree = parse_html(html_string, debug, **parser_kwargs)
+    if parser_kwargs:
+        warnings.warn("parser_kwargs argument in html2textile would be removed in the future!", PendingDeprecationWarning)
 
-    # create creole markup from the document tree
-    emitter = TextileEmitter(document_tree, debug=debug, **emitter_kwargs)
+    document_tree = parse_html(html_string, debug=debug)
+
+    emitter_kwargs2 = {
+        "unknown_emit": unknown_emit,
+    }
+    if emitter_kwargs:
+        warnings.warn("emitter_kwargs argument in html2textile would be removed in the future!", PendingDeprecationWarning)
+        emitter_kwargs2.update(emitter_kwargs)
+
+    # create textile markup from the document tree
+    emitter = TextileEmitter(document_tree, debug=debug, **emitter_kwargs2)
     return emitter.emit()
 
 
-def html2rest(html_string, debug=False, parser_kwargs={}, emitter_kwargs={}):
+def html2rest(html_string, debug=False,
+        parser_kwargs={}, emitter_kwargs={},
+        unknown_emit=None
+    ):
     """
-    convert html code into textile markup
+    convert html code into ReStructuredText markup
     
     >>> html2rest('<p>This is <strong>ReStructuredText</strong> <em>markup</em>!</p>')
     'This is **ReStructuredText** *markup*!'
     """
-    document_tree = parse_html(html_string, debug, **parser_kwargs)
+    if parser_kwargs:
+        warnings.warn("parser_kwargs argument in html2rest would be removed in the future!", PendingDeprecationWarning)
 
-    # create creole markup from the document tree
-    emitter = ReStructuredTextEmitter(document_tree, debug=debug, **emitter_kwargs)
+    document_tree = parse_html(html_string, debug=debug)
+
+    emitter_kwargs2 = {
+        "unknown_emit": unknown_emit,
+    }
+    if emitter_kwargs:
+        warnings.warn("emitter_kwargs argument in html2rest would be removed in the future!", PendingDeprecationWarning)
+        emitter_kwargs2.update(emitter_kwargs)
+
+    # create ReStructuredText markup from the document tree
+    emitter = ReStructuredTextEmitter(document_tree, debug=debug, **emitter_kwargs2)
     return emitter.emit()
 
 
