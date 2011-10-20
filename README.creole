@@ -2,7 +2,7 @@
 
 python-creole is a OpenSource (GPL) Python lib for converting markups.
 python-creole is pure python. No external libs needed.
-It's compatible with Python v2, v3 and PyPy.
+It's compatible with Python v2.6-v3.2 and PyPy.
 
 Existing converters:
 
@@ -96,15 +96,43 @@ From source package, use setup.py to run unittests:
 .../path/to/python-creole$ python setup.py test
 }}}
 
-If you have install python-creole do this:
+If you have install python-creole do this to run unittests:
 {{{
 ~$ cd /path/to/site-packages
 ...path/to/site-packages/$ cd 
 ...path/to/site-packages/python_creole-0.9.0.pre-py2.7.egg$ cd /creole/tests
-...path/to/site-packages/python_creole-0.9.0.pre-py2.7.egg/creole/tests$ python run_all_tests.py
+...path/to/site-packages/python_creole-0.9.0.pre-py2.7.egg/creole/tests$ python all_tests.py
+}}}
+Note: You can pass the arguments {{{--verbose}}} or {{{--quite}}} to **setup.py** and **all_tests.py**
+
+
+You can also run tests inside interactive python:
+{{{
+>>> from creole.tests import run_unittests
+>>> run_unittests()
+..............................................................................................................................
+----------------------------------------------------------------------
+Ran 126 tests in 0.966s
+
+>>> from creole.tests.all_tests import run_all_doctests
+>>> run_all_doctests()
+.....................
+----------------------------------------------------------------------
+Ran 21 DocTests from 49 files in 0.368s: failed=0, attempted=88
 }}}
 
-Note: You can pass the arguments {{{--verbose}}} or {{{--quite}}} to **setup.py** and **run_all_tests.py**
+or do this:
+{{{
+~$ python -c "from creole.tests import run_unittests;run_unittests()"
+..............................................................................................................................
+----------------------------------------------------------------------
+Ran 126 tests in 0.917s
+
+~$ python -c "from creole.tests.all_tests import run_all_doctests;run_all_doctests()"
+.....................
+----------------------------------------------------------------------
+Ran 21 DocTests from 49 files in 0.368s: failed=0, attempted=88
+}}}
 
 We using [[https://www.shiningpanda.com|the Shining Panda Service]] for running unittests automaticly on GIT changes, see:
 
@@ -119,6 +147,10 @@ How to do this, read: https://code.google.com/p/python-creole/wiki/UseInSetup
 
 = history =
 
+* v1.0pre
+** Change API: Replace 'parser_kwargs' and 'emitter_kwargs' with separate arguments. (More information on [[http://code.google.com/p/python-creole/wiki/API_changes_v1|Wiki Page]])
+* v0.9.2
+** Turn zip_safe in setup.py on and change unittests API.
 * v0.9.1
 ** Many Bugfixes, tested with CPython 2.6, 2.7, 3.2 and PyPy v1.6
 * v0.9.0
