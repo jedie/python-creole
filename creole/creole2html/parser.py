@@ -32,7 +32,7 @@ from creole.py3compat import TEXT_TYPE
 from creole.shared.document_tree import DocNode, DebugList
 
 
-class CreoleParser:
+class CreoleParser(object):
     """
     Parse the raw text and create a document object
     that can be converted into output using Emitter.

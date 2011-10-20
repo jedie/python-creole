@@ -20,7 +20,7 @@ from creole.py3compat import TEXT_TYPE, repr2
 from creole.shared.utils import string2dict
 
 
-class HtmlEmitter:
+class HtmlEmitter(object):
     """
     Generate HTML output for the document
     tree consisting of DocNodes.
