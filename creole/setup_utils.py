@@ -105,12 +105,13 @@ def get_long_description(package_root, filename="README.creole", raise_errors=No
             long_description_rest = long_description_rest_unicode
         else:
             long_description_rest = long_description_rest_unicode.encode("utf-8")
-    except Exception as err:
+    except Exception:
         if raise_errors:
             raise
         # Don't raise the error e.g. in ./setup install process
+        evalue = sys.exc_info()[1]
         long_description_rest = "[Error: %s]\n%s" % (
-            err, long_description_origin
+            evalue, long_description_origin
         )
     else:
         if raise_errors:

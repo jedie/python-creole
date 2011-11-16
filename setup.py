@@ -27,8 +27,9 @@ def get_authors():
         f = file(os.path.join(PACKAGE_ROOT, "AUTHORS"), "r")
         authors = [l.strip(" *\r\n") for l in f if l.strip().startswith("*")]
         f.close()
-    except Exception as err:
-        authors = "[Error: %s]" % err
+    except Exception:
+        evalue = sys.exc_info()[1]
+        authors = "[Error: %s]" % evalue
     return authors
 
 
