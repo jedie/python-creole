@@ -48,7 +48,7 @@ DEBUG = False
 #DEBUG = True
 
 IGNORE_ATTR = (
-    "class", "frame", "rules",
+    "start", "class", "frame", "rules",
 )
 IGNORE_TAGS = (
     "div",
@@ -95,9 +95,10 @@ class CleanHTMLTranslator(html4css1.HTMLTranslator, object):
                 continue
 
             if isinstance(value, list):
-                parts.append('%s="%s"' % (name.lower(), self.attval(' '.join(value))))
-            else:
-                parts.append('%s="%s"' % (name.lower(), self.attval(value)))
+                value = ' '.join([TEXT_TYPE(x) for x in value])
+
+            part = '%s="%s"' % (name.lower(), self.attval(TEXT_TYPE(value)))
+            parts.append(part)
 
         if DEBUG:
             print("Tag %r - ids: %r - attributes: %r - parts: %r" % (
