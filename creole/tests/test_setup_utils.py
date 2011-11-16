@@ -19,9 +19,12 @@ import os
 import creole
 from creole.setup_utils import get_long_description
 from creole.tests.utils.base_unittest import BaseCreoleTest
+from creole.py3compat import BINARY_TYPE, PY3, TEXT_TYPE
 
 
 CREOLE_PACKAGE_ROOT = os.path.abspath(os.path.join(os.path.dirname(creole.__file__), ".."))
+TEST_README_DIR = os.path.abspath(os.path.dirname(__file__))
+TEST_README_FILENAME = "test_README.creole"
 
 
 class SetupUtilsTests(BaseCreoleTest):
@@ -57,6 +60,18 @@ class SetupUtilsTests(BaseCreoleTest):
     def test_wrong_path_with_raise_errors(self):
         self.assertRaises(IOError, get_long_description, "wrong/path", raise_errors=True)
 
+    def test_readme_encoding(self):
+        long_description = get_long_description(TEST_README_DIR, filename=TEST_README_FILENAME, raise_errors=True)
+
+        if PY3:
+            self.assertTrue(isinstance(long_description, TEXT_TYPE))
+        else:
+            self.assertTrue(isinstance(long_description, BINARY_TYPE))
+
+        txt = "German Umlaute: ä ö ü ß Ä Ö Ü"
+        if not PY3:
+            txt = txt.encode("utf-8")
+        self.assertIn(txt, long_description)
 
 if __name__ == '__main__':
     unittest.main()
