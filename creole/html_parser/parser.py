@@ -251,7 +251,7 @@ class HtmlParser(HTMLParser2):
         if tag in ("ul", "ol"):
             self.__list_level -= 1
 
-        if tag in BLOCK_TAGS:
+        if tag in BLOCK_TAGS or self.cur is None:
             self._go_up()
         else:
             self.cur = self.cur.parent
