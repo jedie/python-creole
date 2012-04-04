@@ -395,6 +395,11 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             <p>two</p>
         """)
 
+    def test_nested_empty_tags(self):
+        self.assert_html2creole2("TEST", "<p>TEST</p>")
+        self.assert_html2creole2("TEST", "<bar><p>TEST</p></bar>")
+        self.assert_html2creole2("TEST", "<foo><bar><p>TEST</p></bar></foo>")
+
 
 #    def test_nowiki1(self):
 #        self.assert_html2creole(r"""

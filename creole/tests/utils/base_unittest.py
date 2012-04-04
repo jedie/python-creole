@@ -145,6 +145,15 @@ class BaseCreoleTest(MarkupTest):
         # compare
         self.assertEqual(out_string, html_string, msg="creole2html")
 
+    def assert_html2creole2(self, creole, html, debug=False, unknown_emit=None):
+        # convert html code into creole markup
+        out_string = html2creole(html, debug, unknown_emit=unknown_emit)
+        if debug:
+            self._debug_text("assert_html2creole() html2creole", out_string)
+
+        # compare
+        self.assertEqual(out_string, creole, msg="html2creole")
+
     def assert_html2creole(self, raw_creole, raw_html, \
                 strip_lines=False, debug=False,
                 # OLD API:
@@ -165,21 +174,16 @@ class BaseCreoleTest(MarkupTest):
         self.assertNotEqual(raw_creole, raw_html)
 
         # prepare whitespace on test strings
-        markup = self._prepare_text(raw_creole)
-        assert isinstance(markup, TEXT_TYPE)
+        creole = self._prepare_text(raw_creole)
+        assert isinstance(creole, TEXT_TYPE)
         if debug:
-            self._debug_text("assert_creole2html() markup", markup)
+            self._debug_text("assert_creole2html() markup", creole)
 
         html = self._prepare_text(raw_html)
         assert isinstance(html, TEXT_TYPE)
 
-        # convert html code into creole markup
-        out_string = html2creole(html, debug, unknown_emit=unknown_emit)
-        if debug:
-            self._debug_text("assert_html2creole() html2creole", out_string)
+        self.assert_html2creole2(creole, html, debug, unknown_emit)
 
-        # compare
-        self.assertEqual(out_string, markup, msg="html2creole")
 
     def cross_compare_creole(self, creole_string, html_string,
                         strip_lines=False, debug=False,
