@@ -147,6 +147,8 @@ How to do this, read: https://code.google.com/p/python-creole/wiki/UseInSetup
 
 = history =
 
+* v1.0.2
+** Fix "[[https://github.com/jedie/python-creole/issues/6|AttributeError: 'NoneType' object has no attribute 'parent']]" in html2creole.
 * v1.0.1
 ** Fix "[[https://github.com/jedie/python-creole/issues/5|TypeError: expected string or buffer]]" in rest2html.
 ** [[https://github.com/jedie/python-creole/commit/e8422f944709a5f8c2c6a8c8a58a84a92620f035|Bugfix in exception handling.]]
