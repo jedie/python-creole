@@ -20,6 +20,7 @@ import creole
 from creole.setup_utils import get_long_description
 from creole.tests.utils.base_unittest import BaseCreoleTest
 from creole.py3compat import BINARY_TYPE, PY3, TEXT_TYPE
+import tempfile
 
 
 CREOLE_PACKAGE_ROOT = os.path.abspath(os.path.join(os.path.dirname(creole.__file__), ".."))
@@ -50,6 +51,23 @@ class SetupUtilsTests(BaseCreoleTest):
     def test_get_long_description_with_raise_errors(self):
         long_description = get_long_description(CREOLE_PACKAGE_ROOT, raise_errors=True)
         self.assertIn("=====\nabout\n=====\n\n", long_description)
+
+    def test_with_string(self):
+        fd = tempfile.NamedTemporaryFile()
+        path, filename = os.path.split(fd.name)
+
+        fd.write("== noerror ==")
+        fd.seek(0)
+        long_description = get_long_description(path, filename, raise_errors=True)
+        self.assertEqual(long_description, "-------\nnoerror\n-------")
+
+        fd.truncate()
+        fd.write("----")
+        fd.seek(0)
+
+        self.assertRaises(SystemExit, get_long_description, path, filename, raise_errors=True)
+
+        fd.close()
 
     def test_wrong_path_without_raise_errors(self):
         self.assertEqual(

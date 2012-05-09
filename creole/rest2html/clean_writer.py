@@ -165,7 +165,7 @@ class CleanHTMLTranslator(html4css1.HTMLTranslator, object):
         self.body.append('</table>\n')
 
 
-def rest2html(content):
+def rest2html(content, enable_exit_status=None, **kwargs):
     """
     Convert reStructuredText markup to clean html code: No extra div, class or ids.
     
@@ -174,19 +174,28 @@ def rest2html(content):
     
     >>> rest2html("A ReSt link to `PyLucid CMS <http://www.pylucid.org>`_ :)")
     '<p>A ReSt link to <a href="http://www.pylucid.org">PyLucid CMS</a> :)</p>\\n'
+         
+    >>> rest2html("========", enable_exit_status=1, traceback=False, exit_status_level=2)
+    Traceback (most recent call last):
+    ...
+    SystemExit: 13
     """
     if not PY3:
         content = unicode(content)
 
     assert isinstance(content, TEXT_TYPE), "rest2html content must be %s, but it's %s" % (TEXT_TYPE, type(content))
 
+    settings_overrides = {
+        "input_encoding": "unicode",
+        "doctitle_xform": False,
+    }
+    settings_overrides.update(kwargs)
+
     parts = publish_parts(
         source=content,
         writer=CleanHTMLWriter(),
-        settings_overrides={
-            "input_encoding": "unicode",
-            "doctitle_xform": False,
-        },
+        settings_overrides=settings_overrides,
+        enable_exit_status=enable_exit_status,
     )
 #    import pprint
 #    pprint.pprint(parts)
