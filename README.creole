@@ -25,6 +25,15 @@ Python packages available on: [[http://pypi.python.org/pypi/python-creole/]]
 ~$ pip install python-creole
 }}}
 
+== dependencies ==
+
+For the most parts ({{{creole2html}}} and {{{html2creole}}}) no external libraries are needed.
+
+For all functionality (and running the unittests) these modules are needed:
+
+* [[http://pypi.python.org/pypi/docutils/|docutils]] (for the ReStructuredText stuff)
+* [[http://pypi.python.org/pypi/textile/|textile]] (for html2textile tests)
+
 
 = example =
 
@@ -146,6 +155,8 @@ We using [[https://www.shiningpanda.com|Shining Panda]] and [[http://travis-ci.o
 
 With python-creole you can convert a README on-the-fly from creole into ReStructuredText in setup.py
 How to do this, read: https://code.google.com/p/python-creole/wiki/UseInSetup
+
+Note: In this case you must install **docutils**! See above.
 
 
 = history =
