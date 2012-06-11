@@ -52,22 +52,35 @@ class SetupUtilsTests(BaseCreoleTest):
         long_description = get_long_description(CREOLE_PACKAGE_ROOT, raise_errors=True)
         self.assertIn("=====\nabout\n=====\n\n", long_description)
 
-    def test_with_string(self):
+    def _tempfile(self, content):
         fd = tempfile.NamedTemporaryFile()
         path, filename = os.path.split(fd.name)
 
-        fd.write(b"== noerror ==")
+        fd.write(content)
         fd.seek(0)
-        long_description = get_long_description(path, filename, raise_errors=True)
-        self.assertEqual(long_description, "-------\nnoerror\n-------")
+        return path, filename, fd
 
-        fd.truncate()
-        fd.write(b"----")
-        fd.seek(0)
-
-        self.assertRaises(SystemExit, get_long_description, path, filename, raise_errors=True)
-
-        fd.close()
+    def test_tempfile_without_error(self):
+        path, filename, fd = self._tempfile(b"== noerror ==")
+        try:
+            long_description = get_long_description(path, filename, raise_errors=True)
+            self.assertEqual(long_description, "-------\nnoerror\n-------")
+        finally:
+            fd.close()
+            
+    def test_get_long_description_error_handling(self):
+        """
+        Test if get_long_description will raised a error, if description
+        produce a ReSt error.
+        
+        We test with this error:
+        <string>:102: (ERROR/3) Document or section may not begin with a transition.
+        """
+        path, filename, fd = self._tempfile(b"----")
+        try:
+            self.assertRaises(SystemExit, get_long_description, path, filename, raise_errors=True)
+        finally:
+            fd.close()
 
     def test_wrong_path_without_raise_errors(self):
         self.assertEqual(
