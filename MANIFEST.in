@@ -1,2 +1,3 @@
-include AUTHORS README.creole MANIFEST.in
+include AUTHORS MANIFEST.in
 recursive-exclude * *.py[co]
+recursive-include * *.creole
