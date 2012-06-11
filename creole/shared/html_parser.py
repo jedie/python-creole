@@ -25,4 +25,4 @@ if hasattr(OriginHTMLParser, "cdata_elem"):
     HTMLParser = OriginHTMLParser
 else:
     # Current python version is not patched -> use own patched version
-    from HTMLParsercompat import HTMLParser
+    from creole.shared.HTMLParsercompat import HTMLParser
