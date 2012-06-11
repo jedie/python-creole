@@ -1,0 +1,16 @@
+language: python
+python:
+  - "2.6"
+  - "2.7"
+  - "3.2"
+  - "pypy"
+install:
+  - pip install textile docutils
+# command to run tests
+script:
+  - ./setup.py test
+branches:
+  only:
+    - master
+notifications:
+  irc: "irc.freenode.org#pylucid"

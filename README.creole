@@ -1,3 +1,5 @@
+[[http://travis-ci.org/jedie/python-creole|{{https://secure.travis-ci.org/jedie/python-creole.png?branch=master|Build Status on travis-ci.org}}]]
+
 = about =
 
 python-creole is a OpenSource (GPL) Python lib for converting markups.
