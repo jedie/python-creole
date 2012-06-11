@@ -9,7 +9,7 @@
 
     http://openalea.gforge.inria.fr/doc/openalea/doc/_build/html/source/sphinx/rest_syntax.html
 
-    :copyleft: 2011 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2011-2012 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -25,6 +25,10 @@ from creole.shared.markup_table import MarkupTable
 DO_SUBSTITUTION = ("th", "td",) # TODO: In witch kind of node must we also substitude links?
 
 
+class Html2restException(Exception):
+    pass
+
+
 class ReStructuredTextEmitter(BaseEmitter):
     """
     Build from a document_tree (html2creole.parser.HtmlParser instance) a
@@ -37,6 +41,8 @@ class ReStructuredTextEmitter(BaseEmitter):
         self.table_auto_width = False
 
         self._substitution_data = []
+        self._used_substitution_links = {}
+        self._used_substitution_images = {}
         self._list_markup = ""
 
     def _get_block_data(self):
@@ -176,18 +182,45 @@ class ReStructuredTextEmitter(BaseEmitter):
         else:
             return False
 
+    def _get_old_substitution(self, substitution_dict, text, url):
+        if text not in substitution_dict:
+            # save for the next time
+            substitution_dict[text] = url
+        else:
+            # text has links with the same link text
+            old_url = substitution_dict[text]
+            if old_url == url:
+                # same url -> substitution can be reused
+                return old_url
+            else:
+                msg = (
+                    "Duplicate explicit target name:"
+                    " substitution was used more than one time, but with different URL."
+                    " - link text: %r url1: %r url2: %r"
+                ) % (text, old_url, url)
+                raise Html2restException(msg)
+
     def a_emit(self, node):
         link_text = self.emit_children(node)
         url = node.attrs["href"]
+
+        old_url = self._get_old_substitution(self._used_substitution_links, link_text, url)
+
         if self._should_do_substitution(node):
             # make a hyperlink reference
-            self._substitution_data.append(
-                ".. _%s: %s" % (link_text, url)
-            )
+            if not old_url:
+                # new substitution
+                self._substitution_data.append(
+                    ".. _%s: %s" % (link_text, url)
+                )
             return "`%s`_" % link_text
 
-        # create a inline hyperlink
-        return "`%s <%s>`_" % (link_text, url)
+        if old_url:
+            # reuse a existing substitution
+            return "`%s`_" % link_text
+        else:
+            # create a inline hyperlink
+            return "`%s <%s>`_" % (link_text, url)
 
     def img_emit(self, node):
         src = node.attrs["src"]
@@ -205,9 +238,13 @@ class ReStructuredTextEmitter(BaseEmitter):
         if substitution_text == "": # Use filename as picture text
             substitution_text = posixpath.basename(src)
 
-        self._substitution_data.append(
-            ".. |%s| image:: %s" % (substitution_text, src)
+        old_src = self._get_old_substitution(
+            self._used_substitution_images, substitution_text, src
         )
+        if not old_src:
+            self._substitution_data.append(
+                ".. |%s| image:: %s" % (substitution_text, src)
+            )
 
         return "|%s|" % substitution_text
 

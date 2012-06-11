@@ -9,7 +9,7 @@
 
     Note: This only works fine if there is no problematic whitespace handling.
 
-    :copyleft: 2011 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2011-2012 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -17,6 +17,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import unittest
 
+from creole.html2rest.emitter import Html2restException
 from creole.shared.unknown_tags import preformat_unknown_nodes
 from creole.tests.utils.base_unittest import BaseCreoleTest
 
@@ -195,8 +196,66 @@ class ReStTests(BaseCreoleTest):
                 </table>
             """
         )
+        
+    def test_duplicate_substitution1(self):
+        self.assertRaises(Html2restException, self.assert_html2rest,
+            rest_string="""
+                +-----------------------------+
+                | this is `same`_ first time. |
+                +-----------------------------+
+                
+                .. _same: /first/
+                
+                the `same </other/>`_ link?
+            """,
+            html_string="""
+                <table>
+                <tr><td>the <a href="/first/">same</a> first time.</td>
+                </tr>
+                </table>
+                <p>the <a href="/other/">same</a> link?</p>
+            """,
+#            debug=True
+        )
+        
+    def test_duplicate_link_substitution(self):
+        self.assertRaises(Html2restException, self.assert_html2rest,
+#        self.cross_compare(
+            rest_string="""
+                +-----------------------------+
+                | this is `same`_ first time. |
+                +-----------------------------+
+                
+                .. _same: /first/
+                
+                the `same </other/>`_ link?
+            """,
+            html_string="""
+                <table>
+                <tr><td>the <a href="/first/">same</a> first time.</td>
+                </tr>
+                </table>
+                <p>the <a href="/other/">same</a> link?</p>
+            """,
+#            debug=True
+        )
 
-
+    def test_duplicate_image_substitution(self):
+        self.assertRaises(Html2restException, self.assert_html2rest,
+#        self.cross_compare(
+            rest_string="""
+                a |image|...
+                and a other |image|!
+                
+                .. |image| image:: /image.png
+                .. |image| image:: /other.png
+            """,
+            html_string="""
+                <p>a <img src="/image.png" title="image" alt="image" />...<br />
+                and a other <img src="/other.png" title="image" alt="image" />!</p>
+            """,
+#            debug=True
+        )
 
 
 
