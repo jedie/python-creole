@@ -56,13 +56,13 @@ class SetupUtilsTests(BaseCreoleTest):
         fd = tempfile.NamedTemporaryFile()
         path, filename = os.path.split(fd.name)
 
-        fd.write("== noerror ==")
+        fd.write(b"== noerror ==")
         fd.seek(0)
         long_description = get_long_description(path, filename, raise_errors=True)
         self.assertEqual(long_description, "-------\nnoerror\n-------")
 
         fd.truncate()
-        fd.write("----")
+        fd.write(b"----")
         fd.seek(0)
 
         self.assertRaises(SystemExit, get_long_description, path, filename, raise_errors=True)
