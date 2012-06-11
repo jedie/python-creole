@@ -119,8 +119,8 @@ def get_long_description(package_root, filename="README.creole", raise_errors=No
             from creole.rest2html.clean_writer import rest2html
             try:
                 rest2html(long_description_rest_unicode, traceback=True, enable_exit_status=1, exit_status_level=2)
-            except SystemExit, e:
-                print("Error creole2rest self test failed: rest2html() exist with status code: %s" % e)
+            except SystemExit as e:
+                print("Error creole2rest self test failed: rest2html() exist with status code: %s" % e.args[0])
                 raise
 
     return long_description_rest
