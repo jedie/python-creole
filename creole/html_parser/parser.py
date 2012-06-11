@@ -20,7 +20,7 @@ from creole.html_parser.config import BLOCK_TAGS, IGNORE_TAGS
 from creole.html_tools.strip_html import strip_html
 from creole.py3compat import TEXT_TYPE, BINARY_TYPE
 from creole.shared.document_tree import DocNode, DebugList
-from creole.shared.html_parser import HTMLParser2
+from creole.shared.html_parser import HTMLParser
 
 #------------------------------------------------------------------------------
 
@@ -47,7 +47,7 @@ headline_tag_re = re.compile(r"h(\d)", re.UNICODE)
 #------------------------------------------------------------------------------
 
 
-class HtmlParser(HTMLParser2):
+class HtmlParser(HTMLParser):
     """
     parse html code and create a document tree.
     
@@ -85,7 +85,7 @@ class HtmlParser(HTMLParser2):
     _inline_placeholder = "inlinedata"
 
     def __init__(self, debug=False):
-        HTMLParser2.__init__(self)
+        HTMLParser.__init__(self)
 
         self.debugging = debug
         if self.debugging:
@@ -156,7 +156,7 @@ class HtmlParser(HTMLParser2):
 #            print(clean_data.replace(">", ">\n"))
 #            print("-"*79)
 
-        HTMLParser2.feed(self, data)
+        HTMLParser.feed(self, data)
 
         return self.root
 
