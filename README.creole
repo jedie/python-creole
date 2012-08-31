@@ -279,5 +279,6 @@ Note: In this case you must install **docutils**! See above.
 | Google code   | [[http://code.google.com/p/python-creole/]]
 | GitHub        | [[http://github.com/jedie/python-creole]]
 | PyPi          | [[http://pypi.python.org/pypi/python-creole/]]
+| Forum         | [[http://www.pylucid.org/de/forum/9/|official python-creole Forum]]
 | IRC           | [[http://www.pylucid.org/permalink/304/irc-channel|#pylucid on freenode.net]]
 | Shining Panda | [[https://jenkins.shiningpanda.com/python-creole/]]
