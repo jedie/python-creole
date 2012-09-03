@@ -5,7 +5,7 @@
     collects all existing unittests
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    :copyleft: 2008-2011 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2008-2012 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -16,6 +16,12 @@ import os
 import sys
 import time
 import unittest
+
+try:
+    import creole
+except ImportError as err:
+    # running tests, but creole is not in sys.path
+    raise ImportError("Seems that pyhton-creole is not installed, correctly: %s" % err)
 
 from creole.tests.test_creole2html import TestCreole2html, TestCreole2htmlMarkup, TestStr2Dict, TestDict2String
 from creole.tests.test_cross_compare_all import CrossCompareTests
