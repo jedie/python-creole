@@ -163,21 +163,22 @@ Note: In this case you must install **docutils**! See above.
 
 = history =
 
-* v1.0.5.pre
+* v1.0.5 - 2012-09-03
 ** made automatic protocol links more strict: Only whitespace before and at the end are allowed.
-* v1.0.4
+** Bugfix: Don't allow {{{ftp:/broken}}} (Only one slash) to be a link.
+* v1.0.4 - 2012-06-11
 ** html2rest: Handle double link/image substitution and raise better error messages
 ** Bugfix in unittests (include test README file in python package).  Thanks to Wen Heping for reporting this.
-* v1.0.3
+* v1.0.3 - 2012-06-11
 ** Bugfix: {{{AttributeError: 'module' object has no attribute 'interesting_cdata'}}} from HTMLParser patch. Thanks to Wen Heping for reporting this.
 ** Fix a bug in get_long_description() ReSt test for Py3k and his unittests.
 ** Use Travis CI, too.
-* v1.0.2
+* v1.0.2 - 2012-04-04
 ** Fix "[[https://github.com/jedie/python-creole/issues/6|AttributeError: 'NoneType' object has no attribute 'parent']]" in html2creole.
-* v1.0.1
+* v1.0.1 - 2011-11-16
 ** Fix "[[https://github.com/jedie/python-creole/issues/5|TypeError: expected string or buffer]]" in rest2html.
 ** [[https://github.com/jedie/python-creole/commit/e8422f944709a5f8c2c6a8c8a58a84a92620f035|Bugfix in exception handling.]]
-* v1.0.0
+* v1.0.0 - 2011-10-20
 ** Change API: Replace 'parser_kwargs' and 'emitter_kwargs' with separate arguments. (More information on [[http://code.google.com/p/python-creole/wiki/API|API Wiki Page]])
 * v0.9.2
 ** Turn zip_safe in setup.py on and change unittests API.
