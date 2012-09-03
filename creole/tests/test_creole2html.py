@@ -539,6 +539,52 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             ...and <tt><strong>strong</strong> Teletyper</tt> ;)</p>
         """)
 
+    def test_protocol_in_brackets(self):
+        self.assert_creole2html(r"""
+            My Server ([[ftp://foo/bar]]) is ok.
+        """, """
+            <p>My Server (<a href="ftp://foo/bar">ftp://foo/bar</a>) is ok.</p>
+        """)
+        self.assert_creole2html(r"""
+            My Server (ftp://foo/bar) is ok.
+        """, """
+            <p>My Server (<a href="ftp://foo/bar">ftp://foo/bar</a>) is ok.</p>
+        """)
+
+    def test_protocol_with_brackets(self):
+        self.assert_creole2html(r"""
+            A http://en.wikipedia.org/wiki/Uri_(Island) link.
+        """, """
+            <p>A <a href="http://en.wikipedia.org/wiki/Uri_(Island)">http://en.wikipedia.org/wiki/Uri_(Island)</a>) link.</p>
+        """)
+
+    def test_wrong_protocol(self):
+        self.assert_creole2html(r"""
+            ~ftp://ok
+        """, """
+            <p>ftp://ok</p>
+        """)
+        self.assert_creole2html(r"""
+            ftp:
+        """, """
+            <p>ftp:</p>
+        """)
+        self.assert_creole2html(r"""
+            ftp:/
+        """, """
+            <p>ftp:/</p>
+        """)
+        self.assert_creole2html(r"""
+            missing space.ftp://ok
+        """, """
+            <p>missing space.ftp://ok</p>
+        """)
+        self.assert_creole2html(r"""
+            ftp://ok(Also missed space)
+        """, """
+            <p>ftp://ok(Also missed space)</p>
+        """)
+
 
 class TestStr2Dict(unittest.TestCase):
     def test_basic(self):
