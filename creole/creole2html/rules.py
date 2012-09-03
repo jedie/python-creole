@@ -22,7 +22,7 @@ class InlineRules(object):
     url = r'''(?P<url>
             (^ | (?<=\s | \W))
             (?P<escaped_url>~)?
-            (?P<url_target> (?P<url_proto> %s ):\S+)
+            (?P<url_target> (?P<url_proto> %s )://\S+)
         )''' % proto
     link = r'''(?P<link>
             \[\[
