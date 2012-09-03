@@ -102,19 +102,21 @@ Contributers should take a look at this page:
 
 == run unittests ==
 
-From source package, use setup.py to run unittests:
+From source package, use setup.py to run unittests (Works without install python-creole):
 {{{
 .../path/to/python-creole$ python setup.py test
 }}}
 
-If you have install python-creole do this to run unittests:
+If you have installed python-creole do this to run unittests:
 {{{
 ~$ cd /path/to/site-packages
 ...path/to/site-packages/$ cd 
 ...path/to/site-packages/python_creole-0.9.0.pre-py2.7.egg$ cd /creole/tests
 ...path/to/site-packages/python_creole-0.9.0.pre-py2.7.egg/creole/tests$ python all_tests.py
 }}}
-Note: You can pass the arguments {{{--verbose}}} or {{{--quite}}} to **setup.py** and **all_tests.py**
+Note:
+* You can pass the arguments {{{--verbose}}} or {{{--quite}}} to **setup.py** and **all_tests.py**
+* If you get a error like {{{ImportError: ... No module named creole}}}, then python-creole is not installed successfully, because it's not found in Python {{{sys.path}}}
 
 
 You can also run tests inside interactive python:
