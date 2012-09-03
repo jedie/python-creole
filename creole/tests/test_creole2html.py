@@ -12,7 +12,7 @@
 
     Test the creole markup.
 
-    :copyleft: 2008-2011 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2008-2012 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -555,7 +555,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
         self.assert_creole2html(r"""
             A http://en.wikipedia.org/wiki/Uri_(Island) link.
         """, """
-            <p>A <a href="http://en.wikipedia.org/wiki/Uri_(Island)">http://en.wikipedia.org/wiki/Uri_(Island)</a>) link.</p>
+            <p>A <a href="http://en.wikipedia.org/wiki/Uri_(Island)">http://en.wikipedia.org/wiki/Uri_(Island)</a> link.</p>
         """)
 
     def test_wrong_protocol(self):
@@ -578,11 +578,6 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             missing space.ftp://ok
         """, """
             <p>missing space.ftp://ok</p>
-        """)
-        self.assert_creole2html(r"""
-            ftp://ok(Also missed space)
-        """, """
-            <p>ftp://ok(Also missed space)</p>
         """)
 
 

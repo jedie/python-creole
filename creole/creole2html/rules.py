@@ -5,7 +5,7 @@
     Creole Rules for parser
     ~~~~~~~~~~~~~~~~~~~~~~~
 
-    :copyleft: 2008-2011 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2008-2012 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -20,10 +20,9 @@ class InlineRules(object):
     """
     proto = r'http|https|ftp|nntp|news|mailto|telnet|file|irc'
     url = r'''(?P<url>
-            (^ | (?<=\s | [.,:;!?()/=]))
+            (^ | (?<=\s))
             (?P<escaped_url>~)?
-            (?P<url_target> (?P<url_proto> %s ):\S+? )
-            ($ | (?=\s | [,.:;!?()] (\s | $)))
+            (?P<url_target> (?P<url_proto> %s )://[^$\s]+ )
         )''' % proto
     link = r'''(?P<link>
             \[\[

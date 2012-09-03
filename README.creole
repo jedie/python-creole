@@ -163,6 +163,8 @@ Note: In this case you must install **docutils**! See above.
 
 = history =
 
+* v1.0.5.pre
+** made automatic protocol links more strict: Only whitespace before and at the end are allowed.
 * v1.0.4
 ** html2rest: Handle double link/image substitution and raise better error messages
 ** Bugfix in unittests (include test README file in python package).  Thanks to Wen Heping for reporting this.
