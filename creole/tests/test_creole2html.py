@@ -548,7 +548,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
         self.assert_creole2html(r"""
             My Server (ftp://foo/bar) is ok.
         """, """
-            <p>My Server (<a href="ftp://foo/bar">ftp://foo/bar</a>) is ok.</p>
+            <p>My Server (ftp://foo/bar) is ok.</p>
         """)
 
     def test_protocol_with_brackets(self):
