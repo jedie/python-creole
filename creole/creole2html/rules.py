@@ -152,10 +152,10 @@ class BlockRules(object):
 
     def __init__(self, blog_line_breaks=True):
         if blog_line_breaks:
-            # use blog style line breaks (every line break would be convertet into <br />) 
+            # use natural style line breaks (every line break would be converted into <br />) 
             self.text = r'(?P<text> .+ ) (?P<break> (?<!\\)$\n(?!\s*$) )?'
         else:
-            # use wiki style line breaks, seperate lines with one space
+            # use wikipedia style line breaks, separate lines with one space
             self.text = r'(?P<space> (?<!\\)$\n(?!\s*$) )? (?P<text> .+ )'
 
         self.rules = (
