@@ -20,10 +20,9 @@ class InlineRules(object):
     """
     proto = r'http|https|ftp|nntp|news|mailto|telnet|file|irc'
     url = r'''(?P<url>
-            (^ | (?<=\s | [.,:;!?()/=]))
+            (^ | (?<=\s | \W))
             (?P<escaped_url>~)?
-            (?P<url_target> (?P<url_proto> %s ):\S+? )
-            ($ | (?=\s | [,.:;!?()] (\s | $)))
+            (?P<url_target> (?P<url_proto> %s )://\S+)
         )''' % proto
     link = r'''(?P<link>
             \[\[
