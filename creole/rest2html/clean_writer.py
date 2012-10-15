@@ -12,7 +12,7 @@
     http://www.arnebrodowski.de/blog/write-your-own-restructuredtext-writer.html
     https://github.com/alex-morega/docutils-plainhtml/blob/master/plain_html_writer.py
     
-    :copyleft: 2011 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2011-2012 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -188,6 +188,7 @@ def rest2html(content, enable_exit_status=None, **kwargs):
     settings_overrides = {
         "input_encoding": "unicode",
         "doctitle_xform": False,
+        "file_insertion_enabled": False,
     }
     settings_overrides.update(kwargs)
 

@@ -7,7 +7,7 @@
     
     Unittests for rest2html, see: creole/rest2html/clean_writer.py
 
-    :copyleft: 2011 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2011-2012 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -98,6 +98,21 @@ class ReSt2HtmlTests(BaseCreoleTest):
         """, """
             <h1>head 1</h1>
             <h2>head 2</h2>
+        """)
+
+    def test_include(self):
+        self.assert_rest2html("""
+            Include should be disabled by default.
+            
+            .. include:: doesntexist.txt
+        """, """
+            <p>Include should be disabled by default.</p>
+            <p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">&lt;string&gt;</tt>, line 3)</p>
+            <p>&quot;include&quot; directive disabled.</p>
+            <pre>
+            .. include:: doesntexist.txt
+            </pre>
+            </div>
         """)
 
 
