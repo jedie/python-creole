@@ -163,8 +163,8 @@ Note: In this case you must install **docutils**! See above.
 
 = history =
 
-* v1.0.6.pre - 2012-10-15
-** Security fix in rest2html: Disable "file_insertion_enabled" as default.
+* v1.0.6 - 2012-10-15
+** Security fix in rest2html: Disable "file_insertion_enabled" and "raw_enabled" as default.
 * v1.0.5 - 2012-09-03
 ** made automatic protocol links more strict: Only whitespace before and at the end are allowed.
 ** Bugfix: Don't allow {{{ftp:/broken}}} (Only one slash) to be a link.

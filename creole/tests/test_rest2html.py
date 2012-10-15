@@ -102,20 +102,13 @@ class ReSt2HtmlTests(BaseCreoleTest):
         """)
 
     def test_include_disabled_by_default(self):
-        # Info: will create a waring
         self.assert_rest2html("""
             Include should be disabled by default.
             
             .. include:: doesntexist.txt
         """, """
             <p>Include should be disabled by default.</p>
-            <p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">&lt;string&gt;</tt>, line 3)</p>
-            <p>&quot;include&quot; directive disabled.</p>
-            <pre>
-            .. include:: doesntexist.txt
-            </pre>
-            </div>
-        """)
+        """, report_level=3) # Set log level to "error" to suppress the waring output
 
     def test_include_enabled(self):
         with tempfile.NamedTemporaryFile() as temp:
@@ -129,6 +122,29 @@ class ReSt2HtmlTests(BaseCreoleTest):
                 <p>Enable include and test it.</p>
                 <p>Content from include file.</p>
             """, file_insertion_enabled=True, input_encoding="utf-8")
+
+    def test_raw_disabled_by_default(self):
+        self.assert_rest2html("""
+            Raw directive should be disabled by default.
+            
+            .. raw:: html
+
+               <hr width=50 size=10>
+        """, """
+            <p>Raw directive should be disabled by default.</p>
+        """, report_level=3) # Set log level to "error" to suppress the waring output
+
+    def test_raw_enabled(self):
+        self.assert_rest2html("""
+            Now RAW is enabled.
+            
+            .. raw:: html
+
+               <hr width=50 size=10>
+        """, """
+            <p>Now RAW is enabled.</p>
+            <hr width=50 size=10>
+        """, raw_enabled=True)
 
 
 if __name__ == '__main__':

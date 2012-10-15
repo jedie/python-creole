@@ -189,6 +189,7 @@ def rest2html(content, enable_exit_status=None, **kwargs):
         "input_encoding": "unicode",
         "doctitle_xform": False,
         "file_insertion_enabled": False,
+        "raw_enabled": False,
     }
     settings_overrides.update(kwargs)
 
