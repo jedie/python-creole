@@ -111,8 +111,10 @@ class ReSt2HtmlTests(BaseCreoleTest):
         """, report_level=3) # Set log level to "error" to suppress the waring output
 
     def test_include_enabled(self):
+        test_content = "Content from include file."
+        test_content = test_content.encode("utf-8")
         with tempfile.NamedTemporaryFile() as temp:
-            temp.write("Content from include file.")
+            temp.write(test_content)
             temp.flush()
             self.assert_rest2html("""
                 Enable include and test it.
