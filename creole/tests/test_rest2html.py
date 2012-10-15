@@ -13,6 +13,7 @@
 
 from __future__ import division, absolute_import, print_function, unicode_literals
 
+import tempfile
 import unittest
 
 from creole.tests.utils.base_unittest import BaseCreoleTest
@@ -100,7 +101,8 @@ class ReSt2HtmlTests(BaseCreoleTest):
             <h2>head 2</h2>
         """)
 
-    def test_include(self):
+    def test_include_disabled_by_default(self):
+        # Info: will create a waring
         self.assert_rest2html("""
             Include should be disabled by default.
             
@@ -114,6 +116,19 @@ class ReSt2HtmlTests(BaseCreoleTest):
             </pre>
             </div>
         """)
+
+    def test_include_enabled(self):
+        with tempfile.NamedTemporaryFile() as temp:
+            temp.write("Content from include file.")
+            temp.flush()
+            self.assert_rest2html("""
+                Enable include and test it.
+                
+                .. include:: %s
+            """ % temp.name, """
+                <p>Enable include and test it.</p>
+                <p>Content from include file.</p>
+            """, file_insertion_enabled=True, input_encoding="utf-8")
 
 
 if __name__ == '__main__':

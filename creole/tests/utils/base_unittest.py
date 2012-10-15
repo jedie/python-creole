@@ -301,7 +301,7 @@ class BaseCreoleTest(MarkupTest):
         return rest_string, html_string
 
     def assert_rest2html(self, rest_string, html_string, \
-            strip_lines=False, debug=False, prepare_strings=True):
+            strip_lines=False, debug=False, prepare_strings=True, **kwargs):
 
         # compare rest -> html
         if not REST_INSTALLED:
@@ -312,7 +312,7 @@ class BaseCreoleTest(MarkupTest):
             rest_string = self._prepare_text(rest_string)
             html_string = self._prepare_text(html_string)
 
-        html = rest2html(rest_string)
+        html = rest2html(rest_string, **kwargs)
 
         if debug:
             print(rest_string)
