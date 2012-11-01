@@ -124,7 +124,7 @@ class CreoleParser(object):
         text = groups.get('text', "")
 
         if groups.get('space'):
-            # use wiki style line breaks and seperate a new line with one space
+            # use wikipedia style line breaks and seperate a new line with one space
             text = " " + text
 
         self.parse_inline(text)

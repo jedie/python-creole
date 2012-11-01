@@ -19,11 +19,19 @@ class InlineRules(object):
     All inline rules
     """
     proto = r'http|https|ftp|nntp|news|mailto|telnet|file|irc'
+    # New regex for finding uris, requires uri to free stand within whitespace or lineends.
     url = r'''(?P<url>
             (^ | (?<=\s))
             (?P<escaped_url>~)?
             (?P<url_target> (?P<url_proto> %s )://[^$\s]+ )
         )''' % proto
+    # Original uri matching regex inherited from MoinMoin code.
+    #url = r'''(?P<url>
+            #(^ | (?<=\s | [.,:;!?()/=]))
+            #(?P<escaped_url>~)?
+            #(?P<url_target> (?P<url_proto> %s ):\S+? )
+            #($ | (?=\s | [,.:;!?()] (\s | $)))
+        #)''' % proto
     link = r'''(?P<link>
             \[\[
             (?P<link_target>.+?) \s*
