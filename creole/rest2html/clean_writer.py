@@ -164,6 +164,28 @@ class CleanHTMLTranslator(html4css1.HTMLTranslator, object):
     def depart_docinfo(self, node):
         self.body.append('</table>\n')
 
+    #__________________________________________________________________________
+    # Clean image:
+
+    depart_figure = _do_nothing
+
+    def visit_image(self, node):
+        super(CleanHTMLTranslator, self).visit_image(node)
+        if self.body[-1].startswith('<img'):
+            align = None
+
+            if 'align' in node:
+                # image with alignment
+                align = node['align']
+
+            elif node.parent.tagname == 'figure' and 'align' in node.parent:
+                # figure with alignment
+                align = node.parent['align']
+
+            if align:
+                self.body[-1] = self.body[-1].replace(' />', ' align="%s" />' % align)
+
+
 
 def rest2html(content, enable_exit_status=None, **kwargs):
     """
