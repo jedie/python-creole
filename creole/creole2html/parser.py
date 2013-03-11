@@ -60,8 +60,9 @@ class CreoleParser(object):
 
 
     def __init__(self, raw, block_rules=None, blog_line_breaks=True):
+        raw = raw or ""
         assert isinstance(raw, TEXT_TYPE)
-        self.raw = raw or ""
+        self.raw = raw
 
         if block_rules is None:
             block_rules = BlockRules(blog_line_breaks=blog_line_breaks)
