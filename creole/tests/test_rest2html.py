@@ -148,6 +148,28 @@ class ReSt2HtmlTests(BaseCreoleTest):
             <hr width=50 size=10>
         """, raw_enabled=True)
 
+    def test_preserve_image_alignment(self):
+        self.assert_rest2html("""
+            Image alignment should be preserved.
+
+            .. image:: foo.png
+               :align: right
+        """, """
+            <p>Image alignment should be preserved.</p>
+            <img alt="foo.png" src="foo.png" align="right" />
+        """)
+
+    def test_preserve_figure_alignment(self):
+        self.assert_rest2html("""
+            Image alignment should be preserved.
+
+            .. figure:: bar.png
+               :align: right
+        """, """
+            <p>Image alignment should be preserved.</p>
+            <img alt="bar.png" src="bar.png" align="right" />
+        """)
+
 
 if __name__ == '__main__':
     unittest.main()
