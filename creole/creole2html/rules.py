@@ -61,8 +61,8 @@ class InlineRules(object):
     #--------------------------------------------------------------------------
 
     # a macro like: <<macro>>text<</macro>>
-    inline_macro = r'''
-        (?P<inline_macro>
+    macro_inline = r'''
+        (?P<macro_inline>
         << \s* (?P<macro_inline_start>\w+) \s* (?P<macro_inline_args>.*?) \s* >>
         (?P<macro_inline_text>(.|\n)*?)
         <</ \s* (?P=macro_inline_start) \s* >>
@@ -196,7 +196,7 @@ class SpecialRules(object):
             ) \s*
         ''' % '|'.join([
             InlineRules.link,
-            InlineRules.inline_macro, InlineRules.macro_tag,
+            InlineRules.macro_inline, InlineRules.macro_tag,
             InlineRules.image,
             InlineRules.pre_inline
         ])
@@ -208,7 +208,7 @@ class SpecialRules(object):
 INLINE_FLAGS = re.VERBOSE | re.UNICODE
 INLINE_RULES = (
     InlineRules.link, InlineRules.url,
-    InlineRules.inline_macro, InlineRules.macro_tag,
+    InlineRules.macro_inline, InlineRules.macro_tag,
     InlineRules.pre_inline, InlineRules.image,
 
     InlineRules.strong, InlineRules.emphasis,
