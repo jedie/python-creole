@@ -12,7 +12,7 @@
     http://www.arnebrodowski.de/blog/write-your-own-restructuredtext-writer.html
     https://github.com/alex-morega/docutils-plainhtml/blob/master/plain_html_writer.py
     
-    :copyleft: 2011-2012 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2011-2013 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -144,6 +144,9 @@ class CleanHTMLTranslator(html4css1.HTMLTranslator, object):
     depart_tbody = _do_nothing
 
     def visit_table(self, node):
+        if docutils.__version__ > "0.10":
+            self.context.append(self.compact_p)
+            self.compact_p = True
         self.body.append(self.starttag(node, 'table'))
 
     def visit_tgroup(self, node):
