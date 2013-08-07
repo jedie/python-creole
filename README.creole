@@ -165,6 +165,7 @@ Note: In this case you must install **docutils**! See above.
 
 * v1.0.7 - 2013-08.07
 ** Bugfix in 'clean reStructuredText html writer' if docutils => v0.11 used.
+** Bugfix for PyPy 2.1 usage
 * v1.0.6 - 2012-10-15
 ** Security fix in rest2html: Disable "file_insertion_enabled" and "raw_enabled" as default.
 * v1.0.5 - 2012-09-03
