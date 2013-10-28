@@ -45,6 +45,14 @@ setup(
     packages=find_packages(),
     include_package_data=True, # include package data under svn source control
     data_files=[("", ["README.creole"])], # README used in unittest test_setup_utils.py
+    entry_points={
+        "console_scripts": [
+            "creole2html = creole.cmdline:cli_creole2html",
+            "html2creole = creole.cmdline:cli_html2creole",
+            "html2rest = creole.cmdline:cli_html2rest",
+            "html2textile = creole.cmdline:cli_html2textile",
+        ],
+    },
     zip_safe=True, # http://packages.python.org/distribute/setuptools.html#setting-the-zip-safe-flag
     keywords="creole markup creole2html html2creole rest2html html2rest html2textile",
     classifiers=[

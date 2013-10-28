@@ -84,6 +84,36 @@ u'This is *textile __markup__*!'
 
 See also: [[http://github.com/jedie/python-creole/blob/master/demo.py]]
 
+= commandline interface =
+
+If you have python-creole installed, you will get these simple CLI scripts:
+* creole2html
+* html2creole
+* html2rest
+* html2textile
+
+Here the {{{--help}}} output from {{{html2creole}}}: 
+{{{
+$ html2creole --help
+usage: html2creole [-h] [-v] [--encoding ENCODING] sourcefile destination
+
+python-creole is an open-source (GPL) markup converter in pure Python for:
+creole2html, html2creole, html2ReSt, html2textile
+
+positional arguments:
+  sourcefile           source file to convert
+  destination          Output filename
+
+optional arguments:
+  -h, --help           show this help message and exit
+  -v, --version        show program's version number and exit
+  --encoding ENCODING  Codec for read/write file (default encoding: utf-8)
+}}}
+
+Example to convert a html file into a creole file:
+{{{
+$ html2creole foobar.html foobar.creole
+}}}
 
 = documentation =
 
@@ -163,7 +193,9 @@ Note: In this case you must install **docutils**! See above.
 
 = history =
 
-* v1.0.7 - 2013-08.07
+* v1.1.0 - 2013-10-28
+** NEW: Simple commandline interface added.
+* v1.0.7 - 2013-08-07
 ** Bugfix in 'clean reStructuredText html writer' if docutils => v0.11 used.
 ** Bugfix for PyPy 2.1 usage
 * v1.0.6 - 2012-10-15
