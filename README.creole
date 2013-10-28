@@ -1,5 +1,3 @@
-{{https://secure.travis-ci.org/jedie/python-creole.png?branch=master|Build Status on travis-ci.org}}
-
 = about =
 
 python-creole is a OpenSource (GPL) Python lib for converting markups.
@@ -130,7 +128,15 @@ Contributers should take a look at this page:
 * [[http://code.google.com/p/python-creole/wiki/DeveloperInfo]]
 
 
-== run unittests ==
+== unittests ==
+
+{{https://secure.travis-ci.org/jedie/python-creole.png?branch=master|Build Status on travis-ci.org}}
+* https://travis-ci.org/jedie/python-creole
+
+Jenkins @ shiningpanda.com:
+* https://jenkins.shiningpanda.com/python-creole/
+
+=== run unittests ===
 
 From source package, use setup.py to run unittests (Works without install python-creole):
 {{{
