@@ -199,6 +199,8 @@ Note: In this case you must install **docutils**! See above.
 
 = history =
 
+* v1.1.1 - 2013-11-08
+** Bugfix: Setup script exited with error: can't copy 'README.creole': doesn't exist or not a regular file
 * v1.1.0 - 2013-10-28
 ** NEW: Simple commandline interface added.
 * v1.0.7 - 2013-08-07
