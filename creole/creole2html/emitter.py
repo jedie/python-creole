@@ -28,6 +28,13 @@ class HtmlEmitter(object):
     def __init__(self, root, macros=None, verbose=None, stderr=None):
         self.root = root
         self.macros = macros
+        self.has_toc = False
+        self.toc_max_depth = float('inf')
+
+        if self.macros is None:
+            self.macros = {'toc': self.create_toc}
+        elif isinstance(self.macros, dict):
+            self.macros['toc'] = self.create_toc
 
         if verbose is None:
             self.verbose = 1
@@ -51,6 +58,24 @@ class HtmlEmitter(object):
 
     def attr_escape(self, text):
         return self.html_escape(text).replace('"', '&quot')
+
+    def create_toc(self,  depth=float('inf'),  **kwargs):
+        """Called when if the macro <<toc>> is defined when it is emitted."""
+        self.has_toc = True
+        self.toc_max_depth = depth
+        self.toc = ['root',  []]
+
+        return u'<<toc>>'
+
+    def update_toc(self, level, content):
+        """Add the current header to the toc."""
+        if level <= self.toc_max_depth:
+            current_level = 0
+            toc_node = self.toc
+            while current_level != level:
+                toc_node = toc_node[-1]
+                current_level += 1
+            toc_node.extend([self.html_escape(content),  []])
 
     # *_emit methods for emitting nodes of the document:
 
@@ -138,8 +163,16 @@ class HtmlEmitter(object):
     #--------------------------------------------------------------------------
 
     def header_emit(self, node):
-        return '<h%d>%s</h%d>\n' % (
-            node.level, self.html_escape(node.content), node.level)
+        header = '<h%d>%s</h%d>\n' % (
+                node.level, self.html_escape(node.content), node.level)
+        if self.has_toc:
+            self.update_toc(node.level,  node.content)
+            # add link attribute for toc navigation
+            header = '<a name="%s">%s</a>' % (
+                self.html_escape(node.content),  header)
+            return header
+        else:
+            return header
 
     def preformatted_emit(self, node):
         return '<pre>%s</pre>' % self.html_escape(node.content)
@@ -274,9 +307,32 @@ class HtmlEmitter(object):
         emit = getattr(self, '%s_emit' % node.kind, self.default_emit)
         return emit(node)
 
+    def python_list2html_list(self, python_list):
+        """Convert a python nested list like the one representing the toc to an html equivalent."""
+        if python_list:
+            if isinstance(python_list,  str):
+                return '<li><a href="#%s">%s</a> </li>\n' % (python_list, python_list)
+            elif isinstance(python_list,  list):
+                html_list = '<ul>'
+                for elt in python_list:
+                    html_list += self.python_list2html_list(elt)
+                html_list += '</ul>\n'
+                return html_list
+        else:
+            return ''
+
+    def toc_emit(self,  document):
+        """Emit the toc where the <<toc>> macro was."""
+        html_toc = self.python_list2html_list(self.toc[-1])
+        return document.replace('<p><<toc>></p>', html_toc)
+
     def emit(self):
         """Emit the document represented by self.root DOM tree."""
-        return self.emit_node(self.root).strip()
+        document = self.emit_node(self.root).strip()
+        if self.has_toc:
+            return self.toc_emit(document)
+        else:
+            return document
 
     def error(self, text, exc_info=None):
         """

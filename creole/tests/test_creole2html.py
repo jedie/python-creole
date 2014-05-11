@@ -4,9 +4,9 @@
 """
     creole2html unittest
     ~~~~~~~~~~~~~~~~~~~~
-    
+
     Here are only some tests witch doesn't work in the cross compare tests.
-    
+
     Info: There exist some situations with different whitespace handling
         between creol2html and html2creole.
 
@@ -59,9 +59,9 @@ class TestCreole2html(unittest.TestCase):
         # Check if we get a traceback information into our stderr handler
         must_have = (
             "Traceback",
-            "AttributeError:",
-            "has no attribute 'notexist1'",
-            "has no attribute 'notexist2'",
+            "KeyError:",
+            "KeyError: 'notexist1'",
+            "KeyError: 'notexist2'",
         )
 
         for part in must_have:
@@ -194,7 +194,6 @@ class TestCreole2html(unittest.TestCase):
 
 
 
-
 class TestCreole2htmlMarkup(BaseCreoleTest):
 
     def test_creole_basic(self):
@@ -226,16 +225,16 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
         self.assert_creole2html(r"""
             This is a normal Text block witch would
             escape html chars like < and > ;)
-            
+
             So you can't insert <html> directly.
-            
+
             <p>This escaped, too.</p>
         """, """
             <p>This is a normal Text block witch would<br />
             escape html chars like &lt; and &gt; ;)</p>
-            
+
             <p>So you can't insert &lt;html&gt; directly.</p>
-            
+
             <p>&lt;p&gt;This escaped, too.&lt;/p&gt;</p>
         """)
 
@@ -258,20 +257,20 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
         self.assert_creole2html(r"""
             Bold and italics should //not be...
 
-            ...able// to **cross 
-            
+            ...able// to **cross
+
             paragraphs.**
         """, """
             <p>Bold and italics should //not be...</p>
-            
+
             <p>...able// to **cross</p>
-            
+
             <p>paragraphs.**</p>
         """)
 
     def test_list_special(self):
         """
-        optional whitespace before the list 
+        optional whitespace before the list
         """
         self.assert_creole2html(r"""
             * Item 1
@@ -279,7 +278,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
              ** Item 1.2
                 ** Item 1.3
                     * Item2
-            
+
                 # one
               ## two
         """, """
@@ -309,7 +308,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             A <<test_macro1 args="foo1">>bar1<</test_macro1>> in a line...
             ...a single <<test_macro1 foo="bar">> tag,
             or: <<test_macro1 a=1 b=2 />> closed...
-            
+
             a macro block:
             <<test_macro2 char="|">>
             the
@@ -321,7 +320,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             A [test macro1 - kwargs: args='foo1',text='bar1'] in a line...<br />
             ...a single [test macro1 - kwargs: foo='bar',text=None] tag,<br />
             or: [test macro1 - kwargs: a=1,b=2,text=None] closed...</p>
-            
+
             <p>a macro block:</p>
             the|text
             <p>the end</p>
@@ -335,12 +334,12 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
                 <<html>>
                 <p><<this is broken 'html', but it will be pass throu>></p>
                 <</html>>
-                
+
                 inline: <<html>>&#x7B;...&#x7D;<</html>> code
             """, r"""
                 <p>html macro:</p>
                 <p><<this is broken 'html', but it will be pass throu>></p>
-                
+
                 <p>inline: &#x7B;...&#x7D; code</p>
             """,
             macros=example_macros,
@@ -350,7 +349,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
         """
         not existing macro with creole2html.HtmlEmitter(verbose=1):
         A error message should be insertet into the generated code
-        
+
         Two tests: with verbose=1 and verbose=2, witch write a Traceback
         information to a given "stderr"
         """
@@ -359,14 +358,14 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             <<notexists>>
             foo bar
             <</notexists>>
-            
+
             inline macro:
             <<notexisttoo foo="bar">>
         """
         should_string = r"""
             <p>macro block:</p>
             [Error: Macro 'notexists' doesn't exist]
-            
+
             <p>inline macro:<br />
             [Error: Macro 'notexisttoo' doesn't exist]
             </p>
@@ -391,7 +390,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
     def test_macro_not_exist2(self):
         """
         not existing macro with creole2html.HtmlEmitter(verbose=0):
-        
+
         No error messages should be inserted.
         """
         self.assert_creole2html(r"""
@@ -399,16 +398,26 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             <<notexists>>
             foo bar
             <</notexists>>
-            
+
             inline macro:
             <<notexisttoo foo="bar">>
         """, r"""
             <p>macro block:</p>
-            
+
             <p>inline macro:<br />
             </p>
         """, verbose=False
         )
+
+
+    def test_toc(self):
+        """
+        Simple test to check the table of content is correctly generated.
+        """
+        html = creole2html("""<<toc>>\n= Creole""")
+        self.assertEqual(html,
+                            """<ul><li><a href="#Creole">Creole</a> </li>\n</ul>\n\n<a name="Creole"><h1>Creole</h1>\n</a>""")
+
 
     def test_image(self):
         """ test image tag with different picture text """
@@ -446,7 +455,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
 
     def test_standalone_hyperlink(self):
         self.assert_creole2html(r"""
-                a link to the http://www.pylucid.org page. 
+                a link to the http://www.pylucid.org page.
             """, """
                 <p>a link to the <a href="http://www.pylucid.org">http://www.pylucid.org</a> page.</p>
             """
@@ -457,14 +466,14 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             markup_string=self._prepare_text("""
                 wiki style
                 linebreaks
-                
+
                 ...and not blog styled.
             """),
             parser_kwargs={"blog_line_breaks":False},
         )
         self.assertEqual(html, self._prepare_text("""
             <p>wiki style linebreaks</p>
-            
+
             <p>...and not blog styled.</p>
         """))
 
@@ -473,7 +482,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             markup_string=self._prepare_text("""
                 **one**
                 //two//
-                
+
                 * one
                 * two
             """),
@@ -481,7 +490,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
         )
         self.assertEqual(html, self._prepare_text("""
             <p><strong>one</strong> <i>two</i></p>
-            
+
             <ul>
             \t<li>one</li>
             \t<li>two</li>
@@ -493,29 +502,29 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             markup_string=self._prepare_text("""
                 with blog line breaks, every line break would be convertet into<br />
                 with wiki style not.
-                
+
                 This is the first line,\\\\and this is the second.
-                
+
                 new line
                 block 1
-                
+
                 new line
                 block 2
-                
+
                 end
             """),
             parser_kwargs={"blog_line_breaks":False},
         )
         self.assertEqual(html, self._prepare_text("""
             <p>with blog line breaks, every line break would be convertet into&lt;br /&gt; with wiki style not.</p>
-            
+
             <p>This is the first line,<br />
             and this is the second.</p>
-            
+
             <p>new line block 1</p>
-            
+
             <p>new line block 2</p>
-            
+
             <p>end</p>
         """))
 
