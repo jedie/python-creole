@@ -309,9 +309,8 @@ class HtmlEmitter(object):
 
     def toc_list2html(self, toc_list):
         """Convert a python nested list like the one representing the toc to an html equivalent."""
-        print(toc_list)
         if toc_list:
-            if isinstance(toc_list,  str):
+            if isinstance(toc_list,  TEXT_TYPE):
                 return '<li><a href="#%s">%s</a> </li>\n' % (toc_list, toc_list)
             elif isinstance(toc_list,  list):
                 html = '<ul>'

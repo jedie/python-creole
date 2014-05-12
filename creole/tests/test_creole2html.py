@@ -28,6 +28,7 @@ except ImportError:
 
 from creole.tests.utils.base_unittest import BaseCreoleTest
 from creole.tests import test_macros
+from creole.py3compat import PY3
 
 from creole import creole2html
 from creole.shared import example_macros
@@ -57,12 +58,20 @@ class TestCreole2html(unittest.TestCase):
         error_msg = my_stderr.getvalue()
 
         # Check if we get a traceback information into our stderr handler
-        must_have = (
-            "Traceback",
-            "KeyError:",
-            "KeyError: 'notexist1'",
-            "KeyError: 'notexist2'",
-        )
+        if PY3:
+            must_have = (
+                "Traceback",
+                "KeyError:",
+                "KeyError: 'notexist1'",
+                "KeyError: 'notexist2'",
+            )
+        else:
+            must_have = (
+                "Traceback",
+                "KeyError:",
+                "KeyError: u'notexist1'",
+                "KeyError: u'notexist2'",
+            )
 
         for part in must_have:
             self.assertIn(part, error_msg)
