@@ -29,7 +29,7 @@ class HtmlEmitter(object):
         self.root = root
         self.macros = macros
         self.has_toc = False
-        self.toc_max_depth = float('inf')
+        self.toc_max_depth = None
 
         if self.macros is None:
             self.macros = {'toc': self.create_toc}
@@ -59,7 +59,7 @@ class HtmlEmitter(object):
     def attr_escape(self, text):
         return self.html_escape(text).replace('"', '&quot')
 
-    def create_toc(self,  depth=float('inf'),  **kwargs):
+    def create_toc(self,  depth=None,  **kwargs):
         """Called when if the macro <<toc>> is defined when it is emitted."""
         self.has_toc = True
         self.toc_max_depth = depth
@@ -69,7 +69,7 @@ class HtmlEmitter(object):
 
     def update_toc(self, level, content):
         """Add the current header to the toc."""
-        if level <= self.toc_max_depth:
+        if self.toc_max_depth is None or level < self.toc_max_depth:
             current_level = 0
             toc_node = self.toc
             while current_level != level:
@@ -307,24 +307,25 @@ class HtmlEmitter(object):
         emit = getattr(self, '%s_emit' % node.kind, self.default_emit)
         return emit(node)
 
-    def python_list2html_list(self, python_list):
+    def toc_list2html(self, toc_list):
         """Convert a python nested list like the one representing the toc to an html equivalent."""
-        if python_list:
-            if isinstance(python_list,  str):
-                return '<li><a href="#%s">%s</a> </li>\n' % (python_list, python_list)
-            elif isinstance(python_list,  list):
-                html_list = '<ul>'
-                for elt in python_list:
-                    html_list += self.python_list2html_list(elt)
-                html_list += '</ul>\n'
-                return html_list
+        print(toc_list)
+        if toc_list:
+            if isinstance(toc_list,  str):
+                return '<li><a href="#%s">%s</a> </li>\n' % (toc_list, toc_list)
+            elif isinstance(toc_list,  list):
+                html = '<ul>'
+                for elt in toc_list:
+                    html += self.toc_list2html(elt)
+                html += '</ul>\n'
+                return html
         else:
             return ''
 
     def toc_emit(self,  document):
         """Emit the toc where the <<toc>> macro was."""
-        html_toc = self.python_list2html_list(self.toc[-1])
-        return document.replace('<p><<toc>></p>', html_toc)
+        html_toc = self.toc_list2html(self.toc[-1])
+        return document.replace('<p><<toc>></p>', html_toc, 1)
 
     def emit(self):
         """Emit the document represented by self.root DOM tree."""
