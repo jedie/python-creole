@@ -65,7 +65,7 @@ class HtmlEmitter(object):
         self.toc_max_depth = depth
         self.toc = ['root',  []]
 
-        return u'<<toc>>'
+        return '<<toc>>'
 
     def update_toc(self, level, content):
         """Add the current header to the toc."""
