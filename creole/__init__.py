@@ -14,13 +14,13 @@
     :PyPi:
       http://pypi.python.org/pypi/python-creole/
 
-    :copyleft: 2008-2013 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2008-2014 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 from __future__ import division, absolute_import, print_function, unicode_literals
 
-__version__ = (1, 1, 1)
+__version__ = (1, 2, 0)
 __api__ = (1, 0) # Creole 1.0 spec - http://wikicreole.org/
 
 
