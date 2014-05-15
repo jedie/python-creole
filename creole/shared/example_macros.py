@@ -7,7 +7,7 @@
 
     Note: all mecro functions must return unicode!
 
-    :copyleft: 2008-2011 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2008-2014 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 
 """
@@ -34,7 +34,7 @@ def pre(text):
     Macro tag <<pre>>...<</pre>>.
     Put text between html pre tag.
     """
-    pre_text = '\n<pre>{}</pre>\n'
+    pre_text = '<pre>{}</pre>'
     return pre_text.format(text)
 
 
@@ -63,4 +63,4 @@ def code(ext, text):
     except:
         highlighted_text = pre(text)
     finally:
-        return highlighted_text.replace('\n', '<br />')
+        return highlighted_text.replace('\n', '<br />\n')

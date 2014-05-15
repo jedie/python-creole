@@ -12,7 +12,7 @@
 
     Test the creole markup.
 
-    :copyleft: 2008-2012 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2008-2014 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -48,6 +48,9 @@ class TestCreole2html(unittest.TestCase):
     def assertIn(self, src, dst):
         # assertIn is new in Python 2.7 ;)
         self.assertFalse(src not in dst, "%r not found in %r" % (src, dst))
+    def setUp(self):
+        # For fallback tests
+        example_macros.PYGMENTS = PYGMENTS
 
     def test_stderr(self):
         """
@@ -206,11 +209,38 @@ class TestCreole2html(unittest.TestCase):
         self.assertEqual(error_msg, "")
 
     def test_code_macro(self):
-        if PYGMENTS:
-            html = r'''<div class="pygments"><pre><span class="c"># Simple test</span><br /><span class="k">print</span><span class="p">(</span><span class="s">&#39;hello world&#39;</span><span class="p">)</span><br /></pre></div><br />'''
-            creole = """<<code ext=".py">># Simple test\nprint('hello world')\n<</code>>"""
-            self.assertEqual(creole2html(creole,  macros={'code': example_macros.code}),  html)
+        creole = (
+            r"""
+            Here a simple code macro test:
+            <<code ext=".py">>
+            for i in xrange(10):
+                print('hello world')
+            <</code>>
+            """
+        )
 
+        if PYGMENTS:
+            self.assert_creole2html(creole,
+                """
+                <p>Here a simple code macro test:</p>
+                <div class="pygments"><pre><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span><br />
+                    <span class="k">print</span><span class="p">(</span><span class="s">&#39;hello world&#39;</span><span class="p">)</span><br />
+                </pre></div><br />
+                """,
+                macros={'code': example_macros.code}
+            )
+
+            # test the pre fallback, too. Will be reset in self.setUp()
+            example_macros.PYGMENTS = False
+
+        self.assert_creole2html(creole,
+            """
+            <p>Here a simple code macro test:</p>
+            <pre>for i in xrange(10):
+                print('hello world')</pre>
+            """,
+            macros={'code': example_macros.code}
+        )
 
 
 

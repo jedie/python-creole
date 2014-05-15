@@ -85,8 +85,8 @@ See also: [[http://github.com/jedie/python-creole/blob/master/demo.py]]
 = Source code highlighting support =
 
 You can find a example macro which highlight source code thanks to the pygments
-library. It is located here: /creole/shared/example_macros.py. Here is how to
-use it:
+library. It is located here: [[https://github.com/jedie/python-creole/blob/master/creole/shared/example_macros.py|/creole/shared/example_macros.py]].
+Here is how to use it:
 
 {{{
 >>> from creole import creole2html
@@ -151,7 +151,7 @@ Jenkins @ shiningpanda.com:
 
 === run unittests ===
 
-From source package, use setup.py to run unittests (Works without install python-creole):
+From source package, use setup.py to run unittests (Works without install python-creole, needs setuptools):
 {{{
 .../path/to/python-creole$ python setup.py test
 }}}
@@ -213,6 +213,7 @@ Note: In this case you must install **docutils**! See above.
 = history =
 
 * v1.2.0.dev - 2014-05
+** NEW: Add {{{<<code>>}}} example macro (Source code highlighting with pygments) - implemented by Julien Enselme
 ** Bugfix for: AttributeError: 'CreoleParser' object has no attribute '_escaped_char_repl'
 ** Bugfix for: AttributeError: 'CreoleParser' object has no attribute '_escaped_url_repl'
 * v1.1.1 - 2013-11-08
