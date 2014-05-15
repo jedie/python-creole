@@ -45,9 +45,6 @@ class TestCreole2html(BaseCreoleTest):
     """
     Tests around creole2html API and macro function.
     """
-    def assertIn(self, src, dst):
-        # assertIn is new in Python 2.7 ;)
-        self.assertFalse(src not in dst, "%r not found in %r" % (src, dst))
     def setUp(self):
         # For fallback tests
         example_macros.PYGMENTS = PYGMENTS
@@ -67,23 +64,21 @@ class TestCreole2html(BaseCreoleTest):
         error_msg = my_stderr.getvalue()
 
         # Check if we get a traceback information into our stderr handler
-        if PY3:
-            must_have = (
-                "Traceback",
-                "KeyError:",
-                "KeyError: 'notexist1'",
-                "KeyError: 'notexist2'",
-            )
-        else:
-            must_have = (
-                "Traceback",
-                "KeyError:",
-                "KeyError: u'notexist1'",
-                "KeyError: u'notexist2'",
-            )
-
+        must_have = (
+            "Traceback",
+            "AttributeError:",
+            "has no attribute 'notexist1'",
+            "has no attribute 'notexist2'",
+        )
         for part in must_have:
-            self.assertIn(part, error_msg)
+            tb_lines = [" -"*40]
+            tb_lines += error_msg.splitlines()
+            tb_lines += [" -"*40]
+            tb = "\n".join([" >>> %s" % l for l in tb_lines])
+            msg = "%r not found in:\n%s" % (part, tb)
+            if part not in error_msg:
+                # assertIn is new in Python 2.7 ;)
+                raise self.failureException(msg)
 
     def test_example_macros1(self):
         """
@@ -435,7 +430,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
                 <p>wrong macro line:<br />
                 [Error: Wrong macro arguments: '>Some funky page summary.<</summary' for macro 'summary' (maybe wrong macro tag syntax?)]
                 </p>
-            """, #verbose=True
+            """, # verbose=True
         )
 
     def test_macro_not_exist2(self):
