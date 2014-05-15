@@ -21,6 +21,7 @@ except ImportError:
 
 from creole.shared.utils import get_pygments_lexer, get_pygments_formatter
 
+
 def html(text):
     """
     Macro tag <<html>>...<</html>>
@@ -34,8 +35,7 @@ def pre(text):
     Macro tag <<pre>>...<</pre>>.
     Put text between html pre tag.
     """
-    pre_text = '<pre>{}</pre>'
-    return pre_text.format(text)
+    return '<pre>%s</pre>' % text
 
 
 def code(ext, text):
