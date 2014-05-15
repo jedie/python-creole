@@ -82,6 +82,19 @@ u'This is *textile __markup__*!'
 
 See also: [[http://github.com/jedie/python-creole/blob/master/demo.py]]
 
+= Source code highlighting support =
+
+You can find a example macro which highlight source code thanks to the pygments
+library. It is located here: /creole/shared/example_macros.py. Here is how to
+use it:
+
+{{{
+>>> from creole import creole2html
+>>> from creole.shared.example_macros import code
+>>> creole_markup="""<<code ext=".py">>#some code\nprint('coucou')\n<</code>>"""
+>>> creole2html(creole_markup, macros={'code': code})
+}}}
+
 = commandline interface =
 
 If you have python-creole installed, you will get these simple CLI scripts:
@@ -90,7 +103,7 @@ If you have python-creole installed, you will get these simple CLI scripts:
 * html2rest
 * html2textile
 
-Here the {{{--help}}} output from {{{html2creole}}}: 
+Here the {{{--help}}} output from {{{html2creole}}}:
 {{{
 $ html2creole --help
 usage: html2creole [-h] [-v] [--encoding ENCODING] sourcefile destination
@@ -146,7 +159,7 @@ From source package, use setup.py to run unittests (Works without install python
 If you have installed python-creole do this to run unittests:
 {{{
 ~$ cd /path/to/site-packages
-...path/to/site-packages/$ cd 
+...path/to/site-packages/$ cd
 ...path/to/site-packages/python_creole-0.9.0.pre-py2.7.egg$ cd /creole/tests
 ...path/to/site-packages/python_creole-0.9.0.pre-py2.7.egg/creole/tests$ python all_tests.py
 }}}

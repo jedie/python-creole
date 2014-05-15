@@ -26,6 +26,12 @@ try:
 except ImportError:
     from io import StringIO # python 3
 
+try:
+    from pygments import highlight
+    PYGMENTS = True
+except ImportError:
+    PYGMENTS = False
+
 from creole.tests.utils.base_unittest import BaseCreoleTest
 from creole.tests import test_macros
 from creole.py3compat import PY3
@@ -198,6 +204,12 @@ class TestCreole2html(unittest.TestCase):
         )
         error_msg = my_stderr.getvalue()
         self.assertEqual(error_msg, "")
+
+    def test_code_macro(self):
+        if PYGMENTS:
+            html = r'''<div class="pygments"><pre><span class="c"># Simple test</span><br /><span class="k">print</span><span class="p">(</span><span class="s">&#39;hello world&#39;</span><span class="p">)</span><br /></pre></div><br />'''
+            creole = """<<code ext=".py">># Simple test\nprint('hello world')\n<</code>>"""
+            self.assertEqual(creole2html(creole,  macros={'code': example_macros.code}),  html)
 
 
 
