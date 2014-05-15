@@ -212,6 +212,9 @@ Note: In this case you must install **docutils**! See above.
 
 = history =
 
+* v1.2.0.dev - 2014-05
+** Bugfix for: AttributeError: 'CreoleParser' object has no attribute '_escaped_char_repl'
+** Bugfix for: AttributeError: 'CreoleParser' object has no attribute '_escaped_url_repl'
 * v1.1.1 - 2013-11-08
 ** Bugfix: Setup script exited with error: can't copy 'README.creole': doesn't exist or not a regular file
 * v1.1.0 - 2013-10-28

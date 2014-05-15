@@ -153,7 +153,7 @@ class CreoleParser(object):
             self.text.content += groups.get('url_target')
     _url_target_repl = _url_repl
     _url_proto_repl = _url_repl
-    _escaped_url = _url_repl
+    _escaped_url_repl = _url_repl
 
     def _link_repl(self, groups):
         """Handle all kinds of links."""
@@ -406,6 +406,7 @@ class CreoleParser(object):
         if self.text is None:
             self.text = DocNode('text', self.cur, "")
         self.text.content += groups.get('escaped_char', "")
+    _escaped_char_repl = _escape_repl
 
     def _char_repl(self, groups):
         if self.text is None:
