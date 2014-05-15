@@ -41,7 +41,7 @@ from creole.shared import example_macros
 from creole.shared.utils import string2dict, dict2string
 
 
-class TestCreole2html(unittest.TestCase):
+class TestCreole2html(BaseCreoleTest):
     """
     Tests around creole2html API and macro function.
     """
