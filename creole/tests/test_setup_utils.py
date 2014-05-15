@@ -7,7 +7,7 @@
     
     https://code.google.com/p/python-creole/wiki/UseInSetup
 
-    :copyleft: 2011-2012 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2011-2014 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -15,6 +15,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import unittest
 import os
+import warnings
 
 try:
     import docutils
@@ -34,8 +35,16 @@ TEST_README_DIR = os.path.abspath(os.path.dirname(__file__))
 TEST_README_FILENAME = "test_README.creole"
 
 
-@unittest.skipIf(DOCUTILS == False, "docutils not installed.")
+# TODO: Use @unittest.skipIf if python 2.6 will be not support anymore.
+# @unittest.skipIf(DOCUTILS == False, "docutils not installed.")
 class SetupUtilsTests(BaseCreoleTest):
+    def run(self, *args, **kwargs):
+        # TODO: Remove if python 2.6 will be not support anymore.
+        if DOCUTILS == False:
+            warnings.warn("Skip SetupUtilsTests, because 'docutils' not installed.")
+            return
+        return super(SetupUtilsTests, self).run(*args, **kwargs)
+
     def test_creole_package_path(self):
         self.assertTrue(
             os.path.isdir(CREOLE_PACKAGE_ROOT),
