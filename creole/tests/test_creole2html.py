@@ -244,6 +244,21 @@ class TestCreole2html(BaseCreoleTest):
             macros={'code': example_macros.code}
         )
 
+    def test_code_macro_fallback_escape(self):
+        # force to use fallback. Will be reset in self.setUp()
+        example_macros.PYGMENTS = False
+
+        self.assert_creole2html(
+            r"""
+            <<code ext=".py">>
+            print('This >>should<< be escaped!')
+            <</code>>
+            """, """
+            <pre>print('This &gt;&gt;should&lt;&lt; be escaped!')</pre>
+            """,
+            macros={'code': example_macros.code}
+        )
+
 
 
 

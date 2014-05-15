@@ -13,6 +13,8 @@
 """
 from __future__ import division, absolute_import, print_function, unicode_literals
 
+from xml.sax.saxutils import escape
+
 try:
     from pygments import highlight
     PYGMENTS = True
@@ -35,7 +37,7 @@ def pre(text):
     Macro tag <<pre>>...<</pre>>.
     Put text between html pre tag.
     """
-    return '<pre>%s</pre>' % text
+    return '<pre>%s</pre>' % escape(text)
 
 
 def code(ext, text):
