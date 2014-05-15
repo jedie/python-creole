@@ -64,12 +64,12 @@ class TestCreole2html(BaseCreoleTest):
         )
         error_msg = my_stderr.getvalue()
 
+        # Note:
+        # The error message change if macros are a dict or are a object!
+
         # Check if we get a traceback information into our stderr handler
         must_have = (
-            "Traceback",
-            "AttributeError:",
-            "has no attribute 'notexist1'",
-            "has no attribute 'notexist2'",
+            "Traceback", "'notexist1'", "'notexist2'",
         )
         for part in must_have:
             tb_lines = [" -"*40]
