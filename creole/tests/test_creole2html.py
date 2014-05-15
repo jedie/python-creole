@@ -20,6 +20,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import sys
 import unittest
+import warnings
 
 try:
     from StringIO import StringIO
@@ -204,32 +205,38 @@ class TestCreole2html(BaseCreoleTest):
         self.assertEqual(error_msg, "")
 
     def test_code_macro(self):
-        creole = (
+        if not PYGMENTS:
+            # TODO: Use @unittest.skipIf if python 2.6 will be not support anymore
+            warnings.warn("Skip test, because 'pygments' is not installed.")
+            return
+
+        self.assert_creole2html(r"""
+            Here a simple code macro test:
+            <<code ext=".py">>
+            for i in xrange(10):
+                print('hello world')
+            <</code>>
+            """, """
+            <p>Here a simple code macro test:</p>
+            <div class="pygments"><pre><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span><br />
+                <span class="k">print</span><span class="p">(</span><span class="s">&#39;hello world&#39;</span><span class="p">)</span><br />
+            </pre></div><br />
+            """,
+            macros={'code': example_macros.code}
+        )
+
+    def test_code_macro_fallback(self):
+        # force to use fallback. Will be reset in self.setUp()
+        example_macros.PYGMENTS = False
+
+        self.assert_creole2html(
             r"""
             Here a simple code macro test:
             <<code ext=".py">>
             for i in xrange(10):
                 print('hello world')
             <</code>>
-            """
-        )
-
-        if PYGMENTS:
-            self.assert_creole2html(creole,
-                """
-                <p>Here a simple code macro test:</p>
-                <div class="pygments"><pre><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span><br />
-                    <span class="k">print</span><span class="p">(</span><span class="s">&#39;hello world&#39;</span><span class="p">)</span><br />
-                </pre></div><br />
-                """,
-                macros={'code': example_macros.code}
-            )
-
-            # test the pre fallback, too. Will be reset in self.setUp()
-            example_macros.PYGMENTS = False
-
-        self.assert_creole2html(creole,
-            """
+            """, """
             <p>Here a simple code macro test:</p>
             <pre>for i in xrange(10):
                 print('hello world')</pre>
