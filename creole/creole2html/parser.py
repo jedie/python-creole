@@ -76,6 +76,9 @@ class CreoleParser(object):
         self.text = None            # The node to add inline characters to
         self.last_text_break = None # Last break node, inserted by _text_repl()
 
+        # Filled with all macros that's in the text
+        self.root.used_macros = set()
+
     #--------------------------------------------------------------------------
 
     def cleanup_break(self, old_cur):
@@ -173,7 +176,7 @@ class CreoleParser(object):
 
     def _add_macro(self, groups, macro_type, name_key, args_key, text_key=None):
         """
-        generic mathod to handle the macro, used for all variants:
+        generic method to handle the macro, used for all variants:
         inline, inline-tag, block
         """
         #self.debug_groups(groups)
@@ -185,7 +188,9 @@ class CreoleParser(object):
             macro_text = None
 
         node = DocNode(macro_type, self.cur, macro_text)
-        node.macro_name = groups[name_key]
+        macro_name = groups[name_key]
+        node.macro_name = macro_name
+        self.root.used_macros.add(macro_name)
         node.macro_args = groups.get(args_key, "").strip()
 
         self.text = None

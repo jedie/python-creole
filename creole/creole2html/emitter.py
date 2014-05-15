@@ -4,7 +4,7 @@
 """
     WikiCreole to HTML converter
 
-    :copyleft: 2008-2011 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2008-2014 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -28,13 +28,17 @@ class HtmlEmitter(object):
     def __init__(self, root, macros=None, verbose=None, stderr=None):
         self.root = root
         self.macros = macros
-        self.has_toc = False
-        self.toc_max_depth = None
 
-        if self.macros is None:
-            self.macros = {'toc': self.create_toc}
-        elif isinstance(self.macros, dict):
-            self.macros['toc'] = self.create_toc
+        if not "toc" in root.used_macros:
+            self.has_toc = False
+        else:
+            self.has_toc = True
+            self.toc_max_depth = None
+            self.toc = ['root', []]
+            if self.macros is None:
+                self.macros = {'toc': self.create_toc}
+            elif isinstance(self.macros, dict) and "toc" not in self.macros:
+                self.macros['toc'] = self.create_toc
 
         if verbose is None:
             self.verbose = 1
@@ -59,11 +63,14 @@ class HtmlEmitter(object):
     def attr_escape(self, text):
         return self.html_escape(text).replace('"', '&quot')
 
-    def create_toc(self,  depth=None,  **kwargs):
+    _toc_created = False
+    def create_toc(self, depth=None, **kwargs):
         """Called when if the macro <<toc>> is defined when it is emitted."""
-        self.has_toc = True
+        if self._toc_created:
+            return "&lt;&lt;toc&gt;&gt;"
+
+        self._toc_created = True
         self.toc_max_depth = depth
-        self.toc = ['root',  []]
 
         return '<<toc>>'
 
@@ -73,9 +80,14 @@ class HtmlEmitter(object):
             current_level = 0
             toc_node = self.toc
             while current_level != level:
-                toc_node = toc_node[-1]
-                current_level += 1
-            toc_node.extend([self.html_escape(content),  []])
+                try:
+                    toc_node = toc_node[-1]
+                except IndexError: # FIXME
+                    toc_node = self.toc
+                    break
+                else:
+                    current_level += 1
+            toc_node.extend([self.html_escape(content), []])
 
     # *_emit methods for emitting nodes of the document:
 
@@ -163,16 +175,18 @@ class HtmlEmitter(object):
     #--------------------------------------------------------------------------
 
     def header_emit(self, node):
-        header = '<h%d>%s</h%d>\n' % (
-                node.level, self.html_escape(node.content), node.level)
+        header = '<h%d>%s</h%d>' % (
+                node.level, self.html_escape(node.content), node.level
+        )
         if self.has_toc:
-            self.update_toc(node.level,  node.content)
+            self.update_toc(node.level, node.content)
             # add link attribute for toc navigation
             header = '<a name="%s">%s</a>' % (
-                self.html_escape(node.content),  header)
-            return header
-        else:
-            return header
+                self.html_escape(node.content), header
+            )
+
+        header += "\n"
+        return header
 
     def preformatted_emit(self, node):
         return '<pre>%s</pre>' % self.html_escape(node.content)
@@ -307,24 +321,32 @@ class HtmlEmitter(object):
         emit = getattr(self, '%s_emit' % node.kind, self.default_emit)
         return emit(node)
 
-    def toc_list2html(self, toc_list):
+    def toc_list2html(self, toc_list, level=0):
         """Convert a python nested list like the one representing the toc to an html equivalent."""
         if toc_list:
-            if isinstance(toc_list,  TEXT_TYPE):
-                return '<li><a href="#%s">%s</a> </li>\n' % (toc_list, toc_list)
-            elif isinstance(toc_list,  list):
-                html = '<ul>'
+            indent = "\t"*level
+            if isinstance(toc_list, TEXT_TYPE):
+                return '%s<li><a href="#%s">%s</a></li>\n' % (indent, toc_list, toc_list)
+            elif isinstance(toc_list, list):
+                html = '%s<ul>\n' % indent
                 for elt in toc_list:
-                    html += self.toc_list2html(elt)
-                html += '</ul>\n'
+                    html += self.toc_list2html(elt, level + 1)
+                html += '%s</ul>' % indent
+                if level > 0:
+                    html += "\n"
                 return html
         else:
             return ''
 
-    def toc_emit(self,  document):
+    def toc_emit(self, document):
         """Emit the toc where the <<toc>> macro was."""
         html_toc = self.toc_list2html(self.toc[-1])
-        return document.replace('<p><<toc>></p>', html_toc, 1)
+
+        # FIXME: We should not use <p> here, because it doesn't match
+        #        if no newline was made before <<toc>>
+        document = document.replace('<p><<toc>></p>', html_toc, 1)
+
+        return document
 
     def emit(self):
         """Emit the document represented by self.root DOM tree."""

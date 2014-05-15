@@ -461,14 +461,124 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
         )
 
 
-    def test_toc(self):
+    def test_toc_simple(self):
         """
         Simple test to check the table of content is correctly generated.
         """
-        html = creole2html("""<<toc>>\n= Creole""")
-        self.assertEqual(html,
-                            """<ul><li><a href="#Creole">Creole</a> </li>\n</ul>\n\n<a name="Creole"><h1>Creole</h1>\n</a>""")
+        self.assert_creole2html(r"""
+            <<toc>>
+            = Headline
+        """, """
+            <ul>
+                <li><a href="#Headline">Headline</a></li>
+            </ul>
+            <a name="Headline"><h1>Headline</h1></a>
+        """)
 
+    def test_toc_more_headlines(self):
+        self.assert_creole2html(r"""
+            Between text and toc must be a newline.
+
+            <<toc>>
+            = Headline 1
+            == Sub-Headline 1.1
+            == Sub-Headline 1.2
+            = Headline 2
+            == Sub-Headline 2.1
+            == Sub-Headline 2.2
+        """, """
+            <p>Between text and toc must be a newline.</p>
+
+            <ul>
+                <li><a href="#Headline 1">Headline 1</a></li>
+                <ul>
+                    <li><a href="#Sub-Headline 1.1">Sub-Headline 1.1</a></li>
+                    <li><a href="#Sub-Headline 1.2">Sub-Headline 1.2</a></li>
+                </ul>
+                <li><a href="#Headline 2">Headline 2</a></li>
+                <ul>
+                    <li><a href="#Sub-Headline 2.1">Sub-Headline 2.1</a></li>
+                    <li><a href="#Sub-Headline 2.2">Sub-Headline 2.2</a></li>
+                </ul>
+            </ul>
+            <a name="Headline 1"><h1>Headline 1</h1></a>
+            <a name="Sub-Headline 1.1"><h2>Sub-Headline 1.1</h2></a>
+            <a name="Sub-Headline 1.2"><h2>Sub-Headline 1.2</h2></a>
+            <a name="Headline 2"><h1>Headline 2</h1></a>
+            <a name="Sub-Headline 2.1"><h2>Sub-Headline 2.1</h2></a>
+            <a name="Sub-Headline 2.2"><h2>Sub-Headline 2.2</h2></a>
+        """)
+
+    def test_toc_with_no_toc(self):
+        self.assert_creole2html(r"""
+            <<toc>>
+            = This is the Headline
+            Use {{{<<toc>>}}} to insert a table of contents.
+        """, """
+            <ul>
+                <li><a href="#This is the Headline">This is the Headline</a></li>
+            </ul>
+            <a name="This is the Headline"><h1>This is the Headline</h1></a>
+            <p>Use <tt>&lt;&lt;toc&gt;&gt;</tt> to insert a table of contents.</p>
+        """)
+
+    def test_toc_more_then_one_toc(self):
+        self.assert_creole2html(r"""
+            Not here:
+            {{{
+            print("<<toc>>")
+            }}}
+
+            and onle the first:
+
+            <<toc>>
+
+            <<toc>>
+            <<toc>>
+            = Headline
+            == Sub-Headline
+        """, """
+            <p>Not here:</p>
+            <pre>
+            print("&lt;&lt;toc&gt;&gt;")
+            </pre>
+
+            <p>and onle the first:</p>
+
+            <ul>
+                <li><a href="#Headline">Headline</a></li>
+                <ul>
+                    <li><a href="#Sub-Headline">Sub-Headline</a></li>
+                </ul>
+            </ul>
+
+            <p>&lt;&lt;toc&gt;&gt;<br />
+            &lt;&lt;toc&gt;&gt;</p>
+            <a name="Headline"><h1>Headline</h1></a>
+            <a name="Sub-Headline"><h2>Sub-Headline</h2></a>
+        """)
+
+    def test_toc_headline_before_toc(self):
+        self.assert_creole2html(r"""
+            = headline
+            == sub headline
+
+            <<toc>>
+
+            ok?
+        """, """
+            <a name="headline"><h1>headline</h1></a>
+            <a name="sub headline"><h2>sub headline</h2></a>
+
+            <ul>
+                <li><a href="#headline">headline</a></li>
+                <ul>
+                    <li><a href="#sub headline">sub headline</a></li>
+                </ul>
+            </ul>
+
+            <p>ok?</p>
+        """)
 
     def test_image(self):
         """ test image tag with different picture text """
