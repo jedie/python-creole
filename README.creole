@@ -143,11 +143,9 @@ Contributers should take a look at this page:
 
 == unittests ==
 
-{{https://secure.travis-ci.org/jedie/python-creole.png?branch=master|Build Status on travis-ci.org}}
+[[https://travis-ci.org/jedie/python-creole|python-creole @ Travis CI]]: {{https://secure.travis-ci.org/jedie/python-creole.png?branch=master|Build Status on travis-ci.org}}
 * https://travis-ci.org/jedie/python-creole
 
-Jenkins @ shiningpanda.com:
-* https://jenkins.shiningpanda.com/python-creole/
 
 === run unittests ===
 
@@ -195,11 +193,6 @@ Ran 126 tests in 0.917s
 ----------------------------------------------------------------------
 Ran 21 DocTests from 49 files in 0.368s: failed=0, attempted=88
 }}}
-
-We using [[https://www.shiningpanda.com|Shining Panda]] and [[http://travis-ci.org|Travis CI]] for running unittests automaticly on GIT changes, see:
-
-* https://jenkins.shiningpanda.com/python-creole/view/All/builds
-* http://travis-ci.org/jedie/python-creole
 
 
 == Use creole in README ==
