@@ -16,6 +16,12 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 import unittest
 import os
 
+try:
+    import docutils
+    DOCUTILS = True
+except ImportError:
+    DOCUTILS = False
+
 import creole
 from creole.setup_utils import get_long_description
 from creole.tests.utils.base_unittest import BaseCreoleTest
@@ -28,6 +34,7 @@ TEST_README_DIR = os.path.abspath(os.path.dirname(__file__))
 TEST_README_FILENAME = "test_README.creole"
 
 
+@unittest.skipIf(DOCUTILS == False, "docutils not installed.")
 class SetupUtilsTests(BaseCreoleTest):
     def test_creole_package_path(self):
         self.assertTrue(
