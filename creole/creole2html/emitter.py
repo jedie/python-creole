@@ -20,6 +20,83 @@ from creole.py3compat import TEXT_TYPE, repr2
 from creole.shared.utils import string2dict
 
 
+
+class TableOfContent(object):
+    def __init__(self):
+        self.max_depth = None
+        self.headlines = []
+        self._created = False
+        self._current_level = 0
+
+    def __call__(self, depth=None, **kwargs):
+        """Called when if the macro <<toc>> is defined when it is emitted."""
+        if self._created:
+            return "&lt;&lt;toc&gt;&gt;"
+
+        self._created = True
+        if depth is not None:
+            self.max_depth = depth
+
+        return '<<toc>>'
+
+    def add_headline(self, level, content):
+        """Add the current header to the toc."""
+        if self.max_depth is None or level <= self.max_depth:
+            self.headlines.append(
+                (level, content)
+            )
+
+    def flat_list2nest_list(self, flat_list):
+        # this func code based on borrowed code from EyDu, Thanks!
+        # http://www.python-forum.de/viewtopic.php?p=258121#p258121
+        tree = []
+        stack = [tree]
+
+        for index, element in flat_list:
+            stack_length = len(stack)
+
+            if index > stack_length:
+                for _ in range(stack_length, index):
+                    l = []
+                    stack[-1].append(l)
+                    stack.append(l)
+            elif index < stack_length:
+                stack = stack[:index]
+
+            stack[-1].append(element)
+
+        return tree
+
+    def nested_headlines2html(self, nested_headlines, level=0):
+        """Convert a python nested list like the one representing the toc to an html equivalent."""
+        indent = "\t"*level
+        if isinstance(nested_headlines, TEXT_TYPE):
+            return '%s<li><a href="#%s">%s</a></li>\n' % (indent, nested_headlines, nested_headlines)
+        elif isinstance(nested_headlines, list):
+            html = '%s<ul>\n' % indent
+            for elt in nested_headlines:
+                html += self.nested_headlines2html(elt, level + 1)
+            html += '%s</ul>' % indent
+            if level > 0:
+                html += "\n"
+            return html
+
+    def emit(self, document):
+        """Emit the toc where the <<toc>> macro was."""
+        nested_headlines = self.flat_list2nest_list(self.headlines)
+        html = self.nested_headlines2html(nested_headlines)
+
+        # FIXME: We should not use <p> here, because it doesn't match
+        #        if no newline was made before <<toc>>
+        if "<p><<toc>></p>" in document:
+            document = document.replace("<p><<toc>></p>", html, 1)
+        else:
+            document = document.replace("<<toc>>", html, 1)
+
+        return document
+
+
+
 class HtmlEmitter(object):
     """
     Generate HTML output for the document
@@ -27,18 +104,34 @@ class HtmlEmitter(object):
     """
     def __init__(self, root, macros=None, verbose=None, stderr=None):
         self.root = root
-        self.macros = macros
+
+
+        if callable(macros) == True:
+            # was a DeprecationWarning in the past
+            raise TypeError("Callable macros are not supported anymore!")
+
+        if macros is None:
+            self.macros = {}
+        else:
+            self.macros = macros
 
         if not "toc" in root.used_macros:
-            self.has_toc = False
+            # The document has no <<toc>>
+            self.toc = None
         else:
-            self.has_toc = True
-            self.toc_max_depth = None
-            self.toc = ['root', []]
-            if self.macros is None:
-                self.macros = {'toc': self.create_toc}
-            elif isinstance(self.macros, dict) and "toc" not in self.macros:
-                self.macros['toc'] = self.create_toc
+            if isinstance(self.macros, dict):
+                if "toc" in self.macros:
+                    self.toc = self.macros["toc"]
+                else:
+                    self.toc = TableOfContent()
+                    self.macros["toc"] = self.toc
+            else:
+                try:
+                    self.toc = getattr(self.macros, "toc")
+                except AttributeError:
+                    self.toc = TableOfContent()
+                    self.macros.toc = self.toc
+
 
         if verbose is None:
             self.verbose = 1
@@ -62,32 +155,6 @@ class HtmlEmitter(object):
 
     def attr_escape(self, text):
         return self.html_escape(text).replace('"', '&quot')
-
-    _toc_created = False
-    def create_toc(self, depth=None, **kwargs):
-        """Called when if the macro <<toc>> is defined when it is emitted."""
-        if self._toc_created:
-            return "&lt;&lt;toc&gt;&gt;"
-
-        self._toc_created = True
-        self.toc_max_depth = depth
-
-        return '<<toc>>'
-
-    def update_toc(self, level, content):
-        """Add the current header to the toc."""
-        if self.toc_max_depth is None or level < self.toc_max_depth:
-            current_level = 0
-            toc_node = self.toc
-            while current_level != level:
-                try:
-                    toc_node = toc_node[-1]
-                except IndexError: # FIXME
-                    toc_node = self.toc
-                    break
-                else:
-                    current_level += 1
-            toc_node.extend([self.html_escape(content), []])
 
     # *_emit methods for emitting nodes of the document:
 
@@ -178,8 +245,8 @@ class HtmlEmitter(object):
         header = '<h%d>%s</h%d>' % (
                 node.level, self.html_escape(node.content), node.level
         )
-        if self.has_toc:
-            self.update_toc(node.level, node.content)
+        if self.toc is not None:
+            self.toc.add_headline(node.level, node.content)
             # add link attribute for toc navigation
             header = '<a name="%s">%s</a>' % (
                 self.html_escape(node.content), header
@@ -228,10 +295,6 @@ class HtmlEmitter(object):
 
         macro_kwargs["text"] = text
 
-        if callable(self.macros) == True:
-            raise DeprecationWarning("Callable macros are not supported anymore!")
-            return
-
         exc_info = None
         if isinstance(self.macros, dict):
             try:
@@ -256,17 +319,24 @@ class HtmlEmitter(object):
             msg = "Macro '%s' error: %s" % (macro_name, err)
             exc_info = sys.exc_info()
             if self.verbose > 1:
+                if self.verbose > 2:
+                    raise
+
                 # Inject more information about the macro in traceback
                 etype, evalue, etb = exc_info
                 import inspect
-                filename = inspect.getfile(macro)
                 try:
-                    sourceline = inspect.getsourcelines(macro)[0][0].strip()
-                except IOError as err:
-                    evalue = etype("%s (error getting sourceline: %s from %s)" % (evalue, err, filename))
+                    filename = inspect.getfile(macro)
+                except TypeError:
+                    pass
                 else:
-                    evalue = etype("%s (sourceline: %r from %s)" % (evalue, sourceline, filename))
-                exc_info = etype, evalue, etb
+                    try:
+                        sourceline = inspect.getsourcelines(macro)[0][0].strip()
+                    except IOError as err:
+                        evalue = etype("%s (error getting sourceline: %s from %s)" % (evalue, err, filename))
+                    else:
+                        evalue = etype("%s (sourceline: %r from %s)" % (evalue, sourceline, filename))
+                    exc_info = etype, evalue, etb
 
             return self.error(msg, exc_info)
         except Exception as err:
@@ -321,38 +391,11 @@ class HtmlEmitter(object):
         emit = getattr(self, '%s_emit' % node.kind, self.default_emit)
         return emit(node)
 
-    def toc_list2html(self, toc_list, level=0):
-        """Convert a python nested list like the one representing the toc to an html equivalent."""
-        if toc_list:
-            indent = "\t"*level
-            if isinstance(toc_list, TEXT_TYPE):
-                return '%s<li><a href="#%s">%s</a></li>\n' % (indent, toc_list, toc_list)
-            elif isinstance(toc_list, list):
-                html = '%s<ul>\n' % indent
-                for elt in toc_list:
-                    html += self.toc_list2html(elt, level + 1)
-                html += '%s</ul>' % indent
-                if level > 0:
-                    html += "\n"
-                return html
-        else:
-            return ''
-
-    def toc_emit(self, document):
-        """Emit the toc where the <<toc>> macro was."""
-        html_toc = self.toc_list2html(self.toc[-1])
-
-        # FIXME: We should not use <p> here, because it doesn't match
-        #        if no newline was made before <<toc>>
-        document = document.replace('<p><<toc>></p>', html_toc, 1)
-
-        return document
-
     def emit(self):
         """Emit the document represented by self.root DOM tree."""
         document = self.emit_node(self.root).strip()
-        if self.has_toc:
-            return self.toc_emit(document)
+        if self.toc is not None:
+            return self.toc.emit(document)
         else:
             return document
 
@@ -373,7 +416,15 @@ class HtmlEmitter(object):
 
 
 if __name__ == "__main__":
-    txt = """A <<test_macro1 args="foo1">>bar1<</test_macro1>> in a line..."""
+    txt = """Local test
+<<toc>>
+= headline 1 level 1
+== headline 2 level 2
+== headline 3 level 2
+==== headline 4 level 4
+= headline 5 level 1
+=== headline 6 level 3
+"""
 
     print("-" * 80)
 #    from creole_alt.creole import CreoleParser
@@ -381,10 +432,7 @@ if __name__ == "__main__":
     document = p.parse()
     p.debug()
 
-    from creole.shared.unknown_tags import escape_unknown_nodes
-    html = HtmlEmitter(document,
-        macros=escape_unknown_nodes
-    ).emit()
+    html = HtmlEmitter(document, verbose=999).emit()
     print(html)
     print("-" * 79)
     print(html.replace(" ", ".").replace("\n", "\\n\n"))

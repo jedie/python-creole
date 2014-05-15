@@ -141,7 +141,7 @@ class TestCreole2html(BaseCreoleTest):
         def testmacro():
             pass
 
-        self.assertRaises(DeprecationWarning,
+        self.assertRaises(TypeError,
             creole2html,
             markup_string="<<test no=1 arg2='foo'>>bar<</test>>",
             emitter_kwargs={
@@ -509,6 +509,144 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             <a name="Headline 2"><h1>Headline 2</h1></a>
             <a name="Sub-Headline 2.1"><h2>Sub-Headline 2.1</h2></a>
             <a name="Sub-Headline 2.2"><h2>Sub-Headline 2.2</h2></a>
+        """)
+
+    def test_toc_chaotic_headlines(self):
+        self.assert_creole2html(r"""
+            <<toc>>
+            = level 1
+            === level 3
+            == level 2
+            ==== level 4
+            = level 1
+        """, """
+            <ul>
+                <li><a href="#level 1">level 1</a></li>
+                <ul>
+                    <ul>
+                        <li><a href="#level 3">level 3</a></li>
+                    </ul>
+                    <li><a href="#level 2">level 2</a></li>
+                    <ul>
+                        <ul>
+                            <li><a href="#level 4">level 4</a></li>
+                        </ul>
+                    </ul>
+                </ul>
+                <li><a href="#level 1">level 1</a></li>
+            </ul>
+            <a name="level 1"><h1>level 1</h1></a>
+            <a name="level 3"><h3>level 3</h3></a>
+            <a name="level 2"><h2>level 2</h2></a>
+            <a name="level 4"><h4>level 4</h4></a>
+            <a name="level 1"><h1>level 1</h1></a>
+        """)
+
+    def test_toc_depth_1(self):
+        self.assert_creole2html(r"""
+            <<toc depth=1>>
+            = Headline 1
+            == Sub-Headline 1.1
+            === Sub-Sub-Headline 1.1.1
+            === Sub-Sub-Headline 1.1.2
+            == Sub-Headline 1.2
+            = Headline 2
+            == Sub-Headline 2.1
+            == Sub-Headline 2.2
+            === Sub-Sub-Headline 2.2.1
+        """, """
+            <ul>
+                <li><a href="#Headline 1">Headline 1</a></li>
+                <li><a href="#Headline 2">Headline 2</a></li>
+            </ul>
+            <a name="Headline 1"><h1>Headline 1</h1></a>
+            <a name="Sub-Headline 1.1"><h2>Sub-Headline 1.1</h2></a>
+            <a name="Sub-Sub-Headline 1.1.1"><h3>Sub-Sub-Headline 1.1.1</h3></a>
+            <a name="Sub-Sub-Headline 1.1.2"><h3>Sub-Sub-Headline 1.1.2</h3></a>
+            <a name="Sub-Headline 1.2"><h2>Sub-Headline 1.2</h2></a>
+            <a name="Headline 2"><h1>Headline 2</h1></a>
+            <a name="Sub-Headline 2.1"><h2>Sub-Headline 2.1</h2></a>
+            <a name="Sub-Headline 2.2"><h2>Sub-Headline 2.2</h2></a>
+            <a name="Sub-Sub-Headline 2.2.1"><h3>Sub-Sub-Headline 2.2.1</h3></a>
+        """)
+
+    def test_toc_depth_2(self):
+        self.assert_creole2html(r"""
+            <<toc depth=2>>
+            = Headline 1
+            == Sub-Headline 1.1
+            === Sub-Sub-Headline 1.1.1
+            === Sub-Sub-Headline 1.1.2
+            == Sub-Headline 1.2
+            = Headline 2
+            == Sub-Headline 2.1
+            == Sub-Headline 2.2
+            === Sub-Sub-Headline 2.2.1
+        """, """
+            <ul>
+                <li><a href="#Headline 1">Headline 1</a></li>
+                <ul>
+                    <li><a href="#Sub-Headline 1.1">Sub-Headline 1.1</a></li>
+                    <li><a href="#Sub-Headline 1.2">Sub-Headline 1.2</a></li>
+                </ul>
+                <li><a href="#Headline 2">Headline 2</a></li>
+                <ul>
+                    <li><a href="#Sub-Headline 2.1">Sub-Headline 2.1</a></li>
+                    <li><a href="#Sub-Headline 2.2">Sub-Headline 2.2</a></li>
+                </ul>
+            </ul>
+            <a name="Headline 1"><h1>Headline 1</h1></a>
+            <a name="Sub-Headline 1.1"><h2>Sub-Headline 1.1</h2></a>
+            <a name="Sub-Sub-Headline 1.1.1"><h3>Sub-Sub-Headline 1.1.1</h3></a>
+            <a name="Sub-Sub-Headline 1.1.2"><h3>Sub-Sub-Headline 1.1.2</h3></a>
+            <a name="Sub-Headline 1.2"><h2>Sub-Headline 1.2</h2></a>
+            <a name="Headline 2"><h1>Headline 2</h1></a>
+            <a name="Sub-Headline 2.1"><h2>Sub-Headline 2.1</h2></a>
+            <a name="Sub-Headline 2.2"><h2>Sub-Headline 2.2</h2></a>
+            <a name="Sub-Sub-Headline 2.2.1"><h3>Sub-Sub-Headline 2.2.1</h3></a>
+        """)
+
+    def test_toc_depth_3(self):
+        self.assert_creole2html(r"""
+            <<toc depth=3>>
+            = Headline 1
+            == Sub-Headline 1.1
+            === Sub-Sub-Headline 1.1.1
+            === Sub-Sub-Headline 1.1.2
+            == Sub-Headline 1.2
+            = Headline 2
+            == Sub-Headline 2.1
+            == Sub-Headline 2.2
+            === Sub-Sub-Headline 2.2.1
+        """, """
+            <ul>
+                <li><a href="#Headline 1">Headline 1</a></li>
+                <ul>
+                    <li><a href="#Sub-Headline 1.1">Sub-Headline 1.1</a></li>
+                    <ul>
+                        <li><a href="#Sub-Sub-Headline 1.1.1">Sub-Sub-Headline 1.1.1</a></li>
+                        <li><a href="#Sub-Sub-Headline 1.1.2">Sub-Sub-Headline 1.1.2</a></li>
+                    </ul>
+                    <li><a href="#Sub-Headline 1.2">Sub-Headline 1.2</a></li>
+                </ul>
+                <li><a href="#Headline 2">Headline 2</a></li>
+                <ul>
+                    <li><a href="#Sub-Headline 2.1">Sub-Headline 2.1</a></li>
+                    <li><a href="#Sub-Headline 2.2">Sub-Headline 2.2</a></li>
+                    <ul>
+                        <li><a href="#Sub-Sub-Headline 2.2.1">Sub-Sub-Headline 2.2.1</a></li>
+                    </ul>
+                </ul>
+            </ul>
+            <a name="Headline 1"><h1>Headline 1</h1></a>
+            <a name="Sub-Headline 1.1"><h2>Sub-Headline 1.1</h2></a>
+            <a name="Sub-Sub-Headline 1.1.1"><h3>Sub-Sub-Headline 1.1.1</h3></a>
+            <a name="Sub-Sub-Headline 1.1.2"><h3>Sub-Sub-Headline 1.1.2</h3></a>
+            <a name="Sub-Headline 1.2"><h2>Sub-Headline 1.2</h2></a>
+            <a name="Headline 2"><h1>Headline 2</h1></a>
+            <a name="Sub-Headline 2.1"><h2>Sub-Headline 2.1</h2></a>
+            <a name="Sub-Headline 2.2"><h2>Sub-Headline 2.2</h2></a>
+            <a name="Sub-Sub-Headline 2.2.1"><h3>Sub-Sub-Headline 2.2.1</h3></a>
         """)
 
     def test_toc_with_no_toc(self):
