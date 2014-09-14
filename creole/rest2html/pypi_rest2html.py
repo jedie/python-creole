@@ -13,7 +13,12 @@
 
 from __future__ import division, absolute_import, print_function
 
-import urlparse
+try:
+    # Python 3
+    from urllib.parse import urlparse
+except ImportError:
+    # Python 2
+    from urlparse import urlparse
 
 from creole.exceptions import DocutilsImportError
 
@@ -61,7 +66,7 @@ def pypi_rest2html(source, output_encoding='unicode'):
             uri = node['uri']
         else:
             continue
-        o = urlparse.urlparse(uri)
+        o = urlparse(uri)
         if o.scheme not in ALLOWED_SCHEMES:
             raise TransformError('link scheme not allowed')
 
