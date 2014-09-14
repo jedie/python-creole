@@ -55,7 +55,8 @@ from creole.py3compat import PY3
 
 
 RAISE_ERRORS_ARGS = (
-    "register", "sdist", "bdist", "upload", "--long-description",
+    "check", "register", "sdist", "bdist", "upload",
+    "--long-description", "--restructuredtext",
 )
 
 
@@ -122,6 +123,9 @@ def get_long_description(package_root, filename="README.creole", raise_errors=No
             except SystemExit as e:
                 print("Error creole2rest self test failed: rest2html() exist with status code: %s" % e.args[0])
                 raise
+            else:
+                if "check" in sys.argv:
+                    print("Generating creole to ReSt to html, ok.")
 
     return long_description_rest
 
