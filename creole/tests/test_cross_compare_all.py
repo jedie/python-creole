@@ -4,7 +4,7 @@
 """
     cross compare unittest
     ~~~~~~~~~~~~~~~~~~~~~~
-    
+
     Compare all similarities between:
         * creole2html
         * html2creole
@@ -14,7 +14,7 @@
     Note: This only works fine if there is no problematic whitespace handling.
         In this case, we must test in test_creole2html.py or test_html2creole.py
 
-    :copyleft: 2008-2011 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2008-2014 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -39,6 +39,13 @@ class CrossCompareTests(BaseCreoleTest):
                 //italics and **bold**.//
                 **bold and //italics//.**
             """,
+            html_string="""
+                <p><strong>bold</strong> <i>italics</i><br />
+                <i>italics and <strong>bold</strong>.</i><br />
+                <strong>bold and <i>italics</i>.</strong></p>
+            """,
+        )
+        self.cross_compare(
             textile_string="""
                 *bold* __italics__
                 __italics and *bold*.__
@@ -46,7 +53,9 @@ class CrossCompareTests(BaseCreoleTest):
             """,
             html_string="""
                 <p><strong>bold</strong> <i>italics</i><br />
+
                 <i>italics and <strong>bold</strong>.</i><br />
+
                 <strong>bold and <i>italics</i>.</strong></p>
             """,
         )
@@ -67,6 +76,13 @@ class CrossCompareTests(BaseCreoleTest):
                 //**bold italics**//
                 //This is **also** good.//
             """,
+            html_string="""
+                <p><strong><i>bold italics</i></strong><br />
+                <i><strong>bold italics</strong></i><br />
+                <i>This is <strong>also</strong> good.</i></p>
+            """,
+        )
+        self.cross_compare(
             textile_string="""
                 *__bold italics__*
                 __*bold italics*__
@@ -74,7 +90,9 @@ class CrossCompareTests(BaseCreoleTest):
             """,
             html_string="""
                 <p><strong><i>bold italics</i></strong><br />
+
                 <i><strong>bold italics</strong></i><br />
+
                 <i>This is <strong>also</strong> good.</i></p>
             """,
         )
@@ -83,41 +101,41 @@ class CrossCompareTests(BaseCreoleTest):
         self.cross_compare(
             creole_string=r"""
                 = Section Title 1
-                
+
                 == Section Title 2
-                
+
                 === Section Title 3
-                
+
                 ==== Section Title 4
-                
+
                 ===== Section Title 5
-                
+
                 ====== Section Title 6
             """,
             textile_string="""
                 h1. Section Title 1
-                
+
                 h2. Section Title 2
-                
+
                 h3. Section Title 3
-                
+
                 h4. Section Title 4
-                
+
                 h5. Section Title 5
-                
+
                 h6. Section Title 6
             """,
             html_string="""
                 <h1>Section Title 1</h1>
-                
+
                 <h2>Section Title 2</h2>
-                
+
                 <h3>Section Title 3</h3>
-                
+
                 <h4>Section Title 4</h4>
-                
+
                 <h5>Section Title 5</h5>
-                
+
                 <h6>Section Title 6</h6>
             """
         )
@@ -126,20 +144,20 @@ class CrossCompareTests(BaseCreoleTest):
                 ===============
                 Section Title 1
                 ===============
-                
+
                 ---------------
                 Section Title 2
                 ---------------
-                
+
                 Section Title 3
                 ===============
-                
+
                 Section Title 4
                 ---------------
-                
+
                 Section Title 5
                 ```````````````
-                
+
                 Section Title 6
                 '''''''''''''''
             """,
@@ -156,19 +174,19 @@ class CrossCompareTests(BaseCreoleTest):
     def test_horizontal_rule(self):
         all_markups = """
             Text before horizontal rule.
-            
+
             ----
-            
+
             Text after the line.
         """
         self.cross_compare(
             creole_string=all_markups,
-            #textile_string=all_markups, # FIXME: textile and <hr> ?
+            # textile_string=all_markups, # FIXME: textile and <hr> ?
             html_string="""
                 <p>Text before horizontal rule.</p>
-                
+
                 <hr />
-                
+
                 <p>Text after the line.</p>
             """
         )
@@ -216,16 +234,16 @@ class CrossCompareTests(BaseCreoleTest):
     def test_link_with_unknown_protocol(self):
         self.cross_compare(
             creole_string=r"""
-                X [[Foo://bar|unknown protocol]] Y
+                X [[foo://bar|unknown protocol]] Y
             """,
             textile_string="""
-                X "unknown protocol":Foo://bar Y
+                X "unknown protocol":foo://bar Y
             """,
             rest_string="""
-                X `unknown protocol <Foo://bar>`_ Y
+                X `unknown protocol <foo://bar>`_ Y
             """,
             html_string="""
-                <p>X <a href="Foo://bar">unknown protocol</a> Y</p>
+                <p>X <a href="foo://bar">unknown protocol</a> Y</p>
             """
         )
 
@@ -233,9 +251,6 @@ class CrossCompareTests(BaseCreoleTest):
         self.cross_compare(
             creole_string=r"""
                 X [[http://de.wikipedia.org/wiki/Creole_(Markup)|Creole@wikipedia]]
-            """,
-            textile_string="""
-                X "Creole@wikipedia":http://de.wikipedia.org/wiki/Creole_(Markup)
             """,
             html_string="""
                 <p>X <a href="http://de.wikipedia.org/wiki/Creole_(Markup)">Creole@wikipedia</a></p>
@@ -249,6 +264,14 @@ class CrossCompareTests(BaseCreoleTest):
                 <p>X <a href="http://de.wikipedia.org/wiki/Creole_(Markup)">Creole&#64;wikipedia</a></p>
             """
         )
+        self.cross_compare_textile(
+            textile_string="""
+                X "foo@domain":http://domain.tld
+            """,
+            html_string="""
+                <p>X <a href="http://domain.tld">foo@domain</a></p>
+            """
+        )
 
     def test_image(self):
         self.cross_compare(
@@ -259,13 +282,6 @@ class CrossCompareTests(BaseCreoleTest):
                 a {{/image.png|PNG pictures}} !
                 {{/path1/path2/image|Image without files ext?}}
             """,
-            textile_string="""
-                a !/image.jpg(JPG pictures)! and
-                a !/image.jpeg(JPEG pictures)! and
-                a !/image.gif(GIF pictures)! and
-                a !/image.png(PNG pictures)! !
-                !/path1/path2/image(Image without files ext?)!
-            """,
             html_string="""
                 <p>a <img src="/image.jpg" title="JPG pictures" alt="JPG pictures" /> and<br />
                 a <img src="/image.jpeg" title="JPEG pictures" alt="JPEG pictures" /> and<br />
@@ -275,25 +291,45 @@ class CrossCompareTests(BaseCreoleTest):
             """
         )
         self.cross_compare(
+            textile_string="""
+                a !/image.jpg(JPG pictures)! and
+                a !/image.jpeg(JPEG pictures)! and
+                a !/image.gif(GIF pictures)! and
+                a !/image.png(PNG pictures)! !
+                !/path1/path2/image(Image without files ext?)!
+            """,
+            html_string="""
+                <p>a <img alt="JPG pictures" src="/image.jpg" title="JPG pictures" /> and<br />
+
+                a <img alt="JPEG pictures" src="/image.jpeg" title="JPEG pictures" /> and<br />
+
+                a <img alt="GIF pictures" src="/image.gif" title="GIF pictures" /> and<br />
+
+                a <img alt="PNG pictures" src="/image.png" title="PNG pictures" /> !<br />
+
+                <img alt="Image without files ext?" src="/path1/path2/image" title="Image without files ext?" /></p>
+            """
+        )
+        self.cross_compare(
             rest_string="""
                 1 |JPG pictures| one
-                
+
                 .. |JPG pictures| image:: /image.jpg
-                
+
                 2 |JPEG pictures| two
-                
+
                 .. |JPEG pictures| image:: /image.jpeg
-                
+
                 3 |GIF pictures| tree
-                
+
                 .. |GIF pictures| image:: /image.gif
-                
+
                 4 |PNG pictures| four
-                
+
                 .. |PNG pictures| image:: /image.png
-                
+
                 5 |Image without files ext?| five
-                
+
                 .. |Image without files ext?| image:: /path1/path2/image
             """,
             html_string="""
@@ -311,17 +347,24 @@ class CrossCompareTests(BaseCreoleTest):
             creole_string=r"""
                 Linked [[http://example.com/|{{myimage.jpg|example site}} image]]
             """,
-            textile_string="""
-                Linked "!myimage.jpg(example site)! image":http://example.com/
-            """,
             html_string="""
                 <p>Linked <a href="http://example.com/"><img src="myimage.jpg" title="example site" alt="example site" /> image</a></p>
             """
         )
+        self.cross_compare(
+            textile_string="""
+                Linked "!myimage.jpg(example site)! image":http://example.com/
+            """,
+            html_string="""
+                <p>Linked <a href="http://example.com/"><img alt="example site" src="myimage.jpg" title="example site" /> image</a></p>
+            """
+        )
+
+
 #        self.cross_compare(# FIXME: ReSt
 #            rest_string="""
 #                I recommend you try |PyLucid CMS|_.
-#                
+#
 #                .. |PyLucid CMS| image:: /images/pylucid.png
 #                .. _PyLucid CMS: http://www.pylucid.org/
 #            """,
@@ -350,13 +393,13 @@ class CrossCompareTests(BaseCreoleTest):
         self.cross_compare(# FIXME: Not the best html2rest output
             rest_string="""
                 Preformatting text:
-                
+
                 ::
-                
+
                     Here some performatting with
                     no `link <http://domain.tld>`_ here.
                     text... end.
-                
+
                 Under pre block
             """,
             html_string="""
@@ -376,29 +419,29 @@ class CrossCompareTests(BaseCreoleTest):
 #        self.cross_compare(
 #            creole_string=r"""
 #                start
-#                
+#
 #                {{{
 #                * no list
 #                }}}
-#                
+#
 #                end
 #                """,
 #            textile_string="""
 #                start
-#                
+#
 #                <pre>
 #                * no list
 #                </pre>
-#                
+#
 #                end
 #                """,
 #            html_string="""
 #                <p>start</p>
-#                
+#
 #                <pre>
 #                * no list
 #                </pre>
-#                
+#
 #                <p>end</p>
 #            """)
 
@@ -426,7 +469,7 @@ class CrossCompareTests(BaseCreoleTest):
                 """,
             rest_string="""
                 ::
-                
+
                     # Closing braces in nowiki:
                     if (x != NULL) {
                       for (i = 0) {
@@ -451,13 +494,13 @@ class CrossCompareTests(BaseCreoleTest):
             creole_string=r"""
                 * **bold** item
                 * //italic// item
-    
+
                 # item about a [[/foo/bar|certain_page]]
                 """,
             textile_string="""
                 * *bold* item
                 * __italic__ item
-    
+
                 # item about a "certain_page":/foo/bar
             """,
             html_string="""
@@ -494,7 +537,7 @@ class CrossCompareTests(BaseCreoleTest):
                 </tr>
                 </table>
             """,
-            #debug=True
+            # debug=True
             strip_lines=True,
         )
         self.cross_compare(
@@ -515,7 +558,7 @@ class CrossCompareTests(BaseCreoleTest):
                 </tr>
                 </table>
             """,
-            #debug=True
+            # debug=True
         )
 
 

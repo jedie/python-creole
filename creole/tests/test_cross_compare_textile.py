@@ -4,7 +4,7 @@
 """
     cross compare textile unittest
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     Compare all similarities between:
         * textile2html (used the python textile module)
         * html2textile
@@ -12,7 +12,7 @@
     Note: This only works fine if there is no problematic whitespace handling.
         In this case, we must test in test_creole2html.py or test_html2creole.py
 
-    :copyleft: 2008-2011 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2008-2014 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -41,15 +41,25 @@ class CrossCompareTextileTests(BaseCreoleTest):
             """,
             html_string="""
                 <p><em>emphasis</em><br />
+
                 <strong>strong</strong><br />
+
                 <i>italic</i><br />
+
                 <b>bold</b><br />
+
                 <cite>citation</cite><br />
+
                 <del>deleted text</del><br />
+
                 <ins>inserted text</ins><br />
+
                 <sup>superscript</sup><br />
+
                 <sub>subscript</sub><br />
+
                 <span>span</span><br />
+
                 <code>code</code></p>
             """
         )
@@ -63,7 +73,7 @@ class CrossCompareTextileTests(BaseCreoleTest):
             """,
             html_string="""
                 <pre>
-                &#60;html escaped&#62;
+                &lt;html escaped&gt;
                 </pre>
             """)
 

@@ -207,6 +207,7 @@ Note: In this case you must install **docutils**! See above.
 
 * v1.2.1dev - 2014-09-14
 ** Use origin PyPi code to check generated reStructuredText in setup.py
+** Update unitest for textile v2.1.8
 * v1.2.0 - 2014-05-15
 ** NEW: Add {{{<<code>>}}} example macro (Source code highlighting with pygments) - implemented by Julien Enselme
 ** NEW: Add {{{<<toc>>}}} macro to create a table of contents list

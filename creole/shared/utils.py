@@ -5,7 +5,7 @@
     python creole utilities
     ~~~~~~~~~~~~~~~~~~~~~~~
 
-    :copyleft: 2011 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2011-2014 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -34,8 +34,11 @@ def string2dict(raw_content, encoding="utf-8"):
     """
     convert a string into a dictionary. e.g.:
 
-    >>> string2dict('key1="value1" key2="value2"')
-    {'key2': 'value2', 'key1': 'value1'}
+    >>> string2dict('key="value"')
+    {'key': 'value'}
+
+    >>> string2dict('key1="value1" key2="value2"') == {'key2': 'value2', 'key1': 'value1'}
+    True
 
     See test_creole2html.TestString2Dict()
     """

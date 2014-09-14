@@ -7,7 +7,7 @@
 
     Basic unittest class for all python-creole tests.
 
-    :copyleft: 2008-2009 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2008-2014 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -265,6 +265,7 @@ class BaseCreoleTest(MarkupTest):
 
         # compare textile -> html
         if not test_textile:
+            # TODO: Use @unittest.skipIf if python 2.6 will be not support anymore
             warnings.warn("Skip textile test. Please install python textile module.")
             return
 
