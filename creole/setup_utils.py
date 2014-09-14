@@ -3,23 +3,23 @@
 """
     utils for distutils setup
     ~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     Get README.creole as ReStructuredText on-the-fly for setup.long_description
-    
+
     More information:
         https://code.google.com/p/python-creole/wiki/UseInSetup
-    
+
     usage in setup.py e.g.:
     ---------------------------------------------------------------------------
     #!/usr/bin/env python
     # coding: utf-8
-    
+
     import os
     import sys
     from setuptools import setup, find_packages
-    
+
     PACKAGE_ROOT = os.path.dirname(os.path.abspath(__file__))
-    
+
     try:
         from creole.setup_utils import get_long_description
     except ImportError:
@@ -30,15 +30,15 @@
         long_description = None
     else:
         long_description = get_long_description(PACKAGE_ROOT)
-    
+
     setup(
         ...
         long_description = long_description,
         ...
     )
     ---------------------------------------------------------------------------
-    
-    :copyleft: 2011-2012 by the python-creole team, see AUTHORS for more details.
+
+    :copyleft: 2011-2014 by the python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -80,6 +80,7 @@ def get_long_description(package_root, filename="README.creole", raise_errors=No
         raise_errors = should_raise_errors()
 
     if raise_errors:
+        sys.stderr.write("Test creole2rest and raise an error, if rendering failed...\n")
         # raise a error if a unknown node found
         unknown_emit = raise_unknown_node
     else:
@@ -116,13 +117,16 @@ def get_long_description(package_root, filename="README.creole", raise_errors=No
         )
     else:
         if raise_errors:
-            # Test created ReSt code
-            from creole.rest2html.clean_writer import rest2html
+            # Test created ReSt code like PyPi does it.
+            from creole.rest2html.pypi_rest2html import pypi_rest2html
             try:
-                rest2html(long_description_rest_unicode, traceback=True, enable_exit_status=1, exit_status_level=2)
+                pypi_rest2html(long_description_rest_unicode)
             except SystemExit as e:
-                print("Error creole2rest self test failed: rest2html() exist with status code: %s" % e.args[0])
-                raise
+                msg = "Error creole2rest self test failed: rest2html() exist with status code: %s\n" % e.args[0]
+                sys.stderr.write(msg)
+                sys.exit(msg)
+            except Exception as e:
+                sys.exit("ReSt2html error: %s" % e)
             else:
                 if "check" in sys.argv:
                     print("Generating creole to ReSt to html, ok.")

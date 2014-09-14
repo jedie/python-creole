@@ -4,7 +4,7 @@
 """
     unittest for setup_utils
     ~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     https://code.google.com/p/python-creole/wiki/UseInSetup
 
     :copyleft: 2011-2014 by python-creole team, see AUTHORS for more details.
@@ -83,16 +83,31 @@ class SetupUtilsTests(BaseCreoleTest):
             self.assertEqual(long_description, "-------\nnoerror\n-------")
         finally:
             fd.close()
-            
+
     def test_get_long_description_error_handling(self):
         """
         Test if get_long_description will raised a error, if description
         produce a ReSt error.
-        
+
         We test with this error:
         <string>:102: (ERROR/3) Document or section may not begin with a transition.
         """
         path, filename, fd = self._tempfile(b"----")
+        try:
+            self.assertRaises(SystemExit, get_long_description, path, filename, raise_errors=True)
+        finally:
+            fd.close()
+
+    def test_get_long_description_error_handling2(self):
+        """
+        Test if get_long_description will raised a error, if description
+        produce a ReSt error.
+
+        We test with this error:
+        SystemExit: ReSt2html error: link scheme not allowed
+        """
+        path, filename, fd = self._tempfile(b"[[foo://bar]]")
+#         print(get_long_description(path, filename, raise_errors=True))
         try:
             self.assertRaises(SystemExit, get_long_description, path, filename, raise_errors=True)
         finally:
