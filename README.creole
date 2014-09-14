@@ -205,7 +205,7 @@ Note: In this case you must install **docutils**! See above.
 
 = history =
 
-* v1.2.1dev - 2014-09-14
+* v1.2.1 - 2014-09-14
 ** Use origin PyPi code to check generated reStructuredText in setup.py
 ** Update unitest for textile v2.1.8
 * v1.2.0 - 2014-05-15
