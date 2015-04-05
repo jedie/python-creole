@@ -2,7 +2,12 @@
 
 python-creole is a OpenSource (GPL) Python lib for converting markups.
 python-creole is pure python. No external libs needed.
-It's compatible with Python v2.6-v3.4 and PyPy.
+
+Compatible Python Versions (see also [[https://github.com/jedie/python-creole/blob/master/.travis.yml|.travis.yml]]):
+ * 2.6 - 2.7.x
+ * 3.3 - 3.4.x
+ * PyPy v2
+
 
 Existing converters:
 
