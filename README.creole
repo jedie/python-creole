@@ -2,7 +2,7 @@
 
 python-creole is a OpenSource (GPL) Python lib for converting markups.
 python-creole is pure python. No external libs needed.
-It's compatible with Python v2.6-v3.2 and PyPy.
+It's compatible with Python v2.6-v3.4 and PyPy.
 
 Existing converters:
 
@@ -205,6 +205,8 @@ Note: In this case you must install **docutils**! See above.
 
 = history =
 
+* v1.2.2 - **not released, yet**
+** Bugfix textile unittests if url scheme is unknown
 * v1.2.1 - 2014-09-14
 ** Use origin PyPi code to check generated reStructuredText in setup.py
 ** Update unitest for textile v2.1.8
