@@ -41,7 +41,7 @@ setup(
     author=get_authors(),
     author_email="python-creole@jensdiemer.de",
     maintainer="Jens Diemer",
-    url='http://code.google.com/p/python-creole/',
+    url='https://github.com/jedie/python-creole/',
     packages=find_packages(),
     include_package_data=True, # include package data under svn source control
     data_files=[("", ["README.creole"])], # README used in unittest test_setup_utils.py

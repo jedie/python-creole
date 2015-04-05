@@ -212,6 +212,7 @@ Note: In this case you must install **docutils**! See above.
 
 * v1.2.2 - **not released, yet**
 ** Bugfix textile unittests if url scheme is unknown
+** migrate google-code Wiki to github and remove google-code links
 * v1.2.1 - 2014-09-14
 ** Use origin PyPi code to check generated reStructuredText in setup.py
 ** Update unitest for textile v2.1.8
