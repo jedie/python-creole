@@ -6,7 +6,7 @@ python-creole is pure python. No external libs needed.
 Compatible Python Versions (see also [[https://github.com/jedie/python-creole/blob/master/.travis.yml|.travis.yml]]):
  * 2.6 - 2.7.x
  * 3.3 - 3.4.x
- * PyPy v2
+ * PyPy (Python v2 and v3)
 
 
 Existing converters:

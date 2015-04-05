@@ -5,6 +5,7 @@ python:
   - "3.3"
   - "3.4"
   - "pypy"
+  - "pypy3"
 install:
   - pip install --verbose "textile>=2.1.8" docutils pygments
 # command to run tests
