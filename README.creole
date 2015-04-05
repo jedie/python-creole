@@ -210,7 +210,7 @@ Note: In this case you must install **docutils**! See above.
 
 = history =
 
-* v1.2.2 - **not released, yet**
+* v1.2.2 - 2015-04-05
 ** Bugfix textile unittests if url scheme is unknown
 ** migrate google-code Wiki to github and remove google-code links
 * v1.2.1 - 2014-09-14
