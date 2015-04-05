@@ -236,9 +236,10 @@ class CrossCompareTests(BaseCreoleTest):
             creole_string=r"""
                 X [[foo://bar|unknown protocol]] Y
             """,
-            textile_string="""
-                X "unknown protocol":foo://bar Y
-            """,
+            # textile will return '#' if url scheme is unknown!
+            # textile_string="""
+            #     X "unknown protocol":foo://bar Y
+            # """,
             rest_string="""
                 X `unknown protocol <foo://bar>`_ Y
             """,
