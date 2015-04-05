@@ -352,7 +352,7 @@ Note: In this case you must install **docutils**! See above.
 | GitHub        | [[http://github.com/jedie/python-creole]]
 | Wiki          | [[http://github.com/jedie/python-creole/wiki]]
 | PyPi          | [[http://pypi.python.org/pypi/python-creole/]]
-| Shining Panda | [[https://jenkins.shiningpanda.com/python-creole/]]
+| Travis CI     | [[https://travis-ci.org/jedie/python-creole/]]
 
 === contact ===
 
