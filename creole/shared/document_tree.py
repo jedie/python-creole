@@ -64,12 +64,28 @@ class DocNode:
 #        return "<DocNode %s (parent: %r): %r>" % (self.kind, self.parent, self.content)
 
     def debug(self):
+        """
+        >>> node = DocNode(kind="test", content="foo", attrs={"a":1}, level=0)
+        >>> node.debug() # doctest: +NORMALIZE_WHITESPACE +REPORT_NDIFF
+        ________________________________________________________________________________
+            DocNode - debug:
+        str(): <DocNode test: 'foo'>
+        attributes:
+                       attrs: {'a': 1}
+                    children: []
+                     content: 'foo'
+                        kind: 'test'
+                       level: 0
+                      parent: None
+        """
         print("_" * 80)
         print("\tDocNode - debug:")
         print("str(): %s" % self)
         print("attributes:")
         for i in dir(self):
             if i.startswith("_") or i == "debug":
+                continue
+            if callable(getattr(self, i)):
                 continue
             print("%20s: %r" % (i, getattr(self, i, "---")))
 
