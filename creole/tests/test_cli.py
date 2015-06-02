@@ -17,6 +17,7 @@ import sys
 import os
 import tempfile
 
+from creole import cmdline
 from creole.tests.utils.base_unittest import BaseCreoleTest
 from creole import VERSION_STRING
 from creole.tests.utils.unittest_subprocess import SubprocessMixin
@@ -24,10 +25,43 @@ from creole.tests.utils.unittest_subprocess import SubprocessMixin
 CMDS = ("creole2html", "html2creole", "html2rest", "html2textile")
 
 
-class CreoleCLITests(BaseCreoleTest, SubprocessMixin):
+class CliTestMixins(object):
+    def test_creole2html(self):
+        self._test_convert(
+            source_content=b"= test creole2html =",
+            dest_content="<h1>test creole2html</h1>",
+            cli_str="creole2html",
+        )
+
+    def test_html2creole(self):
+        self._test_convert(
+            source_content=b"<h1>test html2creole</h1>",
+            dest_content="= test html2creole",
+            cli_str="html2creole",
+        )
+
+    def test_html2rest(self):
+        self._test_convert(
+            source_content=b"<h1>test html2rest</h1>",
+            dest_content=(
+                "==============\n"
+                "test html2rest\n"
+                "=============="
+            ),
+            cli_str="html2rest",
+        )
+
+    def test_html2textile(self):
+        self._test_convert(
+            source_content=b"<h1>test html2textile</h1>",
+            dest_content="h1. test html2textile",
+            cli_str="html2textile",
+        )
+
+
+class CreoleCLITests(BaseCreoleTest, SubprocessMixin, CliTestMixins):
     def _test_convert(self, source_content, dest_content, cli_str, verbose=True):
         assert isinstance(source_content, bytes), type(source_content)
-        assert isinstance(dest_content, bytes), type(dest_content)
 
         source_file = tempfile.NamedTemporaryFile()
         sourcefilepath = source_file.name
@@ -56,7 +90,6 @@ class CreoleCLITests(BaseCreoleTest, SubprocessMixin):
         result_content = dest_file.read()
 
         result_content = result_content.decode("utf-8")
-        dest_content = dest_content.decode("utf-8")
         self.assertEqual(result_content, dest_content)
 
     def test_version(self):
@@ -71,36 +104,37 @@ class CreoleCLITests(BaseCreoleTest, SubprocessMixin):
                 verbose=False,
             )
 
-    def test_creole2html(self):
-        self._test_convert(
-            source_content=b"= test creole2html =",
-            dest_content=b"<h1>test creole2html</h1>",
-            cli_str="creole2html",
-        )
 
-    def test_html2creole(self):
-        self._test_convert(
-            source_content=b"<h1>test html2creole</h1>",
-            dest_content=b"= test html2creole",
-            cli_str="html2creole",
-        )
 
-    def test_html2rest(self):
-        self._test_convert(
-            source_content=b"<h1>test html2rest</h1>",
-            dest_content=(b"==============\n"
-                          b"test html2rest\n"
-                          b"=============="
-            ),
-            cli_str="html2rest",
-        )
+class CreoleCLITestsDirect(BaseCreoleTest, CliTestMixins):
 
-    def test_html2textile(self):
-        self._test_convert(
-            source_content=b"<h1>test html2textile</h1>",
-            dest_content=b"h1. test html2textile",
-            cli_str="html2textile",
-        )
+    def setUp(self):
+        super(CreoleCLITestsDirect, self).setUp()
+        self._old_sys_argv = sys.argv[:]
+
+    def tearDown(self):
+        sys.argv = self._old_sys_argv
+
+    def _test_convert(self, source_content, dest_content, cli_str, verbose=True):
+        assert isinstance(source_content, bytes), type(source_content)
+
+        source_file = tempfile.NamedTemporaryFile()
+        sourcefilepath = source_file.name
+        source_file.write(source_content)
+        source_file.seek(0)
+
+        dest_file = tempfile.NamedTemporaryFile()
+        destfilepath = dest_file.name
+
+        sys.argv = [cli_str, sourcefilepath, destfilepath]
+        cli = getattr(cmdline, "cli_%s" % cli_str)
+        cli()
+
+        dest_file.seek(0)
+        result_content = dest_file.read()
+
+        result_content = result_content.decode("utf-8")
+        self.assertEqual(result_content, dest_content)
 
 
 if __name__ == '__main__':
