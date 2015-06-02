@@ -21,6 +21,27 @@ from creole.setup_utils import get_long_description
 
 PACKAGE_ROOT = os.path.dirname(os.path.abspath(__file__))
 
+if "publish" in sys.argv:
+    try:
+        import wheel
+    except ImportError as err:
+        print("\nError: %s" % err)
+        print("\nMaybe https://pypi.python.org/pypi/wheel is not installed or virtualenv not activated?!?")
+        print("e.g.:")
+        print("    ~/your/env/$ source bin/activate")
+        print("    ~/your/env/$ pip install wheel")
+        sys.exit(-1)
+
+    import subprocess
+    args = [sys.executable or "python", "setup.py", "sdist", "bdist_wheel", "upload"]
+    print("\nCall: %r\n" %  " ".join(args))
+    subprocess.call(args)
+
+    print("\nDon't forget to tag this version, e.g.:")
+    print("\tgit tag v%s" % VERSION_STRING)
+    print("\tgit push --tags")
+    sys.exit()
+
 
 def get_authors():
     try:
