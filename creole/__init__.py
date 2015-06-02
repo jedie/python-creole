@@ -24,8 +24,6 @@ __version__ = (1, 2, 2)
 __api__ = (1, 0) # Creole 1.0 spec - http://wikicreole.org/
 
 
-import os
-import sys
 import warnings
 
 from creole.creole2html.emitter import HtmlEmitter
@@ -45,7 +43,7 @@ API_STRING = '.'.join(str(integer) for integer in __api__)
 
 
 def creole2html(markup_string, debug=False,
-        parser_kwargs={}, emitter_kwargs={},
+        parser_kwargs=None, emitter_kwargs=None,
         block_rules=None, blog_line_breaks=True,
         macros=None, verbose=None, stderr=None,
     ):
@@ -63,7 +61,7 @@ def creole2html(markup_string, debug=False,
         "block_rules": block_rules,
         "blog_line_breaks": blog_line_breaks,
     }
-    if parser_kwargs:
+    if parser_kwargs is not None:
         warnings.warn("parser_kwargs argument in creole2html would be removed in the future!", PendingDeprecationWarning)
         parser_kwargs2.update(parser_kwargs)
 
@@ -77,7 +75,7 @@ def creole2html(markup_string, debug=False,
         "verbose": verbose,
         "stderr": stderr,
     }
-    if emitter_kwargs:
+    if emitter_kwargs is not None:
         warnings.warn("emitter_kwargs argument in creole2html would be removed in the future!", PendingDeprecationWarning)
         emitter_kwargs2.update(emitter_kwargs)
 
@@ -97,7 +95,7 @@ def parse_html(html_string, debug=False):
 
 
 def html2creole(html_string, debug=False,
-        parser_kwargs={}, emitter_kwargs={},
+        parser_kwargs=None, emitter_kwargs=None,
         unknown_emit=None
     ):
     """
@@ -106,7 +104,7 @@ def html2creole(html_string, debug=False,
     >>> html2creole('<p>This is <strong>creole <i>markup</i></strong>!</p>')
     'This is **creole //markup//**!'
     """
-    if parser_kwargs:
+    if parser_kwargs is not None:
         warnings.warn("parser_kwargs argument in html2creole would be removed in the future!", PendingDeprecationWarning)
 
     document_tree = parse_html(html_string, debug=debug)
@@ -114,7 +112,7 @@ def html2creole(html_string, debug=False,
     emitter_kwargs2 = {
         "unknown_emit": unknown_emit,
     }
-    if emitter_kwargs:
+    if emitter_kwargs is not None:
         warnings.warn("emitter_kwargs argument in html2creole would be removed in the future!", PendingDeprecationWarning)
         emitter_kwargs2.update(emitter_kwargs)
 
@@ -124,7 +122,7 @@ def html2creole(html_string, debug=False,
 
 
 def html2textile(html_string, debug=False,
-        parser_kwargs={}, emitter_kwargs={},
+        parser_kwargs=None, emitter_kwargs=None,
         unknown_emit=None
     ):
     """
@@ -133,7 +131,7 @@ def html2textile(html_string, debug=False,
     >>> html2textile('<p>This is <strong>textile <i>markup</i></strong>!</p>')
     'This is *textile __markup__*!'
     """
-    if parser_kwargs:
+    if parser_kwargs is not None:
         warnings.warn("parser_kwargs argument in html2textile would be removed in the future!", PendingDeprecationWarning)
 
     document_tree = parse_html(html_string, debug=debug)
@@ -141,7 +139,7 @@ def html2textile(html_string, debug=False,
     emitter_kwargs2 = {
         "unknown_emit": unknown_emit,
     }
-    if emitter_kwargs:
+    if emitter_kwargs is not None:
         warnings.warn("emitter_kwargs argument in html2textile would be removed in the future!", PendingDeprecationWarning)
         emitter_kwargs2.update(emitter_kwargs)
 
@@ -151,7 +149,7 @@ def html2textile(html_string, debug=False,
 
 
 def html2rest(html_string, debug=False,
-        parser_kwargs={}, emitter_kwargs={},
+        parser_kwargs=None, emitter_kwargs=None,
         unknown_emit=None
     ):
     """
@@ -160,7 +158,7 @@ def html2rest(html_string, debug=False,
     >>> html2rest('<p>This is <strong>ReStructuredText</strong> <em>markup</em>!</p>')
     'This is **ReStructuredText** *markup*!'
     """
-    if parser_kwargs:
+    if parser_kwargs is not None:
         warnings.warn("parser_kwargs argument in html2rest would be removed in the future!", PendingDeprecationWarning)
 
     document_tree = parse_html(html_string, debug=debug)
@@ -168,7 +166,7 @@ def html2rest(html_string, debug=False,
     emitter_kwargs2 = {
         "unknown_emit": unknown_emit,
     }
-    if emitter_kwargs:
+    if emitter_kwargs is not None:
         warnings.warn("emitter_kwargs argument in html2rest would be removed in the future!", PendingDeprecationWarning)
         emitter_kwargs2.update(emitter_kwargs)
 
