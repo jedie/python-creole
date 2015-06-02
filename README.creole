@@ -151,51 +151,16 @@ Contributers should take a look at this page:
 
 == unittests ==
 
-=== run unittests ===
-
-From source package, use setup.py to run unittests (Works without install python-creole, needs setuptools):
+We use **nose** for running unittests (with DocTests).
+Please install it, e.g.:
 {{{
-.../path/to/python-creole$ python setup.py test
+.../your/env/$ source bin/activate
+.../your/env/$ pip install nose
 }}}
 
-If you have installed python-creole do this to run unittests:
+To run the unittests:
 {{{
-~$ cd /path/to/site-packages
-...path/to/site-packages/$ cd
-...path/to/site-packages/python_creole-0.9.0.pre-py2.7.egg$ cd /creole/tests
-...path/to/site-packages/python_creole-0.9.0.pre-py2.7.egg/creole/tests$ python all_tests.py
-}}}
-Note:
-* You can pass the arguments {{{--verbose}}} or {{{--quite}}} to **setup.py** and **all_tests.py**
-* If you get a error like {{{ImportError: ... No module named creole}}}, then python-creole is not installed successfully, because it's not found in Python {{{sys.path}}}
-
-
-You can also run tests inside interactive python:
-{{{
->>> from creole.tests import run_unittests
->>> run_unittests()
-..............................................................................................................................
-----------------------------------------------------------------------
-Ran 126 tests in 0.966s
-
->>> from creole.tests.all_tests import run_all_doctests
->>> run_all_doctests()
-.....................
-----------------------------------------------------------------------
-Ran 21 DocTests from 49 files in 0.368s: failed=0, attempted=88
-}}}
-
-or do this:
-{{{
-~$ python -c "from creole.tests import run_unittests;run_unittests()"
-..............................................................................................................................
-----------------------------------------------------------------------
-Ran 126 tests in 0.917s
-
-~$ python -c "from creole.tests.all_tests import run_all_doctests;run_all_doctests()"
-.....................
-----------------------------------------------------------------------
-Ran 21 DocTests from 49 files in 0.368s: failed=0, attempted=88
+.../path/to/python-creole$ python setup.py nosetests
 }}}
 
 
@@ -214,7 +179,8 @@ Note: In this case you must install **docutils**! See above.
 ** run unittests and doctests with nose
 ** Refactor CLI tests
 ** skip official support for Python 2.6
-** small code cleanups, fixes.
+** small code cleanups and fixes.
+** use **json.dumps()** instead of **repr()** in some cases
 * v1.2.2 - 2015-04-05 - [[https://github.com/jedie/python-creole/compare/v1.2.1...v1.2.2|compare v1.2.1...v1.2.2]]
 ** Bugfix textile unittests if url scheme is unknown
 ** migrate google-code Wiki to github and remove google-code links
@@ -345,6 +311,7 @@ Note: In this case you must install **docutils**! See above.
 * v0.1.0
 ** first version cut out from [[http://www.pylucid.org|PyLucid CMS]]
 
+first source code was written 27.11.2008: [[http://www.python-forum.de/viewtopic.php?f=3&t=16742|Forum thread (de)]]
 
 = donation =
 
