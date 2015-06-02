@@ -76,7 +76,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         """
         self.assert_html2creole(r"""
             111 <<html>><unknown><</html>>foo<<html>></unknown><</html>> 222
-            333<<html>><unknown foo1='bar1' foo2='bar2'><</html>>foobar<<html>></unknown><</html>>444
+            333<<html>><unknown foo1="bar1" foo2="bar2"><</html>>foobar<<html>></unknown><</html>>444
 
             555<<html>><unknown /><</html>>666
         """, """
@@ -95,12 +95,12 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         """
         self.assert_html2creole(r"""
             111 &lt;unknown&gt;foo&lt;/unknown&gt; 222
-            333&lt;unknown foo1='bar1' foo2='bar2'&gt;foobar&lt;/unknown&gt;444
+            333&lt;unknown foo1="bar1" foo2="bar2"&gt;foobar&lt;/unknown&gt;444
 
             555&lt;unknown /&gt;666
         """, """
             <p>111 <unknown>foo</unknown> 222<br />
-            333<unknown foo1="bar1" foo2='bar2'>foobar</unknown>444</p>
+            333<unknown foo1="bar1" foo2="bar2">foobar</unknown>444</p>
 
             <p>555<unknown />666</p>
         """,

@@ -2,7 +2,7 @@
 # coding: utf-8
 
 """
-    html -> textile Emitter
+    html -> creole Emitter
     ~~~~~~~~~~~~~~~~~~~~~~
 
 
@@ -17,17 +17,16 @@ from creole.shared.base_emitter import BaseEmitter
 
 
 
-class TextileEmitter(BaseEmitter):
+class CreoleEmitter(BaseEmitter):
     """
     Build from a document_tree (html2creole.parser.HtmlParser instance) a
     creole markup text.
     """
-
     def __init__(self, *args, **kwargs):
-        super(TextileEmitter, self).__init__(*args, **kwargs)
+        super(CreoleEmitter, self).__init__(*args, **kwargs)
 
-        self.table_head_prefix = "_. "
-        self.table_auto_width = False
+        self.table_head_prefix = "= "
+        self.table_auto_width = True
 
     def emit(self):
         """Emit the document represented by self.root DOM tree."""
@@ -37,56 +36,56 @@ class TextileEmitter(BaseEmitter):
 
     def blockdata_pre_emit(self, node):
         """ pre block -> with newline at the end """
-        return "<pre>%s</pre>\n" % self.deentity.replace_all(node.content)
+        return "{{{%s}}}\n" % self.deentity.replace_all(node.content)
     def inlinedata_pre_emit(self, node):
         """ a pre inline block -> no newline at the end """
-        return "<pre>%s</pre>" % self.deentity.replace_all(node.content)
+        return "{{{%s}}}" % self.deentity.replace_all(node.content)
 
     def blockdata_pass_emit(self, node):
         return "%s\n\n" % node.content
         return node.content
 
-
     #--------------------------------------------------------------------------
 
     def p_emit(self, node):
-        return "%s\n\n" % self.emit_children(node)
+        result = self.emit_children(node)
+        if self._inner_list == "":
+            result += "\n\n"
+        return result
+
+    def br_emit(self, node):
+        if self._inner_list != "":
+            return "\\\\"
+        else:
+            return "\n"
 
     def headline_emit(self, node):
-        return "h%i. %s\n\n" % (node.level, self.emit_children(node))
+        return "%s %s\n\n" % ("=" * node.level, self.emit_children(node))
 
     #--------------------------------------------------------------------------
 
-    def _typeface(self, node, key):
-        return key + self.emit_children(node) + key
-
     def strong_emit(self, node):
-        return self._typeface(node, key="*")
-    def b_emit(self, node):
         return self._typeface(node, key="**")
+    b_emit = strong_emit
     big_emit = strong_emit
 
     def i_emit(self, node):
-        return self._typeface(node, key="__")
-    def em_emit(self, node):
-        return self._typeface(node, key="_")
+        return self._typeface(node, key="//")
+    em_emit = i_emit
 
+    def tt_emit(self, node):
+        return self._typeface(node, key="##")
     def sup_emit(self, node):
-        return self._typeface(node, key="^")
+        return self._typeface(node, key="^^")
     def sub_emit(self, node):
-        return self._typeface(node, key="~")
+        return self._typeface(node, key=",,")
+    def u_emit(self, node):
+        return self._typeface(node, key="__")
+    def small_emit(self, node):
+        return self._typeface(node, key="--")
     def del_emit(self, node):
-        return self._typeface(node, key="-")
-
-    def cite_emit(self, node):
-        return self._typeface(node, key="??")
-    def ins_emit(self, node):
-        return self._typeface(node, key="+")
-
-    def span_emit(self, node):
-        return self._typeface(node, key="%")
-    def code_emit(self, node):
-        return self._typeface(node, key="@")
+        return self._typeface(node, key="~~")
+    strike_emit = del_emit
 
     #--------------------------------------------------------------------------
 
@@ -95,8 +94,15 @@ class TextileEmitter(BaseEmitter):
 
     def a_emit(self, node):
         link_text = self.emit_children(node)
-        url = node.attrs["href"]
-        return '"%s":%s' % (link_text, url)
+        try:
+            url = node.attrs["href"]
+        except KeyError:
+            # e.g.: <a name="anchor-one">foo</a>
+            return link_text
+        if link_text == url:
+            return "[[%s]]" % url
+        else:
+            return "[[%s|%s]]" % (url, link_text)
 
     def img_emit(self, node):
         src = node.attrs["src"]
@@ -114,7 +120,7 @@ class TextileEmitter(BaseEmitter):
         if text == "": # Use filename as picture text
             text = posixpath.basename(src)
 
-        return "!%s(%s)!" % (src, text)
+        return "{{%s|%s}}" % (src, text)
 
     #--------------------------------------------------------------------------
 
@@ -124,7 +130,13 @@ class TextileEmitter(BaseEmitter):
     def ol_emit(self, node):
         return self._list_emit(node, list_type="#")
 
+    #--------------------------------------------------------------------------
 
+    def div_emit(self, node):
+        return self._emit_content(node)
+
+    def span_emit(self, node):
+        return self._emit_content(node)
 
 
 
@@ -136,21 +148,9 @@ if __name__ == '__main__':
     print(doctest.testmod())
 
 #    import sys;sys.exit()
-    from creole.html_parser.parser import HtmlParser
+    from creole.parser.html_parser import HtmlParser
 
-    data = """
-<h1>Textile</h1>
-<table>
-<tr>
-    <th>Headline 1</th>
-    <th>Headline 2</th>
-</tr>
-<tr>
-    <td>cell one</td>
-    <td>cell two</td>
-</tr>
-</table>
-"""
+    data = """A <<unittest_macro1 args="foo1">>bar1<</unittest_macro1>> in a line..."""
 
 #    print(data.strip())
     h2c = HtmlParser(
@@ -159,8 +159,11 @@ if __name__ == '__main__':
     document_tree = h2c.feed(data)
     h2c.debug()
 
-    e = TextileEmitter(document_tree,
-        debug=True
+    from creole.shared.unknown_tags import escape_unknown_nodes
+
+    e = CreoleEmitter(document_tree,
+        debug=True,
+        unknown_emit=escape_unknown_nodes
     )
     content = e.emit()
     print("*" * 79)

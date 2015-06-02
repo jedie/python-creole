@@ -11,9 +11,8 @@
 """
 
 from __future__ import division, absolute_import, print_function, unicode_literals
-import posixpath
 
-from creole.html_parser.config import BLOCK_TAGS
+from creole.parser.html_parser_config import BLOCK_TAGS
 from creole.html_tools.deentity import Deentity
 from creole.py3compat import TEXT_TYPE
 from creole.shared.markup_table import MarkupTable

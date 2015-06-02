@@ -15,7 +15,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import re
 
-from creole.html_parser.config import BLOCK_TAGS
+from creole.parser.html_parser_config import BLOCK_TAGS
 
 
 strip_html_regex = re.compile(

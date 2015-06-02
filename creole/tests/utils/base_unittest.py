@@ -36,7 +36,7 @@ from creole.exceptions import DocutilsImportError
 from creole import creole2html, html2creole, html2textile, html2rest
 
 try:
-    from creole.rest2html.clean_writer import rest2html
+    from creole.rest_tools.clean_writer import rest2html
 except DocutilsImportError as err:
     REST_INSTALLED = False
     warnings.warn("Can't run all ReSt unittests: %s" % err)

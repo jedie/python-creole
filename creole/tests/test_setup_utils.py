@@ -60,7 +60,7 @@ class SetupUtilsTests(BaseCreoleTest):
         long_description = get_long_description(CREOLE_PACKAGE_ROOT, raise_errors=False)
         self.assertIn("=====\nabout\n=====\n\n", long_description)
         # Test created ReSt code
-        from creole.rest2html.clean_writer import rest2html
+        from creole.rest_tools.clean_writer import rest2html
         html = rest2html(long_description)
         self.assertIn("<h1>about</h1>\n", html)
 

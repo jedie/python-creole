@@ -11,17 +11,19 @@ from creole.html_tools.strip_html import strip_html
 
 
 class StripHtml(unittest.TestCase):
+    @unittest.expectedFailure
     def test_not_closed_image_tag(self):
         output = strip_html('<p>a <img src="/image.jpg"> image.</p>')
         self.assertEqual(output, '<p>a <img src="/image.jpg"> image.</p>')
 
+    @unittest.expectedFailure
     def test_remove_linebreak(self):
         output = strip_html('<strong>foo</strong>\n<ul><li>one</li></ul>')
         self.assertEqual(output, '<strong>foo</strong><ul><li>one</li></ul>')
 
 
-
 class CrossCompareCreoleTests(BaseCreoleTest):
+    @unittest.expectedFailure
     def test_cross_lines_creole2html(self):
         """ TODO: bold/italics cross lines in creole2html
         see: http://code.google.com/p/python-creole/issues/detail?id=13
@@ -40,6 +42,7 @@ class CrossCompareCreoleTests(BaseCreoleTest):
             """
         )
 
+    @unittest.expectedFailure
     def test_cross_paragraphs(self):
         """ TODO: bold/italics cross paragraphs in creole2html
         see: http://code.google.com/p/python-creole/issues/detail?id=13 
@@ -53,7 +56,7 @@ class CrossCompareCreoleTests(BaseCreoleTest):
             <p>...able<em> to cross paragraphs.</em></p>
         """)
 
-
+    @unittest.expectedFailure
     def test_escape_inline(self):
         """ TODO: different pre/code syntax?
         """
@@ -75,6 +78,7 @@ class CrossCompareCreoleTests(BaseCreoleTest):
 
 
 class TestHtml2CreoleMarkup(BaseCreoleTest):
+    @unittest.expectedFailure
     def test_format_in_a_text(self):
         """ TODO: http://code.google.com/p/python-creole/issues/detail?id=4 """
         self.assert_html2creole(r"""
@@ -83,7 +87,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             <a href="/url/"><strong>title</strong></a>
         """)
 
-
+    @unittest.expectedFailure
     def test_newline_before_headline(self):
         """ TODO: http://code.google.com/p/python-creole/issues/detail?id=16#c5 """
         self.assert_html2creole(r"""
@@ -95,6 +99,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             <h1>one</h1>
         """)#, debug=True)
 
+    @unittest.expectedFailure
     def test_no_space_before_blocktag(self):
         """ TODO: Bug in html2creole.strip_html(): Don't add a space before/after block tags """
         self.assert_html2creole(r"""
@@ -107,6 +112,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         """#, debug=True
         )
 
+    @unittest.expectedFailure
     def test_escape_char(self):
         self.assert_html2creole(r"""
             ~#1
@@ -122,6 +128,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             [[Link]]</p>
         """)
 
+    @unittest.expectedFailure
     def test_images(self):
         self.assert_html2creole(r"""
             a {{/image.jpg|JPG pictures}} and
@@ -140,7 +147,4 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         """#, debug=True
         )
 
-if __name__ == '__main__':
-    unittest.main(
-        verbosity=2
-    )
+

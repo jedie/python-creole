@@ -14,6 +14,7 @@
 from __future__ import division, absolute_import, print_function, unicode_literals
 
 import difflib
+import textwrap
 import unittest
 
 
@@ -78,7 +79,6 @@ class MarkupTest(unittest.TestCase):
         """
         prepare the multiline, indentation text.
         """
-        #txt = unicode(txt)
         txt = txt.splitlines()
         assert txt[0] == "", "First assertion line must be empty! Is: %s" % repr(txt[0])
         txt = txt[1:] # Skip the first line

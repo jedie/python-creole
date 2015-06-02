@@ -4,21 +4,21 @@
 """
     WikiCreole to HTML converter
 
-    :copyleft: 2008-2014 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2008-2015 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 
 from __future__ import division, absolute_import, print_function, unicode_literals
 
+import json
 from xml.sax.saxutils import escape
 import sys
 import traceback
 
-from creole.creole2html.parser import CreoleParser
-from creole.py3compat import TEXT_TYPE, repr2
+from creole.parser.creol2html_parser import CreoleParser
+from creole.py3compat import TEXT_TYPE
 from creole.shared.utils import string2dict
-
 
 
 class TableOfContent(object):
@@ -288,7 +288,7 @@ class HtmlEmitter(object):
             exc_info = sys.exc_info()
             return self.error(
                 "Wrong macro arguments: %s for macro '%s' (maybe wrong macro tag syntax?)" % (
-                    repr2(args), macro_name
+                    json.dumps(args), macro_name
                 ),
                 exc_info
             )

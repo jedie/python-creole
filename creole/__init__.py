@@ -20,18 +20,18 @@
 
 from __future__ import division, absolute_import, print_function, unicode_literals
 
-__version__ = (1, 2, 2)
+__version__ = (1, 3, 0)
 __api__ = (1, 0) # Creole 1.0 spec - http://wikicreole.org/
 
 
 import warnings
 
-from creole.creole2html.emitter import HtmlEmitter
-from creole.creole2html.parser import BlockRules, CreoleParser
-from creole.html2creole.emitter import CreoleEmitter
-from creole.html2rest.emitter import ReStructuredTextEmitter
-from creole.html2textile.emitter import TextileEmitter
-from creole.html_parser.parser import HtmlParser
+from creole.emitter.creol2html_emitter import HtmlEmitter
+from creole.parser.creol2html_parser import CreoleParser
+from creole.emitter.html2creole_emitter import CreoleEmitter
+from creole.emitter.html2rest_emitter import ReStructuredTextEmitter
+from creole.emitter.html2textile_emitter import TextileEmitter
+from creole.parser.html_parser import HtmlParser
 from creole.py3compat import TEXT_TYPE
 
 

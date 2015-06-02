@@ -118,7 +118,7 @@ def get_long_description(package_root, filename="README.creole", raise_errors=No
     else:
         if raise_errors:
             # Test created ReSt code like PyPi does it.
-            from creole.rest2html.pypi_rest2html import pypi_rest2html
+            from creole.rest_tools.pypi_rest2html import pypi_rest2html
             try:
                 pypi_rest2html(long_description_rest_unicode)
             except SystemExit as e:

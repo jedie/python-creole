@@ -12,8 +12,9 @@
 from __future__ import division, absolute_import, print_function, unicode_literals
 
 import shlex
+import json
 
-from creole.py3compat import TEXT_TYPE, PY3, repr2
+from creole.py3compat import TEXT_TYPE, PY3
 
 try:
     from pygments import lexers
@@ -72,16 +73,16 @@ def dict2string(d):
     FIXME: Find a better was to do this.
 
     >>> dict2string({'foo':"bar", "no":123})
-    "foo='bar' no=123"
+    'foo="bar" no=123'
 
     >>> dict2string({"foo":'bar', "no":"ABC"})
-    "foo='bar' no='ABC'"
+    'foo="bar" no="ABC"'
 
     See test_creole2html.TestDict2String()
     """
     attr_list = []
     for key, value in sorted(d.items()):
-        value_string = repr2(value)
+        value_string = json.dumps(value)
         attr_list.append("%s=%s" % (key, value_string))
     return " ".join(attr_list)
 

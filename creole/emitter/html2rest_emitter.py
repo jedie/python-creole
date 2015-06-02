@@ -16,7 +16,6 @@
 from __future__ import division, absolute_import, print_function, unicode_literals
 import posixpath
 
-from creole.html_parser.config import BLOCK_TAGS
 from creole.shared.base_emitter import BaseEmitter
 from creole.shared.markup_table import MarkupTable
 
@@ -298,7 +297,7 @@ if __name__ == '__main__':
     print(doctest.testmod())
 
 #    import sys;sys.exit()
-    from creole.html_parser.parser import HtmlParser
+    from creole.parser.html_parser import HtmlParser
 
     data = """<p>A nested bullet lists:</p>
 <ul>

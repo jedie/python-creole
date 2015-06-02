@@ -14,32 +14,30 @@
 
 from __future__ import division, absolute_import, print_function, unicode_literals
 
-from creole.py3compat import repr2
+import json
 
-
-def test_macro1(**kwargs):
+def unittest_macro1(**kwargs):
     """
-    >>> test_macro1(foo="bar")
-    "[test macro1 - kwargs: foo='bar']"
+    >>> unittest_macro1(foo="bar")
+    '[test macro1 - kwargs: foo="bar"]'
     
-    >>> test_macro1()
+    >>> unittest_macro1()
     '[test macro1 - kwargs: ]'
     
-    >>> test_macro1(a=1,b=2)
+    >>> unittest_macro1(a=1,b=2)
     '[test macro1 - kwargs: a=1,b=2]'
     """
-    kwargs = ','.join(['%s=%s' % (k, repr2(v)) for k, v in sorted(kwargs.items())])
+    kwargs = ','.join(['%s=%s' % (k, json.dumps(v)) for k, v in sorted(kwargs.items())])
     return "[test macro1 - kwargs: %s]" % kwargs
 
 
-def test_macro2(char, text):
+def unittest_macro2(char, text):
     """
-    >>> test_macro2(char="|", text="a\\nb")
+    >>> unittest_macro2(char="|", text="a\\nb")
     'a|b'
     """
     return char.join(text.split())
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     import doctest
     print(doctest.testmod())

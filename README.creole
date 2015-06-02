@@ -4,8 +4,7 @@ python-creole is a OpenSource (GPL) Python lib for converting markups.
 python-creole is pure python. No external libs needed.
 
 Compatible Python Versions (see also [[https://github.com/jedie/python-creole/blob/master/.travis.yml|.travis.yml]]):
- * 2.6 - 2.7.x
- * 3.3 - 3.4.x
+ * 2.7.x, 3.3 - 3.4.x
  * PyPy (Python v2 and v3)
 
 
@@ -210,13 +209,19 @@ Note: In this case you must install **docutils**! See above.
 
 = history =
 
-* v1.2.2 - 2015-04-05
+* v1.3.0 - 2015-06-02 - [[https://github.com/jedie/python-creole/compare/v1.2.2...v1.3.0|compare v1.2.2...v1.3.0]]
+** Refactory internal file structure
+** run unittests and doctests with nose
+** Refactor CLI tests
+** skip official support for Python 2.6
+** small code cleanups, fixes.
+* v1.2.2 - 2015-04-05 - [[https://github.com/jedie/python-creole/compare/v1.2.1...v1.2.2|compare v1.2.1...v1.2.2]]
 ** Bugfix textile unittests if url scheme is unknown
 ** migrate google-code Wiki to github and remove google-code links
-* v1.2.1 - 2014-09-14
+* v1.2.1 - 2014-09-14 - [[https://github.com/jedie/python-creole/compare/v1.2.0...v1.2.1|compare v1.2.0...v1.2.1]]
 ** Use origin PyPi code to check generated reStructuredText in setup.py
 ** Update unitest for textile v2.1.8
-* v1.2.0 - 2014-05-15
+* v1.2.0 - 2014-05-15 - [[https://github.com/jedie/python-creole/compare/v1.1.1...v1.2.0|compare v1.1.1...v1.2.0]]
 ** NEW: Add {{{<<code>>}}} example macro (Source code highlighting with pygments) - implemented by Julien Enselme
 ** NEW: Add {{{<<toc>>}}} macro to create a table of contents list
 ** Bugfix for: AttributeError: 'CreoleParser' object has no attribute '_escaped_char_repl'
@@ -352,7 +357,6 @@ Note: In this case you must install **docutils**! See above.
 | GitHub        | [[http://github.com/jedie/python-creole]]
 | Wiki          | [[http://github.com/jedie/python-creole/wiki]]
 | PyPi          | [[http://pypi.python.org/pypi/python-creole/]]
-| Travis CI     | [[https://travis-ci.org/jedie/python-creole/]]
 
 === contact ===
 

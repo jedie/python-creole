@@ -44,7 +44,7 @@ wais irc'''.split()
 def pypi_rest2html(source, output_encoding='unicode'):
     """
     >>> pypi_rest2html("test!")
-    u'<p>test!</p>\n'
+    '<p>test!</p>\\n'
     """
     settings_overrides = {
         'raw_enabled': 0,  # no raw HTML code

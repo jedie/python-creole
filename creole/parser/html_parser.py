@@ -13,14 +13,14 @@
 from __future__ import division, absolute_import, print_function, unicode_literals
 
 import re
-import sys
 import warnings
 
-from creole.html_parser.config import BLOCK_TAGS, IGNORE_TAGS
+from creole.parser.html_parser_config import BLOCK_TAGS, IGNORE_TAGS
 from creole.html_tools.strip_html import strip_html
 from creole.py3compat import TEXT_TYPE, BINARY_TYPE
 from creole.shared.document_tree import DocNode, DebugList
 from creole.shared.html_parser import HTMLParser
+
 
 #------------------------------------------------------------------------------
 
@@ -74,9 +74,7 @@ class HtmlParser(HTMLParser):
     p
         data: 'html1 '
         script
-            data: "var foo='<em>BAR"
-            data: '</em>'
-            data: "';"
+            data: "var foo='<em>BAR</em>';"
         data: ' html2'
     ********************************************************************************
     """

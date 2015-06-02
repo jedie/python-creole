@@ -369,25 +369,25 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
 
     def test_macro_basic(self):
         """
-        Test the three diferent macro types with a "unittest macro"
+        Test the three different macro types with a "unittest macro"
         """
         self.assert_creole2html(r"""
             There exist three different macro types:
-            A <<test_macro1 args="foo1">>bar1<</test_macro1>> in a line...
-            ...a single <<test_macro1 foo="bar">> tag,
-            or: <<test_macro1 a=1 b=2 />> closed...
+            A <<unittest_macro1 args="foo1">>bar1<</unittest_macro1>> in a line...
+            ...a single <<unittest_macro1 foo="bar">> tag,
+            or: <<unittest_macro1 a=1 b=2 />> closed...
 
             a macro block:
-            <<test_macro2 char="|">>
+            <<unittest_macro2 char="|">>
             the
             text
-            <</test_macro2>>
+            <</unittest_macro2>>
             the end
         """, r"""
             <p>There exist three different macro types:<br />
-            A [test macro1 - kwargs: args='foo1',text='bar1'] in a line...<br />
-            ...a single [test macro1 - kwargs: foo='bar',text=None] tag,<br />
-            or: [test macro1 - kwargs: a=1,b=2,text=None] closed...</p>
+            A [test macro1 - kwargs: args="foo1",text="bar1"] in a line...<br />
+            ...a single [test macro1 - kwargs: foo="bar",text=null] tag,<br />
+            or: [test macro1 - kwargs: a=1,b=2,text=null] closed...</p>
 
             <p>a macro block:</p>
             the|text
@@ -450,7 +450,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
                 <<summary>Some funky page summary.<</summary>>
             """, r"""
                 <p>wrong macro line:<br />
-                [Error: Wrong macro arguments: '>Some funky page summary.<</summary' for macro 'summary' (maybe wrong macro tag syntax?)]
+                [Error: Wrong macro arguments: ">Some funky page summary.<</summary" for macro 'summary' (maybe wrong macro tag syntax?)]
                 </p>
             """, # verbose=True
         )
@@ -935,18 +935,18 @@ class TestDict2String(unittest.TestCase):
     def test_basic(self):
         self.assertEqual(
             dict2string({'key':'value'}),
-            "key='value'"
+            'key="value"'
         )
 
     def test_basic2(self):
         self.assertEqual(
             dict2string({'foo':"bar", "no":123}),
-            "foo='bar' no=123"
+            'foo="bar" no=123'
         )
     def test_basic3(self):
         self.assertEqual(
             dict2string({"foo":'bar', "no":"ABC"}),
-            "foo='bar' no='ABC'"
+            'foo="bar" no="ABC"'
         )
 
 if __name__ == '__main__':

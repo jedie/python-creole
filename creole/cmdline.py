@@ -26,9 +26,10 @@ class CreoleCLI(object):
                 " in pure Python for:"
                 " creole2html, html2creole, html2ReSt, html2textile"
             ),
-            version=VERSION_STRING,
         )
-
+        self.parser.add_argument('--version', action='version',
+            version='%%(prog)s from python-creole v%s' % VERSION_STRING
+        )
         self.parser.add_argument("sourcefile", help="source file to convert")
         self.parser.add_argument("destination", help="Output filename")
         self.parser.add_argument("--encoding",

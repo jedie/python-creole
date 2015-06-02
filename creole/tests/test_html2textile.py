@@ -67,10 +67,10 @@ class TextileTests(BaseCreoleTest):
         """
         self.assert_html2textile(
             textile_string="""
-                111 <<pre>><x><</pre>>foo<<pre>></x><</pre>> 222
-                333<<pre>><x foo1="bar1"><</pre>>foobar<<pre>></x><</pre>>444
-                
-                555<<pre>><x /><</pre>>666
+                111 foo 222
+                333foobar444
+
+                555666
             """,
             html_string="""
                 <p>111 <x>foo</x> 222<br />

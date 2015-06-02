@@ -41,13 +41,3 @@ else:
     doctest.OutputChecker = OutputChecker2
 
 
-def repr2(obj):
-    """
-    Don't mark unicode strings with u in Python 2
-    """
-    if not PY3:
-        return repr(obj).lstrip("u")
-    else:
-        return repr(obj)
-
-

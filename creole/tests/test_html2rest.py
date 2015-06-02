@@ -17,8 +17,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import unittest
 
-from creole.html2rest.emitter import Html2restException
-from creole.shared.unknown_tags import preformat_unknown_nodes
+from creole.emitter.html2rest_emitter import Html2restException
 from creole.tests.utils.base_unittest import BaseCreoleTest
 
 

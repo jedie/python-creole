@@ -26,10 +26,10 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import re
 
-from creole.creole2html.rules import BlockRules, INLINE_FLAGS, INLINE_RULES, \
+from creole.parser.creol2html_rules import BlockRules, INLINE_FLAGS, INLINE_RULES, \
     SpecialRules, InlineRules
 from creole.py3compat import TEXT_TYPE
-from creole.shared.document_tree import DocNode, DebugList
+from creole.shared.document_tree import DocNode
 
 
 class CreoleParser(object):
@@ -493,7 +493,7 @@ if __name__ == "__main__":
 
     print("-" * 80)
 
-    txt = """A <<test_macro1 args="foo1">>bar1<</test_macro1>> in a line..."""
+    txt = """A <<unittest_macro1 args="foo1">>bar1<</unittest_macro1>> in a line..."""
 
     print(txt)
     print("-" * 80)

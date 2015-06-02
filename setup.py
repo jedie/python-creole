@@ -24,13 +24,28 @@ PACKAGE_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 def get_authors():
     try:
-        f = file(os.path.join(PACKAGE_ROOT, "AUTHORS"), "r")
-        authors = [l.strip(" *\r\n") for l in f if l.strip().startswith("*")]
-        f.close()
+        with open(os.path.join(PACKAGE_ROOT, "AUTHORS"), "r") as f:
+            authors = [l.strip(" *\r\n") for l in f if l.strip().startswith("*")]
     except Exception:
         evalue = sys.exc_info()[1]
         authors = "[Error: %s]" % evalue
     return authors
+
+
+if "test" in sys.argv:
+    """
+    nose is a optional dependency, so test import
+    if user run with: './setup.py test'
+    """
+    try:
+        import nose
+    except ImportError as err:
+        print("\nError: Can't import 'nose': %s" % err)
+        print("\nMaybe 'nose' is not installed or virtualenv not activated?!?")
+        print("e.g.:")
+        print("    ~/your/env/$ source bin/activate")
+        print("    ~/your/env/$ pip install nose")
+        sys.exit(-1)
 
 
 setup(
@@ -75,5 +90,5 @@ setup(
         "Topic :: Text Processing :: Markup :: HTML",
         "Topic :: Utilities",
     ],
-    test_suite="creole.tests.get_test_suite",
+    test_suite="nose.collector",
 )
