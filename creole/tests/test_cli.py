@@ -53,7 +53,8 @@ class CreoleCLITests(BaseCreoleTest):
             print("Call:", popen_args)
 
         process = subprocess.Popen(popen_args,
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
             universal_newlines=True,
         )
         stdout, stderr = process.communicate()
@@ -65,14 +66,12 @@ class CreoleCLITests(BaseCreoleTest):
             print("stderr: %r" % stderr)
 
         stdout = stdout.strip()
-        stderr = stderr.strip()
-        return popen_args, retcode, stdout, stderr
+        return popen_args, retcode, stdout
 
-    def assertSubprocess(self, popen_args, retcode, stdout, stderr, verbose=True):
-        popen_args2, retcode2, stdout2, stderr2 = self._subprocess(popen_args, verbose)
+    def assertSubprocess(self, popen_args, retcode, stdout, verbose=True):
+        popen_args2, retcode2, stdout2 = self._subprocess(popen_args, verbose)
         try:
             self.assertEqual(stdout, stdout2, "stdout wrong:")
-            self.assertEqual(stderr, stderr2, "stderr wrong:")
             self.assertEqual(retcode, retcode2, "return code wrong:")
         except AssertionError as err:
             msg = (
@@ -81,13 +80,11 @@ class CreoleCLITests(BaseCreoleTest):
                 "return code........: %r\n"
                 " ---------- [stdout] ---------- \n"
                 "%s\n"
-                " ---------- [stderr] ---------- \n"
-                "%s\n"
                 "-------------------------------"
             ) % (
                 err,
                 repr(popen_args2), retcode2,
-                stdout2, stderr2,
+                stdout2,
             )
             self.fail(msg)
 
@@ -114,7 +111,7 @@ class CreoleCLITests(BaseCreoleTest):
 
         self.assertSubprocess(
             popen_args=[cli_str, sourcefilepath, destfilepath],
-            retcode=0, stdout=stdout, stderr="",
+            retcode=0, stdout=stdout,
             verbose=False,
         )
 
@@ -130,22 +127,12 @@ class CreoleCLITests(BaseCreoleTest):
             version_info = "%s from python-creole v%s" % (
                 cmd, VERSION_STRING
             )
-            if PY3:
-                self.assertSubprocess(
-                    popen_args=[cmd, "--version"],
-                    retcode=0,
-                    stdout=version_info,
-                    stderr="",
-                    verbose=False,
-                )
-            else:
-                self.assertSubprocess(
-                    popen_args=[cmd, "--version"],
-                    retcode=0,
-                    stdout="",
-                    stderr=version_info,
-                    verbose=False,
-                )
+            self.assertSubprocess(
+                popen_args=[cmd, "--version"],
+                retcode=0,
+                stdout=version_info,
+                verbose=False,
+            )
 
     def test_creole2html(self):
         self._test_convert(
