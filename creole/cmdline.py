@@ -59,20 +59,16 @@ class CreoleCLI(object):
 
 
 def cli_creole2html():
-    cli = CreoleCLI(creole2html)
-#     cli.convert()
+    CreoleCLI(creole2html)
 
 def cli_html2creole():
-    cli = CreoleCLI(html2creole)
-#     cli.convert()
+    CreoleCLI(html2creole)
     
 def cli_html2rest():
-    cli = CreoleCLI(html2rest)
-#     cli.convert()
+    CreoleCLI(html2rest)
     
 def cli_html2textile():
-    cli = CreoleCLI(html2textile)
-#     cli.convert()
+    CreoleCLI(html2textile)
 
 
 if __name__ == "__main__":
