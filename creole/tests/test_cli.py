@@ -17,77 +17,14 @@ import sys
 import os
 import tempfile
 
-from creole.py3compat import PY3
 from creole.tests.utils.base_unittest import BaseCreoleTest
 from creole import VERSION_STRING
-
+from creole.tests.utils.unittest_subprocess import SubprocessMixin
 
 CMDS = ("creole2html", "html2creole", "html2rest", "html2textile")
 
 
-class CreoleCLITests(BaseCreoleTest):
-    CMD_PATH = None
-
-    @classmethod
-    def setUpClass(cls):
-        # FIXME: How can this be easier?!?
-        prog = CMDS[0]
-        cls.CMD_PATH = os.path.abspath(os.path.dirname(sys.executable))
-        if not os.path.isfile(os.path.join(cls.CMD_PATH, prog)):
-            for path in sys.path:
-                if os.path.isfile(os.path.join(path, prog)):
-                    cls.CMD_PATH = path
-                    break
-
-    def _subprocess(self, popen_args, verbose=True):
-        assert isinstance(popen_args, list)
-
-        # set absolute path to called cli program
-        prog = popen_args[0]
-        prog = os.path.join(self.CMD_PATH, prog)
-        self.assertTrue(os.path.isfile(prog), "File not found: %r" % prog)
-        self.assertTrue(os.access(prog, os.X_OK), "File %r is not executeable?!?" % prog)
-        popen_args[0] = prog
-
-        if verbose:
-            print("Call:", popen_args)
-
-        process = subprocess.Popen(popen_args,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            universal_newlines=True,
-        )
-        stdout, stderr = process.communicate()
-        retcode = process.poll()
-
-        if verbose:
-            print("return code: %r" % retcode)
-            print("stdout: %r" % stdout)
-            print("stderr: %r" % stderr)
-
-        stdout = stdout.strip()
-        return popen_args, retcode, stdout
-
-    def assertSubprocess(self, popen_args, retcode, stdout, verbose=True):
-        popen_args2, retcode2, stdout2 = self._subprocess(popen_args, verbose)
-        try:
-            self.assertEqual(stdout, stdout2, "stdout wrong:")
-            self.assertEqual(retcode, retcode2, "return code wrong:")
-        except AssertionError as err:
-            msg = (
-                "Error: %s"
-                "call via subprocess: %s\n"
-                "return code........: %r\n"
-                " ---------- [stdout] ---------- \n"
-                "%s\n"
-                "-------------------------------"
-            ) % (
-                err,
-                repr(popen_args2), retcode2,
-                stdout2,
-            )
-            self.fail(msg)
-
+class CreoleCLITests(BaseCreoleTest, SubprocessMixin):
     def _test_convert(self, source_content, dest_content, cli_str, verbose=True):
         assert isinstance(source_content, bytes), type(source_content)
         assert isinstance(dest_content, bytes), type(dest_content)

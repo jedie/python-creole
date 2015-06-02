@@ -21,8 +21,11 @@ from creole.setup_utils import get_long_description
 
 PACKAGE_ROOT = os.path.dirname(os.path.abspath(__file__))
 
+
 if "publish" in sys.argv:
     try:
+        # Test if wheel is installed, otherwise the user will only see:
+        #   error: invalid command 'bdist_wheel'
         import wheel
     except ImportError as err:
         print("\nError: %s" % err)
@@ -43,20 +46,11 @@ if "publish" in sys.argv:
     sys.exit()
 
 
-def get_authors():
-    try:
-        with open(os.path.join(PACKAGE_ROOT, "AUTHORS"), "r") as f:
-            authors = [l.strip(" *\r\n") for l in f if l.strip().startswith("*")]
-    except Exception:
-        evalue = sys.exc_info()[1]
-        authors = "[Error: %s]" % evalue
-    return authors
-
-
-if "test" in sys.argv:
+if "test" in sys.argv or "nosetests" in sys.argv:
     """
-    nose is a optional dependency, so test import
-    if user run with: './setup.py test'
+    nose is a optional dependency, so test import.
+    Otherwise the user get only the error:
+        error: invalid command 'nosetests'
     """
     try:
         import nose
@@ -66,7 +60,24 @@ if "test" in sys.argv:
         print("e.g.:")
         print("    ~/your/env/$ source bin/activate")
         print("    ~/your/env/$ pip install nose")
+        print("    ~/your/env/$ ./setup.py nosetests\n")
         sys.exit(-1)
+    else:
+        if "test" in sys.argv:
+            print("\nPlease use 'nosetests' instead of 'test' to cover all tests!\n")
+            print("e.g.:")
+            print("     $ ./setup.py nosetests\n")
+            sys.exit(-1)
+
+
+def get_authors():
+    try:
+        with open(os.path.join(PACKAGE_ROOT, "AUTHORS"), "r") as f:
+            authors = [l.strip(" *\r\n") for l in f if l.strip().startswith("*")]
+    except Exception:
+        evalue = sys.exc_info()[1]
+        authors = "[Error: %s]" % evalue
+    return authors
 
 
 setup(
@@ -89,6 +100,9 @@ setup(
             "html2textile = creole.cmdline:cli_html2textile",
         ],
     },
+    tests_require=[
+        "nose", # https://pypi.python.org/pypi/nose
+    ],
     zip_safe=True, # http://packages.python.org/distribute/setuptools.html#setting-the-zip-safe-flag
     keywords="creole markup creole2html html2creole rest2html html2rest html2textile",
     classifiers=[
