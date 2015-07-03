@@ -313,11 +313,6 @@ Note: In this case you must install **docutils**! See above.
 
 first source code was written 27.11.2008: [[http://www.python-forum.de/viewtopic.php?f=3&t=16742|Forum thread (de)]]
 
-= donation =
-
-* [[http://flattr.com/thing/181554/python-creole|Flattr this!]]
-* Send [[http://www.bitcoin.org/|Bitcoins]] to [[https://blockexplorer.com/address/12QK6o7sGw7Dp3Fdfm2qKvyRqzuY2w5da9|12QK6o7sGw7Dp3Fdfm2qKvyRqzuY2w5da9]]
-
 
 == Project links ==
 
