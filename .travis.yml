@@ -1,4 +1,7 @@
+# Config file for automatic testing at travis-ci.org
+
 language: python
+sudo: false
 
 python:
   - "2.7"
@@ -8,14 +11,15 @@ python:
   - "pypy3"
 
 install:
-  - pip install nose "textile>=2.1.8" docutils pygments coveralls
+  - pip install --upgrade pip
+  - pip install nose textile docutils pygments coveralls
   - pip install .
 
 script:
   - coverage run ./setup.py nosetests
 
 after_success:
-  coveralls
+  - coveralls
 
 notifications:
   irc: "irc.freenode.org#pylucid"
