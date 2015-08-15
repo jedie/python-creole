@@ -14,15 +14,11 @@
     :PyPi:
       http://pypi.python.org/pypi/python-creole/
 
-    :copyleft: 2008-2014 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2008-2015 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 from __future__ import division, absolute_import, print_function, unicode_literals
-
-__version__ = (1, 3, 0)
-__api__ = (1, 0) # Creole 1.0 spec - http://wikicreole.org/
-
 
 import warnings
 
@@ -35,11 +31,11 @@ from creole.parser.html_parser import HtmlParser
 from creole.py3compat import TEXT_TYPE
 
 
-# TODO: Add git date to __version__
+__version__ = "1.3.1"
+__api__ = "1.0" # Creole 1.0 spec - http://wikicreole.org/
 
-
-VERSION_STRING = '.'.join(str(part) for part in __version__)
-API_STRING = '.'.join(str(integer) for integer in __api__)
+VERSION_STRING = __version__ # remove in future
+API_STRING = __api__ # remove in future
 
 
 def creole2html(markup_string, debug=False,
