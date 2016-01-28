@@ -71,6 +71,18 @@ class ReStTests(BaseCreoleTest):
             """
         )
 
+    def test_substitution_image_without_p(self):
+        self.assert_html2rest(
+            rest_string="""
+                |image.png|
+
+                .. |image.png| image:: /url/to/image.png
+            """,
+            html_string="""
+                <img src="/url/to/image.png" />
+            """
+        )
+
     def test_pre_code1(self):
         self.assert_html2rest(
             rest_string="""
