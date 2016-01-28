@@ -86,6 +86,8 @@ class ReStructuredTextEmitter(BaseEmitter):
         result = self.emit_children(node)
         if self._substitution_data:
             # add rest at the end
+            if not result.endswith("\n\n"):
+                 result += "\n\n"
             result += "%s\n\n" % self._get_block_data()
         return result
 
