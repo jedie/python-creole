@@ -148,6 +148,9 @@ Contributers should take a look at this page:
 
 * [[https://github.com/jedie/python-creole/wiki/Developer-Info]]
 
+Creole Markup Cheat Sheet can be found here: http://www.wikicreole.org/wiki/CheatSheet
+
+{{http://www.wikicreole.org/imageServlet?page=CheatSheet%2Fcreole_cheat_sheet.png&width=340|Creole Markup Cheat Sheet}}
 
 == unittests ==
 
