@@ -42,6 +42,7 @@ def creole2html(markup_string, debug=False,
         parser_kwargs=None, emitter_kwargs=None,
         block_rules=None, blog_line_breaks=True,
         macros=None, verbose=None, stderr=None,
+        allow_img_size=False,
     ):
     """
     convert creole markup into html code
@@ -70,6 +71,7 @@ def creole2html(markup_string, debug=False,
         "macros": macros,
         "verbose": verbose,
         "stderr": stderr,
+        "allow_img_size": allow_img_size,
     }
     if emitter_kwargs is not None:
         warnings.warn("emitter_kwargs argument in creole2html would be removed in the future!", PendingDeprecationWarning)
