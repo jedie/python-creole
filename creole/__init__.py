@@ -42,7 +42,7 @@ def creole2html(markup_string, debug=False,
         parser_kwargs=None, emitter_kwargs=None,
         block_rules=None, blog_line_breaks=True,
         macros=None, verbose=None, stderr=None,
-        allow_img_size=False,
+        strict=False,
     ):
     """
     convert creole markup into html code
@@ -71,7 +71,7 @@ def creole2html(markup_string, debug=False,
         "macros": macros,
         "verbose": verbose,
         "stderr": stderr,
-        "allow_img_size": allow_img_size,
+        "strict": strict,
     }
     if emitter_kwargs is not None:
         warnings.warn("emitter_kwargs argument in creole2html would be removed in the future!", PendingDeprecationWarning)
@@ -92,9 +92,13 @@ def parse_html(html_string, debug=False):
     return document_tree
 
 
-def html2creole(html_string, debug=False,
-        parser_kwargs=None, emitter_kwargs=None,
-        unknown_emit=None
+def html2creole(
+        html_string,
+        debug=False,
+        parser_kwargs=None,
+        emitter_kwargs=None,
+        unknown_emit=None,
+        strict=False,
     ):
     """
     convert html code into creole markup
@@ -109,6 +113,7 @@ def html2creole(html_string, debug=False,
 
     emitter_kwargs2 = {
         "unknown_emit": unknown_emit,
+        "strict": strict,
     }
     if emitter_kwargs is not None:
         warnings.warn("emitter_kwargs argument in html2creole would be removed in the future!", PendingDeprecationWarning)

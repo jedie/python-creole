@@ -23,6 +23,9 @@ class CreoleEmitter(BaseEmitter):
     creole markup text.
     """
     def __init__(self, *args, **kwargs):
+        self.strict = kwargs["strict"]
+        del kwargs["strict"]
+
         super(CreoleEmitter, self).__init__(*args, **kwargs)
 
         self.table_head_prefix = "= "
@@ -112,6 +115,9 @@ class CreoleEmitter(BaseEmitter):
 
         title = node.attrs.get("title", "")
         alt = node.attrs.get("alt", "")
+        width = node.attrs.get("height", None)
+        height = node.attrs.get("width", None)
+        print("strict", self.strict)
         if len(alt) > len(title): # Use the longest one
             text = alt
         else:
@@ -119,6 +125,10 @@ class CreoleEmitter(BaseEmitter):
 
         if text == "": # Use filename as picture text
             text = posixpath.basename(src)
+
+        if not self.strict:
+            if width and height:
+                return "{{%s|%s|%sx%s}}" % (src, text, width, height)
 
         return "{{%s|%s}}" % (src, text)
 

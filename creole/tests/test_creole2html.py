@@ -210,6 +210,8 @@ class TestCreole2html(BaseCreoleTest):
             warnings.warn("Skip test, because 'pygments' is not installed.")
             return
 
+        # due to https://bitbucket.org/birkenfeld/pygments-main/issues/1254/empty-at-the-begining-of-the-highlight
+        # an empty <span></span> is now part of pygments output
         self.assert_creole2html(r"""
             Here a simple code macro test:
             <<code ext=".py">>
@@ -218,8 +220,8 @@ class TestCreole2html(BaseCreoleTest):
             <</code>>
             """, """
             <p>Here a simple code macro test:</p>
-            <div class="pygments"><pre><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span><br />
-                <span class="k">print</span><span class="p">(</span><span class="s">&#39;hello world&#39;</span><span class="p">)</span><br />
+            <div class="pygments"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span><br />
+                <span class="k">print</span><span class="p">(</span><span class="s1">&#39;hello world&#39;</span><span class="p">)</span><br />
             </pre></div><br />
             """,
             macros={'code': example_macros.code}
@@ -746,6 +748,32 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             <img src="/path1/path2/foobar2.jpg" title="/path1/path2/foobar2.jpg" alt="/path1/path2/foobar2.jpg" /><br />
             <img src="/path1/path2/foobar3.jpg" title="foobar3.jpg" alt="foobar3.jpg" /></p>
         """)
+
+    def test_image_with_size(self):
+        """ test image tag with size dimention (good and bad) """
+        self.assert_creole2html(r"""
+            {{/path1/path2/foobar3.jpg|foo|160x90}}
+            {{/path1/path2/foobar3.jpg|foo| 160 x 90 }}
+            {{/path1/path2/foobar3.jpg|foo|160}}
+            {{/path1/path2/foobar3.jpg||160x90}}
+            {{/path1/path2/foobar3.jpg|foo|}}
+        """, """
+            <p><img src="/path1/path2/foobar3.jpg" title="foo" alt="foo" width="160" height="90" /><br />
+            <img src="/path1/path2/foobar3.jpg" title="foo" alt="foo" width="160" height="90" /><br />
+            <img src="/path1/path2/foobar3.jpg" title="foo|160" alt="foo|160" /><br />
+            <img src="/path1/path2/foobar3.jpg" title="/path1/path2/foobar3.jpg" alt="/path1/path2/foobar3.jpg" width="160" height="90" /><br />
+            <img src="/path1/path2/foobar3.jpg" title="foo|" alt="foo|" /></p>
+        """)
+
+    def test_image_with_size_strict(self):
+        """ test image tag with size dimention (good and bad) """
+        self.assert_creole2html(r"""
+            {{/path1/path2/foobar3.jpg|foo|160x90}}
+            {{/path1/path2/foobar3.jpg|foo|160}}
+        """, """
+            <p><img src="/path1/path2/foobar3.jpg" title="foo|160x90" alt="foo|160x90" /><br />
+            <img src="/path1/path2/foobar3.jpg" title="foo|160" alt="foo|160" /></p>
+        """, strict=True)
 
     def test_image_unknown_extension(self):
         self.assert_creole2html(r"""

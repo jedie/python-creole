@@ -47,7 +47,7 @@ For all functionality (and running the unittests) these modules are needed:
 Convert creole markup to html code:
 {{{
 >>> from creole import creole2html
->>> creole2html("This is **creole //markup//**")
+>>> creole2html(u"This is **creole //markup//**")
 u'<p>This is <strong>creole <i>markup</i></strong></p>\n'
 }}}
 

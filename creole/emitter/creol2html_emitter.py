@@ -102,8 +102,7 @@ class HtmlEmitter(object):
     Generate HTML output for the document
     tree consisting of DocNodes.
     """
-    def __init__(self, root, macros=None, verbose=None, stderr=None, \
-        allow_img_size=False):
+    def __init__(self, root, macros=None, verbose=None, stderr=None, strict=False):
 
         self.root = root
 
@@ -144,7 +143,7 @@ class HtmlEmitter(object):
         else:
             self.stderr = stderr
 
-        self.allow_img_size = allow_img_size
+        self.strict = strict
 
     def get_text(self, node):
         """Try to emit whatever text is in the node."""
@@ -274,11 +273,13 @@ class HtmlEmitter(object):
     def image_emit(self, node):
         target = node.content
         text = self.attr_escape(self.get_text(node))
-        if self.allow_img_size:
+        if not self.strict:
             try:
                 if "|" in text:
                     title, size_str = text.split("|", 1)
-                    w_str, h_str = size_str.split(",", 1)
+                    if not title:
+                        title = target
+                    w_str, h_str = size_str.split("x", 1)
                     width = int(w_str.strip())
                     height = int(h_str.strip())
                     return '<img src="%s" title="%s" alt="%s" width="%s" height="%s" />' % (
