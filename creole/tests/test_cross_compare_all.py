@@ -551,6 +551,10 @@ class CrossCompareTests(BaseCreoleTest):
                 """,
             html_string="""
                 <table>
+                <colgroup>
+                <col width="50%" />
+                <col width="50%" />
+                </colgroup>
                 <tr><th>Headline 1</th>
                 <th>Headline 2</th>
                 </tr>
