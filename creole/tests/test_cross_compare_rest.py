@@ -178,6 +178,9 @@ class CrossCompareReStTests(BaseCreoleTest):
             html_string="""
                 <p>before table.</p>
                 <table>
+                <colgroup>
+                <col width="100%" />
+                </colgroup>
                 <tr><td>table item</td>
                 </tr>
                 </table>
@@ -196,6 +199,9 @@ class CrossCompareReStTests(BaseCreoleTest):
             """,
             html_string="""
                 <table>
+                <colgroup>
+                <col width="100%" />
+                </colgroup>
                 <tr><td><a href="foo/bar">table item</a></td>
                 </tr>
                 </table>
@@ -213,6 +219,9 @@ class CrossCompareReStTests(BaseCreoleTest):
             """,
             html_string="""
                 <table>
+                <colgroup>
+                <col width="100%" />
+                </colgroup>
                 <tr><td>foo <a href="foo/bar">table item</a> bar</td>
                 </tr>
                 </table>
@@ -233,6 +242,9 @@ class CrossCompareReStTests(BaseCreoleTest):
             """,
             html_string="""
                 <table>
+                <colgroup>
+                <col width="100%" />
+                </colgroup>
                 <tr><td><ul>
                 <li>foo <a href="foo/bar/1/">table item 1</a> bar 1</li>
                 </ul>
@@ -263,6 +275,9 @@ class CrossCompareReStTests(BaseCreoleTest):
             """,
             html_string="""
                 <table>
+                <colgroup>
+                <col width="100%" />
+                </colgroup>
                 <tr><td><a href="foo/bar/1/">table item 1</a></td>
                 </tr>
                 <tr><td><a href="foo/bar/2/">table item 2</a></td>
@@ -288,6 +303,9 @@ class CrossCompareReStTests(BaseCreoleTest):
             """,
             html_string="""
                 <table>
+                <colgroup>
+                <col width="100%" />
+                </colgroup>
                 <tr><td>this is <a href="foo/bar/">foo bar</a> first time.</td>
                 </tr>
                 <tr><td>and here <a href="foo/bar/">foo bar</a> again.</td>
@@ -311,6 +329,9 @@ class CrossCompareReStTests(BaseCreoleTest):
             """,
             html_string="""
                 <table>
+                <colgroup>
+                <col width="100%" />
+                </colgroup>
                 <tr><td>this is <a href="foo/bar/">foo bar</a> first time.</td>
                 </tr>
                 </table>
@@ -332,6 +353,9 @@ class CrossCompareReStTests(BaseCreoleTest):
             """,
             html_string="""
                 <table>
+                <colgroup>
+                <col width="100%" />
+                </colgroup>
                 <tr><td>first <img alt="image" src="/picture.png" /> here</td>
                 </tr>
                 <tr><td>second <img alt="image" src="/picture.png" /> there</td>
@@ -357,6 +381,9 @@ class CrossCompareReStTests(BaseCreoleTest):
             """,
             html_string="""
                 <table>
+                <colgroup>
+                <col width="100%" />
+                </colgroup>
                 <tr><td>a <img alt="same" src="/image.png" /> image here</td>
                 </tr>
                 <tr><td>a <a href="/url/foo/">same</a> link there</td>

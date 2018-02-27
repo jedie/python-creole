@@ -22,8 +22,9 @@ class CreoleEmitter(BaseEmitter):
     Build from a document_tree (html2creole.parser.HtmlParser instance) a
     creole markup text.
     """
-    def __init__(self, *args, **kwargs):
-        super(CreoleEmitter, self).__init__(*args, **kwargs)
+    def __init__(self, document_tree, strict=False, *args, **kwargs):
+        self.strict = strict
+        super(CreoleEmitter, self).__init__(document_tree, *args, **kwargs)
 
         self.table_head_prefix = "= "
         self.table_auto_width = True
@@ -112,6 +113,8 @@ class CreoleEmitter(BaseEmitter):
 
         title = node.attrs.get("title", "")
         alt = node.attrs.get("alt", "")
+        width = node.attrs.get("height", None)
+        height = node.attrs.get("width", None)
         if len(alt) > len(title): # Use the longest one
             text = alt
         else:
@@ -119,6 +122,10 @@ class CreoleEmitter(BaseEmitter):
 
         if text == "": # Use filename as picture text
             text = posixpath.basename(src)
+
+        if not self.strict:
+            if width and height:
+                return "{{%s|%s|%sx%s}}" % (src, text, width, height)
 
         return "{{%s|%s}}" % (src, text)
 

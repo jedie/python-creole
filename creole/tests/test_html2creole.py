@@ -279,6 +279,30 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             9TXL0Y4OHwAAAABJRU5ErkJggg==" alt="data uri should be disallowed" /></p>
         """)
 
+    def test_image_with_size(self):
+        """ test image tag with sizes """
+        self.assert_html2creole(r"""
+            {{foobar1.jpg|foobar1.jpg}}
+            {{foobar2.jpg|foobar2.jpg|90x160}}
+            {{foobar3.jpg|foobar3.jpg}}
+        """, """
+            <p><img src="foobar1.jpg" /><br />
+            <img src="foobar2.jpg" width="160" height="90" /><br />
+            <img src="foobar3.jpg" width="160" /></p>
+        """)
+
+    def test_image_with_size_strict(self):
+        """ test image tag with sizes """
+        self.assert_html2creole(r"""
+            {{foobar1.jpg|foobar1.jpg}}
+            {{foobar2.jpg|foobar2.jpg}}
+            {{foobar3.jpg|foobar3.jpg}}
+        """, """
+            <p><img src="foobar1.jpg" /><br />
+            <img src="foobar2.jpg" width="160" height="90" /><br />
+            <img src="foobar3.jpg" width="160" /></p>
+        """, strict=True)
+
     def test_non_closed_br(self):
         self.assert_html2creole(r"""
             one

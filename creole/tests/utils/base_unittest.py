@@ -104,10 +104,12 @@ class BaseCreoleTest(MarkupTest):
         else:
             f(member, container, *args, **kwargs)
 
-    def assert_creole2html(self, raw_creole, raw_html, \
+    def assert_creole2html(
+            self, raw_creole, raw_html,
             strip_lines=False, debug=False,
             parser_kwargs={}, emitter_kwargs={},
             block_rules=None, blog_line_breaks=True, macros=None, verbose=None, stderr=None,
+            strict=False,
         ):
         """
         compare the generated html code from the markup string >creole_string<
@@ -133,6 +135,7 @@ class BaseCreoleTest(MarkupTest):
             markup_string, debug,
             block_rules=block_rules, blog_line_breaks=blog_line_breaks,
             macros=macros, verbose=verbose, stderr=stderr,
+            strict=strict,
         )
         if debug:
             self._debug_text("assert_creole2html() creole2html", out_string)
@@ -145,9 +148,15 @@ class BaseCreoleTest(MarkupTest):
         # compare
         self.assertEqual(out_string, html_string, msg="creole2html")
 
-    def assert_html2creole2(self, creole, html, debug=False, unknown_emit=None):
+    def assert_html2creole2(self, creole, html,
+            debug=False, 
+            unknown_emit=None,
+            strict=False,
+        ):
         # convert html code into creole markup
-        out_string = html2creole(html, debug, unknown_emit=unknown_emit)
+        out_string = html2creole(
+            html, debug, unknown_emit=unknown_emit, strict=strict
+        )
         if debug:
             self._debug_text("assert_html2creole() html2creole", out_string)
 
@@ -159,7 +168,8 @@ class BaseCreoleTest(MarkupTest):
                 # OLD API:
                 parser_kwargs={}, emitter_kwargs={},
                 # html2creole:
-                unknown_emit=None
+                unknown_emit=None,
+                strict=False,
         ):
         """
         Compare the genereted markup from the given >raw_html< html code, with
@@ -182,8 +192,7 @@ class BaseCreoleTest(MarkupTest):
         html = self._prepare_text(raw_html)
         assert isinstance(html, TEXT_TYPE)
 
-        self.assert_html2creole2(creole, html, debug, unknown_emit)
-
+        self.assert_html2creole2(creole, html, debug, unknown_emit, strict)
 
     def cross_compare_creole(self, creole_string, html_string,
                         strip_lines=False, debug=False,
