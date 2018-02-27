@@ -195,6 +195,7 @@ Note: In this case you must install **docutils**! See above.
 
 * v1.3.2 - 2018-02-27 - [[https://github.com/jedie/python-creole/compare/v1.3.1...v1.3.2|compare v1.3.1...v1.3.2]]
 ** Adding optional img size to creole2html and html2creole contributed by [[https://github.com/JohnAD|John Dupuy]]
+** run tests also with python 3.5 and 3.6
 * v1.3.1 - 2015-08-15 - [[https://github.com/jedie/python-creole/compare/v1.3.0...v1.3.1|compare v1.3.0...v1.3.1]]
 ** Bugfix for "Failed building wheel for python-creole"
 * v1.3.0 - 2015-06-02 - [[https://github.com/jedie/python-creole/compare/v1.2.2...v1.3.0|compare v1.2.2...v1.3.0]]
