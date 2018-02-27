@@ -4,7 +4,7 @@ python-creole is a OpenSource (GPL) Python lib for converting markups.
 python-creole is pure python. No external libs needed.
 
 Compatible Python Versions (see also [[https://github.com/jedie/python-creole/blob/master/.travis.yml|.travis.yml]]):
- * 2.7.x, 3.3 - 3.4.x
+ * 2.7.x, 3.3, 3.4, 3.5, 3.6
  * PyPy (Python v2 and v3)
 
 
@@ -89,6 +89,22 @@ u'This is *textile __markup__*!'
 }}}
 
 See also: [[http://github.com/jedie/python-creole/blob/master/demo.py]]
+
+= Image size additional =
+
+You can pass image width/height in image tags, e.g.:
+{{{
+>>> from creole import creole2html
+>>> creole_markup="""{{foobar.jpg|image title|90x160}}"""
+>>> creole2html(creole_markup)
+'<p><img src="foobar.jpg" title="image title" alt="image title" width="90" height="160" /></p>'
+}}}
+
+The third part ({{{90x160}}}) is not in creole standard, you can force a //strict// mode, e.g.:
+{{{
+>>> creole2html(creole_markup, strict=True)
+'<p><img src="foobar.jpg" title="image title|90x160" alt="image title|90x160" /></p>'
+}}}
 
 = Source code highlighting support =
 
@@ -323,17 +339,9 @@ first source code was written 27.11.2008: [[http://www.python-forum.de/viewtopic
 
 == Project links ==
 
-| GitHub        | [[http://github.com/jedie/python-creole]]
-| Wiki          | [[http://github.com/jedie/python-creole/wiki]]
-| PyPi          | [[http://pypi.python.org/pypi/python-creole/]]
-
-== contact ==
-
-Come into the conversation, besides the github communication features:
-
-| Forum   | [[http://www.pylucid.org/en/forum/9/|official python-creole Forum]]
-| IRC     | #pylucid on freenode.net (Yes, the PyLucid channel...)
-| webchat | http://webchat.freenode.net/?channels=pylucid
+| GitHub        | [[https://github.com/jedie/python-creole]]
+| Wiki          | [[https://github.com/jedie/python-creole/wiki]]
+| PyPi          | [[https://pypi.org/project/python-creole/]]
 
 
 == donation
