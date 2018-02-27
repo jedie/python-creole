@@ -31,7 +31,7 @@ from creole.parser.html_parser import HtmlParser
 from creole.py3compat import TEXT_TYPE
 
 
-__version__ = "1.3.1"
+__version__ = "1.3.2"
 __api__ = "1.0" # Creole 1.0 spec - http://wikicreole.org/
 
 VERSION_STRING = __version__ # remove in future
