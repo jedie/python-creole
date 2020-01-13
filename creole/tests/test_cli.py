@@ -9,17 +9,16 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import, print_function, unicode_literals
 
-import subprocess
-import unittest
-import sys
+
 import os
+import subprocess
+import sys
 import tempfile
+import unittest
 
-from creole import cmdline
+from creole import VERSION_STRING, cmdline
 from creole.tests.utils.base_unittest import BaseCreoleTest
-from creole import VERSION_STRING
 from creole.tests.utils.unittest_subprocess import SubprocessMixin
 
 CMDS = ("creole2html", "html2creole", "html2rest", "html2textile")
@@ -28,34 +27,24 @@ CMDS = ("creole2html", "html2creole", "html2rest", "html2textile")
 class CliTestMixins(object):
     def test_creole2html(self):
         self._test_convert(
-            source_content=b"= test creole2html =",
-            dest_content="<h1>test creole2html</h1>",
-            cli_str="creole2html",
+            source_content=b"= test creole2html =", dest_content="<h1>test creole2html</h1>", cli_str="creole2html",
         )
 
     def test_html2creole(self):
         self._test_convert(
-            source_content=b"<h1>test html2creole</h1>",
-            dest_content="= test html2creole",
-            cli_str="html2creole",
+            source_content=b"<h1>test html2creole</h1>", dest_content="= test html2creole", cli_str="html2creole",
         )
 
     def test_html2rest(self):
         self._test_convert(
             source_content=b"<h1>test html2rest</h1>",
-            dest_content=(
-                "==============\n"
-                "test html2rest\n"
-                "=============="
-            ),
+            dest_content=("==============\n" "test html2rest\n" "=============="),
             cli_str="html2rest",
         )
 
     def test_html2textile(self):
         self._test_convert(
-            source_content=b"<h1>test html2textile</h1>",
-            dest_content="h1. test html2textile",
-            cli_str="html2textile",
+            source_content=b"<h1>test html2textile</h1>", dest_content="h1. test html2textile", cli_str="html2textile",
         )
 
 
@@ -71,19 +60,14 @@ class CreoleCLITests(BaseCreoleTest, SubprocessMixin, CliTestMixins):
         dest_file = tempfile.NamedTemporaryFile()
         destfilepath = dest_file.name
 
-        stdout=(
-            "Convert '%(src)s' to '%(dst)s' with %(prog)s (codec: utf-8)\n"
-            "done. '%(dst)s' created."
-        ) % {
+        stdout = ("Convert '%(src)s' to '%(dst)s' with %(prog)s (codec: utf-8)\n" "done. '%(dst)s' created.") % {
             "prog": cli_str,
             "src": sourcefilepath,
             "dst": destfilepath,
         }
 
         self.assertSubprocess(
-            popen_args=[cli_str, sourcefilepath, destfilepath],
-            retcode=0, stdout=stdout,
-            verbose=False,
+            popen_args=[cli_str, sourcefilepath, destfilepath], retcode=0, stdout=stdout, verbose=False,
         )
 
         dest_file.seek(0)
@@ -94,20 +78,13 @@ class CreoleCLITests(BaseCreoleTest, SubprocessMixin, CliTestMixins):
 
     def test_version(self):
         for cmd in CMDS:
-            version_info = "%s from python-creole v%s" % (
-                cmd, VERSION_STRING
-            )
+            version_info = f"{cmd} from python-creole v{VERSION_STRING}"
             self.assertSubprocess(
-                popen_args=[cmd, "--version"],
-                retcode=0,
-                stdout=version_info,
-                verbose=False,
+                popen_args=[cmd, "--version"], retcode=0, stdout=version_info, verbose=False,
             )
-
 
 
 class CreoleCLITestsDirect(BaseCreoleTest, CliTestMixins):
-
     def setUp(self):
         super(CreoleCLITestsDirect, self).setUp()
         self._old_sys_argv = sys.argv[:]
@@ -127,7 +104,7 @@ class CreoleCLITestsDirect(BaseCreoleTest, CliTestMixins):
         destfilepath = dest_file.name
 
         sys.argv = [cli_str, sourcefilepath, destfilepath]
-        cli = getattr(cmdline, "cli_%s" % cli_str)
+        cli = getattr(cmdline, f"cli_{cli_str}")
         cli()
 
         dest_file.seek(0)
@@ -137,5 +114,5 @@ class CreoleCLITestsDirect(BaseCreoleTest, CliTestMixins):
         self.assertEqual(result_content, dest_content)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

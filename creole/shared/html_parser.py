@@ -21,7 +21,7 @@
 try:
     import HTMLParser as OriginHTMLParser
 except ImportError:
-    from html import parser as OriginHTMLParser # python 3
+    from html import parser as OriginHTMLParser  # python 3
 
 
 if hasattr(OriginHTMLParser, "cdata_elem"):

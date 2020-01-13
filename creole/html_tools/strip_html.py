@@ -4,19 +4,18 @@
 
 """
     python-creole utils
-    ~~~~~~~~~~~~~~~~~~~    
+    ~~~~~~~~~~~~~~~~~~~
 
 
     :copyleft: 2008-2011 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import, print_function, unicode_literals
+
 
 import re
 
 from creole.parser.html_parser_config import BLOCK_TAGS
-
 
 strip_html_regex = re.compile(
     r"""
@@ -29,9 +28,8 @@ strip_html_regex = re.compile(
         >
         \s*
     """,
-    re.VERBOSE | re.MULTILINE | re.UNICODE
+    re.VERBOSE | re.MULTILINE | re.UNICODE,
 )
-
 
 
 def strip_html(html_code):
@@ -68,12 +66,12 @@ def strip_html(html_code):
         startend_tag = match.group("startend") in ("/", "/")
         tag = match.group("tag")
 
-#        print("_"*40)
-#        print(match.groupdict())
-#        print("block.......: %r" % block)
-#        print("end_tag.....:", end_tag)
-#        print("startend_tag:", startend_tag)
-#        print("tag.........: %r" % tag)
+        #        print("_"*40)
+        #        print(match.groupdict())
+        #        print("block.......: %r" % block)
+        #        print("end_tag.....:", end_tag)
+        #        print("startend_tag:", startend_tag)
+        #        print("tag.........: %r" % tag)
 
         if tag in BLOCK_TAGS:
             return block.strip()
@@ -90,10 +88,10 @@ def strip_html(html_code):
         elif startend_tag:
             # It's a closed start tag e.g.: <br />
 
-            if space_start: # there was space before the tag
+            if space_start:  # there was space before the tag
                 result = " " + result
 
-            if space_end: # there was space after the tag
+            if space_end:  # there was space after the tag
                 result += " "
         else:
             # a start tag e.g.: <strong>
@@ -108,6 +106,7 @@ def strip_html(html_code):
     return clean_data
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import doctest
+
     print(doctest.testmod())

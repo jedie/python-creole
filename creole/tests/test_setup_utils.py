@@ -11,23 +11,23 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import, print_function, unicode_literals
 
-import unittest
+
 import os
+import tempfile
+import unittest
 import warnings
-
-try:
-    import docutils
-    DOCUTILS = True
-except ImportError:
-    DOCUTILS = False
 
 import creole
 from creole.setup_utils import get_long_description
 from creole.tests.utils.base_unittest import BaseCreoleTest
-from creole.py3compat import BINARY_TYPE, PY3, TEXT_TYPE
-import tempfile
+
+try:
+    import docutils
+
+    DOCUTILS = True
+except ImportError:
+    DOCUTILS = False
 
 
 CREOLE_PACKAGE_ROOT = os.path.abspath(os.path.join(os.path.dirname(creole.__file__), ".."))
@@ -48,19 +48,17 @@ class SetupUtilsTests(BaseCreoleTest):
     def test_creole_package_path(self):
         self.assertTrue(
             os.path.isdir(CREOLE_PACKAGE_ROOT),
-            "CREOLE_PACKAGE_ROOT %r is not a existing direcotry!" % CREOLE_PACKAGE_ROOT
+            f"CREOLE_PACKAGE_ROOT {CREOLE_PACKAGE_ROOT!r} is not a existing direcotry!",
         )
         filepath = os.path.join(CREOLE_PACKAGE_ROOT, "README.creole")
-        self.assertTrue(
-            os.path.isfile(filepath),
-            "README file %r not found!" % filepath
-        )
+        self.assertTrue(os.path.isfile(filepath), f"README file {filepath!r} not found!")
 
     def test_get_long_description_without_raise_errors(self):
         long_description = get_long_description(CREOLE_PACKAGE_ROOT, raise_errors=False)
         self.assertIn("=====\nabout\n=====\n\n", long_description)
         # Test created ReSt code
         from creole.rest_tools.clean_writer import rest2html
+
         html = rest2html(long_description)
         self.assertIn("<h1>about</h1>\n", html)
 
@@ -107,7 +105,7 @@ class SetupUtilsTests(BaseCreoleTest):
         SystemExit: ReSt2html error: link scheme not allowed
         """
         path, filename, fd = self._tempfile(b"[[foo://bar]]")
-#         print(get_long_description(path, filename, raise_errors=True))
+        #         print(get_long_description(path, filename, raise_errors=True))
         try:
             self.assertRaises(SystemExit, get_long_description, path, filename, raise_errors=True)
         finally:
@@ -116,7 +114,7 @@ class SetupUtilsTests(BaseCreoleTest):
     def test_wrong_path_without_raise_errors(self):
         self.assertEqual(
             get_long_description("wrong/path", raise_errors=False).replace("u'", "'"),
-            "[Error: [Errno 2] No such file or directory: 'wrong/path/README.creole']\n"
+            "[Error: [Errno 2] No such file or directory: 'wrong/path/README.creole']\n",
         )
 
     def test_wrong_path_with_raise_errors(self):
@@ -125,15 +123,11 @@ class SetupUtilsTests(BaseCreoleTest):
     def test_readme_encoding(self):
         long_description = get_long_description(TEST_README_DIR, filename=TEST_README_FILENAME, raise_errors=True)
 
-        if PY3:
-            self.assertTrue(isinstance(long_description, TEXT_TYPE))
-        else:
-            self.assertTrue(isinstance(long_description, BINARY_TYPE))
+        self.assertTrue(isinstance(long_description, str))
 
         txt = "German Umlaute: ä ö ü ß Ä Ö Ü"
-        if not PY3:
-            txt = txt.encode("utf-8")
         self.assertIn(txt, long_description)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

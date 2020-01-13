@@ -7,7 +7,7 @@
     ~~~~~~~~~~~
 """
 
-from __future__ import division, absolute_import, print_function, unicode_literals
+
 
 from creole import creole2html, html2creole, html2rest, html2textile
 

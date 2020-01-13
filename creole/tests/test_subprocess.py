@@ -8,11 +8,11 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import, print_function, unicode_literals
 
-import unittest
-import sys
+
 import os
+import sys
+import unittest
 
 from creole.tests.utils.unittest_subprocess import SubprocessMixin
 
@@ -20,7 +20,7 @@ from creole.tests.utils.unittest_subprocess import SubprocessMixin
 class TestSubprocessMixin(unittest.TestCase, SubprocessMixin):
     def test_find_executable(self):
         filepath = self.find_executable("python")
-        if not hasattr(self, "assertRegex"): # New in version 3.1
+        if not hasattr(self, "assertRegex"):  # New in version 3.1
             self.assertRegex = self.assertRegexpMatches
         self.assertRegex(filepath, ".*?python.*?")
 
@@ -29,16 +29,13 @@ class TestSubprocessMixin(unittest.TestCase, SubprocessMixin):
             self.find_executable("doesn't exists!")
 
     def test_executable_with_path(self):
-        msg = "'%s' unexpectedly found in '%s'" % (
-            os.sep, sys.executable
-        )
+        msg = f"'{os.sep}' unexpectedly found in '{sys.executable}'"
         with self.assertRaisesRegexp(AssertionError, msg):
             self.find_executable(sys.executable)
 
     def test_subprocess(self):
         popen_args, retcode, stdout = self.subprocess(
-            popen_args=[sys.executable, "-c", "import sys;sys.stdout.write('to stdout')"],
-            verbose=False
+            popen_args=[sys.executable, "-c", "import sys;sys.stdout.write('to stdout')"], verbose=False
         )
         self.assertEqual(stdout, "to stdout")
         self.assertEqual(retcode, 0)
@@ -58,12 +55,6 @@ class TestSubprocessMixin(unittest.TestCase, SubprocessMixin):
         self.assertSubprocess(
             popen_args=(sys.executable, "-c", code),
             retcode=0,
-            stdout=(
-                "to stdout 1\n"
-                "to stderr 1\n"
-                "to stdout 2\n"
-                "to stderr 2\n"
-            ),
-            verbose=True
+            stdout=("to stdout 1\n" "to stderr 1\n" "to stdout 2\n" "to stderr 2\n"),
+            verbose=True,
         )
-

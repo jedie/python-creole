@@ -8,7 +8,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import print_function, unicode_literals
+
 
 import json
 import os
@@ -18,7 +18,7 @@ import sys
 
 class SubprocessMixin(object):
     # call .../env/bin/python will not add the .../env/bin/ to the PATH
-    SEARCH_PATH=[os.path.dirname(sys.executable)] + os.environ.get("PATH", "").split(os.pathsep)
+    SEARCH_PATH = [os.path.dirname(sys.executable)] + os.environ.get("PATH", "").split(os.pathsep)
 
     def find_executable(self, program):
         self.assertNotIn(os.sep, program)
@@ -26,7 +26,7 @@ class SubprocessMixin(object):
             filepath = os.path.join(path, program)
             if os.path.isfile(filepath):
                 if not os.access(filepath, os.X_OK):
-                    sys.stderr.write("File %r is not executable?!?\n" % filepath)
+                    sys.stderr.write(f"File {filepath!r} is not executable?!?\n")
                 else:
                     return filepath
 
@@ -39,21 +39,19 @@ class SubprocessMixin(object):
             print("Call:", popen_args)
 
         try:
-            process = subprocess.Popen(popen_args,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                universal_newlines=True,
+            process = subprocess.Popen(
+                popen_args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True,
             )
         except Exception as err:
-            self.fail("Error subprocess call with %r: %s" % (popen_args, err))
+            self.fail(f"Error subprocess call with {popen_args!r}: {err}")
 
         stdout, stderr = process.communicate()
         retcode = process.poll()
 
         if verbose:
-            print("return code: %r" % retcode)
-            print("stdout: %r" % stdout)
-            print("stderr: %r" % stderr)
+            print(f"return code: {retcode!r}")
+            print(f"stdout: {stdout!r}")
+            print(f"stderr: {stderr!r}")
 
         stdout = stdout.strip()
         return popen_args, retcode, stdout
@@ -72,11 +70,5 @@ class SubprocessMixin(object):
                 " ---------- [stdout] ---------- \n"
                 "%s\n"
                 "-------------------------------"
-            ) % (
-                err,
-                repr(popen_args2), retcode2,
-                stdout2,
-            )
+            ) % (err, repr(popen_args2), retcode2, stdout2,)
             self.fail(msg)
-
-

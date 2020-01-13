@@ -18,11 +18,9 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import, print_function, unicode_literals
+
 
 import unittest
-
-
 
 from creole.tests.utils.base_unittest import BaseCreoleTest
 
@@ -32,6 +30,7 @@ class CrossCompareTests(BaseCreoleTest):
     Cross compare tests for creol2html _and_ html2creole with the same test
     strings. Used BaseCreoleTest.assertCreole()
     """
+
     def test_bold_italics(self):
         self.cross_compare(
             creole_string=r"""
@@ -137,7 +136,7 @@ class CrossCompareTests(BaseCreoleTest):
                 <h5>Section Title 5</h5>
 
                 <h6>Section Title 6</h6>
-            """
+            """,
         )
         self.cross_compare(
             rest_string="""
@@ -168,7 +167,7 @@ class CrossCompareTests(BaseCreoleTest):
                 <h4>Section Title 4</h4>
                 <h5>Section Title 5</h5>
                 <h6>Section Title 6</h6>
-            """
+            """,
         )
 
     def test_horizontal_rule(self):
@@ -188,7 +187,7 @@ class CrossCompareTests(BaseCreoleTest):
                 <hr />
 
                 <p>Text after the line.</p>
-            """
+            """,
         )
         self.cross_compare(
             rest_string=all_markups,
@@ -196,7 +195,7 @@ class CrossCompareTests(BaseCreoleTest):
                 <p>Text before horizontal rule.</p>
                 <hr />
                 <p>Text after the line.</p>
-            """
+            """,
         )
 
     def test_link(self):
@@ -212,7 +211,7 @@ class CrossCompareTests(BaseCreoleTest):
             """,
             html_string="""
                 <p>X <a href="http://domain.tld">link B</a> test.</p>
-            """
+            """,
         )
 
     def test_link_without_title(self):
@@ -228,7 +227,7 @@ class CrossCompareTests(BaseCreoleTest):
             """,
             html_string="""
                 <p><a href="http://www.pylucid.org">http://www.pylucid.org</a></p>
-            """
+            """,
         )
 
     def test_link_with_unknown_protocol(self):
@@ -245,7 +244,7 @@ class CrossCompareTests(BaseCreoleTest):
             """,
             html_string="""
                 <p>X <a href="foo://bar">unknown protocol</a> Y</p>
-            """
+            """,
         )
 
     def test_link_with_at_sign(self):
@@ -255,7 +254,7 @@ class CrossCompareTests(BaseCreoleTest):
             """,
             html_string="""
                 <p>X <a href="http://de.wikipedia.org/wiki/Creole_(Markup)">Creole@wikipedia</a></p>
-            """
+            """,
         )
         self.cross_compare(
             rest_string="""
@@ -263,7 +262,7 @@ class CrossCompareTests(BaseCreoleTest):
             """,
             html_string="""
                 <p>X <a href="http://de.wikipedia.org/wiki/Creole_(Markup)">Creole&#64;wikipedia</a></p>
-            """
+            """,
         )
         self.cross_compare_textile(
             textile_string="""
@@ -271,7 +270,7 @@ class CrossCompareTests(BaseCreoleTest):
             """,
             html_string="""
                 <p>X <a href="http://domain.tld">foo@domain</a></p>
-            """
+            """,
         )
 
     def test_image(self):
@@ -289,7 +288,7 @@ class CrossCompareTests(BaseCreoleTest):
                 a <img src="/image.gif" title="GIF pictures" alt="GIF pictures" /> and<br />
                 a <img src="/image.png" title="PNG pictures" alt="PNG pictures" /> !<br />
                 <img src="/path1/path2/image" title="Image without files ext?" alt="Image without files ext?" /></p>
-            """
+            """,
         )
         self.cross_compare(
             textile_string="""
@@ -309,7 +308,7 @@ class CrossCompareTests(BaseCreoleTest):
                 a <img alt="PNG pictures" src="/image.png" title="PNG pictures" /> !<br />
 
                 <img alt="Image without files ext?" src="/path1/path2/image" title="Image without files ext?" /></p>
-            """
+            """,
         )
         self.cross_compare(
             rest_string="""
@@ -339,7 +338,7 @@ class CrossCompareTests(BaseCreoleTest):
                 <p>3 <img alt="GIF pictures" src="/image.gif" /> tree</p>
                 <p>4 <img alt="PNG pictures" src="/image.png" /> four</p>
                 <p>5 <img alt="Image without files ext?" src="/path1/path2/image" /> five</p>
-            """
+            """,
         )
 
     def test_link_image(self):
@@ -350,7 +349,7 @@ class CrossCompareTests(BaseCreoleTest):
             """,
             html_string="""
                 <p>Linked <a href="http://example.com/"><img src="myimage.jpg" title="example site" alt="example site" /> image</a></p>
-            """
+            """,
         )
         self.cross_compare(
             textile_string="""
@@ -358,21 +357,20 @@ class CrossCompareTests(BaseCreoleTest):
             """,
             html_string="""
                 <p>Linked <a href="http://example.com/"><img alt="example site" src="myimage.jpg" title="example site" /> image</a></p>
-            """
+            """,
         )
 
-
-#        self.cross_compare(# FIXME: ReSt
-#            rest_string="""
-#                I recommend you try |PyLucid CMS|_.
-#
-#                .. |PyLucid CMS| image:: /images/pylucid.png
-#                .. _PyLucid CMS: http://www.pylucid.org/
-#            """,
-#            html_string="""
-#                <p>I recommend you try <a href="http://www.pylucid.org/"><img alt="PyLucid CMS" src="/images/pylucid.png" /></a>.</p>
-#            """
-#        )
+    #        self.cross_compare(# FIXME: ReSt
+    #            rest_string="""
+    #                I recommend you try |PyLucid CMS|_.
+    #
+    #                .. |PyLucid CMS| image:: /images/pylucid.png
+    #                .. _PyLucid CMS: http://www.pylucid.org/
+    #            """,
+    #            html_string="""
+    #                <p>I recommend you try <a href="http://www.pylucid.org/"><img alt="PyLucid CMS" src="/images/pylucid.png" /></a>.</p>
+    #            """
+    #        )
 
     def test_pre1(self):
         self.cross_compare(
@@ -390,8 +388,9 @@ class CrossCompareTests(BaseCreoleTest):
                 <pre>
                 * no list
                 </pre>
-            """)
-        self.cross_compare(# FIXME: Not the best html2rest output
+            """,
+        )
+        self.cross_compare(  # FIXME: Not the best html2rest output
             rest_string="""
                 Preformatting text:
 
@@ -411,40 +410,39 @@ class CrossCompareTests(BaseCreoleTest):
                 text... end.
                 </pre>
                 <p>Under pre block</p>
-            """
+            """,
         )
 
-
-#    def test_pre2(self):
-#        """ TODO: html2creole: wrong lineendings """
-#        self.cross_compare(
-#            creole_string=r"""
-#                start
-#
-#                {{{
-#                * no list
-#                }}}
-#
-#                end
-#                """,
-#            textile_string="""
-#                start
-#
-#                <pre>
-#                * no list
-#                </pre>
-#
-#                end
-#                """,
-#            html_string="""
-#                <p>start</p>
-#
-#                <pre>
-#                * no list
-#                </pre>
-#
-#                <p>end</p>
-#            """)
+    #    def test_pre2(self):
+    #        """ TODO: html2creole: wrong lineendings """
+    #        self.cross_compare(
+    #            creole_string=r"""
+    #                start
+    #
+    #                {{{
+    #                * no list
+    #                }}}
+    #
+    #                end
+    #                """,
+    #            textile_string="""
+    #                start
+    #
+    #                <pre>
+    #                * no list
+    #                </pre>
+    #
+    #                end
+    #                """,
+    #            html_string="""
+    #                <p>start</p>
+    #
+    #                <pre>
+    #                * no list
+    #                </pre>
+    #
+    #                <p>end</p>
+    #            """)
 
     def test_pre_contains_braces(self):
         self.cross_compare(
@@ -487,7 +485,8 @@ class CrossCompareTests(BaseCreoleTest):
                       x[i]--;
                   }}}
                 </pre>
-            """)
+            """,
+        )
 
     def test_list(self):
         """ Bold, Italics, Links, Pre in Lists """
@@ -513,7 +512,7 @@ class CrossCompareTests(BaseCreoleTest):
                   <li>item about a <a href="/foo/bar">certain_page</a></li>
                 </ol>
             """,
-            strip_lines=True
+            strip_lines=True,
         )
 
     def test_simple_table(self):
@@ -567,5 +566,5 @@ class CrossCompareTests(BaseCreoleTest):
         )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

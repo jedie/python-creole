@@ -4,25 +4,25 @@
 """
     A clean reStructuredText html writer
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     It will produce a minimal set of html output.
     (No extry divs, classes oder ids.)
-    
+
     Some code stolen from:
     http://www.arnebrodowski.de/blog/write-your-own-restructuredtext-writer.html
     https://github.com/alex-morega/docutils-plainhtml/blob/master/plain_html_writer.py
-    
+
     :copyleft: 2011-2013 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import, print_function, unicode_literals
 
-#import warnings
+
+# import warnings
 import sys
 
 from creole.exceptions import DocutilsImportError
-from creole.py3compat import TEXT_TYPE, PY3
+
 
 try:
     import docutils
@@ -30,10 +30,7 @@ try:
     from docutils.writers import html4css1
 except ImportError:
     etype, evalue, etb = sys.exc_info()
-    msg = (
-        "%s - You can't use rest2html!"
-        " Please install: http://pypi.python.org/pypi/docutils"
-    ) % evalue
+    msg = ("%s - You can't use rest2html!" " Please install: http://pypi.python.org/pypi/docutils") % evalue
     evalue = etype(msg)
 
     # Doesn't work with Python 3:
@@ -43,22 +40,23 @@ except ImportError:
     raise DocutilsImportError(msg)
 
 
-
 DEBUG = False
-#DEBUG = True
+# DEBUG = True
 
 IGNORE_ATTR = (
-    "start", "class", "frame", "rules",
+    "start",
+    "class",
+    "frame",
+    "rules",
 )
-IGNORE_TAGS = (
-    "div",
-)
+IGNORE_TAGS = ("div",)
 
 
 class CleanHTMLWriter(html4css1.Writer):
     """
     This docutils writer will use the CleanHTMLTranslator class below.
     """
+
     def __init__(self):
         html4css1.Writer.__init__(self)
         self.translator_class = CleanHTMLTranslator
@@ -68,19 +66,20 @@ class CleanHTMLTranslator(html4css1.HTMLTranslator, object):
     """
     Clean html translator for docutils system.
     """
+
     def _do_nothing(self, node, *args, **kwargs):
         pass
 
-    def starttag(self, node, tagname, suffix='\n', empty=0, **attributes):
+    def starttag(self, node, tagname, suffix="\n", empty=0, **attributes):
         """
         create start tag with the filter IGNORE_TAGS and IGNORE_ATTR.
         """
-#        return super(CleanHTMLTranslator, self).starttag(node, tagname, suffix, empty, **attributes)
-#        return "XXX%r" % tagname
+        #        return super(CleanHTMLTranslator, self).starttag(node, tagname, suffix, empty, **attributes)
+        #        return "XXX%r" % tagname
 
         if tagname in IGNORE_TAGS:
             if DEBUG:
-                print("ignore tag %r" % tagname)
+                print(f"ignore tag {tagname!r}")
             return ""
 
         parts = [tagname]
@@ -95,23 +94,23 @@ class CleanHTMLTranslator(html4css1.HTMLTranslator, object):
                 continue
 
             if isinstance(value, list):
-                value = ' '.join([TEXT_TYPE(x) for x in value])
+                value = " ".join([str(x) for x in value])
 
-            part = '%s="%s"' % (name.lower(), self.attval(TEXT_TYPE(value)))
+            part = f'{name.lower()}="{self.attval(str(value))}"'
             parts.append(part)
 
         if DEBUG:
-            print("Tag %r - ids: %r - attributes: %r - parts: %r" % (
-                tagname, getattr(node, "ids", "-"), attributes, parts
-            ))
+            print(
+                f"Tag {tagname!r} - ids: {getattr(node, 'ids', '-')!r} - attributes: {attributes!r} - parts: {parts!r}"
+            )
 
         if empty:
-            infix = ' /'
+            infix = " /"
         else:
-            infix = ''
-        html = '<%s%s>%s' % (' '.join(parts), infix, suffix)
+            infix = ""
+        html = f"<{' '.join(parts)}{infix}>{suffix}"
         if DEBUG:
-            print("startag html: %r" % html)
+            print(f"startag html: {html!r}")
         return html
 
     def visit_section(self, node):
@@ -129,13 +128,12 @@ class CleanHTMLTranslator(html4css1.HTMLTranslator, object):
 
     # set only html_body, we used in rest2html() and don't surround it with <div>
     def depart_document(self, node):
-        self.html_body.extend(self.body_prefix[1:] + self.body_pre_docinfo
-                              + self.docinfo + self.body
-                              + self.body_suffix[:-1])
-        assert not self.context, 'len(context) = %s' % len(self.context)
+        self.html_body.extend(
+            self.body_prefix[1:] + self.body_pre_docinfo + self.docinfo + self.body + self.body_suffix[:-1]
+        )
+        assert not self.context, "len(context) = %s" % len(self.context)
 
-
-    #__________________________________________________________________________
+    # __________________________________________________________________________
     # Clean table:
 
     visit_thead = _do_nothing
@@ -147,7 +145,7 @@ class CleanHTMLTranslator(html4css1.HTMLTranslator, object):
         if docutils.__version__ > "0.10":
             self.context.append(self.compact_p)
             self.compact_p = True
-        self.body.append(self.starttag(node, 'table'))
+        self.body.append(self.starttag(node, "table"))
 
     def visit_tgroup(self, node):
         node.stubs = []
@@ -155,60 +153,56 @@ class CleanHTMLTranslator(html4css1.HTMLTranslator, object):
     def visit_field_list(self, node):
         super(CleanHTMLTranslator, self).visit_field_list(node)
         if "<col" in self.body[-1]:
-            del(self.body[-1])
+            del self.body[-1]
 
     def depart_field_list(self, node):
-        self.body.append('</table>\n')
+        self.body.append("</table>\n")
         self.compact_field_list, self.compact_p = self.context.pop()
 
     def visit_docinfo(self, node):
-        self.body.append(self.starttag(node, 'table'))
+        self.body.append(self.starttag(node, "table"))
 
     def depart_docinfo(self, node):
-        self.body.append('</table>\n')
+        self.body.append("</table>\n")
 
-    #__________________________________________________________________________
+    # __________________________________________________________________________
     # Clean image:
 
     depart_figure = _do_nothing
 
     def visit_image(self, node):
         super(CleanHTMLTranslator, self).visit_image(node)
-        if self.body[-1].startswith('<img'):
+        if self.body[-1].startswith("<img"):
             align = None
 
-            if 'align' in node:
+            if "align" in node:
                 # image with alignment
-                align = node['align']
+                align = node["align"]
 
-            elif node.parent.tagname == 'figure' and 'align' in node.parent:
+            elif node.parent.tagname == "figure" and "align" in node.parent:
                 # figure with alignment
-                align = node.parent['align']
+                align = node.parent["align"]
 
             if align:
-                self.body[-1] = self.body[-1].replace(' />', ' align="%s" />' % align)
-
+                self.body[-1] = self.body[-1].replace(" />", f' align="{align}" />')
 
 
 def rest2html(content, enable_exit_status=None, **kwargs):
     """
     Convert reStructuredText markup to clean html code: No extra div, class or ids.
-    
+
     >>> rest2html("- bullet list")
     '<ul>\\n<li>bullet list</li>\\n</ul>\\n'
-    
+
     >>> rest2html("A ReSt link to `PyLucid CMS <http://www.pylucid.org>`_ :)")
     '<p>A ReSt link to <a href="http://www.pylucid.org">PyLucid CMS</a> :)</p>\\n'
-         
+
     >>> rest2html("========", enable_exit_status=1, traceback=False, exit_status_level=2)
     Traceback (most recent call last):
     ...
     SystemExit: 13
     """
-    if not PY3:
-        content = unicode(content)
-
-    assert isinstance(content, TEXT_TYPE), "rest2html content must be %s, but it's %s" % (TEXT_TYPE, type(content))
+    assert isinstance(content, str), f"rest2html content must be {str}, but it's {type(content)}"
 
     settings_overrides = {
         "input_encoding": "unicode",
@@ -224,32 +218,35 @@ def rest2html(content, enable_exit_status=None, **kwargs):
         settings_overrides=settings_overrides,
         enable_exit_status=enable_exit_status,
     )
-#    import pprint
-#    pprint.pprint(parts)
-    return parts["html_body"] # Don't detache the first heading
+    #    import pprint
+    #    pprint.pprint(parts)
+    return parts["html_body"]  # Don't detache the first heading
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import doctest
+
     print(doctest.testmod())
 
-#    print(rest2html(""")
-#+------------+------------+
-#| Headline 1 | Headline 2 |
-#+============+============+
-#| cell one   | cell two   |
-#+------------+------------+
-#    """)
+    #    print(rest2html(""")
+    # +------------+------------+
+    # | Headline 1 | Headline 2 |
+    # +============+============+
+    # | cell one   | cell two   |
+    # +------------+------------+
+    #    """)
 
-#    print(rest2html(""")
-#:homepage:
-#  http://code.google.com/p/python-creole/
-#
-#:sourcecode:
-#  http://github.com/jedie/python-creole
-#    """)
+    #    print(rest2html(""")
+    #:homepage:
+    #  http://code.google.com/p/python-creole/
+    #
+    #:sourcecode:
+    #  http://github.com/jedie/python-creole
+    #    """)
 
-    print(rest2html("""
+    print(
+        rest2html(
+            """
 ===============
 Section Title 1
 ===============
@@ -269,4 +266,6 @@ Section Title 5
 
 Section Title 6
 '''''''''''''''
-    """))
+    """
+        )
+    )

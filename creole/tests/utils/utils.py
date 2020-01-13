@@ -11,18 +11,17 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import, print_function, unicode_literals
+
 
 import difflib
 import textwrap
 import unittest
 
-
 ## error output format:
 # =1 -> via repr()
 # =2 -> raw
 VERBOSE = 1
-#VERBOSE = 2
+# VERBOSE = 2
 
 
 def make_diff(block1, block2):
@@ -41,38 +40,39 @@ class MarkupTest(unittest.TestCase):
     """
     Special error class: Try to display markup errors in a better way.
     """
+
     def _format_output(self, txt):
         txt = txt.split("\\n")
         if VERBOSE == 1:
-            txt = "".join(['%s\\n\n' % i for i in txt])
+            txt = "".join(["%s\\n\n" % i for i in txt])
         elif VERBOSE == 2:
-            txt = "".join(['%s\n' % i for i in txt])
+            txt = "".join(["%s\n" % i for i in txt])
         return txt
 
     def assertEqual(self, first, second, msg=""):
         if not first == second:
             if VERBOSE >= 2:
-                print("first: %r" % first)
-                print("second: %r" % second)
+                print(f"first: {first!r}")
+                print(f"second: {second!r}")
 
-            #~ first = first.rstrip("\\n")
-            #~ second = second.rstrip("\\n")
+            # ~ first = first.rstrip("\\n")
+            # ~ second = second.rstrip("\\n")
             try:
                 diff = make_diff(first, second)
             except AttributeError:
-                raise self.failureException("%s is not %s" % (repr(first), repr(second)))
+                raise self.failureException(f"{repr(first)} is not {repr(second)}")
 
             if VERBOSE >= 2:
-                print("diff: %r" % diff)
+                print(f"diff: {diff!r}")
 
             first = self._format_output(first)
             second = self._format_output(second)
 
-            msg += (
-                "\n---[Output:]---\n%s\n"
-                "---[not equal to:]---\n%s"
-                "\n---[diff:]---\n%s"
-            ) % (first, second, diff)
+            msg += ("\n---[Output:]---\n%s\n" "---[not equal to:]---\n%s" "\n---[diff:]---\n%s") % (
+                first,
+                second,
+                diff,
+            )
             raise self.failureException(msg)
 
     def _prepare_text(self, txt):
@@ -81,7 +81,7 @@ class MarkupTest(unittest.TestCase):
         """
         txt = txt.splitlines()
         assert txt[0] == "", "First assertion line must be empty! Is: %s" % repr(txt[0])
-        txt = txt[1:] # Skip the first line
+        txt = txt[1:]  # Skip the first line
 
         # get the indentation level from the first line
         count = False
@@ -94,15 +94,17 @@ class MarkupTest(unittest.TestCase):
         # remove indentation from all lines
         txt = [i[count:].rstrip(" ") for i in txt]
 
-        #~ txt = re.sub("\n {2,}", "\n", txt)
+        # ~ txt = re.sub("\n {2,}", "\n", txt)
         txt = "\n".join(txt)
 
         # strip *one* newline at the begining...
-        if txt.startswith("\n"): txt = txt[1:]
+        if txt.startswith("\n"):
+            txt = txt[1:]
         # and strip *one* newline at the end of the text
-        if txt.endswith("\n"): txt = txt[:-1]
-        #~ print(repr(txt))
-        #~ print("-"*79)
+        if txt.endswith("\n"):
+            txt = txt[:-1]
+        # ~ print(repr(txt))
+        # ~ print("-"*79)
 
         return txt
 
@@ -110,49 +112,57 @@ class MarkupTest(unittest.TestCase):
         """
         Test for self._prepare_text()
         """
-        out1 = self._prepare_text("""
+        out1 = self._prepare_text(
+            """
             one line
-            line two""")
+            line two"""
+        )
         self.assertEqual(out1, "one line\nline two")
 
-        out2 = self._prepare_text("""
+        out2 = self._prepare_text(
+            """
             one line
             line two
-        """)
+        """
+        )
         self.assertEqual(out2, "one line\nline two")
 
-        out3 = self._prepare_text("""
+        out3 = self._prepare_text(
+            """
             one line
 
             line two
-        """)
+        """
+        )
         self.assertEqual(out3, "one line\n\nline two")
 
-        out4 = self._prepare_text("""
+        out4 = self._prepare_text(
+            """
             one line
                 line two
 
-        """)
+        """
+        )
         self.assertEqual(out4, "one line\n    line two\n")
 
         # removing whitespace and the end
         self.assertEqual(self._prepare_text("\n  111  \n  222"), "111\n222")
 
-        out5 = self._prepare_text("""
+        out5 = self._prepare_text(
+            """
             one line
                 line two
             dritte Zeile
-        """)
+        """
+        )
         self.assertEqual(out5, "one line\n    line two\ndritte Zeile")
 
-        self.assertRaises(
-            AssertionError, self.assertEqual, "foo", "bar"
-        )
+        self.assertRaises(AssertionError, self.assertEqual, "foo", "bar")
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     import doctest
+
     print("DocTest:", doctest.testmod())
 
     unittest.main()

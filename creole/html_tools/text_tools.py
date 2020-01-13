@@ -4,19 +4,20 @@
 
 """
     python-creole utils
-    ~~~~~~~~~~~~~~~~~~~    
+    ~~~~~~~~~~~~~~~~~~~
 
 
     :copyleft: 2008-2011 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import, print_function, unicode_literals
+
 
 import re
 
-
 space_re = re.compile(r"^(\s*)(.*?)(\s*)$", re.DOTALL)
+
+
 def clean_whitespace(txt):
     """
     Special whitespaces cleanup
@@ -33,6 +34,7 @@ def clean_whitespace(txt):
     >>> clean_whitespace("foo   bar")
     'foo   bar'
     """
+
     def cleanup(match):
         start, txt, end = match.groups()
 
@@ -51,6 +53,7 @@ def clean_whitespace(txt):
     return space_re.sub(cleanup, txt)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import doctest
+
     print(doctest.testmod())

@@ -16,7 +16,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import, print_function, unicode_literals
+
 
 import unittest
 
@@ -61,7 +61,7 @@ class CrossCompareTextileTests(BaseCreoleTest):
                 <span>span</span><br />
 
                 <code>code</code></p>
-            """
+            """,
         )
 
     def test_escape_in_pre(self):
@@ -75,8 +75,9 @@ class CrossCompareTextileTests(BaseCreoleTest):
                 <pre>
                 &lt;html escaped&gt;
                 </pre>
-            """)
+            """,
+        )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

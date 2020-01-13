@@ -11,7 +11,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import, print_function, unicode_literals
+
 
 from xml.sax.saxutils import escape
 
@@ -30,33 +30,28 @@ def _mask_content(emitter, node, mask_tag):
     content = emitter.emit_children(node)
     if not content:
         # single tag
-        return "<<%(mask_tag)s>><%(tag)s%(attrs)s /><</%(mask_tag)s>>" % tag_data
+        return f"<<{tag_data['mask_tag']}>><{tag_data['tag']}{tag_data['attrs']} /><</{tag_data['mask_tag']}>>"
 
-    start_tag = "<<%(mask_tag)s>><%(tag)s%(attrs)s><</%(mask_tag)s>>" % tag_data
-    end_tag = "<<%(mask_tag)s>></%(tag)s><</%(mask_tag)s>>" % tag_data
+    start_tag = f"<<{tag_data['mask_tag']}>><{tag_data['tag']}{tag_data['attrs']}><</{tag_data['mask_tag']}>>"
+    end_tag = f"<<{tag_data['mask_tag']}>></{tag_data['tag']}><</{tag_data['mask_tag']}>>"
 
     return start_tag + content + end_tag
-
 
 
 def raise_unknown_node(emitter, node):
     """
     unknown_emit callable for Html2CreoleEmitter
-    
+
     Raise NotImplementedError on unknown tags.
     """
     content = emitter.emit_children(node)
-    raise NotImplementedError(
-        "Node from type '%s' is not implemented! (child content: %r)" % (
-            node.kind, content
-        )
-    )
+    raise NotImplementedError(f"Node from type '{node.kind}' is not implemented! (child content: {content!r})")
 
 
 def use_html_macro(emitter, node):
     """
     unknown_emit callable for Html2CreoleEmitter
-    
+
     Use the <<html>> macro to mask unknown tags.
     """
     return _mask_content(emitter, node, mask_tag="html")
@@ -65,7 +60,7 @@ def use_html_macro(emitter, node):
 def preformat_unknown_nodes(emitter, node):
     """
     Put unknown tags in a <pre> area.
-    
+
     Usefull for html2textile.emitter.TextileEmitter()
     """
     return _mask_content(emitter, node, mask_tag="pre")
@@ -74,7 +69,7 @@ def preformat_unknown_nodes(emitter, node):
 def escape_unknown_nodes(emitter, node):
     """
     unknown_emit callable for Html2CreoleEmitter
-    
+
     All unknown tags should be escaped.
     """
     attrs = node.get_attrs_as_string()
@@ -89,18 +84,18 @@ def escape_unknown_nodes(emitter, node):
     content = emitter.emit_children(node)
     if not content:
         # single tag
-        return escape("<%(tag)s%(attrs)s />" % tag_data)
+        return escape(f"<{tag_data['tag']}{tag_data['attrs']} />")
 
-    start_tag = escape("<%(tag)s%(attrs)s>" % tag_data)
-    end_tag = escape("</%(tag)s>" % tag_data)
+    start_tag = escape(f"<{tag_data['tag']}{tag_data['attrs']}>")
+    end_tag = escape(f"</{tag_data['tag']}>")
 
     return start_tag + content + end_tag
 
 
 def transparent_unknown_nodes(emitter, node):
     """
-    unknown_emit callable for Html2CreoleEmitter 
-    
+    unknown_emit callable for Html2CreoleEmitter
+
     Remove all unknown html tags and show only
     their child nodes' content.
     """

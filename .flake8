@@ -1,0 +1,4 @@
+[flake8]
+exclude = .pytest_cache, python_creole.egg-info
+ignore = E402
+max-line-length = 119
