@@ -14,7 +14,7 @@
     :PyPi:
       http://pypi.python.org/pypi/python-creole/
 
-    :copyleft: 2008-2015 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2008-2020 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -31,7 +31,7 @@ from creole.parser.html_parser import HtmlParser
 from creole.py3compat import TEXT_TYPE
 
 
-__version__ = "1.3.2"
+__version__ = "1.4.0"
 __api__ = "1.0" # Creole 1.0 spec - http://wikicreole.org/
 
 VERSION_STRING = __version__ # remove in future
@@ -57,6 +57,7 @@ def creole2html(markup_string, debug=False,
     parser_kwargs2 = {
         "block_rules": block_rules,
         "blog_line_breaks": blog_line_breaks,
+        "debug": debug,
     }
     if parser_kwargs is not None:
         warnings.warn("parser_kwargs argument in creole2html would be removed in the future!", PendingDeprecationWarning)

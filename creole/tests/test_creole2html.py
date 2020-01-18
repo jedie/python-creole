@@ -809,7 +809,8 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
 
                 ...and not blog styled.
             """),
-            parser_kwargs={"blog_line_breaks":False},
+            blog_line_breaks=False,
+            debug=True, verbose=True
         )
         self.assertEqual(html, self._prepare_text("""
             <p>wiki style linebreaks</p>
@@ -826,7 +827,8 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
                 * one
                 * two
             """),
-            parser_kwargs={"blog_line_breaks":False},
+            blog_line_breaks=False,
+            debug=True, verbose=True
         )
         self.assertEqual(html, self._prepare_text("""
             <p><strong>one</strong> <i>two</i></p>
@@ -853,7 +855,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
 
                 end
             """),
-            parser_kwargs={"blog_line_breaks":False},
+            blog_line_breaks=False,
         )
         self.assertEqual(html, self._prepare_text("""
             <p>with blog line breaks, every line break would be convertet into&lt;br /&gt; with wiki style not.</p>
