@@ -8,7 +8,7 @@ help: ## List all commands
 check-poetry:
 	@if [[ "${POETRY_VERSION}" == *"Poetry"* ]] ; \
 	then \
-		echo "Found version poetry v${POETRY_VERSION}, ok." ; \
+		echo "Found ${POETRY_VERSION}, ok." ; \
 	else \
 		echo 'Please install poetry first, with e.g.:' ; \
 		echo 'make install-poetry' ; \

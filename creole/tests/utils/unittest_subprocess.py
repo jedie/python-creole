@@ -51,6 +51,11 @@ class SubprocessMixin:
         print(f"stderr: {stderr!r}")
 
         stdout = stdout.strip()
+        print("="*100)
+        print("stdout:")
+        print("-"*100)
+        print(stdout)
+        print("-"*100)
         return popen_args, retcode, stdout
 
     def assertSubprocess(self, popen_args, retcode, stdout):
