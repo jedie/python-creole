@@ -50,30 +50,35 @@ class MarkupTest(unittest.TestCase):
         return txt
 
     def assertEqual(self, first, second, msg=""):
-        if not first == second:
-            if VERBOSE >= 2:
-                print("first: %r" % first)
-                print("second: %r" % second)
+        if first == second:
+            return
 
-            #~ first = first.rstrip("\\n")
-            #~ second = second.rstrip("\\n")
-            try:
-                diff = make_diff(first, second)
-            except AttributeError:
-                raise self.failureException("%s is not %s" % (repr(first), repr(second)))
+        if VERBOSE >= 2:
+            print("first: %r" % first)
+            print("second: %r" % second)
 
-            if VERBOSE >= 2:
-                print("diff: %r" % diff)
+        #~ first = first.rstrip("\\n")
+        #~ second = second.rstrip("\\n")
+        try:
+            diff = make_diff(first, second)
+        except AttributeError:
+            raise self.failureException("%s is not %s" % (repr(first), repr(second)))
 
-            first = self._format_output(first)
-            second = self._format_output(second)
+        if VERBOSE >= 2:
+            print("diff: %r" % diff)
 
-            msg += (
-                "\n---[Output:]---\n%s\n"
-                "---[not equal to:]---\n%s"
-                "\n---[diff:]---\n%s"
-            ) % (first, second, diff)
-            raise self.failureException(msg)
+        first = self._format_output(first)
+        second = self._format_output(second)
+
+        print("*"*100)
+        print("---[Output:]-----------------------------------------------------------------------------------------")
+        print(first)
+        print("---[not equal to:]-----------------------------------------------------------------------------------")
+        print(second)
+        print("---[diff:]-------------------------------------------------------------------------------------------")
+        print(diff)
+        print("*"*100)
+        assert first == second
 
     def _prepare_text(self, txt):
         """
