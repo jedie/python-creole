@@ -9,7 +9,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import, print_function, unicode_literals
+
 
 import re
 
@@ -160,7 +160,7 @@ class BlockRules(object):
 
     def __init__(self, blog_line_breaks=True):
         if blog_line_breaks:
-            # use blog style line breaks (every line break would be converted into <br />) 
+            # use blog style line breaks (every line break would be converted into <br />)
             self.text = r'(?P<text> .+ ) (?P<break> (?<!\\)$\n(?!\s*$) )?'
         else:
             # use wiki style line breaks, seperate lines with one space
@@ -224,11 +224,11 @@ INLINE_RULES = (
 def _verify_rules(rules, flags):
     """
     Simple verify the rules -> try to compile it ;)
-    
+
     >>> _verify_rules(INLINE_RULES, INLINE_FLAGS)
     Rule test ok.
-    
-    >>> block_rules = BlockRules()   
+
+    >>> block_rules = BlockRules()
     >>> _verify_rules(block_rules.rules, block_rules.re_flags)
     Rule test ok.
     """

@@ -7,10 +7,10 @@
 
     :homepage:
       http://code.google.com/p/python-creole/
-    
+
     :sourcecode:
       http://github.com/jedie/python-creole
-    
+
     :PyPi:
       http://pypi.python.org/pypi/python-creole/
 
@@ -18,7 +18,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import, print_function, unicode_literals
+
 
 import warnings
 
@@ -49,7 +49,7 @@ def creole2html(markup_string, debug=False,
 
     >>> creole2html('This is **creole //markup//**!')
     '<p>This is <strong>creole <i>markup</i></strong>!</p>'
-    
+
     Info: parser_kwargs and emitter_kwargs are deprecated
     """
     assert isinstance(markup_string, TEXT_TYPE), "given markup_string must be unicode!"
@@ -130,7 +130,7 @@ def html2textile(html_string, debug=False,
     ):
     """
     convert html code into textile markup
-    
+
     >>> html2textile('<p>This is <strong>textile <i>markup</i></strong>!</p>')
     'This is *textile __markup__*!'
     """
@@ -157,7 +157,7 @@ def html2rest(html_string, debug=False,
     ):
     """
     convert html code into ReStructuredText markup
-    
+
     >>> html2rest('<p>This is <strong>ReStructuredText</strong> <em>markup</em>!</p>')
     'This is **ReStructuredText** *markup*!'
     """

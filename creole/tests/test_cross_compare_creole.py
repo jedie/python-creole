@@ -4,7 +4,7 @@
 """
     cross compare creole unittest
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     Compare all similarities between:
         * creole2html
         * html2creole
@@ -16,7 +16,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import, print_function, unicode_literals
+
 
 import unittest
 
@@ -33,13 +33,13 @@ class CrossCompareCreoleTests(BaseCreoleTest):
                 **//bold italics//**
                 //**bold italics**//
                 //This is **also** good.//
-    
+
                 Creole 1.0 optional:
                 This is ##monospace## text.
                 This is ^^superscripted^^ text.
                 This is ,,subscripted,, text.
                 This is __underlined__ text.
-    
+
                 own additions:
                 This is --small-- and this ~~strikeout~~ ;)
             """,
@@ -48,13 +48,13 @@ class CrossCompareCreoleTests(BaseCreoleTest):
                 <strong><i>bold italics</i></strong><br />
                 <i><strong>bold italics</strong></i><br />
                 <i>This is <strong>also</strong> good.</i></p>
-    
+
                 <p>Creole 1.0 optional:<br />
                 This is <tt>monospace</tt> text.<br />
                 This is <sup>superscripted</sup> text.<br />
                 This is <sub>subscripted</sub> text.<br />
                 This is <u>underlined</u> text.</p>
-    
+
                 <p>own additions:<br />
                 This is <small>small</small> and this <del>strikeout</del> ;)</p>
             """
@@ -132,7 +132,7 @@ class CrossCompareCreoleTests(BaseCreoleTest):
         self.cross_compare_creole(
             creole_string=r"""
                 === Closing braces in nowiki:
-                
+
                 {{{
                 if (x != NULL) {
                   for (i = 0; i < size; i++) {
@@ -143,7 +143,7 @@ class CrossCompareCreoleTests(BaseCreoleTest):
                 """,
             html_string="""
                 <h3>Closing braces in nowiki:</h3>
-                
+
                 <pre>
                 if (x != NULL) {
                   for (i = 0; i &lt; size; i++) {
@@ -156,14 +156,14 @@ class CrossCompareCreoleTests(BaseCreoleTest):
     def test_pre2(self):
         self.cross_compare_creole(r"""
             111
-            
+
             {{{
             //This// does **not** get [[formatted]]
             }}}
             222
 
             one
-            
+
             {{{
             foo
 
@@ -172,14 +172,14 @@ class CrossCompareCreoleTests(BaseCreoleTest):
             two
         """, """
             <p>111</p>
-            
+
             <pre>
             //This// does **not** get [[formatted]]
             </pre>
             <p>222</p>
-            
+
             <p>one</p>
-            
+
             <pre>
             foo
 
@@ -191,7 +191,7 @@ class CrossCompareCreoleTests(BaseCreoleTest):
     def test_pre(self):
         self.cross_compare_creole(r"""
             start
-            
+
             {{{
             * no list
             <html escaped>
@@ -199,7 +199,7 @@ class CrossCompareCreoleTests(BaseCreoleTest):
             end
         """, """
             <p>start</p>
-            
+
             <pre>
             * no list
             &lt;html escaped&gt;
@@ -219,16 +219,16 @@ class CrossCompareCreoleTests(BaseCreoleTest):
         self.cross_compare_creole(
             creole_string=r"""
                 = Headline
-                
+
                 === **not** //parsed//
-                
+
                 No == headline == or?
             """,
             html_string="""
                 <h1>Headline</h1>
-                
+
                 <h3>**not** //parsed//</h3>
-                
+
                 <p>No == headline == or?</p>
             """
         )

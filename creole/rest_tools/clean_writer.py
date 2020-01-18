@@ -4,19 +4,19 @@
 """
     A clean reStructuredText html writer
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     It will produce a minimal set of html output.
     (No extry divs, classes oder ids.)
-    
+
     Some code stolen from:
     http://www.arnebrodowski.de/blog/write-your-own-restructuredtext-writer.html
     https://github.com/alex-morega/docutils-plainhtml/blob/master/plain_html_writer.py
-    
+
     :copyleft: 2011-2013 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import, print_function, unicode_literals
+
 
 #import warnings
 import sys
@@ -193,13 +193,13 @@ class CleanHTMLTranslator(html4css1.HTMLTranslator, object):
 def rest2html(content, enable_exit_status=None, **kwargs):
     """
     Convert reStructuredText markup to clean html code: No extra div, class or ids.
-    
+
     >>> rest2html("- bullet list")
     '<ul>\\n<li>bullet list</li>\\n</ul>\\n'
-    
+
     >>> rest2html("A ReSt link to `PyLucid CMS <http://www.pylucid.org>`_ :)")
     '<p>A ReSt link to <a href="http://www.pylucid.org">PyLucid CMS</a> :)</p>\\n'
-         
+
     >>> rest2html("========", enable_exit_status=1, traceback=False, exit_status_level=2)
     Traceback (most recent call last):
     ...

@@ -3,14 +3,14 @@
 
 """
     python-creole utils
-    ~~~~~~~~~~~~~~~~~~~    
+    ~~~~~~~~~~~~~~~~~~~
 
 
     :copyleft: 2008-2011 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import, print_function, unicode_literals
+
 
 import re
 try:
@@ -39,7 +39,7 @@ class Deentity(object):
     >>> d = Deentity()
     >>> d.replace_all("-=[&nbsp;&gt;&#62;&#x3E;nice&lt;&#60;&#x3C;&nbsp;]=-")
     '-=[ >>>nice<<< ]=-'
-        
+
     >>> d.replace_all("-=[M&uuml;hlheim]=-") # uuml - latin small letter u with diaeresis
     '-=[M\\xfchlheim]=-'
 

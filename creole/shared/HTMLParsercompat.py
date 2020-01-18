@@ -1,7 +1,7 @@
 """
 Patched version of the original from:
     http://hg.python.org/cpython/file/tip/Lib/html/parser.py
-    
+
 compare:
     http://hg.python.org/cpython/file/2.7/Lib/HTMLParser.py
     http://hg.python.org/cpython/file/3.2/Lib/html/parser.py
@@ -13,12 +13,12 @@ e.g.:
     meld HTMLParser.py parser.py
 
 Make it compatible with Python 2.x and 3.x
-    
+
 More info see html_parser.py !
 """
 
 # ------------------------------------------------------------------- add start
-from __future__ import division, absolute_import, print_function, unicode_literals
+
 from creole.py3compat import PY3
 # --------------------------------------------------------------------- add end
 
@@ -556,7 +556,7 @@ class HTMLParser(_markupbase.ParserBase):
                         return self.entitydefs[s]
                     except KeyError:
                         return '&'+s+';'
-    
+
             return re.sub(r"&(#?[xX]?(?:[0-9a-fA-F]+|\w{1,8}));",
                           replaceEntities, s, flags=re.ASCII)
         else:
@@ -584,6 +584,6 @@ class HTMLParser(_markupbase.ParserBase):
                         return self.entitydefs[s]
                     except KeyError:
                         return '&'+s+';'
-    
+
             return re.sub(r"&(#?[xX]?(?:[0-9a-fA-F]+|\w{1,8}));", replaceEntities, s)
-        # -------------------------------------------------------- change end        
+        # -------------------------------------------------------- change end

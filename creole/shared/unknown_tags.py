@@ -11,7 +11,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import, print_function, unicode_literals
+
 
 from xml.sax.saxutils import escape
 
@@ -42,7 +42,7 @@ def _mask_content(emitter, node, mask_tag):
 def raise_unknown_node(emitter, node):
     """
     unknown_emit callable for Html2CreoleEmitter
-    
+
     Raise NotImplementedError on unknown tags.
     """
     content = emitter.emit_children(node)
@@ -56,7 +56,7 @@ def raise_unknown_node(emitter, node):
 def use_html_macro(emitter, node):
     """
     unknown_emit callable for Html2CreoleEmitter
-    
+
     Use the <<html>> macro to mask unknown tags.
     """
     return _mask_content(emitter, node, mask_tag="html")
@@ -65,7 +65,7 @@ def use_html_macro(emitter, node):
 def preformat_unknown_nodes(emitter, node):
     """
     Put unknown tags in a <pre> area.
-    
+
     Usefull for html2textile.emitter.TextileEmitter()
     """
     return _mask_content(emitter, node, mask_tag="pre")
@@ -74,7 +74,7 @@ def preformat_unknown_nodes(emitter, node):
 def escape_unknown_nodes(emitter, node):
     """
     unknown_emit callable for Html2CreoleEmitter
-    
+
     All unknown tags should be escaped.
     """
     attrs = node.get_attrs_as_string()
@@ -99,8 +99,8 @@ def escape_unknown_nodes(emitter, node):
 
 def transparent_unknown_nodes(emitter, node):
     """
-    unknown_emit callable for Html2CreoleEmitter 
-    
+    unknown_emit callable for Html2CreoleEmitter
+
     Remove all unknown html tags and show only
     their child nodes' content.
     """

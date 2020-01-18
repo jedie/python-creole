@@ -13,7 +13,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import, print_function, unicode_literals
+
 import posixpath
 
 from creole.shared.base_emitter import BaseEmitter

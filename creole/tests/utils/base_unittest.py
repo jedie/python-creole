@@ -11,7 +11,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import, print_function, unicode_literals
+
 
 import re
 import warnings
@@ -149,7 +149,7 @@ class BaseCreoleTest(MarkupTest):
         self.assertEqual(out_string, html_string, msg="creole2html")
 
     def assert_html2creole2(self, creole, html,
-            debug=False, 
+            debug=False,
             unknown_emit=None,
             strict=False,
         ):

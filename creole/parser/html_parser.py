@@ -10,7 +10,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import, print_function, unicode_literals
+
 
 import re
 import warnings
@@ -50,7 +50,7 @@ headline_tag_re = re.compile(r"h(\d)", re.UNICODE)
 class HtmlParser(HTMLParser):
     """
     parse html code and create a document tree.
-    
+
     >>> p = HtmlParser()
     >>> p.feed("<p>html <strong>code</strong></p>")
     <DocNode document: None>
@@ -63,7 +63,7 @@ class HtmlParser(HTMLParser):
         strong
             data: 'code'
     ********************************************************************************
-    
+
     >>> p = HtmlParser()
     >>> p.feed("<p>html1 <script>var foo='<em>BAR</em>';</script> html2</p>")
     <DocNode document: None>
