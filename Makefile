@@ -1,25 +1,47 @@
-.PHONY: help install lint fix test release
-
-VERSION := $$(poetry version | sed -n 's/contxt-sdk //p')
+SHELL := /bin/bash
+MAX_LINE_LENGTH := 119
+POETRY_VERSION := $(shell poetry --version 2>/dev/null)
 
 help: ## List all commands
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z -]+:.*?## / {printf "\033[36m%-10s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
-install:
-	pip install poetry
+check-poetry:
+	@if [[ "${POETRY_VERSION}" == *"Poetry"* ]] ; \
+	then \
+		echo "Found version poetry v${POETRY_VERSION}, ok." ; \
+	else \
+		echo 'Please install poetry first, with e.g.:' ; \
+		echo 'make install-poetry' ; \
+		exit 1 ; \
+	fi
+
+install-poetry: ## install or update poetry
+	@if [[ "${POETRY_VERSION}" == *"Poetry"* ]] ; \
+	then \
+		echo 'Update poetry v$(POETRY_VERSION)' ; \
+		poetry self update ; \
+	else \
+		echo 'Install poetry' ; \
+		curl -sSL "https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py" | python3 ; \
+	fi
+
+install: check-poetry ## install python-creole via poetry
 	poetry install
 
 lint: ## Run code formatters and linter
-	poetry run isort --check-only --recursive creole
-	poetry run black --line-length=119 --check creole
+# 	poetry run isort --check-only --recursive creole
+# 	poetry run black --line-length=119 --check creole
 	poetry run flake8 creole
 
-fix: ## Fix code formatting
-	poetry run flynt --line_length=119 creole
-	poetry run isort --apply --recursive creole
-	poetry run black --line-length=119 creole
+fix-code-style: ## Fix code formatting
+# 	poetry run flynt --line_length=119 creole
+# 	poetry run isort --apply --recursive creole
+	poetry run autopep8 --ignore-local-config --max-line-length=${MAX_LINE_LENGTH} --aggressive --aggressive --in-place --recursive creole
 
-test: ## Run unit tests
+tox: check-poetry ## Run pytest via tox
+	poetry run tox
+
+pytest: check-poetry ## Run pytest
 	poetry run pytest
 
 release: ## Release new version [usage: v=rule]
@@ -31,3 +53,6 @@ release: ## Release new version [usage: v=rule]
 	git push && git push --tags
 	# Publish to pypi
 	poetry publish --build
+
+
+.PHONY: help install lint fix test release

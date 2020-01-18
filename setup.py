@@ -256,9 +256,6 @@ setup(
             "html2textile = creole.cmdline:cli_html2textile",
         ],
     },
-    tests_require=[
-        "nose", # https://pypi.python.org/pypi/nose
-    ],
     zip_safe=True, # http://packages.python.org/distribute/setuptools.html#setting-the-zip-safe-flag
     keywords="creole markup creole2html html2creole rest2html html2rest html2textile",
     classifiers=[
@@ -282,5 +279,4 @@ setup(
         "Topic :: Text Processing :: Markup :: HTML",
         "Topic :: Utilities",
     ],
-    test_suite="nose.collector",
 )
