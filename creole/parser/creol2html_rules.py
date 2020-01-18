@@ -52,12 +52,12 @@ class InlineRules(object):
 #        ''' % proto
 
     # image tag
-    image = r'''(?P<image>
+    image = r'''(?i)(?P<image>
             {{
             (?P<image_target>.+?) \s*
             (\| \s* (?P<image_text>.+?) \s*)?
             }}
-        )(?i)'''
+        )'''
     #--------------------------------------------------------------------------
 
     # a macro like: <<macro>>text<</macro>>
