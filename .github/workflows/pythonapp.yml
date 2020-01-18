@@ -19,10 +19,31 @@ jobs:
         make install
 
     - name: List installed packages
-      run: poetry run pip freeze
+      run: |
+        source $HOME/.poetry/env
+        poetry run pip freeze
+
+    - name: List all tox test environments
+      run: |
+        source $HOME/.poetry/env
+        make tox-listenvs
 
 #    - name: Run linters
-#      run: make lint
+#      run: |
+#        source $HOME/.poetry/env
+#        make lint
 
-    - name: Run pytest via tox
-      run: make tox
+    - name: Run tests with Python v3.8
+      run: |
+        source $HOME/.poetry/env
+        make tox-py38
+
+    - name: Run tests with Python v3.7
+      run: |
+        source $HOME/.poetry/env
+        make tox-py37
+
+    - name: Run tests with Python v3.6
+      run: |
+        source $HOME/.poetry/env
+        make tox-py36

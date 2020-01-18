@@ -3,18 +3,20 @@
 language: python
 
 python:
-  - "3.6"
-  - "3.7"
   - "3.8"
+  - "3.7"
+  - "3.6"
   - "pypy3"
 
 install:
+  - make install-poetry
+  - source $HOME/.poetry/env
   - make install
   - poetry run pip freeze
+  - make tox-listenvs
 
 script:
-  - make test
-  - make lint
+  - make pytest
 
 after_success:
   - coveralls
