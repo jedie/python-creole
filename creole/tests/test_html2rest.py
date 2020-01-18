@@ -74,17 +74,20 @@ class ReStTests(BaseCreoleTest):
     def test_pre_code1(self):
         self.assert_html2rest(
             rest_string="""
+                Text line
+
                 ::
 
                     >>> from creole import creole2html
                     >>> creole2html("This is **creole //markup//**")
-                    '<p>This is <strong>creole <i>markup</i></strong></p>
+                    '<p>This is <strong>creole <i>markup</i></strong></p>'
             """,
             html_string="""
+                <p>Text line</p>
                 <pre>
                 &gt;&gt;&gt; from creole import creole2html
                 &gt;&gt;&gt; creole2html(&quot;This is **creole //markup//**&quot;)
-                '&lt;p&gt;This is &lt;strong&gt;creole &lt;i&gt;markup&lt;/i&gt;&lt;/strong&gt;&lt;/p&gt;\n'
+                '&lt;p&gt;This is &lt;strong&gt;creole &lt;i&gt;markup&lt;/i&gt;&lt;/strong&gt;&lt;/p&gt;'
                 </pre>
             """
         )

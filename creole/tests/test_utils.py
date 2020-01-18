@@ -10,14 +10,72 @@
 """
 
 
-
 import unittest
 
-from creole.tests.utils.utils import MarkupTest
 from creole.shared.markup_table import MarkupTable
+from creole.tests.utils.utils import MarkupTest
 
 
 class UtilsTests(MarkupTest):
+
+    def test_assertEqual(self):
+        self.assertRaises(
+            AssertionError, self.assertEqual, "foo", "bar"
+        )
+
+    def test_prepare_text_base(self):
+        out1 = self._prepare_text("""
+            one line
+            line two""")
+        self.assertEqual(out1, "one line\nline two")
+
+        out2 = self._prepare_text("""
+            one line
+            line two
+        """)
+        self.assertEqual(out2, "one line\nline two")
+
+    def test_prepare_text_last_line_empty(self):
+
+        out3 = self._prepare_text("""
+            one line
+            line two
+
+        """)
+        self.assertEqual(out3, "one line\nline two\n")
+
+    def test_prepare_text_empty_line(self):
+        self.assertEqual(self._prepare_text("""
+            line one
+
+            line two
+        """), "line one\n\nline two")
+
+    def test_prepare_text_first_line_empty(self):
+        self.assertEqual(self._prepare_text("""
+
+            line one
+            line two
+        """), "\nline one\nline two")
+
+    def test_prepare_space_and_line_end(self):
+        self.assertEqual(self._prepare_text("\n  111  \n  222"), "111\n222")
+
+    def test_prepare_text_indent_line(self):
+        self.assertEqual("line one\n  indent line\nline two", self._prepare_text("""
+            line one
+              indent line
+            line two
+        """))
+
+    def test_prepare_text_indent_with_empty_end(self):
+        out4 = self._prepare_text("""
+            one line
+                line two
+
+        """)
+        self.assertEqual(out4, "one line\n    line two\n")
+
     def assertEqual2(self, first, second, msg=""):
         self.assertNotEqual(first, second, msg)
 

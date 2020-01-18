@@ -294,17 +294,19 @@ class BaseCreoleTest(MarkupTest):
         self.assertNotEqual(rest_string, html_string)
 
         rest_string = self._prepare_text(rest_string)
+        print("-" * 100)
+        print(rest_string)
         html_string = self._prepare_text(html_string)
-
         if strip_lines:
             html_string = strip_html_lines(html_string, strip_lines)
+        print("-" * 100)
+        print(html_string)
 
         # compare html -> reStructuredText
         rest_string2 = html2rest(html_string, debug, parser_kwargs, emitter_kwargs)
-        if debug:
-            print("-" * 79)
-            print(rest_string2)
-            print("-" * 79)
+        print("-" * 100)
+        print(rest_string2)
+        print("-" * 100)
 
         self.assertEqual(rest_string2, rest_string, msg="html2rest")
 
