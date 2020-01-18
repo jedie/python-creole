@@ -8,3 +8,5 @@
 .idea
 /poetry.lock
 /.coverage
+
+.tox
