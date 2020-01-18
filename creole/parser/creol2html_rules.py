@@ -144,10 +144,10 @@ class BlockRules(object):
             ^}}})
         '''
 
-    # Matches the whole list, separate items are parsed later. The
-    # list *must* start with a single bullet.
+    # Matches the whole list, separate items are parsed later.
+    # The list *must* start with a single bullet.
     list = r'''(?P<list>
-        ^ [ \t]* ([*][^*\#]|[\#][^\#*]).* $
+        ^ \s* ([*][^*\#]|[\#][^\#*]).* $
         ( \n[ \t]* [*\#]+.* $ )*
     )'''
 
