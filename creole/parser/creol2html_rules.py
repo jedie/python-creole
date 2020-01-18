@@ -133,7 +133,7 @@ class BlockRules(object):
         (?P<head_text> .*? )
         (=|\s)*?$
     )'''
-    separator = r'(?P<separator> ^ \s* ---- \s* $ )' # horizontal line
+    separator = r'(?P<separator> ^ \s* ----) [ \t]* $' # horizontal line
 
     pre_block = r'''(?P<pre_block>
             ^{{{ \s* $
