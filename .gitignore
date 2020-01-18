@@ -6,3 +6,5 @@
 /build
 
 .idea
+/poetry.lock
+/.coverage
