@@ -5,7 +5,7 @@
     unittest for CLI
     ~~~~~~~~~~~~~~~~
 
-    :copyleft: 2013-2015 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2013-2020 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -83,7 +83,6 @@ class CreoleCLITests(BaseCreoleTest, SubprocessMixin, CliTestMixins):
         self.assertSubprocess(
             popen_args=[cli_str, sourcefilepath, destfilepath],
             retcode=0, stdout=stdout,
-            verbose=False,
         )
 
         dest_file.seek(0)
@@ -101,7 +100,6 @@ class CreoleCLITests(BaseCreoleTest, SubprocessMixin, CliTestMixins):
                 popen_args=[cmd, "--version"],
                 retcode=0,
                 stdout=version_info,
-                verbose=False,
             )
 
 
