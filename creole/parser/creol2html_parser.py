@@ -22,9 +22,10 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import, print_function, unicode_literals
+
 
 import re
+from pprint import pformat
 
 from creole.parser.creol2html_rules import BlockRules, INLINE_FLAGS, INLINE_RULES, \
     SpecialRules, InlineRules
@@ -59,17 +60,18 @@ class CreoleParser(object):
     inline_re = re.compile('|'.join(INLINE_RULES), INLINE_FLAGS)
 
 
-    def __init__(self, raw, block_rules=None, blog_line_breaks=True):
+    def __init__(self, raw, block_rules=None, blog_line_breaks=True, debug=False):
         assert isinstance(raw, TEXT_TYPE)
         self.raw = raw
 
         if block_rules is None:
             block_rules = BlockRules(blog_line_breaks=blog_line_breaks)
 
+        self.blog_line_breaks = blog_line_breaks
+        self.debug = debug  # TODO: use logging
+
         # setup block element rules:
         self.block_re = re.compile('|'.join(block_rules.rules), block_rules.re_flags)
-
-        self.blog_line_breaks = blog_line_breaks
 
         self.root = DocNode('document', None)
         self.cur = self.root        # The most recent document node
@@ -126,7 +128,7 @@ class CreoleParser(object):
 
         text = groups.get('text', "")
 
-        if groups.get('space'):
+        if groups.get('space') and self.cur.children:
             # use wikipedia style line breaks and seperate a new line with one space
             text = " " + text
 
@@ -423,17 +425,18 @@ class CreoleParser(object):
     def _replace(self, match):
         """Invoke appropriate _*_repl method. Called for every matched group."""
 
-#        def debug(groups):
-#            from pprint import pformat
-#            data = dict([
-#                group for group in groups.items() if group[1] is not None
-#            ])
-#            print("%s\n" % pformat(data))
+        def debug(groups):
+            data = dict([
+                group for group in groups.items() if group[1] is not None
+            ])
+            print(pformat(data))
 
         groups = match.groupdict()
         for name, text in groups.items():
             if text is not None:
-                #if name != "char": debug(groups)
+                if self.debug and name != "char":
+                    # TODO: use logging
+                    debug(groups)
                 replace_method = getattr(self, '_%s_repl' % name)
                 replace_method(groups)
                 return
@@ -450,12 +453,15 @@ class CreoleParser(object):
         """Parse the text given as self.raw and return DOM tree."""
         # convert all lineendings to \n
         text = self.raw.replace("\r\n", "\n").replace("\r", "\n")
+        if self.debug:
+            # TODO: use logging
+            print(repr(text))
         self.parse_block(text)
         return self.root
 
 
     #--------------------------------------------------------------------------
-    def debug(self, start_node=None):
+    def debug_tree(self, start_node=None):
         """
         Display the current document tree
         """

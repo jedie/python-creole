@@ -3,16 +3,16 @@
 """
     Helper to support Python v2 and v3
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     Some ideas borrowed from six
-    
+
     See also:
         http://python3porting.com
         https://bitbucket.org/gutworth/six/src/tip/six.py
         http://packages.python.org/six/
 """
 
-from __future__ import division, absolute_import, print_function, unicode_literals
+
 
 import sys
 import doctest

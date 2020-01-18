@@ -6,3 +6,7 @@
 /build
 
 .idea
+/poetry.lock
+/.coverage
+
+.tox

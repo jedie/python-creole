@@ -10,7 +10,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import, print_function, unicode_literals
+
 
 from creole.parser.html_parser_config import BLOCK_TAGS
 from creole.html_tools.deentity import Deentity

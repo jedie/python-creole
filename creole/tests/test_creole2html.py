@@ -16,7 +16,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import, print_function, unicode_literals
+
 
 import sys
 import unittest
@@ -204,12 +204,8 @@ class TestCreole2html(BaseCreoleTest):
         error_msg = my_stderr.getvalue()
         self.assertEqual(error_msg, "")
 
+    @unittest.skipIf(not PYGMENTS, "Pygments not installed")
     def test_code_macro(self):
-        if not PYGMENTS:
-            # TODO: Use @unittest.skipIf if python 2.6 will be not support anymore
-            warnings.warn("Skip test, because 'pygments' is not installed.")
-            return
-
         # due to https://bitbucket.org/birkenfeld/pygments-main/issues/1254/empty-at-the-begining-of-the-highlight
         # an empty <span></span> is now part of pygments output
         self.assert_creole2html(r"""
@@ -220,8 +216,8 @@ class TestCreole2html(BaseCreoleTest):
             <</code>>
             """, """
             <p>Here a simple code macro test:</p>
-            <div class="pygments"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span><br />
-                <span class="k">print</span><span class="p">(</span><span class="s1">&#39;hello world&#39;</span><span class="p">)</span><br />
+            <div class="pygments"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span><br />
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;hello world&#39;</span><span class="p">)</span><br />
             </pre></div><br />
             """,
             macros={'code': example_macros.code}
@@ -813,7 +809,8 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
 
                 ...and not blog styled.
             """),
-            parser_kwargs={"blog_line_breaks":False},
+            blog_line_breaks=False,
+            debug=True, verbose=True
         )
         self.assertEqual(html, self._prepare_text("""
             <p>wiki style linebreaks</p>
@@ -830,7 +827,8 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
                 * one
                 * two
             """),
-            parser_kwargs={"blog_line_breaks":False},
+            blog_line_breaks=False,
+            debug=True, verbose=True
         )
         self.assertEqual(html, self._prepare_text("""
             <p><strong>one</strong> <i>two</i></p>
@@ -857,7 +855,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
 
                 end
             """),
-            parser_kwargs={"blog_line_breaks":False},
+            blog_line_breaks=False,
         )
         self.assertEqual(html, self._prepare_text("""
             <p>with blog line breaks, every line break would be convertet into&lt;br /&gt; with wiki style not.</p>

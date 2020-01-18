@@ -9,7 +9,7 @@
 """
 
 
-from __future__ import division, absolute_import, print_function, unicode_literals
+
 
 import json
 from xml.sax.saxutils import escape
@@ -167,7 +167,7 @@ class HtmlEmitter(object):
         return self.html_escape(node.content)
 
     def separator_emit(self, node):
-        return '<hr />\n\n'
+        return '<hr />\n'
 
     def paragraph_emit(self, node):
         return '<p>%s</p>\n' % self.emit_children(node)

@@ -9,7 +9,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import, print_function, unicode_literals
+
 import argparse
 import codecs
 
@@ -36,7 +36,7 @@ class CreoleCLI(object):
             default="utf-8",
             help="Codec for read/write file (default encoding: utf-8)"
         )
-        
+
         args = self.parser.parse_args()
 
         sourcefile = args.sourcefile
@@ -49,7 +49,7 @@ class CreoleCLI(object):
         print("Convert %r to %r with %s (codec: %s)" % (
             sourcefile, destination, self.convert_func.__name__, encoding
         ))
-        
+
         with codecs.open(sourcefile, "r", encoding=encoding) as infile:
             with codecs.open(destination, "w", encoding=encoding) as outfile:
                 content = infile.read()
@@ -63,10 +63,10 @@ def cli_creole2html():
 
 def cli_html2creole():
     CreoleCLI(html2creole)
-    
+
 def cli_html2rest():
     CreoleCLI(html2rest)
-    
+
 def cli_html2textile():
     CreoleCLI(html2textile)
 

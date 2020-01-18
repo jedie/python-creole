@@ -1,0 +1,49 @@
+name: test
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
+
+    - name: Install package
+      run: |
+        make install-poetry
+        source $HOME/.poetry/env
+        make install
+
+    - name: List installed packages
+      run: |
+        source $HOME/.poetry/env
+        poetry run pip freeze
+
+    - name: List all tox test environments
+      run: |
+        source $HOME/.poetry/env
+        make tox-listenvs
+
+#    - name: Run linters
+#      run: |
+#        source $HOME/.poetry/env
+#        make lint
+
+    - name: Run tests with Python v3.8
+      run: |
+        source $HOME/.poetry/env
+        make tox-py38
+
+    - name: Run tests with Python v3.7
+      run: |
+        source $HOME/.poetry/env
+        make tox-py37
+
+    - name: Run tests with Python v3.6
+      run: |
+        source $HOME/.poetry/env
+        make tox-py36

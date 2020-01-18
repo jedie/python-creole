@@ -11,7 +11,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import, print_function, unicode_literals
+
 
 import re
 import warnings
@@ -86,29 +86,17 @@ class BaseCreoleTest(MarkupTest):
         text = text.replace("\n", "\\n\n")
         text = text.replace("\t", "\\t")
 
-        print
+        print()
         print("_" * 79)
-        print(" Debug Text: %s" % msg)
+        print(" Debug Text: %s:" % msg)
         print(text)
         print("-" * 79)
 
-    def assertIn(self, member, container, *args, **kwargs):
-        """
-        Assert member in container.
-        assertIn is new in Python 2.7
-        """
-        try:
-            f = super(BaseCreoleTest, self).assertIn
-        except AttributeError:
-            self.assertTrue(member in container, *args, **kwargs)
-        else:
-            f(member, container, *args, **kwargs)
-
     def assert_creole2html(
             self, raw_creole, raw_html,
-            strip_lines=False, debug=False,
+            strip_lines=False, debug=True,
             parser_kwargs={}, emitter_kwargs={},
-            block_rules=None, blog_line_breaks=True, macros=None, verbose=None, stderr=None,
+            block_rules=None, blog_line_breaks=True, macros=None, verbose=True, stderr=None,
             strict=False,
         ):
         """
@@ -127,18 +115,16 @@ class BaseCreoleTest(MarkupTest):
         assert isinstance(html_string, TEXT_TYPE)
         if strip_lines:
             html_string = strip_html_lines(html_string, strip_lines)
-        if debug:
-            self._debug_text("assert_creole2html() html_string", html_string)
+        self._debug_text("assert_creole2html() html_string reference", html_string)
 
         # convert creole markup into html code
         out_string = creole2html(
-            markup_string, debug,
+            markup_string, debug=debug,
             block_rules=block_rules, blog_line_breaks=blog_line_breaks,
             macros=macros, verbose=verbose, stderr=stderr,
             strict=strict,
         )
-        if debug:
-            self._debug_text("assert_creole2html() creole2html", out_string)
+        self._debug_text("assert_creole2html() creole2html output", out_string)
 
         if strip_lines:
             out_string = strip_html_lines(out_string, strip_lines)
@@ -149,7 +135,7 @@ class BaseCreoleTest(MarkupTest):
         self.assertEqual(out_string, html_string, msg="creole2html")
 
     def assert_html2creole2(self, creole, html,
-            debug=False, 
+            debug=True,
             unknown_emit=None,
             strict=False,
         ):
@@ -157,8 +143,7 @@ class BaseCreoleTest(MarkupTest):
         out_string = html2creole(
             html, debug, unknown_emit=unknown_emit, strict=strict
         )
-        if debug:
-            self._debug_text("assert_html2creole() html2creole", out_string)
+        self._debug_text("assert_html2creole() html2creole", out_string)
 
         # compare
         self.assertEqual(out_string, creole, msg="html2creole")
@@ -195,7 +180,7 @@ class BaseCreoleTest(MarkupTest):
         self.assert_html2creole2(creole, html, debug, unknown_emit, strict)
 
     def cross_compare_creole(self, creole_string, html_string,
-                        strip_lines=False, debug=False,
+                        strip_lines=False, debug=True,
                         # creole2html old API:
                         creole_parser_kwargs={}, html_emitter_kwargs={},
                         # html2creole old API:
@@ -221,13 +206,14 @@ class BaseCreoleTest(MarkupTest):
         self.assertNotEqual(creole_string, html_string)
 
         self.assert_creole2html(
-            creole_string, html_string, strip_lines, debug,
+            raw_creole=creole_string, raw_html=html_string,
+            strip_lines=strip_lines,
             block_rules=block_rules, blog_line_breaks=blog_line_breaks,
             macros=macros, stderr=stderr,
         )
 
         self.assert_html2creole(
-            creole_string, html_string, strip_lines, debug,
+            raw_creole=creole_string, raw_html=html_string, strip_lines=strip_lines,
             unknown_emit=unknown_emit,
         )
 
@@ -294,17 +280,19 @@ class BaseCreoleTest(MarkupTest):
         self.assertNotEqual(rest_string, html_string)
 
         rest_string = self._prepare_text(rest_string)
+        print("-" * 100)
+        print(rest_string)
         html_string = self._prepare_text(html_string)
-
         if strip_lines:
             html_string = strip_html_lines(html_string, strip_lines)
+        print("-" * 100)
+        print(html_string)
 
         # compare html -> reStructuredText
         rest_string2 = html2rest(html_string, debug, parser_kwargs, emitter_kwargs)
-        if debug:
-            print("-" * 79)
-            print(rest_string2)
-            print("-" * 79)
+        print("-" * 100)
+        print(rest_string2)
+        print("-" * 100)
 
         self.assertEqual(rest_string2, rest_string, msg="html2rest")
 

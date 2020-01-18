@@ -5,15 +5,15 @@
 """
     html2creole tests
     ~~~~~~~~~~~~~~~~~
-    
+
     special html to creole convert tests, witch can't tests in "cross compare"
-    
+
 
     :copyleft: 2008-2011 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import, print_function, unicode_literals
+
 
 import unittest
 
@@ -136,7 +136,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         )
 
     def test_transparent_unknown_nodes2(self):
-        """ 
+        """
         HTMLParser has problems with <script> tags.
         See: http://bugs.python.org/issue670664
         """
@@ -163,7 +163,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         """, unknown_emit=transparent_unknown_nodes
         )
 
-    #--------------------------------------------------------------------------        
+    #--------------------------------------------------------------------------
 
     def test_entities(self):
         """
@@ -224,7 +224,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
     def test_tbody_table(self):
         self.assert_html2creole(r"""
             Ignore 'tbody' tag in tables:
-            
+
             |= Headline 1 |= Headline 2 |
             | cell one    | cell two    |
             end
@@ -327,7 +327,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         """
         self.assert_html2creole(r"""
             **foo**
-            
+
             * one
         """, """
             <b>foo</b><ul><li>one</li></ul>
@@ -409,9 +409,9 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
     def test_horizontal_rule(self):
         self.assert_html2creole(r"""
             one
-            
+
             ----
-            
+
             two
         """, """
             <p>one</p>

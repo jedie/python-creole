@@ -11,7 +11,7 @@
     https://bitbucket.org/pypa/pypi/issue/161/rest-formatting-fails-and-there-is-no-way
 """
 
-from __future__ import division, absolute_import, print_function
+
 
 try:
     # Python 3

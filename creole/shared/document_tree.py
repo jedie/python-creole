@@ -10,7 +10,7 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import, print_function, unicode_literals
+
 
 import warnings
 import inspect
@@ -22,7 +22,7 @@ from creole.shared.utils import dict2string
 class DocNode:
     """
     A node in the document tree for html2creole and creole2html.
-    
+
     The Document tree would be created in the parser and used in the emitter.
     """
     def __init__(self, kind='', parent=None, content=None, attrs=[], level=None):

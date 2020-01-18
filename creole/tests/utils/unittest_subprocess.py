@@ -1,65 +1,65 @@
-# coding: utf-8
-
 """
     unittest subprocess helper
     ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    :copyleft: 2015 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2015-2020 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import print_function, unicode_literals
 
-import json
 import os
+import shutil
 import subprocess
 import sys
+from pathlib import Path
 
 
-class SubprocessMixin(object):
-    # call .../env/bin/python will not add the .../env/bin/ to the PATH
-    SEARCH_PATH=[os.path.dirname(sys.executable)] + os.environ.get("PATH", "").split(os.pathsep)
+class SubprocessMixin:
 
-    def find_executable(self, program):
-        self.assertNotIn(os.sep, program)
-        for path in self.SEARCH_PATH:
-            filepath = os.path.join(path, program)
-            if os.path.isfile(filepath):
-                if not os.access(filepath, os.X_OK):
-                    sys.stderr.write("File %r is not executable?!?\n" % filepath)
-                else:
-                    return filepath
-
-        self.fail("Program %s not found in:\n\t* %s" % (json.dumps(program), "\n\t* ".join(self.SEARCH_PATH)))
-
-    def subprocess(self, popen_args, verbose=True):
+    def subprocess(self, popen_args):
         assert isinstance(popen_args, (tuple, list))
 
-        if verbose:
-            print("Call:", popen_args)
+        print("Call:", popen_args)
+
+        # Expand PATH
+        bin_path = str(Path(sys.executable).parent)
+        if bin_path not in os.environ["PATH"]:
+            # .../venv/bin will be not in PATH in tests, just add it
+            # so that installed [tool.poetry.scripts] will be found
+            os.environ["PATH"] += os.pathsep + bin_path
+
+        # Check if executeable will be found
+        prog = popen_args[0]
+        cmd = shutil.which(prog)
+        assert cmd is not None, f'{prog!r} not found in PATH: {os.environ.get("PATH")!r}!'
 
         try:
-            process = subprocess.Popen(popen_args,
+            process = subprocess.Popen(
+                popen_args,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 universal_newlines=True,
             )
         except Exception as err:
-            self.fail("Error subprocess call with %r: %s" % (popen_args, err))
+            self.fail(f"Error subprocess call with {popen_args!r}: {err}")
 
         stdout, stderr = process.communicate()
         retcode = process.poll()
 
-        if verbose:
-            print("return code: %r" % retcode)
-            print("stdout: %r" % stdout)
-            print("stderr: %r" % stderr)
+        print(f"return code: {retcode!r}")
+        print(f"stdout: {stdout!r}")
+        print(f"stderr: {stderr!r}")
 
         stdout = stdout.strip()
+        print("="*100)
+        print("stdout:")
+        print("-"*100)
+        print(stdout)
+        print("-"*100)
         return popen_args, retcode, stdout
 
-    def assertSubprocess(self, popen_args, retcode, stdout, verbose=True):
-        popen_args2, retcode2, stdout2 = self.subprocess(popen_args, verbose)
+    def assertSubprocess(self, popen_args, retcode, stdout):
+        popen_args2, retcode2, stdout2 = self.subprocess(popen_args)
         stdout = stdout.strip()
         try:
             self.assertEqual(stdout, stdout2, "stdout wrong:")
@@ -78,5 +78,3 @@ class SubprocessMixin(object):
                 stdout2,
             )
             self.fail(msg)
-
-

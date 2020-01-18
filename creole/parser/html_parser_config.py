@@ -4,14 +4,14 @@
 """
     python-creole
     ~~~~~~~~~~~~~
-   
+
     created by Jens Diemer
 
     :copyleft: 2009-2011 by the python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-from __future__ import division, absolute_import, print_function, unicode_literals
+
 
 BLOCK_TAGS = (
     "address", "blockquote", "center", "dir", "div", "dl", "fieldset",

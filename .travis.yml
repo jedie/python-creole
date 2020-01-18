@@ -3,26 +3,22 @@
 language: python
 
 python:
-  - "2.7"
-  - "3.5"
-  - "3.6"
-  - "3.7"
   - "3.8"
-  - "pypy"
+  - "3.7"
+  - "3.6"
   - "pypy3"
 
 install:
-  - pip install --upgrade pip
-  - pip install nose textile docutils pygments coveralls
-  - pip install .
+  - make install-poetry
+  - source $HOME/.poetry/env
+  - make install
+  - poetry run pip freeze
+  - make tox-listenvs
 
 script:
-  - coverage run ./setup.py nosetests
+  - make pytest
 
 after_success:
   - coveralls
   # https://github.com/codecov/codecov-bash
-  - bash <(curl -s https://codecov.io/bash)
-    
-notifications:
-  irc: "irc.freenode.org#pylucid"
+  - bash <(curl -s https://codecov.io/bas
