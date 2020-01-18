@@ -13,8 +13,6 @@ classifiers = [
     'Intended Audience :: Developers',
     'License :: OSI Approved :: GNU General Public License (GPL)',
     'Programming Language :: Python',
-    'Programming Language :: Python :: 2.7',
-    'Programming Language :: Python :: 3.5',
     'Programming Language :: Python :: 3.6',
     'Programming Language :: Python :: 3.7',
     'Programming Language :: Python :: 3.8',
@@ -39,6 +37,7 @@ docutils = "^0.16"
 [tool.poetry.dev-dependencies]
 tox = "^3.14.3"
 pygments = "^2.5.2"
+textile = "^4.0.0"
 pytest = '^4.6'
 pytest-cov = "^2.8.1"
 isort = "^4.3.21"
