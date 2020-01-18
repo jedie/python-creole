@@ -10,10 +10,9 @@
 """
 
 
-
-import unittest
-import sys
 import os
+import sys
+import unittest
 
 import creole
 from creole.tests.utils.unittest_subprocess import SubprocessMixin
@@ -26,7 +25,7 @@ class TestSetup(unittest.TestCase, SubprocessMixin):
 
     def test_setup_path(self):
         if not os.path.isfile(self.setup_path):
-            self.fail("Can't find setup.py: %r doesn't exist" % self.setup_path)
+            self.fail(f"Can't find setup.py: {self.setup_path!r} doesn't exist")
 
     def test_version(self):
         self.assertSubprocess(
@@ -35,13 +34,3 @@ class TestSetup(unittest.TestCase, SubprocessMixin):
             stdout=creole.VERSION_STRING,
             verbose=True
         )
-
-    def test_nose_hint(self):
-        popen_args, retcode, stdout = self.subprocess(
-            popen_args=(sys.executable, self.setup_path, "test"),
-            verbose=False,
-        )
-        self.assertIn("Please use 'nosetests'", stdout)
-        self.assertNotEqual(retcode, 0)
-
-
