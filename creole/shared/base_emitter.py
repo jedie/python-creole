@@ -56,7 +56,7 @@ class BaseEmitter(object):
 
         try:
             return self.deentity.replace_named(entity)
-        except KeyError as err:
+        except KeyError:
             if self.debugging:
                 print(f"unknown html entity found: {entity!r}")
             return f"&{entity}"  # FIXME

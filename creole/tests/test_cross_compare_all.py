@@ -372,7 +372,6 @@ class CrossCompareTests(BaseCreoleTest):
 #            """
 #        )
 
-
     def test_pre1(self):
         self.cross_compare(
             creole_string=r"""
@@ -444,7 +443,6 @@ class CrossCompareTests(BaseCreoleTest):
 #
 #                <p>end</p>
 #            """)
-
 
     def test_pre_contains_braces(self):
         self.cross_compare(

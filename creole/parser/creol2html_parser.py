@@ -266,10 +266,14 @@ class CreoleParser(object):
         level = len(bullet) - 1
         lst = self.cur
         # Find a list of the same kind and level up the tree
-        while (lst and
-               not (lst.kind in ('number_list', 'bullet_list') and
-                    lst.level == level) and
-               lst.kind not in ('document', 'section', 'blockquote')):
+        while (
+            lst and not (
+                lst.kind in (
+                    'number_list',
+                    'bullet_list') and lst.level == level) and lst.kind not in (
+                'document',
+                'section',
+                'blockquote')):
             lst = lst.parent
         if lst and lst.kind == kind:
             self.cur = lst

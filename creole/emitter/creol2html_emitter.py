@@ -52,9 +52,9 @@ class TableOfContent(object):
 
             if index > stack_length:
                 for _ in range(stack_length, index):
-                    l = []
-                    stack[-1].append(l)
-                    stack.append(l)
+                    nest_list = []
+                    stack[-1].append(nest_list)
+                    stack.append(nest_list)
             elif index < stack_length:
                 stack = stack[:index]
 
@@ -293,7 +293,7 @@ class HtmlEmitter(object):
         args = node.macro_args
         try:
             macro_kwargs = string2dict(args)
-        except ValueError as e:
+        except ValueError:
             exc_info = sys.exc_info()
             return self.error(
                 f"Wrong macro arguments: {json.dumps(args)} for macro '{macro_name}' (maybe wrong macro tag syntax?)",
@@ -306,12 +306,12 @@ class HtmlEmitter(object):
         if isinstance(self.macros, dict):
             try:
                 macro = self.macros[macro_name]
-            except KeyError as e:
+            except KeyError:
                 exc_info = sys.exc_info()
         else:
             try:
                 macro = getattr(self.macros, macro_name)
-            except AttributeError as e:
+            except AttributeError:
                 exc_info = sys.exc_info()
 
         if macro is None:

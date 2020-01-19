@@ -12,7 +12,6 @@
 
 import os
 import tempfile
-import unittest
 import warnings
 
 import creole
@@ -20,7 +19,7 @@ from creole.setup_utils import get_long_description
 from creole.tests.utils.base_unittest import BaseCreoleTest
 
 try:
-    import docutils
+    import docutils  # noqa flake8
     DOCUTILS = True
 except ImportError:
     DOCUTILS = False

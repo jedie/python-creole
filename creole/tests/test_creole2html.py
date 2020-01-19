@@ -26,7 +26,7 @@ from creole.tests import test_macros
 from creole.tests.utils.base_unittest import BaseCreoleTest
 
 try:
-    from pygments import highlight
+    import pygments  # noqa flake8
     PYGMENTS = True
 except ImportError:
     PYGMENTS = False

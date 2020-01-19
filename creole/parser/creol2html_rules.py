@@ -234,7 +234,7 @@ def _verify_rules(rules, flags):
             # Try to merge the rules. e.g. Check if group named double used.
             rule_list.append(rule)
             re.compile('|'.join(rule_list), flags)
-        except Exception as err:
+        except Exception:
             print(" *** Error with rule:")
             print(rule)
             print(" -" * 39)

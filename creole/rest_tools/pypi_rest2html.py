@@ -12,21 +12,15 @@
 """
 
 
-try:
-    # Python 3
-    from urllib.parse import urlparse
-except ImportError:
-    # Python 2
-    from urlparse import urlparse
+from urllib.parse import urlparse
 
 from creole.exceptions import DocutilsImportError
 
 try:
-    import docutils
+    import docutils  # noqa flake8
     from docutils import io, readers
     from docutils.core import publish_doctree, Publisher
-    from docutils.writers import get_writer_class
-    from docutils.transforms import TransformError, Transform
+    from docutils.transforms import TransformError
 except ImportError as err:
     msg = (
         "%s - You can't use rest2html!"

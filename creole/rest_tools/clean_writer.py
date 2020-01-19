@@ -124,9 +124,9 @@ class CleanHTMLTranslator(html4css1.HTMLTranslator, object):
 
     # set only html_body, we used in rest2html() and don't surround it with <div>
     def depart_document(self, node):
-        self.html_body.extend(self.body_prefix[1:] + self.body_pre_docinfo
-                              + self.docinfo + self.body
-                              + self.body_suffix[:-1])
+        self.html_body.extend(
+            self.body_prefix[1:] + self.body_pre_docinfo + self.docinfo + self.body + self.body_suffix[:-1]
+        )
         assert not self.context, 'len(context) = %s' % len(self.context)
 
     # __________________________________________________________________________
