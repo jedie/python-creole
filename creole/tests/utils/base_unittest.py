@@ -149,7 +149,7 @@ class BaseCreoleTest(MarkupTest):
         self.assertEqual(out_string, creole, msg="html2creole")
 
     def assert_html2creole(self, raw_creole, raw_html, \
-                strip_lines=False, debug=False,
+                strip_lines=False, debug=True,
                 # OLD API:
                 parser_kwargs={}, emitter_kwargs={},
                 # html2creole:
