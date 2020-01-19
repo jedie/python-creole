@@ -12,7 +12,6 @@
 """
 
 
-
 BLOCK_TAGS = (
     "address", "blockquote", "center", "dir", "div", "dl", "fieldset",
     "form",

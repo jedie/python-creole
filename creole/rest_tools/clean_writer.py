@@ -37,7 +37,6 @@ except ImportError:
     raise DocutilsImportError(msg)
 
 
-
 DEBUG = False
 #DEBUG = True
 
@@ -53,6 +52,7 @@ class CleanHTMLWriter(html4css1.Writer):
     """
     This docutils writer will use the CleanHTMLTranslator class below.
     """
+
     def __init__(self):
         html4css1.Writer.__init__(self)
         self.translator_class = CleanHTMLTranslator
@@ -62,6 +62,7 @@ class CleanHTMLTranslator(html4css1.HTMLTranslator, object):
     """
     Clean html translator for docutils system.
     """
+
     def _do_nothing(self, node, *args, **kwargs):
         pass
 
@@ -128,8 +129,7 @@ class CleanHTMLTranslator(html4css1.HTMLTranslator, object):
                               + self.body_suffix[:-1])
         assert not self.context, 'len(context) = %s' % len(self.context)
 
-
-    #__________________________________________________________________________
+    # __________________________________________________________________________
     # Clean table:
 
     visit_thead = _do_nothing
@@ -161,7 +161,7 @@ class CleanHTMLTranslator(html4css1.HTMLTranslator, object):
     def depart_docinfo(self, node):
         self.body.append('</table>\n')
 
-    #__________________________________________________________________________
+    # __________________________________________________________________________
     # Clean image:
 
     depart_figure = _do_nothing
@@ -181,7 +181,6 @@ class CleanHTMLTranslator(html4css1.HTMLTranslator, object):
 
             if align:
                 self.body[-1] = self.body[-1].replace(' />', f' align="{align}" />')
-
 
 
 def rest2html(content, enable_exit_status=None, **kwargs):
@@ -217,7 +216,7 @@ def rest2html(content, enable_exit_status=None, **kwargs):
     )
 #    import pprint
 #    pprint.pprint(parts)
-    return parts["html_body"] # Don't detache the first heading
+    return parts["html_body"]  # Don't detache the first heading
 
 
 if __name__ == '__main__':
@@ -225,11 +224,11 @@ if __name__ == '__main__':
     print(doctest.testmod())
 
 #    print(rest2html(""")
-#+------------+------------+
-#| Headline 1 | Headline 2 |
-#+============+============+
-#| cell one   | cell two   |
-#+------------+------------+
+# +------------+------------+
+# | Headline 1 | Headline 2 |
+# +============+============+
+# | cell one   | cell two   |
+# +------------+------------+
 #    """)
 
 #    print(rest2html(""")

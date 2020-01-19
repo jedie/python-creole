@@ -22,6 +22,7 @@ class DocNode:
 
     The Document tree would be created in the parser and used in the emitter.
     """
+
     def __init__(self, kind='', parent=None, content=None, attrs=[], level=None):
         self.kind = kind
 
@@ -91,7 +92,7 @@ class DebugList(list):
         super(DebugList, self).__init__()
 
     def append(self, item):
-#        for stack_frame in inspect.stack(): print(stack_frame)
+        #        for stack_frame in inspect.stack(): print(stack_frame)
 
         line, method = inspect.stack()[1][2:4]
         msg = "%-8s   append: %-35r (%-15s line:%s)" % (

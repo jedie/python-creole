@@ -97,7 +97,7 @@ def get_long_description(package_root, filename="README.creole", raise_errors=No
         # convert html to ReSt
         long_description_rest = html2rest(
             long_description_html,
-            emitter_kwargs={"unknown_emit":unknown_emit}
+            emitter_kwargs={"unknown_emit": unknown_emit}
         )
     except Exception:
         if raise_errors:
@@ -131,7 +131,9 @@ def _get_long_description(*args, **kwargs):
     else:
         warnings.warn(msg, DeprecationWarning)
     return get_long_description(*args, **kwargs)
-GetLongDescription = _get_long_description # for backward-compatibility
+
+
+GetLongDescription = _get_long_description  # for backward-compatibility
 
 
 if __name__ == "__main__":

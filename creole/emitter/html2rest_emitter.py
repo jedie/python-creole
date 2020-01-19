@@ -20,7 +20,7 @@ from creole.shared.base_emitter import BaseEmitter
 from creole.shared.markup_table import MarkupTable
 
 # Kink of nodes in which hyperlinks are stored in references intead of embedded urls.
-DO_SUBSTITUTION = ("th", "td",) # TODO: In witch kind of node must we also substitude links?
+DO_SUBSTITUTION = ("th", "td",)  # TODO: In witch kind of node must we also substitude links?
 
 
 class Html2restException(Exception):
@@ -32,6 +32,7 @@ class ReStructuredTextEmitter(BaseEmitter):
     Build from a document_tree (html2creole.parser.HtmlParser instance) a
     creole markup text.
     """
+
     def __init__(self, *args, **kwargs):
         super(ReStructuredTextEmitter, self).__init__(*args, **kwargs)
 
@@ -54,7 +55,7 @@ class ReStructuredTextEmitter(BaseEmitter):
         self._substitution_data = []
         return content
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def blockdata_pre_emit(self, node):
         """ pre block -> with newline at the end """
@@ -70,7 +71,7 @@ class ReStructuredTextEmitter(BaseEmitter):
         return f"{node.content}\n\n"
         return node.content
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def emit_children(self, node):
         """Emit all the children of a node."""
@@ -86,7 +87,7 @@ class ReStructuredTextEmitter(BaseEmitter):
         if self._substitution_data:
             # add rest at the end
             if not result.endswith("\n\n"):
-                 result += "\n\n"
+                result += "\n\n"
             result += "%s\n\n" % self._get_block_data()
         return result
 
@@ -102,13 +103,14 @@ class ReStructuredTextEmitter(BaseEmitter):
         return "%s\n\n" % self.emit_children(node)
 
     HEADLINE_DATA = {
-        1:("=", True),
-        2:("-", True),
-        3:("=", False),
-        4:("-", False),
-        5:('`', False),
-        6:("'", False),
+        1: ("=", True),
+        2: ("-", True),
+        3: ("=", False),
+        4: ("-", False),
+        5: ('`', False),
+        6: ("'", False),
     }
+
     def headline_emit(self, node):
         text = self.emit_children(node)
 
@@ -124,21 +126,23 @@ class ReStructuredTextEmitter(BaseEmitter):
         else:
             format = "%(t)s\n%(m)s\n\n"
 
-        return format % {"m":markup, "t":text}
+        return format % {"m": markup, "t": text}
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def _typeface(self, node, key):
         return key + self.emit_children(node) + key
 
     def strong_emit(self, node):
         return self._typeface(node, key="**")
+
     def b_emit(self, node):
         return self._typeface(node, key="**")
     big_emit = strong_emit
 
     def i_emit(self, node):
         return self._typeface(node, key="*")
+
     def em_emit(self, node):
         return self._typeface(node, key="*")
 
@@ -166,7 +170,7 @@ class ReStructuredTextEmitter(BaseEmitter):
 #    def code_emit(self, node):
 #        return self._typeface(node, key="@")
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def hr_emit(self, node):
         return "----\n\n"
@@ -230,12 +234,12 @@ class ReStructuredTextEmitter(BaseEmitter):
 
         title = node.attrs.get("title", "")
         alt = node.attrs.get("alt", "")
-        if len(alt) > len(title): # Use the longest one
+        if len(alt) > len(title):  # Use the longest one
             substitution_text = alt
         else:
             substitution_text = title
 
-        if substitution_text == "": # Use filename as picture text
+        if substitution_text == "":  # Use filename as picture text
             substitution_text = posixpath.basename(src)
 
         old_src = self._get_old_substitution(
@@ -248,12 +252,12 @@ class ReStructuredTextEmitter(BaseEmitter):
 
         return f"|{substitution_text}|"
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def code_emit(self, node):
         return "``%s``" % self._emit_content(node)
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def li_emit(self, node):
         content = self.emit_children(node).strip("\n")
@@ -327,14 +331,14 @@ if __name__ == '__main__':
 
     print(data)
     h2c = HtmlParser(
-#        debug=True
+        #        debug=True
     )
     document_tree = h2c.feed(data)
     h2c.debug()
 
     e = ReStructuredTextEmitter(document_tree,
-        debug=True
-    )
+                                debug=True
+                                )
     content = e.emit()
     print("*" * 79)
     print(content)

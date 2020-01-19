@@ -12,7 +12,6 @@
 """
 
 
-
 import tempfile
 import unittest
 
@@ -112,7 +111,7 @@ class ReSt2HtmlTests(BaseCreoleTest):
             .. include:: doesntexist.txt
         """, """
             <p>Include should be disabled by default.</p>
-        """, report_level=3) # Set log level to "error" to suppress the waring output
+        """, report_level=3)  # Set log level to "error" to suppress the waring output
 
     def test_include_enabled(self):
         test_content = "Content from include file."
@@ -138,7 +137,7 @@ class ReSt2HtmlTests(BaseCreoleTest):
                <hr width=50 size=10>
         """, """
             <p>Raw directive should be disabled by default.</p>
-        """, report_level=3) # Set log level to "error" to suppress the waring output
+        """, report_level=3)  # Set log level to "error" to suppress the waring output
 
     def test_raw_enabled(self):
         self.assert_rest2html("""

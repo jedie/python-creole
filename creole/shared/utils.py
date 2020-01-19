@@ -10,7 +10,6 @@
 """
 
 
-
 import json
 import shlex
 
@@ -28,6 +27,7 @@ KEYWORD_MAP = {
     "False": False,
     "None": None,
 }
+
 
 def string2dict(raw_content):
     """
@@ -83,7 +83,7 @@ def dict2string(d):
 
 def get_pygments_formatter():
     if PYGMENTS:
-        return HtmlFormatter(lineos = True, encoding='utf-8',
+        return HtmlFormatter(lineos=True, encoding='utf-8',
                              style='colorful', outencoding='utf-8',
                              cssclass='pygments')
 
@@ -92,7 +92,7 @@ def get_pygments_lexer(source_type, code):
     if PYGMENTS:
         try:
             return lexers.get_lexer_by_name(source_type)
-        except:
+        except BaseException:
             return lexers.guess_lexer(code)
     else:
         return None

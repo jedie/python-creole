@@ -14,7 +14,6 @@
 """
 
 
-
 import unittest
 
 from creole.emitter.html2rest_emitter import Html2restException
@@ -38,7 +37,7 @@ class ReStTests(BaseCreoleTest):
                 <p>second block, line 1
                 and line 2</p>
             """,
-#            debug=True
+            # debug=True
         )
 
     def test_substitution_image_without_alt_or_title(self):
@@ -213,7 +212,7 @@ class ReStTests(BaseCreoleTest):
 
     def test_duplicate_substitution1(self):
         self.assertRaises(Html2restException, self.assert_html2rest,
-            rest_string="""
+                          rest_string="""
                 +-----------------------------+
                 | this is `same`_ first time. |
                 +-----------------------------+
@@ -222,20 +221,20 @@ class ReStTests(BaseCreoleTest):
 
                 the `same </other/>`_ link?
             """,
-            html_string="""
+                          html_string="""
                 <table>
                 <tr><td>the <a href="/first/">same</a> first time.</td>
                 </tr>
                 </table>
                 <p>the <a href="/other/">same</a> link?</p>
             """,
-#            debug=True
-        )
+                          # debug=True
+                          )
 
     def test_duplicate_link_substitution(self):
         self.assertRaises(Html2restException, self.assert_html2rest,
-#        self.cross_compare(
-            rest_string="""
+                          #        self.cross_compare(
+                          rest_string="""
                 +-----------------------------+
                 | this is `same`_ first time. |
                 +-----------------------------+
@@ -244,33 +243,32 @@ class ReStTests(BaseCreoleTest):
 
                 the `same </other/>`_ link?
             """,
-            html_string="""
+                          html_string="""
                 <table>
                 <tr><td>the <a href="/first/">same</a> first time.</td>
                 </tr>
                 </table>
                 <p>the <a href="/other/">same</a> link?</p>
             """,
-#            debug=True
-        )
+                          # debug=True
+                          )
 
     def test_duplicate_image_substitution(self):
         self.assertRaises(Html2restException, self.assert_html2rest,
-#        self.cross_compare(
-            rest_string="""
+                          #        self.cross_compare(
+                          rest_string="""
                 a |image|...
                 and a other |image|!
 
                 .. |image| image:: /image.png
                 .. |image| image:: /other.png
             """,
-            html_string="""
+                          html_string="""
                 <p>a <img src="/image.png" title="image" alt="image" />...<br />
                 and a other <img src="/other.png" title="image" alt="image" />!</p>
             """,
-#            debug=True
-        )
-
+                          # debug=True
+                          )
 
 
 #    def test_preformat_unknown_nodes(self):
@@ -314,7 +312,6 @@ class ReStTests(BaseCreoleTest):
 #                <p>555<x />666</p>
 #            """,
 #        )
-
 
 if __name__ == '__main__':
     unittest.main()

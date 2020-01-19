@@ -19,7 +19,6 @@
 """
 
 
-
 import warnings
 
 from creole.emitter.creol2html_emitter import HtmlEmitter
@@ -30,18 +29,18 @@ from creole.parser.creol2html_parser import CreoleParser
 from creole.parser.html_parser import HtmlParser
 
 __version__ = "1.4.0"
-__api__ = "1.0" # Creole 1.0 spec - http://wikicreole.org/
+__api__ = "1.0"  # Creole 1.0 spec - http://wikicreole.org/
 
-VERSION_STRING = __version__ # remove in future
-API_STRING = __api__ # remove in future
+VERSION_STRING = __version__  # remove in future
+API_STRING = __api__  # remove in future
 
 
 def creole2html(markup_string, debug=False,
-        parser_kwargs=None, emitter_kwargs=None,
-        block_rules=None, blog_line_breaks=True,
-        macros=None, verbose=None, stderr=None,
-        strict=False,
-    ):
+                parser_kwargs=None, emitter_kwargs=None,
+                block_rules=None, blog_line_breaks=True,
+                macros=None, verbose=None, stderr=None,
+                strict=False,
+                ):
     """
     convert creole markup into html code
 
@@ -58,7 +57,9 @@ def creole2html(markup_string, debug=False,
         "debug": debug,
     }
     if parser_kwargs is not None:
-        warnings.warn("parser_kwargs argument in creole2html would be removed in the future!", PendingDeprecationWarning)
+        warnings.warn(
+            "parser_kwargs argument in creole2html would be removed in the future!",
+            PendingDeprecationWarning)
         parser_kwargs2.update(parser_kwargs)
 
     # Create document tree from creole markup
@@ -73,7 +74,9 @@ def creole2html(markup_string, debug=False,
         "strict": strict,
     }
     if emitter_kwargs is not None:
-        warnings.warn("emitter_kwargs argument in creole2html would be removed in the future!", PendingDeprecationWarning)
+        warnings.warn(
+            "emitter_kwargs argument in creole2html would be removed in the future!",
+            PendingDeprecationWarning)
         emitter_kwargs2.update(emitter_kwargs)
 
     # Build html code from document tree
@@ -92,13 +95,13 @@ def parse_html(html_string, debug=False):
 
 
 def html2creole(
-        html_string,
-        debug=False,
-        parser_kwargs=None,
-        emitter_kwargs=None,
-        unknown_emit=None,
-        strict=False,
-    ):
+    html_string,
+    debug=False,
+    parser_kwargs=None,
+    emitter_kwargs=None,
+    unknown_emit=None,
+    strict=False,
+):
     """
     convert html code into creole markup
 
@@ -106,7 +109,9 @@ def html2creole(
     'This is **creole //markup//**!'
     """
     if parser_kwargs is not None:
-        warnings.warn("parser_kwargs argument in html2creole would be removed in the future!", PendingDeprecationWarning)
+        warnings.warn(
+            "parser_kwargs argument in html2creole would be removed in the future!",
+            PendingDeprecationWarning)
 
     document_tree = parse_html(html_string, debug=debug)
 
@@ -115,7 +120,9 @@ def html2creole(
         "strict": strict,
     }
     if emitter_kwargs is not None:
-        warnings.warn("emitter_kwargs argument in html2creole would be removed in the future!", PendingDeprecationWarning)
+        warnings.warn(
+            "emitter_kwargs argument in html2creole would be removed in the future!",
+            PendingDeprecationWarning)
         emitter_kwargs2.update(emitter_kwargs)
 
     # create creole markup from the document tree
@@ -124,9 +131,9 @@ def html2creole(
 
 
 def html2textile(html_string, debug=False,
-        parser_kwargs=None, emitter_kwargs=None,
-        unknown_emit=None
-    ):
+                 parser_kwargs=None, emitter_kwargs=None,
+                 unknown_emit=None
+                 ):
     """
     convert html code into textile markup
 
@@ -134,7 +141,9 @@ def html2textile(html_string, debug=False,
     'This is *textile __markup__*!'
     """
     if parser_kwargs is not None:
-        warnings.warn("parser_kwargs argument in html2textile would be removed in the future!", PendingDeprecationWarning)
+        warnings.warn(
+            "parser_kwargs argument in html2textile would be removed in the future!",
+            PendingDeprecationWarning)
 
     document_tree = parse_html(html_string, debug=debug)
 
@@ -142,7 +151,9 @@ def html2textile(html_string, debug=False,
         "unknown_emit": unknown_emit,
     }
     if emitter_kwargs is not None:
-        warnings.warn("emitter_kwargs argument in html2textile would be removed in the future!", PendingDeprecationWarning)
+        warnings.warn(
+            "emitter_kwargs argument in html2textile would be removed in the future!",
+            PendingDeprecationWarning)
         emitter_kwargs2.update(emitter_kwargs)
 
     # create textile markup from the document tree
@@ -151,9 +162,9 @@ def html2textile(html_string, debug=False,
 
 
 def html2rest(html_string, debug=False,
-        parser_kwargs=None, emitter_kwargs=None,
-        unknown_emit=None
-    ):
+              parser_kwargs=None, emitter_kwargs=None,
+              unknown_emit=None
+              ):
     """
     convert html code into ReStructuredText markup
 
@@ -169,18 +180,11 @@ def html2rest(html_string, debug=False,
         "unknown_emit": unknown_emit,
     }
     if emitter_kwargs is not None:
-        warnings.warn("emitter_kwargs argument in html2rest would be removed in the future!", PendingDeprecationWarning)
+        warnings.warn(
+            "emitter_kwargs argument in html2rest would be removed in the future!",
+            PendingDeprecationWarning)
         emitter_kwargs2.update(emitter_kwargs)
 
     # create ReStructuredText markup from the document tree
     emitter = ReStructuredTextEmitter(document_tree, debug=debug, **emitter_kwargs2)
     return emitter.emit()
-
-
-
-if __name__ == '__main__':
-    print("runing local doctest...")
-    import doctest
-    print(doctest.testmod(
-#            verbose=True
-    ))

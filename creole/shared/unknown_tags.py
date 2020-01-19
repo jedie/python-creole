@@ -12,7 +12,6 @@
 """
 
 
-
 from xml.sax.saxutils import escape
 
 
@@ -36,7 +35,6 @@ def _mask_content(emitter, node, mask_tag):
     end_tag = f"<<{tag_data['mask_tag']}>></{tag_data['tag']}><</{tag_data['mask_tag']}>>"
 
     return start_tag + content + end_tag
-
 
 
 def raise_unknown_node(emitter, node):

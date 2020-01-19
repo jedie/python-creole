@@ -20,6 +20,7 @@ class BaseEmitter(object):
     Build from a document_tree (html2creole.parser.HtmlParser instance) a
     creole markup text.
     """
+
     def __init__(self, document_tree, unknown_emit=None, debug=False):
         self.root = document_tree
 
@@ -31,20 +32,20 @@ class BaseEmitter(object):
         self.last = None
         self.debugging = debug
 
-        self.deentity = Deentity() # for replacing html entities
+        self.deentity = Deentity()  # for replacing html entities
         self._inner_list = ""
         self._mask_linebreak = False
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def blockdata_pass_emit(self, node):
         return f"{node.content}\n\n"
         return node.content
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def data_emit(self, node):
-        #node.debug()
+        # node.debug()
         return node.content
 
     def entityref_emit(self, node):
@@ -58,7 +59,7 @@ class BaseEmitter(object):
         except KeyError as err:
             if self.debugging:
                 print(f"unknown html entity found: {entity!r}")
-            return f"&{entity}" # FIXME
+            return f"&{entity}"  # FIXME
         except UnicodeDecodeError as err:
             raise UnicodeError(
                 f"Error handling entity {entity!r}: {err}"
@@ -78,7 +79,7 @@ class BaseEmitter(object):
             # entity as a unicode number
             return self.deentity.replace_number(entity)
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def p_emit(self, node):
         return "%s\n\n" % self.emit_children(node)
@@ -89,12 +90,12 @@ class BaseEmitter(object):
         else:
             return "\n"
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def _typeface(self, node, key):
         return key + self.emit_children(node) + key
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def li_emit(self, node):
         content = self.emit_children(node)
@@ -106,7 +107,7 @@ class BaseEmitter(object):
             if not self.last.content or not self.last.content.endswith("\n"):
                 start_newline = True
 
-        if self._inner_list == "": # Start a new list
+        if self._inner_list == "":  # Start a new list
             self._inner_list = list_type
         else:
             self._inner_list += list_type
@@ -115,7 +116,7 @@ class BaseEmitter(object):
 
         self._inner_list = self._inner_list[:-1]
 
-        if self._inner_list == "": # Start a new list
+        if self._inner_list == "":  # Start a new list
             if start_newline:
                 return "\n" + content + "\n\n"
             else:
@@ -123,7 +124,7 @@ class BaseEmitter(object):
         else:
             return content
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def table_emit(self, node):
         self._table = MarkupTable(
@@ -161,7 +162,7 @@ class BaseEmitter(object):
         self._table.add_td(content)
         return ""
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def _emit_content(self, node):
         content = self.emit_children(node)
@@ -176,7 +177,7 @@ class BaseEmitter(object):
     def span_emit(self, node):
         return self._emit_content(node)
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def document_emit(self, node):
         self.last = node
@@ -227,10 +228,10 @@ class BaseEmitter(object):
 #    def emit(self):
 #        """Emit the document represented by self.root DOM tree."""
 #        result = self.emit_node(self.root)
-##        return result.strip() # FIXME
+# return result.strip() # FIXME
 #        return result.rstrip() # FIXME
 
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
 
     def debug_msg(self, method, txt):
         if not self.debugging:

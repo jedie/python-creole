@@ -12,8 +12,6 @@
 """
 
 
-
-
 import json
 
 
@@ -38,6 +36,7 @@ def unittest_macro2(char, text):
     'a|b'
     """
     return char.join(text.split())
+
 
 if __name__ == '__main__':
     import doctest

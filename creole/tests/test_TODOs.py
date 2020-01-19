@@ -45,7 +45,7 @@ class CrossCompareCreoleTests(BaseCreoleTest):
     @unittest.expectedFailure
     def test_cross_paragraphs(self):
         """ TODO: bold/italics cross paragraphs in creole2html
-        see: http://code.google.com/p/python-creole/issues/detail?id=13 
+        see: http://code.google.com/p/python-creole/issues/detail?id=13
         """
         self.assert_creole2html("""
             But, should //not be...
@@ -62,14 +62,14 @@ class CrossCompareCreoleTests(BaseCreoleTest):
         """
         self.cross_compare_creole(r"""
             this is {{{**escaped** inline}}}, isn't it?
-            
+
             {{{
             a **code**
             block
             }}}
         """, """
             <p>this is <tt>**escaped** inline</tt>, isn't it?</p>
-            
+
             <pre>
             a **code**
             block
@@ -92,25 +92,25 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         """ TODO: http://code.google.com/p/python-creole/issues/detail?id=16#c5 """
         self.assert_html2creole(r"""
             **foo**
-            
+
             = one
         """, """
             <b>foo</b>
             <h1>one</h1>
-        """)#, debug=True)
+        """)  # , debug=True)
 
     @unittest.expectedFailure
     def test_no_space_before_blocktag(self):
         """ TODO: Bug in html2creole.strip_html(): Don't add a space before/after block tags """
         self.assert_html2creole(r"""
             **foo**
-            
+
             * one
         """, """
             <b>foo</b>
             <ul><li>one</li></ul>
-        """#, debug=True
-        )
+        """  # , debug=True
+                                )
 
     @unittest.expectedFailure
     def test_escape_char(self):
@@ -144,5 +144,5 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             a <img src="/image.png" alt="PNG pictures" /> !</p>
 
             <p>picture <a href="www.domain.tld"><img src="foo.JPG" alt="Foo"></a> as a link</p>
-        """#, debug=True
-        )
+        """  # , debug=True
+                                )

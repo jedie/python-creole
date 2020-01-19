@@ -26,7 +26,6 @@ except ImportError:
     DOCUTILS = False
 
 
-
 CREOLE_PACKAGE_ROOT = os.path.abspath(os.path.join(os.path.dirname(creole.__file__), ".."))
 TEST_README_DIR = os.path.abspath(os.path.dirname(__file__))
 TEST_README_FILENAME = "test_README.creole"
@@ -37,7 +36,7 @@ TEST_README_FILENAME = "test_README.creole"
 class SetupUtilsTests(BaseCreoleTest):
     def run(self, *args, **kwargs):
         # TODO: Remove if python 2.6 will be not support anymore.
-        if DOCUTILS == False:
+        if not DOCUTILS:
             warnings.warn("Skip SetupUtilsTests, because 'docutils' not installed.")
             return
         return super(SetupUtilsTests, self).run(*args, **kwargs)

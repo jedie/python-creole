@@ -64,7 +64,7 @@ class TableOfContent(object):
 
     def nested_headlines2html(self, nested_headlines, level=0):
         """Convert a python nested list like the one representing the toc to an html equivalent."""
-        indent = "\t"*level
+        indent = "\t" * level
         if isinstance(nested_headlines, str):
             return f'{indent}<li><a href="#{nested_headlines}">{nested_headlines}</a></li>\n'
         elif isinstance(nested_headlines, list):
@@ -91,17 +91,17 @@ class TableOfContent(object):
         return document
 
 
-
 class HtmlEmitter(object):
     """
     Generate HTML output for the document
     tree consisting of DocNodes.
     """
+
     def __init__(self, root, macros=None, verbose=None, stderr=None, strict=False):
 
         self.root = root
 
-        if callable(macros) == True:
+        if callable(macros):
             # was a DeprecationWarning in the past
             raise TypeError("Callable macros are not supported anymore!")
 
@@ -110,7 +110,7 @@ class HtmlEmitter(object):
         else:
             self.macros = macros
 
-        if not "toc" in root.used_macros:
+        if "toc" not in root.used_macros:
             # The document has no <<toc>>
             self.toc = None
         else:
@@ -126,7 +126,6 @@ class HtmlEmitter(object):
                 except AttributeError:
                     self.toc = TableOfContent()
                     self.macros.toc = self.toc
-
 
         if verbose is None:
             self.verbose = 1
@@ -144,7 +143,7 @@ class HtmlEmitter(object):
         """Try to emit whatever text is in the node."""
         try:
             return node.children[0].content or ''
-        except:
+        except BaseException:
             return node.content or ''
 
     def html_escape(self, text):
@@ -210,7 +209,7 @@ class HtmlEmitter(object):
     def table_head_emit(self, node):
         return '\t<th>%s</th>\n' % self.emit_children(node)
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def _typeface(self, node, tag):
         return '<%(tag)s>%(data)s</%(tag)s>' % {
@@ -221,22 +220,29 @@ class HtmlEmitter(object):
     # TODO: How can we generalize that:
     def emphasis_emit(self, node):
         return self._typeface(node, tag="i")
+
     def strong_emit(self, node):
         return self._typeface(node, tag="strong")
+
     def monospace_emit(self, node):
         return self._typeface(node, tag="tt")
+
     def superscript_emit(self, node):
         return self._typeface(node, tag="sup")
+
     def subscript_emit(self, node):
         return self._typeface(node, tag="sub")
+
     def underline_emit(self, node):
         return self._typeface(node, tag="u")
+
     def small_emit(self, node):
         return self._typeface(node, tag="small")
+
     def delete_emit(self, node):
         return self._typeface(node, tag="del")
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def header_emit(self, node):
         header = f'<h{node.level:d}>{self.html_escape(node.content)}</h{node.level:d}>'
@@ -274,12 +280,12 @@ class HtmlEmitter(object):
                     height = int(h_str.strip())
                     return '<img src="%s" title="%s" alt="%s" width="%s" height="%s" />' % (
                         self.attr_escape(target), title, title, width, height)
-            except:
+            except BaseException:
                 pass
         return f'<img src="{self.attr_escape(target)}" title="{text}" alt="{text}" />'
 
     def macro_emit(self, node):
-        #print(node.debug())
+        # print(node.debug())
         macro_name = node.macro_name
         text = node.content
         macro = None
@@ -308,7 +314,7 @@ class HtmlEmitter(object):
             except AttributeError as e:
                 exc_info = sys.exc_info()
 
-        if macro == None:
+        if macro is None:
             return self.error(
                 f"Macro '{macro_name}' doesn't exist",
                 exc_info

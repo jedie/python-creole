@@ -27,14 +27,14 @@ class CreoleCLI(object):
         )
         self.parser.add_argument(
             '--version', action='version',
-            version='%%(prog)s from python-creole v%s' % VERSION_STRING # noqa flynt
+            version='%%(prog)s from python-creole v%s' % VERSION_STRING  # noqa flynt
         )
         self.parser.add_argument("sourcefile", help="source file to convert")
         self.parser.add_argument("destination", help="Output filename")
         self.parser.add_argument("--encoding",
-            default="utf-8",
-            help="Codec for read/write file (default encoding: utf-8)"
-        )
+                                 default="utf-8",
+                                 help="Codec for read/write file (default encoding: utf-8)"
+                                 )
 
         args = self.parser.parse_args()
 
@@ -58,11 +58,14 @@ class CreoleCLI(object):
 def cli_creole2html():
     CreoleCLI(creole2html)
 
+
 def cli_html2creole():
     CreoleCLI(html2creole)
 
+
 def cli_html2rest():
     CreoleCLI(html2rest)
+
 
 def cli_html2textile():
     CreoleCLI(html2textile)

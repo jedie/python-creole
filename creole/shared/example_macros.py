@@ -24,7 +24,6 @@ except ImportError:
     PYGMENTS = False
 
 
-
 def html(text):
     """
     Macro tag <<html>>...<</html>>
@@ -63,7 +62,7 @@ def code(ext, text):
 
     try:
         highlighted_text = highlight(text, lexer, formatter).decode('utf-8')
-    except:
+    except BaseException:
         highlighted_text = pre(text)
     finally:
         return highlighted_text.replace('\n', '<br />\n')

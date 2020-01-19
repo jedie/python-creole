@@ -10,7 +10,6 @@
 """
 
 
-
 import os
 import subprocess
 import sys
@@ -70,7 +69,7 @@ class CreoleCLITests(BaseCreoleTest, SubprocessMixin, CliTestMixins):
         dest_file = tempfile.NamedTemporaryFile()
         destfilepath = dest_file.name
 
-        stdout=(
+        stdout = (
             "Convert '%(src)s' to '%(dst)s' with %(prog)s (codec: utf-8)\n"
             "done. '%(dst)s' created."
         ) % {
@@ -98,7 +97,6 @@ class CreoleCLITests(BaseCreoleTest, SubprocessMixin, CliTestMixins):
                 retcode=0,
                 stdout=version_info,
             )
-
 
 
 class CreoleCLITestsDirect(BaseCreoleTest, CliTestMixins):

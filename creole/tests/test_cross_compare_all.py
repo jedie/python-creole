@@ -19,7 +19,6 @@
 """
 
 
-
 import unittest
 
 from creole.tests.utils.base_unittest import BaseCreoleTest
@@ -30,6 +29,7 @@ class CrossCompareTests(BaseCreoleTest):
     Cross compare tests for creol2html _and_ html2creole with the same test
     strings. Used BaseCreoleTest.assertCreole()
     """
+
     def test_bold_italics(self):
         self.cross_compare(
             creole_string=r"""
@@ -372,6 +372,7 @@ class CrossCompareTests(BaseCreoleTest):
 #            """
 #        )
 
+
     def test_pre1(self):
         self.cross_compare(
             creole_string=r"""
@@ -389,7 +390,7 @@ class CrossCompareTests(BaseCreoleTest):
                 * no list
                 </pre>
             """)
-        self.cross_compare(# FIXME: Not the best html2rest output
+        self.cross_compare(  # FIXME: Not the best html2rest output
             rest_string="""
                 Preformatting text:
 
@@ -443,6 +444,7 @@ class CrossCompareTests(BaseCreoleTest):
 #
 #                <p>end</p>
 #            """)
+
 
     def test_pre_contains_braces(self):
         self.cross_compare(

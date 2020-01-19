@@ -17,7 +17,7 @@ entities_rules = '|'.join([
     r"(&\#x(?P<hex>[a-fA-F0-9]+);)",
     r"(&(?P<named>[a-zA-Z]+);)",
 ])
-#print(entities_rules)
+# print(entities_rules)
 entities_regex = re.compile(
     entities_rules, re.VERBOSE | re.UNICODE | re.MULTILINE
 )
@@ -41,6 +41,7 @@ class Deentity(object):
     >>> d.replace_named("amp")
     '&'
     """
+
     def replace_number(self, text):
         """ unicode number entity """
         unicode_no = int(text)

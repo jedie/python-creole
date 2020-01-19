@@ -14,7 +14,6 @@
 """
 
 
-
 import unittest
 
 from creole.shared.unknown_tags import preformat_unknown_nodes
@@ -35,7 +34,7 @@ class TextileTests(BaseCreoleTest):
                 <p>less-than sign: &lt;<br />
                 greater-than sign: &gt;</p>
             """,
-#            debug=True
+            # debug=True
         )
 
     def test_preformat_unknown_nodes(self):
@@ -55,7 +54,7 @@ class TextileTests(BaseCreoleTest):
 
                 <p>555<x />666</p>
             """,
-            emitter_kwargs={"unknown_emit":preformat_unknown_nodes}
+            emitter_kwargs={"unknown_emit": preformat_unknown_nodes}
         )
 
     def test_transparent_unknown_nodes(self):

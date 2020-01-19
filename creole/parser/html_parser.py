@@ -151,8 +151,7 @@ class HtmlParser(HTMLParser):
 
         return self.root
 
-
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
 
     def _upto(self, node, kinds):
         """
@@ -172,7 +171,7 @@ class HtmlParser(HTMLParser):
         self.cur = self._upto(self.cur, kinds)
         self.debug_msg("go up to", self.cur)
 
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
 
     def handle_starttag(self, tag, attrs):
         self.debug_msg("starttag", f"{tag!r} atts: {attrs}")
@@ -222,7 +221,7 @@ class HtmlParser(HTMLParser):
                 f"{tag}_{attr_dict['type']}",
                 self.cur,
                 content=self.blockdata[id],
-#                attrs = attr_dict
+                #                attrs = attr_dict
             )
         else:
             DocNode(tag, self.cur, None, attrs)
@@ -233,7 +232,7 @@ class HtmlParser(HTMLParser):
 
         self.debug_msg("endtag", f"{tag!r}")
 
-        if tag == "br": # handled in starttag
+        if tag == "br":  # handled in starttag
             return
 
         self.debug_msg("starttag", "%r" % self.get_starttag_text())
@@ -246,7 +245,7 @@ class HtmlParser(HTMLParser):
         else:
             self.cur = self.cur.parent
 
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
 
     def debug_msg(self, method, txt):
         if not self.debugging:
@@ -259,13 +258,14 @@ class HtmlParser(HTMLParser):
         """
         print("_" * 80)
 
-        if start_node == None:
+        if start_node is None:
             start_node = self.root
             print("  document tree:")
         else:
             print(f"  tree from {start_node}:")
 
         print("=" * 80)
+
         def emit(node, ident=0):
             for child in node.children:
                 txt = "%s%s" % (" " * ident, child.kind)
@@ -276,7 +276,7 @@ class HtmlParser(HTMLParser):
                 if child.attrs:
                     txt += f" - attrs: {child.attrs!r}"
 
-                if child.level != None:
+                if child.level is not None:
                     txt += f" - level: {child.level!r}"
 
                 print(txt)
@@ -291,7 +291,7 @@ if __name__ == '__main__':
 
 #    p = HtmlParser(debug=True)
 #    p.feed("""\
-#<p><span>in span</span><br />
-#<code>in code</code></p>
-#""")
+# <p><span>in span</span><br />
+# <code>in code</code></p>
+# """)
 #    p.debug()

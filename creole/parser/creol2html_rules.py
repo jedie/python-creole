@@ -10,7 +10,6 @@
 """
 
 
-
 import re
 
 
@@ -26,12 +25,12 @@ class InlineRules(object):
             (?P<url_target> (?P<url_proto> %s )://[^$\s]+ )
         )''' % proto
     # Original uri matching regex inherited from MoinMoin code.
-    #url = r'''(?P<url>
-            #(^ | (?<=\s | [.,:;!?()/=]))
-            #(?P<escaped_url>~)?
-            #(?P<url_target> (?P<url_proto> %s ):\S+? )
-            #($ | (?=\s | [,.:;!?()] (\s | $)))
-        #)''' % proto
+    # url = r'''(?P<url>
+    # (^ | (?<=\s | [.,:;!?()/=]))
+    # (?P<escaped_url>~)?
+    # (?P<url_target> (?P<url_proto> %s ):\S+? )
+    # ($ | (?=\s | [,.:;!?()] (\s | $)))
+    # )''' % proto
     link = r'''(?P<link>
             \[\[
             (?P<link_target>.+?) \s*
@@ -58,7 +57,7 @@ class InlineRules(object):
             (\| \s* (?P<image_text>.+?) \s*)?
             }}
         )'''
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     # a macro like: <<macro>>text<</macro>>
     macro_inline = r'''
@@ -98,10 +97,6 @@ class InlineRules(object):
     char = r'(?P<char> . )'
 
 
-
-
-
-
 class BlockRules(object):
     """
     All used block rules.
@@ -125,7 +120,7 @@ class BlockRules(object):
         )
     '''
 
-    line = r'''(?P<line> ^\s*$ )''' # empty line that separates paragraphs
+    line = r'''(?P<line> ^\s*$ )'''  # empty line that separates paragraphs
 
     head = r'''(?P<head>
         ^
@@ -133,7 +128,7 @@ class BlockRules(object):
         (?P<head_text> .*? )
         (=|\s)*?$
     )'''
-    separator = r'(?P<separator> ^ \s* ----) [ \t]* $' # horizontal line
+    separator = r'(?P<separator> ^ \s* ----) [ \t]* $'  # horizontal line
 
     pre_block = r'''(?P<pre_block>
             ^{{{ \s* $
@@ -174,9 +169,6 @@ class BlockRules(object):
         )
 
 
-
-
-
 class SpecialRules(object):
     """
     re rules witch not directly used as inline/block rules.
@@ -195,11 +187,11 @@ class SpecialRules(object):
                 (?P<cell> (  %s | [^|])+ )
             ) \s*
         ''' % '|'.join([
-            InlineRules.link,
-            InlineRules.macro_inline, InlineRules.macro_tag,
-            InlineRules.image,
-            InlineRules.pre_inline
-        ])
+        InlineRules.link,
+        InlineRules.macro_inline, InlineRules.macro_tag,
+        InlineRules.image,
+        InlineRules.pre_inline
+    ])
 
     # For pre escaping, in creole 1.0 done with ~:
     pre_escape = r' ^(?P<indent>\s*) ~ (?P<rest> \}\}\} \s*) $'
@@ -236,7 +228,7 @@ def _verify_rules(rules, flags):
     rule_list = []
     for rule in rules:
         try:
-#            print(rule)
+            #            print(rule)
             re.compile(rule, flags)
 
             # Try to merge the rules. e.g. Check if group named double used.
