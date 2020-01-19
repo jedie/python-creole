@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
 """
     A clean reStructuredText html writer
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -12,17 +9,14 @@
     http://www.arnebrodowski.de/blog/write-your-own-restructuredtext-writer.html
     https://github.com/alex-morega/docutils-plainhtml/blob/master/plain_html_writer.py
 
-    :copyleft: 2011-2013 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2011-2020 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 
-
-#import warnings
 import sys
 
 from creole.exceptions import DocutilsImportError
-from creole.py3compat import TEXT_TYPE, PY3
 
 try:
     import docutils
@@ -95,9 +89,9 @@ class CleanHTMLTranslator(html4css1.HTMLTranslator, object):
                 continue
 
             if isinstance(value, list):
-                value = ' '.join([TEXT_TYPE(x) for x in value])
+                value = ' '.join([str(x) for x in value])
 
-            part = '%s="%s"' % (name.lower(), self.attval(TEXT_TYPE(value)))
+            part = '%s="%s"' % (name.lower(), self.attval(str(value)))
             parts.append(part)
 
         if DEBUG:
@@ -205,10 +199,7 @@ def rest2html(content, enable_exit_status=None, **kwargs):
     ...
     SystemExit: 13
     """
-    if not PY3:
-        content = unicode(content)
-
-    assert isinstance(content, TEXT_TYPE), "rest2html content must be %s, but it's %s" % (TEXT_TYPE, type(content))
+    assert isinstance(content, str), "rest2html content must be %s, but it's %s" % (str, type(content))
 
     settings_overrides = {
         "input_encoding": "unicode",

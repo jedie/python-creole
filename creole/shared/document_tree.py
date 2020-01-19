@@ -6,16 +6,13 @@
     ~~~~~~~~~~~~~
 
 
-    :copyleft: 2008-2011 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2008-2020 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
-
-
 
 import warnings
 import inspect
 
-from creole.py3compat import TEXT_TYPE
 from creole.shared.utils import dict2string
 
 
@@ -35,7 +32,7 @@ class DocNode:
 
         self.attrs = dict(attrs)
         if content:
-            assert isinstance(content, TEXT_TYPE), "Given content %r is not unicode, it's type: %s" % (
+            assert isinstance(content, str), "Given content %r is not unicode, it's type: %s" % (
                 content, type(content)
             )
 

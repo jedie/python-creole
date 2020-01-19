@@ -1,20 +1,16 @@
-#!/usr/bin/env python
-# coding: utf-8
 
 """
     Base document tree emitter
     ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-    :copyleft: 2008-2011 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2008-2020 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 
-
 from creole.parser.html_parser_config import BLOCK_TAGS
 from creole.html_tools.deentity import Deentity
-from creole.py3compat import TEXT_TYPE
 from creole.shared.markup_table import MarkupTable
 from creole.shared.unknown_tags import transparent_unknown_nodes
 
@@ -196,7 +192,7 @@ class BaseEmitter(object):
         result = []
         for child in node.children:
             content = self.emit_node(child)
-            assert isinstance(content, TEXT_TYPE)
+            assert isinstance(content, str)
             result.append(content)
         return result
 
@@ -220,11 +216,11 @@ class BaseEmitter(object):
 
         if emit_method:
             content = emit_method(node)
-            if not isinstance(content, TEXT_TYPE):
+            if not isinstance(content, str):
                 unicode_error(method_name, emit_method, node, content)
         else:
             content = self._unknown_emit(self, node)
-            if not isinstance(content, TEXT_TYPE):
+            if not isinstance(content, str):
                 unicode_error(method_name, self._unknown_emit, node, content)
 
         self.last = node

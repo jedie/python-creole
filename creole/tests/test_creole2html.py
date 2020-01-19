@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
 
 """
     creole2html unittest
@@ -12,7 +10,7 @@
 
     Test the creole markup.
 
-    :copyleft: 2008-2014 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2008-2020 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -20,12 +18,9 @@
 
 import sys
 import unittest
-import warnings
 
-try:
-    from StringIO import StringIO
-except ImportError:
-    from io import StringIO # python 3
+
+from io import StringIO
 
 try:
     from pygments import highlight
@@ -35,7 +30,6 @@ except ImportError:
 
 from creole.tests.utils.base_unittest import BaseCreoleTest
 from creole.tests import test_macros
-from creole.py3compat import PY3
 
 from creole import creole2html
 from creole.shared import example_macros

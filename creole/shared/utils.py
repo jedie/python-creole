@@ -5,7 +5,7 @@
     python creole utilities
     ~~~~~~~~~~~~~~~~~~~~~~~
 
-    :copyleft: 2011-2014 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2011-2020 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -14,7 +14,7 @@
 import shlex
 import json
 
-from creole.py3compat import TEXT_TYPE, PY3
+
 
 try:
     from pygments import lexers
@@ -31,7 +31,7 @@ KEYWORD_MAP = {
     "None": None,
 }
 
-def string2dict(raw_content, encoding="utf-8"):
+def string2dict(raw_content):
     """
     convert a string into a dictionary. e.g.:
 
@@ -43,10 +43,6 @@ def string2dict(raw_content, encoding="utf-8"):
 
     See test_creole2html.TestString2Dict()
     """
-    if not PY3 and isinstance(raw_content, TEXT_TYPE):
-        # shlex.split doesn't work with unicode?!?
-        raw_content = raw_content.encode(encoding)
-
     parts = shlex.split(raw_content)
 
     result = {}

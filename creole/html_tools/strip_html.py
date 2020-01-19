@@ -58,8 +58,6 @@ def strip_html(html_code):
 
     >>> strip_html('<p>a <img src="/image.jpg" /> image.</p>')
     '<p>a <img src="/image.jpg" /> image.</p>'
-
-
     """
 
     def strip_tag(match):

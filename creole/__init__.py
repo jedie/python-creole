@@ -28,7 +28,6 @@ from creole.emitter.html2creole_emitter import CreoleEmitter
 from creole.emitter.html2rest_emitter import ReStructuredTextEmitter
 from creole.emitter.html2textile_emitter import TextileEmitter
 from creole.parser.html_parser import HtmlParser
-from creole.py3compat import TEXT_TYPE
 
 
 __version__ = "1.4.0"
@@ -52,7 +51,7 @@ def creole2html(markup_string, debug=False,
 
     Info: parser_kwargs and emitter_kwargs are deprecated
     """
-    assert isinstance(markup_string, TEXT_TYPE), "given markup_string must be unicode!"
+    assert isinstance(markup_string, str), "given markup_string must be unicode!"
 
     parser_kwargs2 = {
         "block_rules": block_rules,
@@ -84,7 +83,7 @@ def creole2html(markup_string, debug=False,
 
 def parse_html(html_string, debug=False):
     """ create the document tree from html code """
-    assert isinstance(html_string, TEXT_TYPE), "given html_string must be unicode!"
+    assert isinstance(html_string, str), "given html_string must be unicode!"
 
     h2c = HtmlParser(debug=debug)
     document_tree = h2c.feed(html_string)

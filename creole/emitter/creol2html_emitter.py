@@ -1,14 +1,10 @@
-# coding: utf-8
-
 
 """
     WikiCreole to HTML converter
 
-    :copyleft: 2008-2015 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2008-2020 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
-
-
 
 
 import json
@@ -17,7 +13,6 @@ import sys
 import traceback
 
 from creole.parser.creol2html_parser import CreoleParser
-from creole.py3compat import TEXT_TYPE
 from creole.shared.utils import string2dict
 
 
@@ -70,7 +65,7 @@ class TableOfContent(object):
     def nested_headlines2html(self, nested_headlines, level=0):
         """Convert a python nested list like the one representing the toc to an html equivalent."""
         indent = "\t"*level
-        if isinstance(nested_headlines, TEXT_TYPE):
+        if isinstance(nested_headlines, str):
             return '%s<li><a href="#%s">%s</a></li>\n' % (indent, nested_headlines, nested_headlines)
         elif isinstance(nested_headlines, list):
             html = '%s<ul>\n' % indent
@@ -359,7 +354,7 @@ class HtmlEmitter(object):
                 exc_info=sys.exc_info()
             )
 
-        if not isinstance(result, TEXT_TYPE):
+        if not isinstance(result, str):
             msg = "Macro '%s' doesn't return a unicode string!" % macro_name
             if self.verbose > 1:
                 msg += " - returns: %r, type %r" % (result, type(result))

@@ -1,6 +1,3 @@
-# coding: utf-8
-
-
 """
     Creole wiki markup parser
 
@@ -18,18 +15,15 @@
       unrecognized schemes (like wtf://server/path) triggering italic rendering
       for the rest of the paragraph.
 
-    :copyleft: 2008-2011 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2008-2020 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
-
-
 
 import re
 from pprint import pformat
 
 from creole.parser.creol2html_rules import BlockRules, INLINE_FLAGS, INLINE_RULES, \
     SpecialRules, InlineRules
-from creole.py3compat import TEXT_TYPE
 from creole.shared.document_tree import DocNode
 
 
@@ -61,7 +55,7 @@ class CreoleParser(object):
 
 
     def __init__(self, raw, block_rules=None, blog_line_breaks=True, debug=False):
-        assert isinstance(raw, TEXT_TYPE)
+        assert isinstance(raw, str)
         self.raw = raw
 
         if block_rules is None:

@@ -1,28 +1,21 @@
-#!/usr/bin/env python
-# coding: utf-8
 
 """
     python-creole
     ~~~~~~~~~~~~~
 
-
-    :copyleft: 2008-2011 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2008-2020 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-
-
 import re
 import warnings
+from html.parser import HTMLParser
 
-from creole.parser.html_parser_config import BLOCK_TAGS, IGNORE_TAGS
 from creole.html_tools.strip_html import strip_html
-from creole.py3compat import TEXT_TYPE, BINARY_TYPE
-from creole.shared.document_tree import DocNode, DebugList
-from creole.shared.html_parser import HTMLParser
+from creole.parser.html_parser_config import BLOCK_TAGS, IGNORE_TAGS
+from creole.shared.document_tree import DebugList, DocNode
 
-
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 block_re = re.compile(r'''
     ^<pre> \s* $
@@ -44,7 +37,7 @@ inline_re = re.compile(r'''
 
 headline_tag_re = re.compile(r"h(\d)", re.UNICODE)
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 
 class HtmlParser(HTMLParser):
@@ -83,7 +76,7 @@ class HtmlParser(HTMLParser):
     _inline_placeholder = "inlinedata"
 
     def __init__(self, debug=False):
-        HTMLParser.__init__(self)
+        super(HtmlParser, self).__init__(convert_charrefs=False)
 
         self.debugging = debug
         if self.debugging:
@@ -104,7 +97,7 @@ class HtmlParser(HTMLParser):
     def _pre_cut(self, data, type, placeholder):
         if self.debugging:
             print("append blockdata: %r" % data)
-        assert isinstance(data, TEXT_TYPE), "blockdata is not unicode"
+        assert isinstance(data, str), "blockdata is not unicode"
         self.blockdata.append(data)
         id = len(self.blockdata) - 1
         return '<%s type="%s" id="%s" />' % (placeholder, type, id)
@@ -133,7 +126,7 @@ class HtmlParser(HTMLParser):
 #        data = match.group("data")
 
     def feed(self, raw_data):
-        assert isinstance(raw_data, TEXT_TYPE), "feed data must be unicode!"
+        assert isinstance(raw_data, str), "feed data must be unicode!"
         data = raw_data.strip()
 
         # cut out <pre> and <tt> areas block tag areas
@@ -208,8 +201,7 @@ class HtmlParser(HTMLParser):
 
     def handle_data(self, data):
         self.debug_msg("data", "%r" % data)
-        if isinstance(data, BINARY_TYPE):
-            data = unicode(data)
+        assert isinstance(data, str)
         DocNode("data", self.cur, content=data)
 
     def handle_charref(self, name):
