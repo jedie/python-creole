@@ -16,7 +16,6 @@ import posixpath
 from creole.shared.base_emitter import BaseEmitter
 
 
-
 class TextileEmitter(BaseEmitter):
     """
     Build from a document_tree (html2creole.parser.HtmlParser instance) a
@@ -31,64 +30,70 @@ class TextileEmitter(BaseEmitter):
 
     def emit(self):
         """Emit the document represented by self.root DOM tree."""
-        return self.emit_node(self.root).strip() # FIXME
+        return self.emit_node(self.root).strip()  # FIXME
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def blockdata_pre_emit(self, node):
         """ pre block -> with newline at the end """
         return "<pre>%s</pre>\n" % self.deentity.replace_all(node.content)
+
     def inlinedata_pre_emit(self, node):
         """ a pre inline block -> no newline at the end """
         return "<pre>%s</pre>" % self.deentity.replace_all(node.content)
 
     def blockdata_pass_emit(self, node):
-        return "%s\n\n" % node.content
+        return f"{node.content}\n\n"
         return node.content
 
-
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def p_emit(self, node):
         return "%s\n\n" % self.emit_children(node)
 
     def headline_emit(self, node):
-        return "h%i. %s\n\n" % (node.level, self.emit_children(node))
+        return f"h{node.level:d}. {self.emit_children(node)}\n\n"
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def _typeface(self, node, key):
         return key + self.emit_children(node) + key
 
     def strong_emit(self, node):
         return self._typeface(node, key="*")
+
     def b_emit(self, node):
         return self._typeface(node, key="**")
     big_emit = strong_emit
 
     def i_emit(self, node):
         return self._typeface(node, key="__")
+
     def em_emit(self, node):
         return self._typeface(node, key="_")
 
     def sup_emit(self, node):
         return self._typeface(node, key="^")
+
     def sub_emit(self, node):
         return self._typeface(node, key="~")
+
     def del_emit(self, node):
         return self._typeface(node, key="-")
 
     def cite_emit(self, node):
         return self._typeface(node, key="??")
+
     def ins_emit(self, node):
         return self._typeface(node, key="+")
 
     def span_emit(self, node):
         return self._typeface(node, key="%")
+
     def code_emit(self, node):
         return self._typeface(node, key="@")
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def hr_emit(self, node):
         return "----\n\n"
@@ -96,7 +101,7 @@ class TextileEmitter(BaseEmitter):
     def a_emit(self, node):
         link_text = self.emit_children(node)
         url = node.attrs["href"]
-        return '"%s":%s' % (link_text, url)
+        return f'"{link_text}":{url}'
 
     def img_emit(self, node):
         src = node.attrs["src"]
@@ -106,29 +111,23 @@ class TextileEmitter(BaseEmitter):
 
         title = node.attrs.get("title", "")
         alt = node.attrs.get("alt", "")
-        if len(alt) > len(title): # Use the longest one
+        if len(alt) > len(title):  # Use the longest one
             text = alt
         else:
             text = title
 
-        if text == "": # Use filename as picture text
+        if text == "":  # Use filename as picture text
             text = posixpath.basename(src)
 
-        return "!%s(%s)!" % (src, text)
+        return f"!{src}({text})!"
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def ul_emit(self, node):
         return self._list_emit(node, list_type="*")
 
     def ol_emit(self, node):
         return self._list_emit(node, list_type="#")
-
-
-
-
-
-
 
 
 if __name__ == '__main__':
@@ -160,8 +159,8 @@ if __name__ == '__main__':
     h2c.debug()
 
     e = TextileEmitter(document_tree,
-        debug=True
-    )
+                       debug=True
+                       )
     content = e.emit()
     print("*" * 79)
     print(content)

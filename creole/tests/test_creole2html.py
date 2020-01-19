@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
 
 """
     creole2html unittest
@@ -12,40 +10,33 @@
 
     Test the creole markup.
 
-    :copyleft: 2008-2014 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2008-2020 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 
-
 import sys
 import unittest
-import warnings
-
-try:
-    from StringIO import StringIO
-except ImportError:
-    from io import StringIO # python 3
-
-try:
-    from pygments import highlight
-    PYGMENTS = True
-except ImportError:
-    PYGMENTS = False
-
-from creole.tests.utils.base_unittest import BaseCreoleTest
-from creole.tests import test_macros
-from creole.py3compat import PY3
+from io import StringIO
 
 from creole import creole2html
 from creole.shared import example_macros
-from creole.shared.utils import string2dict, dict2string
+from creole.shared.utils import dict2string, string2dict
+from creole.tests import test_macros
+from creole.tests.utils.base_unittest import BaseCreoleTest
+
+try:
+    import pygments  # noqa flake8
+    PYGMENTS = True
+except ImportError:
+    PYGMENTS = False
 
 
 class TestCreole2html(BaseCreoleTest):
     """
     Tests around creole2html API and macro function.
     """
+
     def setUp(self):
         # For fallback tests
         example_macros.PYGMENTS = PYGMENTS
@@ -58,8 +49,8 @@ class TestCreole2html(BaseCreoleTest):
         creole2html(
             markup_string="<<notexist1>><<notexist2>><</notexist2>>",
             emitter_kwargs={
-                "verbose":2,
-                "stderr":my_stderr,
+                "verbose": 2,
+                "stderr": my_stderr,
             }
         )
         error_msg = my_stderr.getvalue()
@@ -72,11 +63,11 @@ class TestCreole2html(BaseCreoleTest):
             "Traceback", "'notexist1'", "'notexist2'",
         )
         for part in must_have:
-            tb_lines = [" -"*40]
+            tb_lines = [" -" * 40]
             tb_lines += error_msg.splitlines()
-            tb_lines += [" -"*40]
+            tb_lines += [" -" * 40]
             tb = "\n".join([" >>> %s" % l for l in tb_lines])
-            msg = "%r not found in:\n%s" % (part, tb)
+            msg = f"{part!r} not found in:\n{tb}"
             # TODO: use assertIn if python 2.6 will be not support anymore.
             if part not in error_msg:
                 raise self.failureException(msg)
@@ -88,9 +79,9 @@ class TestCreole2html(BaseCreoleTest):
         html = creole2html(
             markup_string="<<html>><p>foo</p><</html>><bar?>",
             emitter_kwargs={
-                "verbose":1,
-                "macros":example_macros,
-                "stderr":sys.stderr,
+                "verbose": 1,
+                "macros": example_macros,
+                "stderr": sys.stderr,
             }
         )
         self.assertEqual(html, '<p>foo</p>\n<p>&lt;bar?&gt;</p>')
@@ -99,9 +90,9 @@ class TestCreole2html(BaseCreoleTest):
         html = creole2html(
             markup_string="<<html>>{{{&lt;nocode&gt;}}}<</html>>",
             emitter_kwargs={
-                "verbose":1,
-                "macros":example_macros,
-                "stderr":sys.stderr,
+                "verbose": 1,
+                "macros": example_macros,
+                "stderr": sys.stderr,
             }
         )
         self.assertEqual(html, '{{{&lt;nocode&gt;}}}')
@@ -110,9 +101,9 @@ class TestCreole2html(BaseCreoleTest):
         html = creole2html(
             markup_string="<<html>>1<</html>><<html>>2<</html>>",
             emitter_kwargs={
-                "verbose":1,
-                "macros":example_macros,
-                "stderr":sys.stderr,
+                "verbose": 1,
+                "macros": example_macros,
+                "stderr": sys.stderr,
             }
         )
         self.assertEqual(html, '1\n2')
@@ -127,9 +118,9 @@ class TestCreole2html(BaseCreoleTest):
         html = creole2html(
             markup_string="<<test bar='b' foo='a'>>c<</test>>",
             emitter_kwargs={
-                "verbose":1,
-                "macros":{"test":test},
-                "stderr":sys.stderr,
+                "verbose": 1,
+                "macros": {"test": test},
+                "stderr": sys.stderr,
             }
         )
         self.assertEqual(html, 'a|b|c')
@@ -142,14 +133,14 @@ class TestCreole2html(BaseCreoleTest):
             pass
 
         self.assertRaises(TypeError,
-            creole2html,
-            markup_string="<<test no=1 arg2='foo'>>bar<</test>>",
-            emitter_kwargs={
-                "verbose":1,
-                "macros":testmacro,
-                "stderr":sys.stderr,
-            }
-        )
+                          creole2html,
+                          markup_string="<<test no=1 arg2='foo'>>bar<</test>>",
+                          emitter_kwargs={
+                              "verbose": 1,
+                              "macros": testmacro,
+                              "stderr": sys.stderr,
+                          }
+                          )
 
     def test_macro_wrong_arguments_with_error_report(self):
         """
@@ -162,14 +153,14 @@ class TestCreole2html(BaseCreoleTest):
         html = creole2html(
             markup_string="<<test bar='foo'>>c<</test>>",
             emitter_kwargs={
-                "verbose":2,
-                "macros":{"test":test},
-                "stderr":my_stderr,
+                "verbose": 2,
+                "macros": {"test": test},
+                "stderr": my_stderr,
             }
         )
         self.assertEqual(html,
-            "[Error: Macro 'test' error: test() got an unexpected keyword argument 'bar']"
-        )
+                         "[Error: Macro 'test' error: test() got an unexpected keyword argument 'bar']"
+                         )
         error_msg = my_stderr.getvalue()
 
         # Check traceback information into our stderr handler
@@ -180,7 +171,6 @@ class TestCreole2html(BaseCreoleTest):
         )
         for part in must_have:
             self.assertIn(part, error_msg)
-
 
     def test_macro_wrong_arguments_quite(self):
         """
@@ -193,14 +183,14 @@ class TestCreole2html(BaseCreoleTest):
         html = creole2html(
             markup_string="<<test bar='foo'>>c<</test>>",
             emitter_kwargs={
-                "verbose":1,
-                "macros":{"test":test},
-                "stderr":my_stderr,
+                "verbose": 1,
+                "macros": {"test": test},
+                "stderr": my_stderr,
             }
         )
         self.assertEqual(html,
-            "[Error: Macro 'test' error: test() got an unexpected keyword argument 'bar']"
-        )
+                         "[Error: Macro 'test' error: test() got an unexpected keyword argument 'bar']"
+                         )
         error_msg = my_stderr.getvalue()
         self.assertEqual(error_msg, "")
 
@@ -220,8 +210,8 @@ class TestCreole2html(BaseCreoleTest):
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;hello world&#39;</span><span class="p">)</span><br />
             </pre></div><br />
             """,
-            macros={'code': example_macros.code}
-        )
+                                macros={'code': example_macros.code}
+                                )
 
     def test_code_macro_fallback(self):
         # force to use fallback. Will be reset in self.setUp()
@@ -258,8 +248,6 @@ class TestCreole2html(BaseCreoleTest):
         )
 
 
-
-
 class TestCreole2htmlMarkup(BaseCreoleTest):
 
     def test_creole_basic(self):
@@ -277,7 +265,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
         out_string = creole2html("first\r\nsecond")
         self.assertEqual(out_string, "<p>first<br />\nsecond</p>")
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def test_creole_linebreak(self):
         self.assert_creole2html(r"""
@@ -391,8 +379,8 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             the|text
             <p>the end</p>
         """,
-            macros=test_macros,
-        )
+                                macros=test_macros,
+                                )
 
     def test_macro_html1(self):
         self.assert_creole2html(r"""
@@ -408,8 +396,8 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
 
                 <p>inline: &#x7B;...&#x7D; code</p>
             """,
-            macros=example_macros,
-        )
+                                macros=example_macros,
+                                )
 
     def test_macro_not_exist1(self):
         """
@@ -439,7 +427,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
 
         self.assert_creole2html(source_string, should_string, verbose=1)
 
-        #----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
         # Test with verbose=2 ans a StringIO stderr handler
 
     def test_wrong_macro_syntax(self):
@@ -450,8 +438,8 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
                 <p>wrong macro line:<br />
                 [Error: Wrong macro arguments: ">Some funky page summary.<</summary" for macro 'summary' (maybe wrong macro tag syntax?)]
                 </p>
-            """, # verbose=True
-        )
+            """,  # verbose=True
+                                )
 
     def test_macro_not_exist2(self):
         """
@@ -473,8 +461,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             <p>inline macro:<br />
             </p>
         """, verbose=False
-        )
-
+                                )
 
     def test_toc_simple(self):
         """
@@ -799,7 +786,7 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
             """, """
                 <p>a link to the <a href="http://www.pylucid.org">http://www.pylucid.org</a> page.</p>
             """
-        )
+                                )
 
     def test_wiki_style_line_breaks1(self):
         html = creole2html(
@@ -869,7 +856,6 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
 
             <p>end</p>
         """))
-
 
     def test_headline_spaces(self):
         """
@@ -957,23 +943,26 @@ class TestStr2Dict(unittest.TestCase):
             {'key3': 3, 'key2': 2, 'key1': 1}
         )
 
+
 class TestDict2String(unittest.TestCase):
     def test_basic(self):
         self.assertEqual(
-            dict2string({'key':'value'}),
+            dict2string({'key': 'value'}),
             'key="value"'
         )
 
     def test_basic2(self):
         self.assertEqual(
-            dict2string({'foo':"bar", "no":123}),
+            dict2string({'foo': "bar", "no": 123}),
             'foo="bar" no=123'
         )
+
     def test_basic3(self):
         self.assertEqual(
-            dict2string({"foo":'bar', "no":"ABC"}),
+            dict2string({"foo": 'bar', "no": "ABC"}),
             'foo="bar" no="ABC"'
         )
+
 
 if __name__ == '__main__':
     unittest.main(

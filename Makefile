@@ -29,13 +29,13 @@ install: check-poetry ## install python-creole via poetry
 	poetry install
 
 lint: ## Run code formatters and linter
-# 	poetry run isort --check-only --recursive creole
-# 	poetry run black --line-length=119 --check creole
+	poetry run flynt --fail-on-change --line_length=${MAX_LINE_LENGTH} creole
+	poetry run isort --check-only --recursive creole
 	poetry run flake8 creole
 
 fix-code-style: ## Fix code formatting
-# 	poetry run flynt --line_length=119 creole
-# 	poetry run isort --apply --recursive creole
+	poetry run flynt --line_length=${MAX_LINE_LENGTH} creole
+	poetry run isort --apply --recursive creole
 	poetry run autopep8 --ignore-local-config --max-line-length=${MAX_LINE_LENGTH} --aggressive --aggressive --in-place --recursive creole
 
 tox-listenvs: check-poetry ## List all tox test environments

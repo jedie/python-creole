@@ -16,12 +16,12 @@ import posixpath
 from creole.shared.base_emitter import BaseEmitter
 
 
-
 class CreoleEmitter(BaseEmitter):
     """
     Build from a document_tree (html2creole.parser.HtmlParser instance) a
     creole markup text.
     """
+
     def __init__(self, document_tree, strict=False, *args, **kwargs):
         self.strict = strict
         super(CreoleEmitter, self).__init__(document_tree, *args, **kwargs)
@@ -31,22 +31,23 @@ class CreoleEmitter(BaseEmitter):
 
     def emit(self):
         """Emit the document represented by self.root DOM tree."""
-        return self.emit_node(self.root).strip() # FIXME
+        return self.emit_node(self.root).strip()  # FIXME
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def blockdata_pre_emit(self, node):
         """ pre block -> with newline at the end """
         return "{{{%s}}}\n" % self.deentity.replace_all(node.content)
+
     def inlinedata_pre_emit(self, node):
         """ a pre inline block -> no newline at the end """
         return "{{{%s}}}" % self.deentity.replace_all(node.content)
 
     def blockdata_pass_emit(self, node):
-        return "%s\n\n" % node.content
+        return f"{node.content}\n\n"
         return node.content
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def p_emit(self, node):
         result = self.emit_children(node)
@@ -63,7 +64,7 @@ class CreoleEmitter(BaseEmitter):
     def headline_emit(self, node):
         return "%s %s\n\n" % ("=" * node.level, self.emit_children(node))
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def strong_emit(self, node):
         return self._typeface(node, key="**")
@@ -76,19 +77,24 @@ class CreoleEmitter(BaseEmitter):
 
     def tt_emit(self, node):
         return self._typeface(node, key="##")
+
     def sup_emit(self, node):
         return self._typeface(node, key="^^")
+
     def sub_emit(self, node):
         return self._typeface(node, key=",,")
+
     def u_emit(self, node):
         return self._typeface(node, key="__")
+
     def small_emit(self, node):
         return self._typeface(node, key="--")
+
     def del_emit(self, node):
         return self._typeface(node, key="~~")
     strike_emit = del_emit
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def hr_emit(self, node):
         return "----\n\n"
@@ -101,9 +107,9 @@ class CreoleEmitter(BaseEmitter):
             # e.g.: <a name="anchor-one">foo</a>
             return link_text
         if link_text == url:
-            return "[[%s]]" % url
+            return f"[[{url}]]"
         else:
-            return "[[%s|%s]]" % (url, link_text)
+            return f"[[{url}|{link_text}]]"
 
     def img_emit(self, node):
         src = node.attrs["src"]
@@ -115,12 +121,12 @@ class CreoleEmitter(BaseEmitter):
         alt = node.attrs.get("alt", "")
         width = node.attrs.get("height", None)
         height = node.attrs.get("width", None)
-        if len(alt) > len(title): # Use the longest one
+        if len(alt) > len(title):  # Use the longest one
             text = alt
         else:
             text = title
 
-        if text == "": # Use filename as picture text
+        if text == "":  # Use filename as picture text
             text = posixpath.basename(src)
 
         if not self.strict:
@@ -129,7 +135,7 @@ class CreoleEmitter(BaseEmitter):
 
         return "{{%s|%s}}" % (src, text)
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def ul_emit(self, node):
         return self._list_emit(node, list_type="*")
@@ -137,17 +143,13 @@ class CreoleEmitter(BaseEmitter):
     def ol_emit(self, node):
         return self._list_emit(node, list_type="#")
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def div_emit(self, node):
         return self._emit_content(node)
 
     def span_emit(self, node):
         return self._emit_content(node)
-
-
-
-
 
 
 if __name__ == '__main__':
@@ -169,9 +171,9 @@ if __name__ == '__main__':
     from creole.shared.unknown_tags import escape_unknown_nodes
 
     e = CreoleEmitter(document_tree,
-        debug=True,
-        unknown_emit=escape_unknown_nodes
-    )
+                      debug=True,
+                      unknown_emit=escape_unknown_nodes
+                      )
     content = e.emit()
     print("*" * 79)
     print(content)

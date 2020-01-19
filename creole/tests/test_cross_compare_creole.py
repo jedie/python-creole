@@ -17,7 +17,6 @@
 """
 
 
-
 import unittest
 
 from creole.shared import example_macros
@@ -74,7 +73,6 @@ class CrossCompareCreoleTests(BaseCreoleTest):
             able</i> to <strong>cross<br />
             lines.</strong></p>
         """)
-
 
     def test_small(self):
         """
@@ -213,7 +211,6 @@ class CrossCompareCreoleTests(BaseCreoleTest):
         """, """
             <p>this is <tt><strong>strong</strong> Teletyper</tt> ;)</p>
         """)
-
 
     def test_no_inline_headline(self):
         self.cross_compare_creole(
@@ -361,8 +358,8 @@ class CrossCompareCreoleTests(BaseCreoleTest):
                 </ol></li>
             </ol>
         """,
-#        debug = True
-        )
+                                  #        debug = True
+                                  )
 
     def test_big_table(self):
         self.cross_compare_creole(r"""
@@ -408,8 +405,8 @@ class CrossCompareCreoleTests(BaseCreoleTest):
             </table>
             <p>...end</p>
         """,
-#            debug = True
-        )
+                                  #            debug = True
+                                  )
 
     def test_html_macro_unknown_nodes(self):
         """
@@ -428,11 +425,11 @@ class CrossCompareCreoleTests(BaseCreoleTest):
 
             <p>555<x />666</p>
         """,
-            # use macro in creole2html emitter:
-            macros=example_macros,
-            # escape unknown tags with <<html>> in html2creole emitter:
-            unknown_emit=use_html_macro,
-        )
+                                  # use macro in creole2html emitter:
+                                  macros=example_macros,
+                                  # escape unknown tags with <<html>> in html2creole emitter:
+                                  unknown_emit=use_html_macro,
+                                  )
 
     def test_entities(self):
         self.cross_compare_creole("""
@@ -471,7 +468,6 @@ class CrossCompareCreoleTests(BaseCreoleTest):
 #        """)
 
 
-
 #    def test_macro_pygments_code(self):
 #        self.cross_compare_creole(r"""
 #            a macro:
@@ -496,8 +492,6 @@ class CrossCompareCreoleTests(BaseCreoleTest):
 #            </td></tr></table></fieldset>
 #            <p>the end</p>
 #        """)
-
-
 
 
 if __name__ == '__main__':

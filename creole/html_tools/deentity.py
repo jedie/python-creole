@@ -1,32 +1,23 @@
-#!/usr/bin/env python
-# coding: utf-8
 
 """
     python-creole utils
     ~~~~~~~~~~~~~~~~~~~
 
 
-    :copyleft: 2008-2011 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2008-2020 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 
-
 import re
-try:
-    import htmlentitydefs as entities
-except ImportError:
-    from html import entities # python 3
-
-from creole.py3compat import PY3
-
+from html import entities
 
 entities_rules = '|'.join([
     r"(&\#(?P<number>\d+);)",
     r"(&\#x(?P<hex>[a-fA-F0-9]+);)",
     r"(&(?P<named>[a-zA-Z]+);)",
 ])
-#print(entities_rules)
+# print(entities_rules)
 entities_regex = re.compile(
     entities_rules, re.VERBOSE | re.UNICODE | re.MULTILINE
 )
@@ -50,21 +41,16 @@ class Deentity(object):
     >>> d.replace_named("amp")
     '&'
     """
+
     def replace_number(self, text):
         """ unicode number entity """
         unicode_no = int(text)
-        if PY3:
-            return chr(unicode_no)
-        else:
-            return unichr(unicode_no)
+        return chr(unicode_no)
 
     def replace_hex(self, text):
         """ hex entity """
         unicode_no = int(text, 16)
-        if PY3:
-            return chr(unicode_no)
-        else:
-            return unichr(unicode_no)
+        return chr(unicode_no)
 
     def replace_named(self, text):
         """ named entity """
@@ -73,10 +59,7 @@ class Deentity(object):
             return " "
         else:
             codepoint = entities.name2codepoint[text]
-            if PY3:
-                return chr(codepoint)
-            else:
-                return unichr(codepoint)
+            return chr(codepoint)
 
     def replace_all(self, content):
         """ replace all html entities form the given text. """
@@ -84,7 +67,7 @@ class Deentity(object):
             groups = match.groupdict()
             for name, text in groups.items():
                 if text is not None:
-                    replace_method = getattr(self, 'replace_%s' % name)
+                    replace_method = getattr(self, f'replace_{name}')
                     return replace_method(text)
 
             # Should never happen:

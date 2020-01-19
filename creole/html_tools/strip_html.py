@@ -12,11 +12,9 @@
 """
 
 
-
 import re
 
 from creole.parser.html_parser_config import BLOCK_TAGS
-
 
 strip_html_regex = re.compile(
     r"""
@@ -31,7 +29,6 @@ strip_html_regex = re.compile(
     """,
     re.VERBOSE | re.MULTILINE | re.UNICODE
 )
-
 
 
 def strip_html(html_code):
@@ -58,8 +55,6 @@ def strip_html(html_code):
 
     >>> strip_html('<p>a <img src="/image.jpg" /> image.</p>')
     '<p>a <img src="/image.jpg" /> image.</p>'
-
-
     """
 
     def strip_tag(match):
@@ -90,10 +85,10 @@ def strip_html(html_code):
         elif startend_tag:
             # It's a closed start tag e.g.: <br />
 
-            if space_start: # there was space before the tag
+            if space_start:  # there was space before the tag
                 result = " " + result
 
-            if space_end: # there was space after the tag
+            if space_end:  # there was space after the tag
                 result += " "
         else:
             # a start tag e.g.: <strong>

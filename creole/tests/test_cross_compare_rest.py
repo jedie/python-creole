@@ -14,7 +14,6 @@
 """
 
 
-
 import unittest
 
 from creole.tests.utils.base_unittest import BaseCreoleTest
@@ -32,7 +31,7 @@ class CrossCompareReStTests(BaseCreoleTest):
                 <p>less-than sign: &lt;</p>
                 <p>greater-than sign: &gt;</p>
             """,
-#            debug=True
+            # debug=True
         )
 
     def test_bullet_lists_basic(self):
@@ -51,7 +50,7 @@ class CrossCompareReStTests(BaseCreoleTest):
                 <li>item 3</li>
                 </ul>
             """,
-#            debug=True
+            # debug=True
         )
 
     def test_numbered_lists(self):
@@ -81,7 +80,7 @@ class CrossCompareReStTests(BaseCreoleTest):
             </li>
             </ol>
             """,
-#            debug=True
+            # debug=True
         )
 
     def test_bullet_lists_nested(self):
@@ -133,7 +132,7 @@ class CrossCompareReStTests(BaseCreoleTest):
                 </ul>
                 <p>Text under list.</p>
             """,
-#            debug=True
+            # debug=True
         )
 
     def test_typeface_basic(self):
@@ -285,7 +284,7 @@ class CrossCompareReStTests(BaseCreoleTest):
                 </table>
                 <p>Text after table.</p>
             """,
-#            debug=True
+            # debug=True
         )
 
     def test_reuse_link_substitution1(self):
@@ -313,7 +312,7 @@ class CrossCompareReStTests(BaseCreoleTest):
                 </table>
                 <p>Text after table.</p>
             """,
-#            debug=True
+            # debug=True
         )
 
     def test_reuse_link_substitution2(self):
@@ -337,7 +336,7 @@ class CrossCompareReStTests(BaseCreoleTest):
                 </table>
                 <p>and here <a href="foo/bar/">foo bar</a> again, after table.</p>
             """,
-#            debug=True
+            # debug=True
         )
 
     def test_reuse_image_substitution(self):
@@ -362,7 +361,7 @@ class CrossCompareReStTests(BaseCreoleTest):
                 </tr>
                 </table>
             """,
-#            debug=True
+            # debug=True
         )
 
     def test_duplicate_image_substitution(self):
@@ -391,10 +390,8 @@ class CrossCompareReStTests(BaseCreoleTest):
                 </table>
                 <p>again: the <img alt="same" src="/image.png" /> image and <a href="/url/foo/">same</a> link!</p>
             """,
-#            debug=True
+            # debug=True
         )
-
-
 
 
 #    def test_inline_literal(self):
@@ -422,9 +419,7 @@ class CrossCompareReStTests(BaseCreoleTest):
 #                &#60;html escaped&#62;
 #                </pre>
 #            """)
-
-
 if __name__ == '__main__':
     unittest.main(
-#        defaultTest="CrossCompareReStTests.test_paragraph_bwlow_table_links",
+        #        defaultTest="CrossCompareReStTests.test_paragraph_bwlow_table_links",
     )

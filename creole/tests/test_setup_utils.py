@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
 
 """
     unittest for setup_utils
@@ -7,27 +5,24 @@
 
     https://code.google.com/p/python-creole/wiki/UseInSetup
 
-    :copyleft: 2011-2014 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2011-2020 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 
-
-import unittest
 import os
+import tempfile
 import warnings
-
-try:
-    import docutils
-    DOCUTILS = True
-except ImportError:
-    DOCUTILS = False
 
 import creole
 from creole.setup_utils import get_long_description
 from creole.tests.utils.base_unittest import BaseCreoleTest
-from creole.py3compat import BINARY_TYPE, PY3, TEXT_TYPE
-import tempfile
+
+try:
+    import docutils  # noqa flake8
+    DOCUTILS = True
+except ImportError:
+    DOCUTILS = False
 
 
 CREOLE_PACKAGE_ROOT = os.path.abspath(os.path.join(os.path.dirname(creole.__file__), ".."))
@@ -40,7 +35,7 @@ TEST_README_FILENAME = "test_README.creole"
 class SetupUtilsTests(BaseCreoleTest):
     def run(self, *args, **kwargs):
         # TODO: Remove if python 2.6 will be not support anymore.
-        if DOCUTILS == False:
+        if not DOCUTILS:
             warnings.warn("Skip SetupUtilsTests, because 'docutils' not installed.")
             return
         return super(SetupUtilsTests, self).run(*args, **kwargs)
@@ -48,12 +43,12 @@ class SetupUtilsTests(BaseCreoleTest):
     def test_creole_package_path(self):
         self.assertTrue(
             os.path.isdir(CREOLE_PACKAGE_ROOT),
-            "CREOLE_PACKAGE_ROOT %r is not a existing direcotry!" % CREOLE_PACKAGE_ROOT
+            f"CREOLE_PACKAGE_ROOT {CREOLE_PACKAGE_ROOT!r} is not a existing direcotry!"
         )
         filepath = os.path.join(CREOLE_PACKAGE_ROOT, "README.creole")
         self.assertTrue(
             os.path.isfile(filepath),
-            "README file %r not found!" % filepath
+            f"README file {filepath!r} not found!"
         )
 
     def test_get_long_description_without_raise_errors(self):
@@ -124,16 +119,7 @@ class SetupUtilsTests(BaseCreoleTest):
 
     def test_readme_encoding(self):
         long_description = get_long_description(TEST_README_DIR, filename=TEST_README_FILENAME, raise_errors=True)
-
-        if PY3:
-            self.assertTrue(isinstance(long_description, TEXT_TYPE))
-        else:
-            self.assertTrue(isinstance(long_description, BINARY_TYPE))
+        self.assertTrue(isinstance(long_description, str))
 
         txt = "German Umlaute: ä ö ü ß Ä Ö Ü"
-        if not PY3:
-            txt = txt.encode("utf-8")
         self.assertIn(txt, long_description)
-
-if __name__ == '__main__':
-    unittest.main()

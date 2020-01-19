@@ -207,7 +207,17 @@ Note: In this case you must install **docutils**! See above.
 
 = history =
 
-* *dev* - [[https://github.com/jedie/python-creole/compare/v1.3.2...master|compare v1.3.2...master]]
+* *dev* - [[https://github.com/jedie/python-creole/compare/v1.4.1...master|compare v1.4.1...master]]
+** TBC
+* v1.4.1 - 2020-01-19 - [[https://github.com/jedie/python-creole/compare/v1.4.0...master|compare v1.4.0...master]]
+** Remove Python v2 support code
+** [[https://github.com/jedie/python-creole/issues/26|Fix "Undefined substitution referenced" error]] contributed by dforsi
+** [[https://github.com/jedie/python-creole/pull/37|Fix regression in tests for setup_utils]] contributed by jugmac00
+** Fix code style with: autopep8
+** sort imports with isort
+** change old {{{%-formatted}}} and {{{.format(...)}}} strings into Python 3.6+'s {{{f-strings}}} with flynt
+** Activate linting in CI pipeline
+* v1.4.0 - 2020-01-19 - [[https://github.com/jedie/python-creole/compare/v1.3.2...master|compare v1.3.2...master]]
 ** modernize project:
 *** use poetry
 *** Add a {{{Makefile}}}
@@ -237,7 +247,7 @@ Note: In this case you must install **docutils**! See above.
 ** NEW: Add {{{<<toc>>}}} macro to create a table of contents list
 ** Bugfix for: AttributeError: 'CreoleParser' object has no attribute '_escaped_char_repl'
 ** Bugfix for: AttributeError: 'CreoleParser' object has no attribute '_escaped_url_repl'
-** API Change: Callable macros will raise a TypeError instead of create a DeprecationWarning (Was removed in v0.5) 
+** API Change: Callable macros will raise a TypeError instead of create a DeprecationWarning (Was removed in v0.5)
 * v1.1.1 - 2013-11-08
 ** Bugfix: Setup script exited with error: can't copy 'README.creole': doesn't exist or not a regular file
 * v1.1.0 - 2013-10-28

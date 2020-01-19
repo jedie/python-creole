@@ -38,11 +38,9 @@
     )
     ---------------------------------------------------------------------------
 
-    :copyleft: 2011-2014 by the python-creole team, see AUTHORS for more details.
+    :copyleft: 2011-2020 by the python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
-
-
 
 import codecs
 import os
@@ -51,8 +49,6 @@ import warnings
 
 from creole import creole2html, html2rest
 from creole.shared.unknown_tags import raise_unknown_node, transparent_unknown_nodes
-from creole.py3compat import PY3
-
 
 RAISE_ERRORS_ARGS = (
     "check", "register", "sdist", "bdist", "upload",
@@ -99,34 +95,28 @@ def get_long_description(package_root, filename="README.creole", raise_errors=No
         long_description_html = creole2html(long_description_origin)
 
         # convert html to ReSt
-        long_description_rest_unicode = html2rest(
+        long_description_rest = html2rest(
             long_description_html,
-            emitter_kwargs={"unknown_emit":unknown_emit}
+            emitter_kwargs={"unknown_emit": unknown_emit}
         )
-        if PY3:
-            long_description_rest = long_description_rest_unicode
-        else:
-            long_description_rest = long_description_rest_unicode.encode("utf-8")
     except Exception:
         if raise_errors:
             raise
         # Don't raise the error e.g. in ./setup install process
         evalue = sys.exc_info()[1]
-        long_description_rest = "[Error: %s]\n%s" % (
-            evalue, long_description_origin
-        )
+        long_description_rest = f"[Error: {evalue}]\n{long_description_origin}"
     else:
         if raise_errors:
             # Test created ReSt code like PyPi does it.
             from creole.rest_tools.pypi_rest2html import pypi_rest2html
             try:
-                pypi_rest2html(long_description_rest_unicode)
+                pypi_rest2html(long_description_rest)
             except SystemExit as e:
-                msg = "Error creole2rest self test failed: rest2html() exist with status code: %s\n" % e.args[0]
+                msg = f"Error creole2rest self test failed: rest2html() exist with status code: {e.args[0]}\n"
                 sys.stderr.write(msg)
                 sys.exit(msg)
             except Exception as e:
-                sys.exit("ReSt2html error: %s" % e)
+                sys.exit(f"ReSt2html error: {e}")
             else:
                 if "check" in sys.argv:
                     print("Generating creole to ReSt to html, ok.")
@@ -141,11 +131,12 @@ def _get_long_description(*args, **kwargs):
     else:
         warnings.warn(msg, DeprecationWarning)
     return get_long_description(*args, **kwargs)
-GetLongDescription = _get_long_description # for backward-compatibility
+
+
+GetLongDescription = _get_long_description  # for backward-compatibility
 
 
 if __name__ == "__main__":
     package_root = os.path.abspath("../")
     long_description = get_long_description(package_root)
     print(long_description)
-

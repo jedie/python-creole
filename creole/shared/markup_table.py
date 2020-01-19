@@ -4,6 +4,7 @@ class MarkupTable(object):
     Container for holding table data and render the data in creole markup.
     Format every cell width to the same col width.
     """
+
     def __init__(self, head_prefix="= ", auto_width=True, debug_msg=None):
         self.head_prefix = head_prefix
         self.auto_width = auto_width
@@ -30,7 +31,7 @@ class MarkupTable(object):
         self.add_td(self.head_prefix + text)
 
     def add_td(self, text):
-        if self.row_index == None:
+        if self.row_index is None:
             self.add_tr()
 
         self.debug_msg("Table.add_td", text)
@@ -44,9 +45,9 @@ class MarkupTable(object):
                 cell = cell.strip()
                 if cell != "":
                     if self.head_prefix and cell.startswith(self.head_prefix):
-                        cell += " " # Headline
+                        cell += " "  # Headline
                     else:
-                        cell = " %s " % cell # normal cell
+                        cell = f" {cell} "  # normal cell
                 line_cells.append(cell)
             cells.append(line_cells)
 
@@ -81,8 +82,8 @@ class MarkupTable(object):
         # preformat every table cell
         cells, widths = self._get_preformat_info()
 
-        separator_line = "+%s+" % "+".join(["-"*width for width in widths])
-        headline_separator = "+%s+" % "+".join(["="*width for width in widths])
+        separator_line = "+%s+" % "+".join(["-" * width for width in widths])
+        headline_separator = "+%s+" % "+".join(["=" * width for width in widths])
 
         lines = []
         for no, row in enumerate(cells):
@@ -98,6 +99,7 @@ class MarkupTable(object):
         lines.append(separator_line)
 
         return "\n".join(lines)
+
 
 if __name__ == '__main__':
     import doctest

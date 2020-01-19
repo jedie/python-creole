@@ -14,14 +14,12 @@
 """
 
 
-
 import unittest
 
-from creole.tests.utils.base_unittest import BaseCreoleTest
-
 from creole import html2creole
-from creole.shared.unknown_tags import raise_unknown_node, use_html_macro, \
-                            escape_unknown_nodes, transparent_unknown_nodes
+from creole.shared.unknown_tags import (escape_unknown_nodes, raise_unknown_node, transparent_unknown_nodes,
+                                        use_html_macro)
+from creole.tests.utils.base_unittest import BaseCreoleTest
 
 
 class TestHtml2Creole(unittest.TestCase):
@@ -31,14 +29,12 @@ class TestHtml2Creole(unittest.TestCase):
     pass
 
 
-
-
 class TestHtml2CreoleMarkup(BaseCreoleTest):
 
-#    def assertCreole(self, raw_markup, raw_html, debug=False, **kwargs):
-#        self.assert_html2creole(raw_markup, raw_html, debug=debug, **kwargs)
+    #    def assertCreole(self, raw_markup, raw_html, debug=False, **kwargs):
+    #        self.assert_html2creole(raw_markup, raw_html, debug=debug, **kwargs)
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def test_not_used(self):
         """
@@ -56,7 +52,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             <i>italic</i></p>
         """)
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def test_raise_unknown_node(self):
         """
@@ -64,10 +60,10 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         Raise NotImplementedError on unknown tags.
         """
         self.assertRaises(NotImplementedError,
-            html2creole,
-            html_string="<unknwon>",
-            unknown_emit=raise_unknown_node
-        )
+                          html2creole,
+                          html_string="<unknwon>",
+                          unknown_emit=raise_unknown_node
+                          )
 
     def test_use_html_macro(self):
         """
@@ -85,8 +81,8 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 
             <p>555<unknown />666</p>
         """,
-            unknown_emit=use_html_macro
-        )
+                                unknown_emit=use_html_macro
+                                )
 
     def test_escape_unknown_nodes(self):
         """
@@ -104,8 +100,8 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 
             <p>555<unknown />666</p>
         """,
-            unknown_emit=escape_unknown_nodes
-        )
+                                unknown_emit=escape_unknown_nodes
+                                )
 
     def test_escape_unknown_nodes2(self):
         """
@@ -119,8 +115,8 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             var js_sha_link='<p>***</p>';
             </script>
         """,
-            unknown_emit=escape_unknown_nodes
-        )
+                                unknown_emit=escape_unknown_nodes
+                                )
 
     def test_transparent_unknown_nodes(self):
         """
@@ -133,7 +129,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         """, """
             <form class="foo" id="bar"><label><em>baz</em></label>, <strong>quux</strong></form>
         """, unknown_emit=transparent_unknown_nodes
-        )
+                                )
 
     def test_transparent_unknown_nodes2(self):
         """
@@ -145,7 +141,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
         """, """
             <p>FOO <script>var a='<em>STRONG</em>';</script> BAR</p>
         """, unknown_emit=transparent_unknown_nodes
-        )
+                                )
 
     def test_transparent_unknown_nodes_block_elements(self):
         """
@@ -161,9 +157,9 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             <div><em>baz</em>,</div> <fieldset><strong>quux</strong></fieldset>
             <span>spam, </span><label>ham, </label>and eggs
         """, unknown_emit=transparent_unknown_nodes
-        )
+                                )
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def test_entities(self):
         """
@@ -376,7 +372,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             # foo
         """, """
             <ol class=gbtc><li>foo</li></ol>
-        """)#, debug=True)
+        """)  # , debug=True)
 
     def test_ignore_links_without_href(self):
         """https://code.google.com/p/python-creole/issues/detail?id=19#c4"""
@@ -384,7 +380,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             bar
         """, """
             <a class="foo">bar</a>
-        """)#, debug=True)
+        """)  # , debug=True)
 
     def test_newlines_after_headlines(self):
         self.assert_html2creole(r"""
@@ -518,7 +514,7 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 #            </ol>
 #            <p>list 'b' end</p>
 #        """,
-##            debug=True
+# debug=True
 #        )
 #
 #    def test_list2(self):
@@ -539,12 +535,11 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
 #                <li><tt>//this// is **not** [[processed]]</tt></li>
 #            </ol>
 #        """,
-##            debug=True
+# debug=True
 #        )
 
 
 if __name__ == '__main__':
     unittest.main(
-#        defaultTest="TestHtml2CreoleMarkup.test_nested_listsitems_with_paragraph"
+        #        defaultTest="TestHtml2CreoleMarkup.test_nested_listsitems_with_paragraph"
     )
-

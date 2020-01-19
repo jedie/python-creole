@@ -15,13 +15,13 @@
 
 from xml.sax.saxutils import escape
 
+from creole.shared.utils import get_pygments_formatter, get_pygments_lexer
+
 try:
     from pygments import highlight
     PYGMENTS = True
 except ImportError:
     PYGMENTS = False
-
-from creole.shared.utils import get_pygments_lexer, get_pygments_formatter
 
 
 def html(text):
@@ -62,7 +62,7 @@ def code(ext, text):
 
     try:
         highlighted_text = highlight(text, lexer, formatter).decode('utf-8')
-    except:
+    except BaseException:
         highlighted_text = pre(text)
     finally:
         return highlighted_text.replace('\n', '<br />\n')

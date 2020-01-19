@@ -1,6 +1,6 @@
 [tool.poetry]
 name = 'python-creole'
-version = '1.4.0'
+version = '1.4.1'
 description = 'python-creole is an open-source (GPL) markup converter in pure Python for: creole2html, html2creole, html2ReSt, html2textile'
 
 # TODO: convert it:

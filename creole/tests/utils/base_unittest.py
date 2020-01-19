@@ -1,5 +1,3 @@
-# coding: utf-8
-
 
 """
     unitest base class
@@ -7,18 +5,17 @@
 
     Basic unittest class for all python-creole tests.
 
-    :copyleft: 2008-2014 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2008-2020 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
-
 
 
 import re
 import warnings
 
+from creole import creole2html, html2creole, html2rest, html2textile
+from creole.exceptions import DocutilsImportError
 from creole.tests.utils.utils import MarkupTest
-from creole.py3compat import TEXT_TYPE
-
 
 try:
     import textile
@@ -32,19 +29,15 @@ else:
     test_textile = True
 
 
-from creole.exceptions import DocutilsImportError
-from creole import creole2html, html2creole, html2textile, html2rest
-
 try:
     from creole.rest_tools.clean_writer import rest2html
 except DocutilsImportError as err:
     REST_INSTALLED = False
-    warnings.warn("Can't run all ReSt unittests: %s" % err)
+    warnings.warn(f"Can't run all ReSt unittests: {err}")
 else:
     REST_INSTALLED = True
 
 tabs2spaces_re = re.compile(r"^(\t*)(.*?)$", re.M)
-
 
 
 def tabs2spaces(html):
@@ -76,11 +69,11 @@ def strip_html_lines(html, strip_lines=False):
     return html
 
 
-
 class BaseCreoleTest(MarkupTest):
     """
     Basic unittest class for all python-creole unittest classes.
     """
+
     def _debug_text(self, msg, raw_text):
         text = raw_text.replace(" ", ".")
         text = text.replace("\n", "\\n\n")
@@ -88,17 +81,17 @@ class BaseCreoleTest(MarkupTest):
 
         print()
         print("_" * 79)
-        print(" Debug Text: %s:" % msg)
+        print(f" Debug Text: {msg}:")
         print(text)
         print("-" * 79)
 
     def assert_creole2html(
-            self, raw_creole, raw_html,
-            strip_lines=False, debug=True,
-            parser_kwargs={}, emitter_kwargs={},
-            block_rules=None, blog_line_breaks=True, macros=None, verbose=True, stderr=None,
-            strict=False,
-        ):
+        self, raw_creole, raw_html,
+        strip_lines=False, debug=True,
+        parser_kwargs={}, emitter_kwargs={},
+        block_rules=None, blog_line_breaks=True, macros=None, verbose=True, stderr=None,
+        strict=False,
+    ):
         """
         compare the generated html code from the markup string >creole_string<
         with the >html_string< reference.
@@ -109,10 +102,10 @@ class BaseCreoleTest(MarkupTest):
 
         # prepare whitespace on test strings
         markup_string = self._prepare_text(raw_creole)
-        assert isinstance(markup_string, TEXT_TYPE)
+        assert isinstance(markup_string, str)
 
         html_string = self._prepare_text(raw_html)
-        assert isinstance(html_string, TEXT_TYPE)
+        assert isinstance(html_string, str)
         if strip_lines:
             html_string = strip_html_lines(html_string, strip_lines)
         self._debug_text("assert_creole2html() html_string reference", html_string)
@@ -135,10 +128,10 @@ class BaseCreoleTest(MarkupTest):
         self.assertEqual(out_string, html_string, msg="creole2html")
 
     def assert_html2creole2(self, creole, html,
-            debug=True,
-            unknown_emit=None,
-            strict=False,
-        ):
+                            debug=True,
+                            unknown_emit=None,
+                            strict=False,
+                            ):
         # convert html code into creole markup
         out_string = html2creole(
             html, debug, unknown_emit=unknown_emit, strict=strict
@@ -148,21 +141,21 @@ class BaseCreoleTest(MarkupTest):
         # compare
         self.assertEqual(out_string, creole, msg="html2creole")
 
-    def assert_html2creole(self, raw_creole, raw_html, \
-                strip_lines=False, debug=False,
-                # OLD API:
-                parser_kwargs={}, emitter_kwargs={},
-                # html2creole:
-                unknown_emit=None,
-                strict=False,
-        ):
+    def assert_html2creole(self, raw_creole, raw_html,
+                           strip_lines=False, debug=True,
+                           # OLD API:
+                           parser_kwargs={}, emitter_kwargs={},
+                           # html2creole:
+                           unknown_emit=None,
+                           strict=False,
+                           ):
         """
         Compare the genereted markup from the given >raw_html< html code, with
         the given >creole_string< reference string.
         """
         self.assertEqual(parser_kwargs, {}, "parser_kwargs is deprecated!")
         self.assertEqual(emitter_kwargs, {}, "parser_kwargs is deprecated!")
-#        assert isinstance(raw_html, TEXT_TYPE)
+#        assert isinstance(raw_html, str)
 #        creole_string = unicode(creole_string, encoding="utf8")
 #        raw_html = unicode(raw_html, "utf8")
 
@@ -170,27 +163,27 @@ class BaseCreoleTest(MarkupTest):
 
         # prepare whitespace on test strings
         creole = self._prepare_text(raw_creole)
-        assert isinstance(creole, TEXT_TYPE)
+        assert isinstance(creole, str)
         if debug:
             self._debug_text("assert_creole2html() markup", creole)
 
         html = self._prepare_text(raw_html)
-        assert isinstance(html, TEXT_TYPE)
+        assert isinstance(html, str)
 
         self.assert_html2creole2(creole, html, debug, unknown_emit, strict)
 
     def cross_compare_creole(self, creole_string, html_string,
-                        strip_lines=False, debug=True,
-                        # creole2html old API:
-                        creole_parser_kwargs={}, html_emitter_kwargs={},
-                        # html2creole old API:
-                        html_parser_kwargs={}, creole_emitter_kwargs={},
+                             strip_lines=False, debug=True,
+                             # creole2html old API:
+                             creole_parser_kwargs={}, html_emitter_kwargs={},
+                             # html2creole old API:
+                             html_parser_kwargs={}, creole_emitter_kwargs={},
 
-                        # creole2html new API:
-                        block_rules=None, blog_line_breaks=True, macros=None, stderr=None,
-                        # html2creole:
-                        unknown_emit=None
-        ):
+                             # creole2html new API:
+                             block_rules=None, blog_line_breaks=True, macros=None, stderr=None,
+                             # html2creole:
+                             unknown_emit=None
+                             ):
         """
         Cross compare with:
             * creole2html
@@ -201,8 +194,8 @@ class BaseCreoleTest(MarkupTest):
         self.assertEqual(html_parser_kwargs, {}, "html_parser_kwargs is deprecated!")
         self.assertEqual(creole_emitter_kwargs, {}, "creole_emitter_kwargs is deprecated!")
 
-        assert isinstance(creole_string, TEXT_TYPE)
-        assert isinstance(html_string, TEXT_TYPE)
+        assert isinstance(creole_string, str)
+        assert isinstance(html_string, str)
         self.assertNotEqual(creole_string, html_string)
 
         self.assert_creole2html(
@@ -217,8 +210,8 @@ class BaseCreoleTest(MarkupTest):
             unknown_emit=unknown_emit,
         )
 
-    def assert_html2textile(self, textile_string, html_string, \
-                        strip_lines=False, debug=False, parser_kwargs={}, emitter_kwargs={}):
+    def assert_html2textile(self, textile_string, html_string,
+                            strip_lines=False, debug=False, parser_kwargs={}, emitter_kwargs={}):
         """
         Check html2textile
         """
@@ -241,15 +234,15 @@ class BaseCreoleTest(MarkupTest):
 
         return textile_string, html_string
 
-    def cross_compare_textile(self, textile_string, html_string, \
-                        strip_lines=False, debug=False, parser_kwargs={}, emitter_kwargs={}):
+    def cross_compare_textile(self, textile_string, html_string,
+                              strip_lines=False, debug=False, parser_kwargs={}, emitter_kwargs={}):
         """
             Checks:
                 * html2textile
                 * textile2html
         """
-#        assert isinstance(textile_string, TEXT_TYPE)
-#        assert isinstance(html_string, TEXT_TYPE)
+#        assert isinstance(textile_string, str)
+#        assert isinstance(html_string, str)
         self.assertNotEqual(textile_string, html_string)
 
         # compare html -> textile
@@ -272,8 +265,8 @@ class BaseCreoleTest(MarkupTest):
 
         self.assertEqual(html_string, html, msg="textile2html")
 
-    def assert_html2rest(self, rest_string, html_string, \
-                        strip_lines=False, debug=False, parser_kwargs={}, emitter_kwargs={}):
+    def assert_html2rest(self, rest_string, html_string,
+                         strip_lines=False, debug=False, parser_kwargs={}, emitter_kwargs={}):
         """
         Check html to reStructuredText converter
         """
@@ -298,8 +291,8 @@ class BaseCreoleTest(MarkupTest):
 
         return rest_string, html_string
 
-    def assert_rest2html(self, rest_string, html_string, \
-            strip_lines=False, debug=False, prepare_strings=True, **kwargs):
+    def assert_rest2html(self, rest_string, html_string,
+                         strip_lines=False, debug=False, prepare_strings=True, **kwargs):
 
         # compare rest -> html
         if not REST_INSTALLED:
@@ -325,10 +318,10 @@ class BaseCreoleTest(MarkupTest):
 
         self.assertEqual(html, html_string, msg="rest2html")
 
-    def cross_compare_rest(self, rest_string, html_string, \
-                        strip_lines=False, debug=False, parser_kwargs={}, emitter_kwargs={}):
-#        assert isinstance(textile_string, TEXT_TYPE)
-#        assert isinstance(html_string, TEXT_TYPE)
+    def cross_compare_rest(self, rest_string, html_string,
+                           strip_lines=False, debug=False, parser_kwargs={}, emitter_kwargs={}):
+        #        assert isinstance(textile_string, str)
+        #        assert isinstance(html_string, str)
         self.assertNotEqual(rest_string, html_string)
 
         rest_string, html_string = self.assert_html2rest(
@@ -344,11 +337,11 @@ class BaseCreoleTest(MarkupTest):
         )
 
     def cross_compare(self,
-            html_string,
-            creole_string=None,
-            textile_string=None,
-            rest_string=None,
-            strip_lines=False, debug=False, parser_kwargs={}, emitter_kwargs={}):
+                      html_string,
+                      creole_string=None,
+                      textile_string=None,
+                      rest_string=None,
+                      strip_lines=False, debug=False, parser_kwargs={}, emitter_kwargs={}):
         """
         Cross compare with:
             * creole2html
@@ -370,6 +363,7 @@ class BaseCreoleTest(MarkupTest):
             self.cross_compare_rest(
                 rest_string, html_string, strip_lines, debug, parser_kwargs, emitter_kwargs
             )
+
 
 if __name__ == '__main__':
     import doctest

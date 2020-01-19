@@ -12,22 +12,15 @@
 """
 
 
-
-try:
-    # Python 3
-    from urllib.parse import urlparse
-except ImportError:
-    # Python 2
-    from urlparse import urlparse
+from urllib.parse import urlparse
 
 from creole.exceptions import DocutilsImportError
 
 try:
-    import docutils
+    import docutils  # noqa flake8
     from docutils import io, readers
     from docutils.core import publish_doctree, Publisher
-    from docutils.writers import get_writer_class
-    from docutils.transforms import TransformError, Transform
+    from docutils.transforms import TransformError
 except ImportError as err:
     msg = (
         "%s - You can't use rest2html!"
@@ -51,11 +44,11 @@ def pypi_rest2html(source, output_encoding='unicode'):
         'file_insertion_enabled': 0,  # no file/URL access
         'halt_level': 2,  # at warnings or errors, raise an exception
         'report_level': 5,  # never report problems with the reST code
-        }
+    }
 
     # Convert reStructuredText to HTML using Docutils.
     document = publish_doctree(source=source,
-        settings_overrides=settings_overrides)
+                               settings_overrides=settings_overrides)
 
     for node in document.traverse():
         if node.tagname == '#text':
@@ -73,7 +66,7 @@ def pypi_rest2html(source, output_encoding='unicode'):
     # now turn the transformed document into HTML
     reader = readers.doctree.Reader(parser_name='null')
     pub = Publisher(reader, source=io.DocTreeInput(document),
-        destination_class=io.StringOutput)
+                    destination_class=io.StringOutput)
     pub.set_writer('html')
     pub.process_programmatic_settings(None, settings_overrides, None)
     pub.set_destination(None, None)

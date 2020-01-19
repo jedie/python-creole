@@ -10,16 +10,12 @@
 """
 
 
-
-import subprocess
-import unittest
 import sys
-import os
 import tempfile
+import unittest
 
-from creole import cmdline
+from creole import VERSION_STRING, cmdline
 from creole.tests.utils.base_unittest import BaseCreoleTest
-from creole import VERSION_STRING
 from creole.tests.utils.unittest_subprocess import SubprocessMixin
 
 CMDS = ("creole2html", "html2creole", "html2rest", "html2textile")
@@ -71,7 +67,7 @@ class CreoleCLITests(BaseCreoleTest, SubprocessMixin, CliTestMixins):
         dest_file = tempfile.NamedTemporaryFile()
         destfilepath = dest_file.name
 
-        stdout=(
+        stdout = (
             "Convert '%(src)s' to '%(dst)s' with %(prog)s (codec: utf-8)\n"
             "done. '%(dst)s' created."
         ) % {
@@ -93,15 +89,12 @@ class CreoleCLITests(BaseCreoleTest, SubprocessMixin, CliTestMixins):
 
     def test_version(self):
         for cmd in CMDS:
-            version_info = "%s from python-creole v%s" % (
-                cmd, VERSION_STRING
-            )
+            version_info = f"{cmd} from python-creole v{VERSION_STRING}"
             self.assertSubprocess(
                 popen_args=[cmd, "--version"],
                 retcode=0,
                 stdout=version_info,
             )
-
 
 
 class CreoleCLITestsDirect(BaseCreoleTest, CliTestMixins):
@@ -125,7 +118,7 @@ class CreoleCLITestsDirect(BaseCreoleTest, CliTestMixins):
         destfilepath = dest_file.name
 
         sys.argv = [cli_str, sourcefilepath, destfilepath]
-        cli = getattr(cmdline, "cli_%s" % cli_str)
+        cli = getattr(cmdline, f"cli_{cli_str}")
         cli()
 
         dest_file.seek(0)

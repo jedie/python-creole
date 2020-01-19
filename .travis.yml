@@ -17,6 +17,7 @@ install:
 
 script:
   - make pytest
+  - make lint
 
 after_success:
   - coveralls
