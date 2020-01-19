@@ -58,15 +58,15 @@ class SetupUtilsTests(BaseCreoleTest):
 
     def test_get_long_description_without_raise_errors(self):
         long_description = get_long_description(CREOLE_PACKAGE_ROOT, raise_errors=False)
-        self.assertIn("=====\nabout\n=====\n\n", long_description)
+        self.assertIn("===================\nabout python-creole\n===================\n\n", long_description)
         # Test created ReSt code
         from creole.rest_tools.clean_writer import rest2html
         html = rest2html(long_description)
-        self.assertIn("<h1>about</h1>\n", html)
+        self.assertIn("<h1>about python-creole</h1>\n", html)
 
     def test_get_long_description_with_raise_errors(self):
         long_description = get_long_description(CREOLE_PACKAGE_ROOT, raise_errors=True)
-        self.assertIn("=====\nabout\n=====\n\n", long_description)
+        self.assertIn("===================\nabout python-creole\n===================\n\n", long_description)
 
     def _tempfile(self, content):
         fd = tempfile.NamedTemporaryFile()
