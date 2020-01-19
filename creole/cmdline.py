@@ -12,8 +12,7 @@
 import argparse
 import codecs
 
-from creole import creole2html, html2creole, html2rest, html2textile
-from creole import VERSION_STRING
+from creole import VERSION_STRING, creole2html, html2creole, html2rest, html2textile
 
 
 class CreoleCLI(object):

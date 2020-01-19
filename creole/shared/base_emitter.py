@@ -9,8 +9,8 @@
 """
 
 
-from creole.parser.html_parser_config import BLOCK_TAGS
 from creole.html_tools.deentity import Deentity
+from creole.parser.html_parser_config import BLOCK_TAGS
 from creole.shared.markup_table import MarkupTable
 from creole.shared.unknown_tags import transparent_unknown_nodes
 

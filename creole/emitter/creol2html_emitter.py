@@ -8,9 +8,9 @@
 
 
 import json
-from xml.sax.saxutils import escape
 import sys
 import traceback
+from xml.sax.saxutils import escape
 
 from creole.parser.creol2html_parser import CreoleParser
 from creole.shared.utils import string2dict

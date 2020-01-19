@@ -22,8 +22,7 @@
 import re
 from pprint import pformat
 
-from creole.parser.creol2html_rules import BlockRules, INLINE_FLAGS, INLINE_RULES, \
-    SpecialRules, InlineRules
+from creole.parser.creol2html_rules import INLINE_FLAGS, INLINE_RULES, BlockRules, InlineRules, SpecialRules
 from creole.shared.document_tree import DocNode
 
 

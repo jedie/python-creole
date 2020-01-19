@@ -16,7 +16,6 @@ import posixpath
 from creole.shared.base_emitter import BaseEmitter
 
 
-
 class TextileEmitter(BaseEmitter):
     """
     Build from a document_tree (html2creole.parser.HtmlParser instance) a

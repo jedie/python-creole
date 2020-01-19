@@ -6,8 +6,8 @@
 
 import unittest
 
-from creole.tests.utils.base_unittest import BaseCreoleTest
 from creole.html_tools.strip_html import strip_html
+from creole.tests.utils.base_unittest import BaseCreoleTest
 
 
 class StripHtml(unittest.TestCase):
@@ -146,5 +146,3 @@ class TestHtml2CreoleMarkup(BaseCreoleTest):
             <p>picture <a href="www.domain.tld"><img src="foo.JPG" alt="Foo"></a> as a link</p>
         """#, debug=True
         )
-
-

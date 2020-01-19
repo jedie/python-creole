@@ -50,7 +50,6 @@ import warnings
 from creole import creole2html, html2rest
 from creole.shared.unknown_tags import raise_unknown_node, transparent_unknown_nodes
 
-
 RAISE_ERRORS_ARGS = (
     "check", "register", "sdist", "bdist", "upload",
     "--long-description", "--restructuredtext",
@@ -139,4 +138,3 @@ if __name__ == "__main__":
     package_root = os.path.abspath("../")
     long_description = get_long_description(package_root)
     print(long_description)
-

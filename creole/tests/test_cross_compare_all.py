@@ -22,8 +22,6 @@
 
 import unittest
 
-
-
 from creole.tests.utils.base_unittest import BaseCreoleTest
 
 

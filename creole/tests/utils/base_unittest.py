@@ -14,8 +14,9 @@
 import re
 import warnings
 
+from creole import creole2html, html2creole, html2rest, html2textile
+from creole.exceptions import DocutilsImportError
 from creole.tests.utils.utils import MarkupTest
-
 
 try:
     import textile
@@ -29,8 +30,6 @@ else:
     test_textile = True
 
 
-from creole.exceptions import DocutilsImportError
-from creole import creole2html, html2creole, html2textile, html2rest
 
 try:
     from creole.rest_tools.clean_writer import rest2html

@@ -10,8 +10,8 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-import warnings
 import inspect
+import warnings
 
 from creole.shared.utils import dict2string
 

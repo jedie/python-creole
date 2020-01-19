@@ -16,6 +16,7 @@
 
 import json
 
+
 def unittest_macro1(**kwargs):
     """
     >>> unittest_macro1(foo="bar")

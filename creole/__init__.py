@@ -23,12 +23,11 @@
 import warnings
 
 from creole.emitter.creol2html_emitter import HtmlEmitter
-from creole.parser.creol2html_parser import CreoleParser
 from creole.emitter.html2creole_emitter import CreoleEmitter
 from creole.emitter.html2rest_emitter import ReStructuredTextEmitter
 from creole.emitter.html2textile_emitter import TextileEmitter
+from creole.parser.creol2html_parser import CreoleParser
 from creole.parser.html_parser import HtmlParser
-
 
 __version__ = "1.4.0"
 __api__ = "1.0" # Creole 1.0 spec - http://wikicreole.org/

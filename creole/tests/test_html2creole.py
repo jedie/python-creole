@@ -17,11 +17,10 @@
 
 import unittest
 
-from creole.tests.utils.base_unittest import BaseCreoleTest
-
 from creole import html2creole
-from creole.shared.unknown_tags import raise_unknown_node, use_html_macro, \
-                            escape_unknown_nodes, transparent_unknown_nodes
+from creole.shared.unknown_tags import (escape_unknown_nodes, raise_unknown_node, transparent_unknown_nodes,
+                                        use_html_macro)
+from creole.tests.utils.base_unittest import BaseCreoleTest
 
 
 class TestHtml2Creole(unittest.TestCase):
@@ -547,4 +546,3 @@ if __name__ == '__main__':
     unittest.main(
 #        defaultTest="TestHtml2CreoleMarkup.test_nested_listsitems_with_paragraph"
     )
-

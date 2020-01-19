@@ -10,9 +10,14 @@
 """
 
 
-import unittest
 import os
+import tempfile
+import unittest
 import warnings
+
+import creole
+from creole.setup_utils import get_long_description
+from creole.tests.utils.base_unittest import BaseCreoleTest
 
 try:
     import docutils
@@ -20,10 +25,6 @@ try:
 except ImportError:
     DOCUTILS = False
 
-import creole
-from creole.setup_utils import get_long_description
-from creole.tests.utils.base_unittest import BaseCreoleTest
-import tempfile
 
 
 CREOLE_PACKAGE_ROOT = os.path.abspath(os.path.join(os.path.dirname(creole.__file__), ".."))

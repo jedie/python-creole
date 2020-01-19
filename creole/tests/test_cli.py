@@ -11,15 +11,14 @@
 
 
 
-import subprocess
-import unittest
-import sys
 import os
+import subprocess
+import sys
 import tempfile
+import unittest
 
-from creole import cmdline
+from creole import VERSION_STRING, cmdline
 from creole.tests.utils.base_unittest import BaseCreoleTest
-from creole import VERSION_STRING
 from creole.tests.utils.unittest_subprocess import SubprocessMixin
 
 CMDS = ("creole2html", "html2creole", "html2rest", "html2textile")

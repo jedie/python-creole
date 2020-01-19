@@ -17,7 +17,6 @@ import re
 
 from creole.parser.html_parser_config import BLOCK_TAGS
 
-
 strip_html_regex = re.compile(
     r"""
         \s*

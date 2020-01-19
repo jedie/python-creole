@@ -18,9 +18,13 @@
 
 import sys
 import unittest
-
-
 from io import StringIO
+
+from creole import creole2html
+from creole.shared import example_macros
+from creole.shared.utils import dict2string, string2dict
+from creole.tests import test_macros
+from creole.tests.utils.base_unittest import BaseCreoleTest
 
 try:
     from pygments import highlight
@@ -28,12 +32,7 @@ try:
 except ImportError:
     PYGMENTS = False
 
-from creole.tests.utils.base_unittest import BaseCreoleTest
-from creole.tests import test_macros
 
-from creole import creole2html
-from creole.shared import example_macros
-from creole.shared.utils import string2dict, dict2string
 
 
 class TestCreole2html(BaseCreoleTest):
