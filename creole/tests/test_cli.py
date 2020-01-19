@@ -93,9 +93,7 @@ class CreoleCLITests(BaseCreoleTest, SubprocessMixin, CliTestMixins):
 
     def test_version(self):
         for cmd in CMDS:
-            version_info = "%s from python-creole v%s" % (
-                cmd, VERSION_STRING
-            )
+            version_info = f"{cmd} from python-creole v{VERSION_STRING}"
             self.assertSubprocess(
                 popen_args=[cmd, "--version"],
                 retcode=0,
@@ -125,7 +123,7 @@ class CreoleCLITestsDirect(BaseCreoleTest, CliTestMixins):
         destfilepath = dest_file.name
 
         sys.argv = [cli_str, sourcefilepath, destfilepath]
-        cli = getattr(cmdline, "cli_%s" % cli_str)
+        cli = getattr(cmdline, f"cli_{cli_str}")
         cli()
 
         dest_file.seek(0)

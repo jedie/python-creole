@@ -1,11 +1,10 @@
-#!/usr/bin/env python
-# coding: utf-8
+#!/usr/bin/env python3
 
 """
     python-creole commandline interface
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    :copyleft: 2013 by the python-creole team, see AUTHORS for more details.
+    :copyleft: 2013-2020 by the python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -27,8 +26,9 @@ class CreoleCLI(object):
                 " creole2html, html2creole, html2ReSt, html2textile"
             ),
         )
-        self.parser.add_argument('--version', action='version',
-            version='%%(prog)s from python-creole v%s' % VERSION_STRING
+        self.parser.add_argument(
+            '--version', action='version',
+            version='%%(prog)s from python-creole v%s' % VERSION_STRING # noqa flynt
         )
         self.parser.add_argument("sourcefile", help="source file to convert")
         self.parser.add_argument("destination", help="Output filename")
@@ -46,16 +46,14 @@ class CreoleCLI(object):
         self.convert(sourcefile, destination, encoding)
 
     def convert(self, sourcefile, destination, encoding):
-        print("Convert %r to %r with %s (codec: %s)" % (
-            sourcefile, destination, self.convert_func.__name__, encoding
-        ))
+        print(f"Convert {sourcefile!r} to {destination!r} with {self.convert_func.__name__} (codec: {encoding})")
 
         with codecs.open(sourcefile, "r", encoding=encoding) as infile:
             with codecs.open(destination, "w", encoding=encoding) as outfile:
                 content = infile.read()
                 converted = self.convert_func(content)
                 outfile.write(converted)
-        print("done. %r created." % destination)
+        print(f"done. {destination!r} created.")
 
 
 def cli_creole2html():

@@ -61,14 +61,14 @@ class ReStructuredTextEmitter(BaseEmitter):
         """ pre block -> with newline at the end """
         pre_block = self.deentity.replace_all(node.content).strip()
         pre_block = "\n".join(["    %s" % line for line in pre_block.splitlines()])
-        return "::\n\n%s\n\n" % pre_block
+        return f"::\n\n{pre_block}\n\n"
 
     def inlinedata_pre_emit(self, node):
         """ a pre inline block -> no newline at the end """
         return "<pre>%s</pre>" % self.deentity.replace_all(node.content)
 
     def blockdata_pass_emit(self, node):
-        return "%s\n\n" % node.content
+        return f"{node.content}\n\n"
         return node.content
 
     #--------------------------------------------------------------------------
@@ -212,16 +212,16 @@ class ReStructuredTextEmitter(BaseEmitter):
             if not old_url:
                 # new substitution
                 self._substitution_data.append(
-                    ".. _%s: %s" % (link_text, url)
+                    f".. _{link_text}: {url}"
                 )
-            return "`%s`_" % link_text
+            return f"`{link_text}`_"
 
         if old_url:
             # reuse a existing substitution
-            return "`%s`_" % link_text
+            return f"`{link_text}`_"
         else:
             # create a inline hyperlink
-            return "`%s <%s>`_" % (link_text, url)
+            return f"`{link_text} <{url}>`_"
 
     def img_emit(self, node):
         src = node.attrs["src"]
@@ -244,10 +244,10 @@ class ReStructuredTextEmitter(BaseEmitter):
         )
         if not old_src:
             self._substitution_data.append(
-                ".. |%s| image:: %s" % (substitution_text, src)
+                f".. |{substitution_text}| image:: {src}"
             )
 
-        return "|%s|" % substitution_text
+        return f"|{substitution_text}|"
 
     #--------------------------------------------------------------------------
 
@@ -270,7 +270,7 @@ class ReStructuredTextEmitter(BaseEmitter):
         if node.level == 1:
             # FIXME: This should be made ​​easier and better
             complete_list = "\n\n".join([i.strip("\n") for i in content.split("\n") if i])
-            content = "%s\n\n" % complete_list
+            content = f"{complete_list}\n\n"
 
         return content
 
@@ -291,7 +291,7 @@ class ReStructuredTextEmitter(BaseEmitter):
         )
         self.emit_children(node)
         content = self._table.get_rest_table()
-        return "%s\n\n" % content
+        return f"{content}\n\n"
 
 
 if __name__ == '__main__':

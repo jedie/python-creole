@@ -30,10 +30,10 @@ def _mask_content(emitter, node, mask_tag):
     content = emitter.emit_children(node)
     if not content:
         # single tag
-        return "<<%(mask_tag)s>><%(tag)s%(attrs)s /><</%(mask_tag)s>>" % tag_data
+        return f"<<{tag_data['mask_tag']}>><{tag_data['tag']}{tag_data['attrs']} /><</{tag_data['mask_tag']}>>"
 
-    start_tag = "<<%(mask_tag)s>><%(tag)s%(attrs)s><</%(mask_tag)s>>" % tag_data
-    end_tag = "<<%(mask_tag)s>></%(tag)s><</%(mask_tag)s>>" % tag_data
+    start_tag = f"<<{tag_data['mask_tag']}>><{tag_data['tag']}{tag_data['attrs']}><</{tag_data['mask_tag']}>>"
+    end_tag = f"<<{tag_data['mask_tag']}>></{tag_data['tag']}><</{tag_data['mask_tag']}>>"
 
     return start_tag + content + end_tag
 
@@ -47,9 +47,7 @@ def raise_unknown_node(emitter, node):
     """
     content = emitter.emit_children(node)
     raise NotImplementedError(
-        "Node from type '%s' is not implemented! (child content: %r)" % (
-            node.kind, content
-        )
+        f"Node from type '{node.kind}' is not implemented! (child content: {content!r})"
     )
 
 
@@ -89,10 +87,10 @@ def escape_unknown_nodes(emitter, node):
     content = emitter.emit_children(node)
     if not content:
         # single tag
-        return escape("<%(tag)s%(attrs)s />" % tag_data)
+        return escape(f"<{tag_data['tag']}{tag_data['attrs']} />")
 
-    start_tag = escape("<%(tag)s%(attrs)s>" % tag_data)
-    end_tag = escape("</%(tag)s>" % tag_data)
+    start_tag = escape(f"<{tag_data['tag']}{tag_data['attrs']}>")
+    end_tag = escape(f"</{tag_data['tag']}>")
 
     return start_tag + content + end_tag
 

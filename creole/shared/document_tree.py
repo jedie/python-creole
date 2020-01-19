@@ -32,9 +32,7 @@ class DocNode:
 
         self.attrs = dict(attrs)
         if content:
-            assert isinstance(content, str), "Given content %r is not unicode, it's type: %s" % (
-                content, type(content)
-            )
+            assert isinstance(content, str), f"Given content {content!r} is not unicode, it's type: {type(content)}"
 
         self.content = content
         self.level = level
@@ -57,7 +55,7 @@ class DocNode:
         return str(self.__repr__())
 
     def __repr__(self):
-        return "<DocNode %s: %r>" % (self.kind, self.content)
+        return f"<DocNode {self.kind}: {self.content!r}>"
 #        return "<DocNode %s (parent: %r): %r>" % (self.kind, self.parent, self.content)
 
     def debug(self):
@@ -77,7 +75,7 @@ class DocNode:
         """
         print("_" * 80)
         print("\tDocNode - debug:")
-        print("str(): %s" % self)
+        print(f"str(): {self}")
         print("attributes:")
         for i in dir(self):
             if i.startswith("_") or i == "debug":

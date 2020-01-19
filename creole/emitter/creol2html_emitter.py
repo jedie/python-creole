@@ -66,12 +66,12 @@ class TableOfContent(object):
         """Convert a python nested list like the one representing the toc to an html equivalent."""
         indent = "\t"*level
         if isinstance(nested_headlines, str):
-            return '%s<li><a href="#%s">%s</a></li>\n' % (indent, nested_headlines, nested_headlines)
+            return f'{indent}<li><a href="#{nested_headlines}">{nested_headlines}</a></li>\n'
         elif isinstance(nested_headlines, list):
-            html = '%s<ul>\n' % indent
+            html = f'{indent}<ul>\n'
             for elt in nested_headlines:
                 html += self.nested_headlines2html(elt, level + 1)
-            html += '%s</ul>' % indent
+            html += f'{indent}</ul>'
             if level > 0:
                 html += "\n"
             return html
@@ -239,15 +239,11 @@ class HtmlEmitter(object):
     #--------------------------------------------------------------------------
 
     def header_emit(self, node):
-        header = '<h%d>%s</h%d>' % (
-                node.level, self.html_escape(node.content), node.level
-        )
+        header = f'<h{node.level:d}>{self.html_escape(node.content)}</h{node.level:d}>'
         if self.toc is not None:
             self.toc.add_headline(node.level, node.content)
             # add link attribute for toc navigation
-            header = '<a name="%s">%s</a>' % (
-                self.html_escape(node.content), header
-            )
+            header = f'<a name="{self.html_escape(node.content)}">{header}</a>'
 
         header += "\n"
         return header
@@ -262,8 +258,7 @@ class HtmlEmitter(object):
         else:
             inside = self.html_escape(target)
 
-        return '<a href="%s">%s</a>' % (
-            self.attr_escape(target), inside)
+        return f'<a href="{self.attr_escape(target)}">{inside}</a>'
 
     def image_emit(self, node):
         target = node.content
@@ -281,8 +276,7 @@ class HtmlEmitter(object):
                         self.attr_escape(target), title, title, width, height)
             except:
                 pass
-        return '<img src="%s" title="%s" alt="%s" />' % (
-            self.attr_escape(target), text, text)
+        return f'<img src="{self.attr_escape(target)}" title="{text}" alt="{text}" />'
 
     def macro_emit(self, node):
         #print(node.debug())
@@ -296,9 +290,7 @@ class HtmlEmitter(object):
         except ValueError as e:
             exc_info = sys.exc_info()
             return self.error(
-                "Wrong macro arguments: %s for macro '%s' (maybe wrong macro tag syntax?)" % (
-                    json.dumps(args), macro_name
-                ),
+                f"Wrong macro arguments: {json.dumps(args)} for macro '{macro_name}' (maybe wrong macro tag syntax?)",
                 exc_info
             )
 
@@ -318,14 +310,14 @@ class HtmlEmitter(object):
 
         if macro == None:
             return self.error(
-                "Macro '%s' doesn't exist" % macro_name,
+                f"Macro '{macro_name}' doesn't exist",
                 exc_info
             )
 
         try:
             result = macro(**macro_kwargs)
         except TypeError as err:
-            msg = "Macro '%s' error: %s" % (macro_name, err)
+            msg = f"Macro '{macro_name}' error: {err}"
             exc_info = sys.exc_info()
             if self.verbose > 1:
                 if self.verbose > 2:
@@ -342,22 +334,22 @@ class HtmlEmitter(object):
                     try:
                         sourceline = inspect.getsourcelines(macro)[0][0].strip()
                     except IOError as err:
-                        evalue = etype("%s (error getting sourceline: %s from %s)" % (evalue, err, filename))
+                        evalue = etype(f"{evalue} (error getting sourceline: {err} from {filename})")
                     else:
-                        evalue = etype("%s (sourceline: %r from %s)" % (evalue, sourceline, filename))
+                        evalue = etype(f"{evalue} (sourceline: {sourceline!r} from {filename})")
                     exc_info = etype, evalue, etb
 
             return self.error(msg, exc_info)
         except Exception as err:
             return self.error(
-                "Macro '%s' error: %s" % (macro_name, err),
+                f"Macro '{macro_name}' error: {err}",
                 exc_info=sys.exc_info()
             )
 
         if not isinstance(result, str):
-            msg = "Macro '%s' doesn't return a unicode string!" % macro_name
+            msg = f"Macro '{macro_name}' doesn't return a unicode string!"
             if self.verbose > 1:
-                msg += " - returns: %r, type %r" % (result, type(result))
+                msg += f" - returns: {result!r}, type {type(result)!r}"
             return self.error(msg)
 
         if node.kind == "macro_block":
@@ -388,7 +380,7 @@ class HtmlEmitter(object):
 
     def default_emit(self, node):
         """Fallback function for emitting unknown nodes."""
-        raise NotImplementedError("Node '%s' unknown" % node.kind)
+        raise NotImplementedError(f"Node '{node.kind}' unknown")
 
     def emit_children(self, node):
         """Emit all the children of a node."""
@@ -397,7 +389,7 @@ class HtmlEmitter(object):
     def emit_node(self, node):
         """Emit a single node."""
         #print("%s_emit: %r" % (node.kind, node.content))
-        emit = getattr(self, '%s_emit' % node.kind, self.default_emit)
+        emit = getattr(self, f'{node.kind}_emit', self.default_emit)
         return emit(node)
 
     def emit(self):
@@ -418,7 +410,7 @@ class HtmlEmitter(object):
             self.stderr.write(exception)
 
         if self.verbose > 0:
-            return "[Error: %s]\n" % text
+            return f"[Error: {text}]\n"
         else:
             # No error output
             return ""

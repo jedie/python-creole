@@ -46,7 +46,7 @@ class MarkupTable(object):
                     if self.head_prefix and cell.startswith(self.head_prefix):
                         cell += " " # Headline
                     else:
-                        cell = " %s " % cell # normal cell
+                        cell = f" {cell} " # normal cell
                 line_cells.append(cell)
             cells.append(line_cells)
 

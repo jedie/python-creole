@@ -70,7 +70,7 @@ class TestCreole2html(BaseCreoleTest):
             tb_lines += error_msg.splitlines()
             tb_lines += [" -"*40]
             tb = "\n".join([" >>> %s" % l for l in tb_lines])
-            msg = "%r not found in:\n%s" % (part, tb)
+            msg = f"{part!r} not found in:\n{tb}"
             # TODO: use assertIn if python 2.6 will be not support anymore.
             if part not in error_msg:
                 raise self.failureException(msg)

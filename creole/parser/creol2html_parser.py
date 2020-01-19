@@ -357,7 +357,7 @@ class CreoleParser(object):
         self.cur = DocNode(key, self.cur)
 
         self.text = None
-        text = groups["%s_text" % key]
+        text = groups[f"{key}_text"]
         self.parse_inline(text)
 
         self.cur = self._upto(self.cur, (key,)).parent
@@ -431,7 +431,7 @@ class CreoleParser(object):
                 if self.debug and name != "char":
                     # TODO: use logging
                     debug(groups)
-                replace_method = getattr(self, '_%s_repl' % name)
+                replace_method = getattr(self, f'_{name}_repl')
                 replace_method(groups)
                 return
 
@@ -465,7 +465,7 @@ class CreoleParser(object):
             start_node = self.root
             print("  document tree:")
         else:
-            print("  tree from %s:" % start_node)
+            print(f"  tree from {start_node}:")
 
         print("=" * 80)
         def emit(node, ident=0):

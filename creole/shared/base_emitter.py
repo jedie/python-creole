@@ -38,7 +38,7 @@ class BaseEmitter(object):
     #--------------------------------------------------------------------------
 
     def blockdata_pass_emit(self, node):
-        return "%s\n\n" % node.content
+        return f"{node.content}\n\n"
         return node.content
 
     #--------------------------------------------------------------------------
@@ -57,11 +57,11 @@ class BaseEmitter(object):
             return self.deentity.replace_named(entity)
         except KeyError as err:
             if self.debugging:
-                print("unknown html entity found: %r" % entity)
-            return "&%s" % entity # FIXME
+                print(f"unknown html entity found: {entity!r}")
+            return f"&{entity}" # FIXME
         except UnicodeDecodeError as err:
             raise UnicodeError(
-                "Error handling entity %r: %s" % (entity, err)
+                f"Error handling entity {entity!r}: {err}"
             )
 
     def charref_emit(self, node):
@@ -98,7 +98,7 @@ class BaseEmitter(object):
 
     def li_emit(self, node):
         content = self.emit_children(node)
-        return "\n%s %s" % (self._inner_list, content)
+        return f"\n{self._inner_list} {content}"
 
     def _list_emit(self, node, list_type):
         start_newline = False
@@ -133,7 +133,7 @@ class BaseEmitter(object):
         )
         self.emit_children(node)
         content = self._table.get_table_markup()
-        return "%s\n" % content
+        return f"{content}\n"
 
     def tr_emit(self, node):
         self._table.add_tr()
@@ -167,7 +167,7 @@ class BaseEmitter(object):
         content = self.emit_children(node)
         content = self._escape_linebreaks(content)
         if node.kind in BLOCK_TAGS:
-            content = "%s\n\n" % content
+            content = f"{content}\n\n"
         return content
 
     def div_emit(self, node):
@@ -201,17 +201,15 @@ class BaseEmitter(object):
         def unicode_error(method_name, method, node, content):
             node.debug()
             raise AssertionError(
-                "Method '%s' (%s) returns no unicode - returns: %s (%s)" % (
-                    method_name, method, repr(content), type(content)
-                )
+                f"Method '{method_name}' ({method}) returns no unicode - returns: {repr(content)} ({type(content)})"
             )
 
         if node.level:
-            self.debug_msg("emit_node", "%s (level: %i): %r" % (node.kind, node.level, node.content))
+            self.debug_msg("emit_node", f"{node.kind} (level: {node.level:d}): {node.content!r}")
         else:
-            self.debug_msg("emit_node", "%s: %r" % (node.kind, node.content))
+            self.debug_msg("emit_node", f"{node.kind}: {node.content!r}")
 
-        method_name = "%s_emit" % node.kind
+        method_name = f"{node.kind}_emit"
         emit_method = getattr(self, method_name, None)
 
         if emit_method:

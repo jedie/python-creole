@@ -79,7 +79,7 @@ def dict2string(d):
     attr_list = []
     for key, value in sorted(d.items()):
         value_string = json.dumps(value)
-        attr_list.append("%s=%s" % (key, value_string))
+        attr_list.append(f"{key}={value_string}")
     return " ".join(attr_list)
 
 

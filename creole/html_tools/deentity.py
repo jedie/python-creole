@@ -67,7 +67,7 @@ class Deentity(object):
             groups = match.groupdict()
             for name, text in groups.items():
                 if text is not None:
-                    replace_method = getattr(self, 'replace_%s' % name)
+                    replace_method = getattr(self, f'replace_{name}')
                     return replace_method(text)
 
             # Should never happen:

@@ -105,9 +105,7 @@ def get_long_description(package_root, filename="README.creole", raise_errors=No
             raise
         # Don't raise the error e.g. in ./setup install process
         evalue = sys.exc_info()[1]
-        long_description_rest = "[Error: %s]\n%s" % (
-            evalue, long_description_origin
-        )
+        long_description_rest = f"[Error: {evalue}]\n{long_description_origin}"
     else:
         if raise_errors:
             # Test created ReSt code like PyPi does it.
@@ -115,11 +113,11 @@ def get_long_description(package_root, filename="README.creole", raise_errors=No
             try:
                 pypi_rest2html(long_description_rest)
             except SystemExit as e:
-                msg = "Error creole2rest self test failed: rest2html() exist with status code: %s\n" % e.args[0]
+                msg = f"Error creole2rest self test failed: rest2html() exist with status code: {e.args[0]}\n"
                 sys.stderr.write(msg)
                 sys.exit(msg)
             except Exception as e:
-                sys.exit("ReSt2html error: %s" % e)
+                sys.exit(f"ReSt2html error: {e}")
             else:
                 if "check" in sys.argv:
                     print("Generating creole to ReSt to html, ok.")

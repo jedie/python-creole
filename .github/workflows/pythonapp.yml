@@ -28,10 +28,10 @@ jobs:
         source $HOME/.poetry/env
         make tox-listenvs
 
-#    - name: Run linters
-#      run: |
-#        source $HOME/.poetry/env
-#        make lint
+    - name: Run linters
+      run: |
+        source $HOME/.poetry/env
+        make lint
 
     - name: Run tests with Python v3.8
       run: |

@@ -43,7 +43,7 @@ class TextileEmitter(BaseEmitter):
         return "<pre>%s</pre>" % self.deentity.replace_all(node.content)
 
     def blockdata_pass_emit(self, node):
-        return "%s\n\n" % node.content
+        return f"{node.content}\n\n"
         return node.content
 
 
@@ -53,7 +53,7 @@ class TextileEmitter(BaseEmitter):
         return "%s\n\n" % self.emit_children(node)
 
     def headline_emit(self, node):
-        return "h%i. %s\n\n" % (node.level, self.emit_children(node))
+        return f"h{node.level:d}. {self.emit_children(node)}\n\n"
 
     #--------------------------------------------------------------------------
 
@@ -96,7 +96,7 @@ class TextileEmitter(BaseEmitter):
     def a_emit(self, node):
         link_text = self.emit_children(node)
         url = node.attrs["href"]
-        return '"%s":%s' % (link_text, url)
+        return f'"{link_text}":{url}'
 
     def img_emit(self, node):
         src = node.attrs["src"]
@@ -114,7 +114,7 @@ class TextileEmitter(BaseEmitter):
         if text == "": # Use filename as picture text
             text = posixpath.basename(src)
 
-        return "!%s(%s)!" % (src, text)
+        return f"!{src}({text})!"
 
     #--------------------------------------------------------------------------
 

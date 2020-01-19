@@ -43,7 +43,7 @@ class CreoleEmitter(BaseEmitter):
         return "{{{%s}}}" % self.deentity.replace_all(node.content)
 
     def blockdata_pass_emit(self, node):
-        return "%s\n\n" % node.content
+        return f"{node.content}\n\n"
         return node.content
 
     #--------------------------------------------------------------------------
@@ -101,9 +101,9 @@ class CreoleEmitter(BaseEmitter):
             # e.g.: <a name="anchor-one">foo</a>
             return link_text
         if link_text == url:
-            return "[[%s]]" % url
+            return f"[[{url}]]"
         else:
-            return "[[%s|%s]]" % (url, link_text)
+            return f"[[{url}|{link_text}]]"
 
     def img_emit(self, node):
         src = node.attrs["src"]

@@ -74,7 +74,7 @@ class CleanHTMLTranslator(html4css1.HTMLTranslator, object):
 
         if tagname in IGNORE_TAGS:
             if DEBUG:
-                print("ignore tag %r" % tagname)
+                print(f"ignore tag {tagname!r}")
             return ""
 
         parts = [tagname]
@@ -91,7 +91,7 @@ class CleanHTMLTranslator(html4css1.HTMLTranslator, object):
             if isinstance(value, list):
                 value = ' '.join([str(x) for x in value])
 
-            part = '%s="%s"' % (name.lower(), self.attval(str(value)))
+            part = f'{name.lower()}="{self.attval(str(value))}"'
             parts.append(part)
 
         if DEBUG:
@@ -105,7 +105,7 @@ class CleanHTMLTranslator(html4css1.HTMLTranslator, object):
             infix = ''
         html = '<%s%s>%s' % (' '.join(parts), infix, suffix)
         if DEBUG:
-            print("startag html: %r" % html)
+            print(f"startag html: {html!r}")
         return html
 
     def visit_section(self, node):
@@ -180,7 +180,7 @@ class CleanHTMLTranslator(html4css1.HTMLTranslator, object):
                 align = node.parent['align']
 
             if align:
-                self.body[-1] = self.body[-1].replace(' />', ' align="%s" />' % align)
+                self.body[-1] = self.body[-1].replace(' />', f' align="{align}" />')
 
 
 
@@ -199,7 +199,7 @@ def rest2html(content, enable_exit_status=None, **kwargs):
     ...
     SystemExit: 13
     """
-    assert isinstance(content, str), "rest2html content must be %s, but it's %s" % (str, type(content))
+    assert isinstance(content, str), f"rest2html content must be {str}, but it's {type(content)}"
 
     settings_overrides = {
         "input_encoding": "unicode",

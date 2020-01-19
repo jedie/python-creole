@@ -96,11 +96,11 @@ class HtmlParser(HTMLParser):
 
     def _pre_cut(self, data, type, placeholder):
         if self.debugging:
-            print("append blockdata: %r" % data)
+            print(f"append blockdata: {data!r}")
         assert isinstance(data, str), "blockdata is not unicode"
         self.blockdata.append(data)
         id = len(self.blockdata) - 1
-        return '<%s type="%s" id="%s" />' % (placeholder, type, id)
+        return f'<{placeholder} type="{type}" id="{id}" />'
 
     def _pre_pre_inline_cut(self, groups):
         return self._pre_cut(groups["pre_inline"], "pre", self._inline_placeholder)
@@ -120,7 +120,7 @@ class HtmlParser(HTMLParser):
             if text is not None:
                 if self.debugging:
                     print("%15s: %r (%r)" % (name, text, match.group(0)))
-                method = getattr(self, '_pre_%s_cut' % name)
+                method = getattr(self, f'_pre_{name}_cut')
                 return method(groups)
 
 #        data = match.group("data")
@@ -175,7 +175,7 @@ class HtmlParser(HTMLParser):
     #-------------------------------------------------------------------------
 
     def handle_starttag(self, tag, attrs):
-        self.debug_msg("starttag", "%r atts: %s" % (tag, attrs))
+        self.debug_msg("starttag", f"{tag!r} atts: {attrs}")
 
         if tag in IGNORE_TAGS:
             return
@@ -200,26 +200,26 @@ class HtmlParser(HTMLParser):
             self.cur = DocNode(tag, self.cur, None, attrs)
 
     def handle_data(self, data):
-        self.debug_msg("data", "%r" % data)
+        self.debug_msg("data", f"{data!r}")
         assert isinstance(data, str)
         DocNode("data", self.cur, content=data)
 
     def handle_charref(self, name):
-        self.debug_msg("charref", "%r" % name)
+        self.debug_msg("charref", f"{name!r}")
         DocNode("charref", self.cur, content=name)
 
     def handle_entityref(self, name):
-        self.debug_msg("entityref", "%r" % name)
+        self.debug_msg("entityref", f"{name!r}")
         DocNode("entityref", self.cur, content=name)
 
     def handle_startendtag(self, tag, attrs):
-        self.debug_msg("startendtag", "%r atts: %s" % (tag, attrs))
+        self.debug_msg("startendtag", f"{tag!r} atts: {attrs}")
         attr_dict = dict(attrs)
         if tag in (self._block_placeholder, self._inline_placeholder):
             id = int(attr_dict["id"])
 #            block_type = attr_dict["type"]
             DocNode(
-                "%s_%s" % (tag, attr_dict["type"]),
+                f"{tag}_{attr_dict['type']}",
                 self.cur,
                 content=self.blockdata[id],
 #                attrs = attr_dict
@@ -231,7 +231,7 @@ class HtmlParser(HTMLParser):
         if tag in IGNORE_TAGS:
             return
 
-        self.debug_msg("endtag", "%r" % tag)
+        self.debug_msg("endtag", f"{tag!r}")
 
         if tag == "br": # handled in starttag
             return
@@ -263,7 +263,7 @@ class HtmlParser(HTMLParser):
             start_node = self.root
             print("  document tree:")
         else:
-            print("  tree from %s:" % start_node)
+            print(f"  tree from {start_node}:")
 
         print("=" * 80)
         def emit(node, ident=0):
@@ -271,13 +271,13 @@ class HtmlParser(HTMLParser):
                 txt = "%s%s" % (" " * ident, child.kind)
 
                 if child.content:
-                    txt += ": %r" % child.content
+                    txt += f": {child.content!r}"
 
                 if child.attrs:
-                    txt += " - attrs: %r" % child.attrs
+                    txt += f" - attrs: {child.attrs!r}"
 
                 if child.level != None:
-                    txt += " - level: %r" % child.level
+                    txt += f" - level: {child.level!r}"
 
                 print(txt)
                 emit(child, ident + 4)

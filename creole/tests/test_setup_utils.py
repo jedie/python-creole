@@ -44,12 +44,12 @@ class SetupUtilsTests(BaseCreoleTest):
     def test_creole_package_path(self):
         self.assertTrue(
             os.path.isdir(CREOLE_PACKAGE_ROOT),
-            "CREOLE_PACKAGE_ROOT %r is not a existing direcotry!" % CREOLE_PACKAGE_ROOT
+            f"CREOLE_PACKAGE_ROOT {CREOLE_PACKAGE_ROOT!r} is not a existing direcotry!"
         )
         filepath = os.path.join(CREOLE_PACKAGE_ROOT, "README.creole")
         self.assertTrue(
             os.path.isfile(filepath),
-            "README file %r not found!" % filepath
+            f"README file {filepath!r} not found!"
         )
 
     def test_get_long_description_without_raise_errors(self):

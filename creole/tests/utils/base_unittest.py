@@ -36,7 +36,7 @@ try:
     from creole.rest_tools.clean_writer import rest2html
 except DocutilsImportError as err:
     REST_INSTALLED = False
-    warnings.warn("Can't run all ReSt unittests: %s" % err)
+    warnings.warn(f"Can't run all ReSt unittests: {err}")
 else:
     REST_INSTALLED = True
 
@@ -85,7 +85,7 @@ class BaseCreoleTest(MarkupTest):
 
         print()
         print("_" * 79)
-        print(" Debug Text: %s:" % msg)
+        print(f" Debug Text: {msg}:")
         print(text)
         print("-" * 79)
 
