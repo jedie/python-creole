@@ -51,7 +51,7 @@ class InlineRules(object):
 #        ''' % proto
 
     # image tag
-    image = r'''(?i)(?P<image>
+    image = r'''(?P<image>
             {{
             (?P<image_target>.+?) \s*
             (\| \s* (?P<image_text>.+?) \s*)?
