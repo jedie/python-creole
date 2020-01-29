@@ -1,18 +1,13 @@
-# coding: utf-8
-
 
 """
     python-creole
     ~~~~~~~~~~~~~
 
-    :homepage:
-      http://code.google.com/p/python-creole/
-
     :sourcecode:
-      http://github.com/jedie/python-creole
+      https://github.com/jedie/python-creole
 
     :PyPi:
-      http://pypi.python.org/pypi/python-creole/
+      https://pypi.org/project/python-creole/
 
     :copyleft: 2008-2020 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
@@ -28,7 +23,7 @@ from creole.emitter.html2textile_emitter import TextileEmitter
 from creole.parser.creol2html_parser import CreoleParser
 from creole.parser.html_parser import HtmlParser
 
-__version__ = "1.4.1"
+__version__ = "1.4.2.dev1"
 __api__ = "1.0"  # Creole 1.0 spec - http://wikicreole.org/
 
 VERSION_STRING = __version__  # remove in future

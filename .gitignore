@@ -4,9 +4,13 @@
 *.egg-info
 /dist
 /build
+/publish.log
 
 .idea
 /poetry.lock
 /.coverage
 
 .tox
+
+# Will be generated from README.creole and added to sdist
+/README.rst

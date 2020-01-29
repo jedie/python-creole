@@ -1,14 +1,10 @@
 [tool.poetry]
 name = 'python-creole'
-version = '1.4.1'
+version = "1.4.2.dev1"
 description = 'python-creole is an open-source (GPL) markup converter in pure Python for: creole2html, html2creole, html2ReSt, html2textile'
 
-# TODO: convert it:
-readme='README.creole'
-
-# on the way, see: https://github.com/python-poetry/poetry/pull/1166/
-# https://packaging.python.org/guides/making-a-pypi-friendly-readme/#including-your-readme-in-your-package-s-metadata
-# long_description_content_type = 'text/plain'
+# Will be generated from README.creole with: 'poetry run update_rst_readme'
+readme='README.rst'
 
 license = 'GPL-3.0-or-later'
 authors = ['Jens Diemer <python-creole@jensdiemer.de>']
@@ -57,6 +53,8 @@ creole2html = 'creole.cmdline:cli_creole2html'
 html2creole = 'creole.cmdline:cli_html2creole'
 html2rest = 'creole.cmdline:cli_html2rest'
 html2textile = 'creole.cmdline:cli_html2textile'
+update_rst_readme = 'creole.setup_utils:update_creole_rst_readme'
+publish = 'creole.setup_utils:publish_python_creole'
 
 [build-system]
 requires = ['poetry>=0.12']
