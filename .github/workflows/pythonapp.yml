@@ -36,6 +36,7 @@ jobs:
         make tox-listenvs
 
     - name: 'Run linters'
+      if: matrix.python-version == '3.8'
       run: |
         source $HOME/.poetry/env
         make lint
