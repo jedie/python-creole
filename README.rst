@@ -34,6 +34,8 @@ The creole2html part based on the creole markup parser and emitter from the Moin
 +-----------------------------------+
 | |Status on landscape.io|          |
 +-----------------------------------+
+| |PyPi version|                    |
++-----------------------------------+
 
 .. |Build Status on github| image:: https://github.com/jedie/python-creole/workflows/test/badge.svg?branch=master
 .. |Build Status on travis-ci.org| image:: https://travis-ci.org/jedie/python-creole.svg
@@ -42,6 +44,8 @@ The creole2html part based on the creole markup parser and emitter from the Moin
 .. _coveralls.io/r/jedie/python-creole: https://coveralls.io/r/jedie/python-creole
 .. |Status on landscape.io| image:: https://landscape.io/github/jedie/python-creole/master/landscape.svg
 .. _landscape.io/github/jedie/python-creole/master: https://landscape.io/github/jedie/python-creole/master
+.. |PyPi version| image:: https://badge.fury.io/py/python-creole.svg
+.. _pypi.org/project/python-creole/: https://pypi.org/project/python-creole/
 
 =======
 install
@@ -616,4 +620,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole with "python-creole" at 2020-02-01 12:50:27``
+``Note: this file is generated from README.creole 2020-02-01 14:17:25 with "python-creole"``
