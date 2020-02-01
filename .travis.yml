@@ -16,8 +16,9 @@ matrix:
     env: TOXENV=py38
   - os: linux
     python: pypy3
-  - os: osx
-    language: generic
+  # TODO:
+  #- os: osx
+  #  language: generic
 
 install:
   - make install-poetry
