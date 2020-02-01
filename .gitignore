@@ -4,6 +4,7 @@
 *.egg-info
 /dist
 /build
+/publish.log
 
 .idea
 /poetry.lock

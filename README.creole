@@ -22,6 +22,7 @@ The creole2html part based on the creole markup parser and emitter from the Moin
 | {{https://travis-ci.org/jedie/python-creole.svg|Build Status on travis-ci.org}} | [[https://travis-ci.org/jedie/python-creole/|travis-ci.org/jedie/python-creole]] |
 | {{https://coveralls.io/repos/jedie/python-creole/badge.svg|Coverage Status on coveralls.io}} | [[https://coveralls.io/r/jedie/python-creole|coveralls.io/r/jedie/python-creole]] |
 | {{https://landscape.io/github/jedie/python-creole/master/landscape.svg|Status on landscape.io}} | [[https://landscape.io/github/jedie/python-creole/master|landscape.io/github/jedie/python-creole/master]] |
+| {{https://badge.fury.io/py/python-creole.svg|PyPi version}} | [[https://pypi.org/project/python-creole/|pypi.org/project/python-creole/]] |
 
 
 = install =
