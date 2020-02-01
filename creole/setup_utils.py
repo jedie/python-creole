@@ -1,40 +1,12 @@
 """
-    utils for distutils setup
+    Python setup.py utilities
     ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    Get README.creole as ReStructuredText on-the-fly for setup.long_description
+    Generate ReStructuredText README from README.creole.
+    Usable for other python packages, too.
 
     More information:
-        https://code.google.com/p/python-creole/wiki/UseInSetup
-
-    usage in setup.py e.g.:
-    ---------------------------------------------------------------------------
-    #!/usr/bin/env python
-    # coding: utf-8
-
-    import os
-    import sys
-    from setuptools import setup, find_packages
-
-    PACKAGE_ROOT = os.path.dirname(os.path.abspath(__file__))
-
-    try:
-        from creole.setup_utils import get_long_description
-    except ImportError:
-        if 'register' in sys.argv or 'sdist' in sys.argv or '--long-description' in sys.argv:
-            etype, evalue, etb = sys.exc_info()
-            evalue = etype('%s - Please install python-creole >= v0.8 -  e.g.: pip install python-creole' % evalue)
-            raise etype, evalue, etb
-        long_description = None
-    else:
-        long_description = get_long_description(PACKAGE_ROOT)
-
-    setup(
-        ...
-        long_description = long_description,
-        ...
-    )
-    ---------------------------------------------------------------------------
+        https://github.com/jedie/python-creole/wiki/Use-In-Setup
 
     :copyleft: 2011-2020 by the python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
@@ -172,10 +144,11 @@ def update_rst_readme(package_root, filename='README.creole'):
         f.write(f'``Note: this file is generated from {filename} {dt} with "python-creole"``')
 
     print('done.')
+    return rest_readme_path
 
 
 def update_creole_rst_readme():
-    update_rst_readme(
+    return update_rst_readme(
         package_root=Path(__file__).parent.parent,
         filename='README.creole'
     )

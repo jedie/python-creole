@@ -1,26 +1,21 @@
-# coding: utf-8
-
-
 """
     unitest generic utils
     ~~~~~~~~~~~~~~~~~~~~~
 
     Generic utils useable for a markup test.
 
-    :copyleft: 2008-2011 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2008-2020 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
 
 import difflib
+import os
+import shutil
+import tempfile
 import textwrap
 import unittest
-
-# error output format:
-# =1 -> via repr()
-# =2 -> raw
-VERBOSE = 1
-#VERBOSE = 2
+from pathlib import Path
 
 
 def make_diff(block1, block2):
@@ -31,7 +26,7 @@ def make_diff(block1, block2):
 
     diff = d.compare(block1, block2)
 
-    result = ["%2s %s\n" % (line, i) for line, i in enumerate(diff)]
+    result = [f"{line:>2} {i}\n" for line, i in enumerate(diff)]
     return "".join(result)
 
 
@@ -40,11 +35,17 @@ class MarkupTest(unittest.TestCase):
     Special error class: Try to display markup errors in a better way.
     """
 
+    # error output format:
+    # =1 -> via repr()
+    # =2 -> raw
+    VERBOSE = 1
+    #VERBOSE = 2
+
     def _format_output(self, txt):
         txt = txt.split("\\n")
-        if VERBOSE == 1:
+        if self.VERBOSE == 1:
             txt = "".join(['%s\\n\n' % i for i in txt])
-        elif VERBOSE == 2:
+        elif self.VERBOSE == 2:
             txt = "".join(['%s\n' % i for i in txt])
         return txt
 
@@ -83,3 +84,30 @@ class MarkupTest(unittest.TestCase):
             txt = txt[1:]
 
         return txt
+
+
+class IsolatedFilesystem:
+    """
+    Context manager, e.g.:
+    with IsolatedFilesystem(prefix="temp_dir_prefix"):
+        print("I'm in the temp path here: %s" % Path().cwd())
+    """
+
+    def __init__(self, prefix=None):
+        super().__init__()
+
+        self.prefix = prefix
+
+    def __enter__(self):
+        print(f"Use prefix: {self.prefix!r}")
+
+        self.cwd = Path().cwd()
+        self.temp_path = tempfile.mkdtemp(prefix=self.prefix)
+        os.chdir(self.temp_path)
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        os.chdir(str(self.cwd))  # str() needed for older python <=3.5
+        try:
+            shutil.rmtree(self.temp_path)
+        except OSError:
+            pass
