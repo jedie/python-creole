@@ -14,7 +14,6 @@ import shutil
 import sys
 import tempfile
 from pathlib import Path
-from unittest import TestCase
 
 from creole.setup_utils import get_long_description, update_creole_rst_readme
 from creole.tests.constants import CREOLE_PACKAGE_ROOT
