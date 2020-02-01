@@ -23,7 +23,7 @@ from creole.emitter.html2textile_emitter import TextileEmitter
 from creole.parser.creol2html_parser import CreoleParser
 from creole.parser.html_parser import HtmlParser
 
-__version__ = "1.4.2.dev2"
+__version__ = "1.4.2"
 __api__ = "1.0"  # Creole 1.0 spec - http://wikicreole.org/
 
 VERSION_STRING = __version__  # remove in future
