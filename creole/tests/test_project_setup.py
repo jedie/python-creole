@@ -33,5 +33,5 @@ def test_version():
 
     assert_file_contains_string(
         file_path=Path(CREOLE_PACKAGE_ROOT, 'pyproject.toml'),
-        string=f'version = "{__version__}"'
+        string=f"version = '{__version__}'"
     )
