@@ -27,13 +27,9 @@ install:
   - make tox-listenvs
 
 script:
-  - |
-    if [[ "$TOXENV" != "" ]]; then
-      - make tox
-      - make lint
-    else
-      - make pytest
-    fi
+  - if [ "$TOXENV" == "" ]; then make pytest; fi
+  - if [ "$TOXENV" != "" ]; then make tox; fi
+  - if [ "$TOXENV" != "" ]; then make lint; fi
 
 after_success:
   - coveralls
