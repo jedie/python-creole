@@ -56,15 +56,11 @@ tox-py38: check-poetry ## Run pytest via tox with *python v3.8*
 pytest: check-poetry ## Run pytest
 	poetry run pytest
 
-release: ## Release new version [usage: v=rule]
-	# Update pyproject and changelog
-	poetry version $(v)
-	sed -i "" "s/\[Unreleased\]/\[$(VERSION)\] - $(shell date +%F)/" CHANGELOG.md
-	# Create commit and tag
-	git commit pyproject.toml CHANGELOG.md -m "Bump version to $(VERSION)" && git tag "v$(VERSION)"
-	git push && git push --tags
-	# Publish to pypi
-	poetry publish --build
+update-rst-readme: ## update README.rst from README.creole
+	poetry run update_rst_readme
+
+publish: ## Release new version to PyPi
+	poetry run publish
 
 
-.PHONY: help install lint fix test release
+.PHONY: help install lint fix test publish

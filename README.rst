@@ -34,6 +34,8 @@ The creole2html part based on the creole markup parser and emitter from the Moin
 +-----------------------------------+
 | |Status on landscape.io|          |
 +-----------------------------------+
+| |PyPi version|                    |
++-----------------------------------+
 
 .. |Build Status on github| image:: https://github.com/jedie/python-creole/workflows/test/badge.svg?branch=master
 .. |Build Status on travis-ci.org| image:: https://travis-ci.org/jedie/python-creole.svg
@@ -42,6 +44,8 @@ The creole2html part based on the creole markup parser and emitter from the Moin
 .. _coveralls.io/r/jedie/python-creole: https://coveralls.io/r/jedie/python-creole
 .. |Status on landscape.io| image:: https://landscape.io/github/jedie/python-creole/master/landscape.svg
 .. _landscape.io/github/jedie/python-creole/master: https://landscape.io/github/jedie/python-creole/master
+.. |PyPi version| image:: https://badge.fury.io/py/python-creole.svg
+.. _pypi.org/project/python-creole/: https://pypi.org/project/python-creole/
 
 =======
 install
@@ -242,21 +246,44 @@ unittests
     ~$ cd python-creole
     
     # install or update poetry:
-    ~/python-crole$ make install-poetry
+    ~/python-creole$ make install-poetry
     
     # install python-creole via poetry:
-    ~/python-crole$ make install
+    ~/python-creole$ make install
     
     # Run pytest:
-    ~/python-crole$ make pytest
+    ~/python-creole$ make pytest
     
     # Run pytest via tox with all environments:
-    ~/python-crole$ make tox
+    ~/python-creole$ make tox
     
     # Run pytest via tox with one Python version:
-    ~/python-crole$ make tox-py38
-    ~/python-crole$ make tox-py37
-    ~/python-crole$ make tox-py36
+    ~/python-creole$ make tox-py38
+    ~/python-creole$ make tox-py37
+    ~/python-creole$ make tox-py36
+
+------------
+make targets
+------------
+
+To see all make targets, just call ``make``:
+
+::
+
+    ~/python-creole$ make
+    help                 List all commands
+    install-poetry       install or update poetry
+    install              install python-creole via poetry
+    lint                 Run code formatters and linter
+    fix-code-style       Fix code formatting
+    tox-listenvs         List all tox test environments
+    tox                  Run pytest via tox with all environments
+    tox-py36             Run pytest via tox with *python v3.6*
+    tox-py37             Run pytest via tox with *python v3.7*
+    tox-py38             Run pytest via tox with *python v3.8*
+    pytest               Run pytest
+    update-rst-readme    update README.rst from README.creole
+    publish              Release new version to PyPi
 
 --------------------
 Use creole in README
@@ -616,4 +643,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole with "python-creole" at 2020-02-01 12:50:27``
+``Note: this file is generated from README.creole 2020-02-01 15:25:27 with "python-creole"``

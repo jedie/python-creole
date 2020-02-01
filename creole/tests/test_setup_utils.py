@@ -1,45 +1,29 @@
-
 """
     unittest for setup_utils
     ~~~~~~~~~~~~~~~~~~~~~~~~
 
-    https://code.google.com/p/python-creole/wiki/UseInSetup
+    https://github.com/jedie/python-creole/wiki/Use-In-Setup
 
     :copyleft: 2011-2020 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
-
-
+import difflib
+import filecmp
 import os
+import shutil
 import tempfile
-import warnings
+from pathlib import Path
 
-import creole
-from creole.setup_utils import get_long_description
+from creole.setup_utils import get_long_description, update_creole_rst_readme
+from creole.tests.constants import CREOLE_PACKAGE_ROOT
 from creole.tests.utils.base_unittest import BaseCreoleTest
+from creole.tests.utils.utils import IsolatedFilesystem
 
-try:
-    import docutils  # noqa flake8
-    DOCUTILS = True
-except ImportError:
-    DOCUTILS = False
-
-
-CREOLE_PACKAGE_ROOT = os.path.abspath(os.path.join(os.path.dirname(creole.__file__), ".."))
-TEST_README_DIR = os.path.abspath(os.path.dirname(__file__))
+TEST_README_DIR = Path(__file__).parent
 TEST_README_FILENAME = "test_README.creole"
 
 
-# TODO: Use @unittest.skipIf if python 2.6 will be not support anymore.
-# @unittest.skipIf(DOCUTILS == False, "docutils not installed.")
 class SetupUtilsTests(BaseCreoleTest):
-    def run(self, *args, **kwargs):
-        # TODO: Remove if python 2.6 will be not support anymore.
-        if not DOCUTILS:
-            warnings.warn("Skip SetupUtilsTests, because 'docutils' not installed.")
-            return
-        return super(SetupUtilsTests, self).run(*args, **kwargs)
-
     def test_creole_package_path(self):
         self.assertTrue(
             os.path.isdir(CREOLE_PACKAGE_ROOT),
@@ -123,3 +107,43 @@ class SetupUtilsTests(BaseCreoleTest):
 
         txt = "German Umlaute: ä ö ü ß Ä Ö Ü"
         self.assertIn(txt, long_description)
+
+
+def test_update_rst_readme():
+    with IsolatedFilesystem(prefix="temp_dir_prefix"):
+        old_rest_readme_path = Path(Path().cwd(), 'README.rst')
+        shutil.copy(
+            Path(CREOLE_PACKAGE_ROOT, 'README.rst'),
+            old_rest_readme_path
+        )
+        try:
+            rest_readme_path = update_creole_rst_readme()
+            assert str(rest_readme_path.relative_to(CREOLE_PACKAGE_ROOT)) == 'README.rst'
+
+            if filecmp.cmp(rest_readme_path, old_rest_readme_path, shallow=False) is True:
+                return
+
+            # On CI the file modification time maybe not the same.
+            # So skip the last line and compare again.
+
+            with old_rest_readme_path.open('r') as f:
+                from_file = [line.rstrip() for line in f][:-1]
+
+            with rest_readme_path.open('r') as f:
+                to_file = [line.rstrip() for line in f][:-1]
+
+            if from_file == to_file:
+                return
+
+            diff = '\n'.join(
+                line
+                for line in difflib.Differ().compare(from_file, to_file)
+                if line[0] != ' '
+            )
+            raise AssertionError(f'README.rst is not up-to-date:\n{diff}')
+        finally:
+            # restore the origin file
+            shutil.copy(
+                old_rest_readme_path,
+                Path(CREOLE_PACKAGE_ROOT, 'README.rst'),
+            )
