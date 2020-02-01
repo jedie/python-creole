@@ -23,6 +23,7 @@ from pathlib import Path
 
 from creole import __version__, creole2html, html2rest
 from creole.shared.unknown_tags import raise_unknown_node, transparent_unknown_nodes
+from creole.tests.test_project_setup import test_version
 
 RAISE_ERRORS_ARGS = (
     'check', 'register', 'sdist', 'bdist', 'upload',
@@ -314,6 +315,7 @@ def publish_python_creole():
         Call this via:
             $ poetry run publish
     """
+    test_version()
     poetry_publish(
         package_root=Path(__file__).parent.parent,
         version=__version__,
