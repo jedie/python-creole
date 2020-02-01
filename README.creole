@@ -227,9 +227,13 @@ Note: In this case you must install **docutils**! See above.
 
 = history =
 
-* *dev* - [[https://github.com/jedie/python-creole/compare/v1.4.1...master|compare v1.4.1...master]]
+* *dev* - [[https://github.com/jedie/python-creole/compare/v1.4.2...master|compare v1.4.2...master]]
 ** TBC
-* v1.4.1 - 2020-01-19 - [[https://github.com/jedie/python-creole/compare/v1.4.0...master|compare v1.4.0...master]]
+* v1.4.2 - 2020-02-01 - [[https://github.com/jedie/python-creole/compare/v1.4.1...v1.4.2|compare v1.4.1...v1.4.2]]
+** Update CI configs on github and travis
+** Update {{{Makefile}}}: add {{{make publish}}} and {{{make update-rst-readme}}}
+** Add generated {{{README.rst}}} in repository to fix install problems about missing readme
+* v1.4.1 - 2020-01-19 - [[https://github.com/jedie/python-creole/compare/v1.4.0...v1.4.1|compare v1.4.0...v1.4.1]]
 ** Remove Python v2 support code
 ** [[https://github.com/jedie/python-creole/issues/26|Fix "Undefined substitution referenced" error]] contributed by dforsi
 ** [[https://github.com/jedie/python-creole/pull/37|Fix regression in tests for setup_utils]] contributed by jugmac00
@@ -237,7 +241,7 @@ Note: In this case you must install **docutils**! See above.
 ** sort imports with isort
 ** change old {{{%-formatted}}} and {{{.format(...)}}} strings into Python 3.6+'s {{{f-strings}}} with flynt
 ** Activate linting in CI pipeline
-* v1.4.0 - 2020-01-19 - [[https://github.com/jedie/python-creole/compare/v1.3.2...master|compare v1.3.2...master]]
+* v1.4.0 - 2020-01-19 - [[https://github.com/jedie/python-creole/compare/v1.3.2...v1.4.0|compare v1.3.2...v1.4.0]]
 ** modernize project:
 *** use poetry
 *** Add a {{{Makefile}}}

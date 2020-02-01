@@ -298,11 +298,19 @@ Note: In this case you must install **docutils**! See above.
 history
 =======
 
-* *dev* - `compare v1.4.1...master <https://github.com/jedie/python-creole/compare/v1.4.1...master>`_ 
+* *dev* - `compare v1.4.2...master <https://github.com/jedie/python-creole/compare/v1.4.2...master>`_ 
 
     * TBC
 
-* v1.4.1 - 2020-01-19 - `compare v1.4.0...master <https://github.com/jedie/python-creole/compare/v1.4.0...master>`_ 
+* v1.4.2 - 2020-02-01 - `compare v1.4.1...v1.4.2 <https://github.com/jedie/python-creole/compare/v1.4.1...v1.4.2>`_ 
+
+    * Update CI configs on github and travis
+
+    * Update ``Makefile``: add ``make publish`` and ``make update-rst-readme``
+
+    * Add generated ``README.rst`` in repository to fix install problems about missing readme
+
+* v1.4.1 - 2020-01-19 - `compare v1.4.0...v1.4.1 <https://github.com/jedie/python-creole/compare/v1.4.0...v1.4.1>`_ 
 
     * Remove Python v2 support code
 
@@ -318,7 +326,7 @@ history
 
     * Activate linting in CI pipeline
 
-* v1.4.0 - 2020-01-19 - `compare v1.3.2...master <https://github.com/jedie/python-creole/compare/v1.3.2...master>`_ 
+* v1.4.0 - 2020-01-19 - `compare v1.3.2...v1.4.0 <https://github.com/jedie/python-creole/compare/v1.3.2...v1.4.0>`_ 
 
     * modernize project:
 
@@ -643,4 +651,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-02-01 15:25:27 with "python-creole"``
+``Note: this file is generated from README.creole 2020-02-01 16:46:16 with "python-creole"``
