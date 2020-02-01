@@ -227,8 +227,10 @@ Note: In this case you must install **docutils**! See above.
 
 = history =
 
-* *dev* - [[https://github.com/jedie/python-creole/compare/v1.4.2...master|compare v1.4.2...master]]
+* *dev* - [[https://github.com/jedie/python-creole/compare/v1.4.3...master|compare v1.4.3...master]]
 ** TBC
+* v1.4.3 - 2020-02-01 - [[https://github.com/jedie/python-creole/compare/v1.4.2...v1.4.3|compare v1.4.2...v1.4.3]]
+** Use new [[https://pypi.org/project/poetry-publish/|poetry-publish]] for {{{make publish}}}
 * v1.4.2 - 2020-02-01 - [[https://github.com/jedie/python-creole/compare/v1.4.1...v1.4.2|compare v1.4.1...v1.4.2]]
 ** Update CI configs on github and travis
 ** Update {{{Makefile}}}: add {{{make publish}}} and {{{make update-rst-readme}}}
