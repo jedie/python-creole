@@ -15,15 +15,12 @@
 import codecs
 import datetime
 import os
-import shutil
-import subprocess
 import sys
 import warnings
 from pathlib import Path
 
-from creole import __version__, creole2html, html2rest
+from creole import creole2html, html2rest
 from creole.shared.unknown_tags import raise_unknown_node, transparent_unknown_nodes
-from creole.tests.test_project_setup import test_version
 
 RAISE_ERRORS_ARGS = (
     'check', 'register', 'sdist', 'bdist', 'upload',
@@ -152,173 +149,6 @@ def update_creole_rst_readme():
     return update_rst_readme(
         package_root=Path(__file__).parent.parent,
         filename='README.creole'
-    )
-
-
-def verbose_check_output(*args, log=None):
-    """ 'verbose' version of subprocess.check_output() """
-    call_info = 'Call: %r' % ' '.join(args)
-    try:
-        output = subprocess.check_output(
-            args, universal_newlines=True, stderr=subprocess.STDOUT
-        )
-    except subprocess.CalledProcessError as err:
-        print('\n***ERROR:')
-        print(err.output)
-        if log is not None:
-            log.write(err.output)
-        raise
-    return call_info, output
-
-
-def verbose_check_call(*args):
-    """ 'verbose' version of subprocess.check_call() """
-    print('\tCall: %r\n' % ' '.join(args))
-    subprocess.check_call(args, universal_newlines=True)
-
-
-def confirm(txt):
-    print(f'\n{txt}')
-    if input('\nPublish anyhow? (Y/N)').lower() not in ('y', 'j'):
-        print('Bye.')
-        sys.exit(-1)
-
-
-def poetry_publish(package_root, version, filename='README.creole', log_filename='publish.log'):
-    """
-    Helper to build and upload to PyPi, with prechecks and update README.rst from README.creole
-
-    Optional arguments are passed to `poetry publish` e.g.:
-
-        $ poetry config repositories.testpypi https://test.pypi.org/simple
-        $ poetry run publish --repository=testpypi
-
-    Build and upload to PyPi, if...
-        ... __version__ doesn't contains 'dev'
-        ... we are on git "master" branch
-        ... git repository is 'clean' (no changed files)
-
-    Upload with 'poetry', git tag the current version and git push --tag
-
-    The cli arguments will be pass to 'twine'. So this is possible:
-     * Display 'twine' help page...: ./setup.py publish --help
-     * use testpypi................: ./setup.py publish --repository=test
-
-    add this to poetry pyproject.toml, e.g.:
-
-        [tool.poetry.scripts]
-        publish = 'foo.bar:publish'
-
-    based on:
-    https://github.com/jedie/python-code-snippets/blob/master/CodeSnippets/setup_publish.py
-    """
-    update_rst_readme(package_root=package_root, filename=filename)
-
-    for key in ('dev', 'rc'):
-        if key in version:
-            confirm(f'WARNING: Version contains {key!r}: v{version}\n')
-            break
-
-    print('\nCheck if we are on "master" branch:')
-    call_info, output = verbose_check_output('git', 'branch', '--no-color')
-    print(f'\t{call_info}')
-    if '* master' in output:
-        print('OK')
-    else:
-        confirm(f'\nNOTE: It seems you are not on "master":\n{output}')
-
-    print('\ncheck if if git repro is clean:')
-    call_info, output = verbose_check_output('git', 'status', '--porcelain')
-    print(f'\t{call_info}')
-    if output == '':
-        print('OK')
-    else:
-        print('\n *** ERROR: git repro not clean:')
-        print(output)
-        sys.exit(-1)
-
-    print('\nRun "poetry check":')
-    call_info, output = verbose_check_output('poetry', 'check')
-    if 'All set!' not in output:
-        print(output)
-        confirm('Check failed!')
-    else:
-        print('OK')
-
-    print('\ncheck if pull is needed')
-    verbose_check_call('git', 'fetch', '--all')
-    call_info, output = verbose_check_output('git', 'log', 'HEAD..origin/master', '--oneline')
-    print(f'\t{call_info}')
-    if output == '':
-        print('OK')
-    else:
-        print('\n *** ERROR: git repro is not up-to-date:')
-        print(output)
-        sys.exit(-1)
-    verbose_check_call('git', 'push')
-
-    print('\nCleanup old builds:')
-
-    def rmtree(path):
-        path = os.path.abspath(path)
-        if os.path.isdir(path):
-            print('\tremove tree:', path)
-            shutil.rmtree(path)
-    rmtree('./dist')
-    rmtree('./build')
-
-    print(f'\nSet new version to: v{version}')
-    verbose_check_call('poetry', 'version', version)
-
-    print('\nbuild but do not upload...')
-
-    with open(log_filename, 'a') as log:
-        log.write('\n')
-        log.write('-' * 100)
-        log.write('\n')
-        call_info, output = verbose_check_output('poetry', 'build', log=log)
-        print(f'\t{call_info}')
-        log.write(call_info)
-        log.write(output)
-
-    print(f'Build log file is here: {log_filename!r}')
-
-    git_tag = f'v{version}'
-
-    print('\ncheck git tag')
-    call_info, output = verbose_check_output(
-        'git', 'log', 'HEAD..origin/master', '--oneline',
-    )
-    if git_tag in output:
-        print(f'\n *** ERROR: git tag {git_tag!r} already exists!')
-        print(output)
-        sys.exit(-1)
-    else:
-        print('OK')
-
-    print('\nUpload to PyPi via poetry:')
-    args = ['poetry', 'publish'] + sys.argv[1:]
-    verbose_check_call(*args)
-
-    print('\ngit tag version')
-    verbose_check_call('git', 'tag', git_tag)
-
-    print('\ngit push tag to server')
-    verbose_check_call('git', 'push', '--tags')
-
-    sys.exit(0)
-
-
-def publish_python_creole():
-    """
-        Publish python-creole to PyPi
-        Call this via:
-            $ poetry run publish
-    """
-    test_version()
-    poetry_publish(
-        package_root=Path(__file__).parent.parent,
-        version=__version__,
     )
 
 
