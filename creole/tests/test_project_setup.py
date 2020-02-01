@@ -18,7 +18,7 @@ def assert_file_contains_string(file_path, string):
 
 
 def test_version():
-    if 'dev' not in __version__:
+    if 'dev' not in __version__ and 'rc' not in __version__:
         version_string = f'v{__version__}'
 
         assert_file_contains_string(
@@ -33,5 +33,5 @@ def test_version():
 
     assert_file_contains_string(
         file_path=Path(CREOLE_PACKAGE_ROOT, 'pyproject.toml'),
-        string=f"version = '{__version__}'"
+        string=f'version = "{__version__}"'
     )
