@@ -246,21 +246,44 @@ unittests
     ~$ cd python-creole
     
     # install or update poetry:
-    ~/python-crole$ make install-poetry
+    ~/python-creole$ make install-poetry
     
     # install python-creole via poetry:
-    ~/python-crole$ make install
+    ~/python-creole$ make install
     
     # Run pytest:
-    ~/python-crole$ make pytest
+    ~/python-creole$ make pytest
     
     # Run pytest via tox with all environments:
-    ~/python-crole$ make tox
+    ~/python-creole$ make tox
     
     # Run pytest via tox with one Python version:
-    ~/python-crole$ make tox-py38
-    ~/python-crole$ make tox-py37
-    ~/python-crole$ make tox-py36
+    ~/python-creole$ make tox-py38
+    ~/python-creole$ make tox-py37
+    ~/python-creole$ make tox-py36
+
+------------
+make targets
+------------
+
+To see all make targets, just call ``make``:
+
+::
+
+    ~/python-creole$ make
+    help                 List all commands
+    install-poetry       install or update poetry
+    install              install python-creole via poetry
+    lint                 Run code formatters and linter
+    fix-code-style       Fix code formatting
+    tox-listenvs         List all tox test environments
+    tox                  Run pytest via tox with all environments
+    tox-py36             Run pytest via tox with *python v3.6*
+    tox-py37             Run pytest via tox with *python v3.7*
+    tox-py38             Run pytest via tox with *python v3.8*
+    pytest               Run pytest
+    update-rst-readme    update README.rst from README.creole
+    publish              Release new version to PyPi
 
 --------------------
 Use creole in README
@@ -620,4 +643,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-02-01 14:17:25 with "python-creole"``
+``Note: this file is generated from README.creole 2020-02-01 15:25:27 with "python-creole"``
