@@ -56,6 +56,8 @@ tox-py38: check-poetry ## Run pytest via tox with *python v3.8*
 pytest: check-poetry ## Run pytest
 	poetry run pytest
 
+update-rst-readme: ## update README.rst from README.creole
+	poetry run update_rst_readme
 
 publish: ## Release new version to PyPi
 	poetry run publish
