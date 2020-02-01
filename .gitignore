@@ -11,6 +11,3 @@
 /.coverage
 
 .tox
-
-# Will be generated from README.creole and added to sdist
-/README.rst

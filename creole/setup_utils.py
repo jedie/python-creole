@@ -41,6 +41,7 @@
 """
 
 import codecs
+import datetime
 import os
 import shutil
 import subprocess
@@ -159,6 +160,11 @@ def update_rst_readme(package_root, filename='README.creole'):
 
     with rest_readme_path.open('w') as f:
         f.write(rest_readme)
+        f.write('\n\n------------\n\n')
+        dt = datetime.datetime.utcnow()
+        dt = dt.replace(microsecond=0)
+        dt = dt.isoformat(sep=' ')
+        f.write(f'``Note: this file is generated from {filename} with "python-creole" at {dt}``')
 
     print('done.')
 
