@@ -228,6 +228,7 @@ Note: In this case you must install **docutils**! See above.
 = history =
 
 * *dev* - [[https://github.com/jedie/python-creole/compare/v1.4.3...master|compare v1.4.3...master]]
+** Always update README.rst before publish
 ** TBC
 * v1.4.3 - 2020-02-01 - [[https://github.com/jedie/python-creole/compare/v1.4.2...v1.4.3|compare v1.4.2...v1.4.3]]
 ** Use new [[https://pypi.org/project/poetry-publish/|poetry-publish]] for {{{make publish}}}

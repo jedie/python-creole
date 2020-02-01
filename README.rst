@@ -298,9 +298,15 @@ Note: In this case you must install **docutils**! See above.
 history
 =======
 
-* *dev* - `compare v1.4.2...master <https://github.com/jedie/python-creole/compare/v1.4.2...master>`_ 
+* *dev* - `compare v1.4.3...master <https://github.com/jedie/python-creole/compare/v1.4.3...master>`_ 
+
+    * Always update README.rst before publish
 
     * TBC
+
+* v1.4.3 - 2020-02-01 - `compare v1.4.2...v1.4.3 <https://github.com/jedie/python-creole/compare/v1.4.2...v1.4.3>`_ 
+
+    * Use new `poetry-publish <https://pypi.org/project/poetry-publish/>`_ for ``make publish``
 
 * v1.4.2 - 2020-02-01 - `compare v1.4.1...v1.4.2 <https://github.com/jedie/python-creole/compare/v1.4.1...v1.4.2>`_ 
 
@@ -651,4 +657,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-02-01 16:46:16 with "python-creole"``
+``Note: this file is generated from README.creole 2020-02-01 22:57:40 with "python-creole"``
