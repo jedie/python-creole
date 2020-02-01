@@ -123,15 +123,21 @@ def test_update_rst_readme():
             if filecmp.cmp(rest_readme_path, old_rest_readme_path, shallow=False) is True:
                 return
 
+            # On CI the file modification time maybe not the same.
+            # So skip the last line and compare again.
+
             with old_rest_readme_path.open('r') as f:
-                from_file = [line.rstrip() for line in f]
+                from_file = [line.rstrip() for line in f][:-1]
 
             with rest_readme_path.open('r') as f:
-                to_tile = [line.rstrip() for line in f]
+                to_file = [line.rstrip() for line in f][:-1]
+
+            if from_file == to_file:
+                return
 
             diff = '\n'.join(
                 line
-                for line in difflib.Differ().compare(from_file, to_tile)
+                for line in difflib.Differ().compare(from_file, to_file)
                 if line[0] != ' '
             )
             raise AssertionError(f'README.rst is not up-to-date:\n{diff}')
