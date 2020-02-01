@@ -11,7 +11,6 @@ import difflib
 import filecmp
 import os
 import shutil
-import sys
 import tempfile
 from pathlib import Path
 
@@ -117,21 +116,28 @@ def test_update_rst_readme():
             Path(CREOLE_PACKAGE_ROOT, 'README.rst'),
             old_rest_readme_path
         )
-        rest_readme_path = update_creole_rst_readme()
-        assert str(rest_readme_path.relative_to(CREOLE_PACKAGE_ROOT)) == 'README.rst'
+        try:
+            rest_readme_path = update_creole_rst_readme()
+            assert str(rest_readme_path.relative_to(CREOLE_PACKAGE_ROOT)) == 'README.rst'
 
-        if filecmp.cmp(rest_readme_path, old_rest_readme_path, shallow=False) is True:
-            return
+            if filecmp.cmp(rest_readme_path, old_rest_readme_path, shallow=False) is True:
+                return
 
-        with old_rest_readme_path.open('r') as f:
-            fromlines = f.readlines()
+            with old_rest_readme_path.open('r') as f:
+                from_file = [line.rstrip() for line in f]
 
-        with rest_readme_path.open('r') as f:
-            tolines = f.readlines()
+            with rest_readme_path.open('r') as f:
+                to_tile = [line.rstrip() for line in f]
 
-        diff = difflib.ndiff(fromlines, tolines)
-        print('=' * 100)
-        sys.stdout.writelines(diff)
-        print('=' * 100)
-
-        assert fromlines == tolines
+            diff = '\n'.join(
+                line
+                for line in difflib.Differ().compare(from_file, to_tile)
+                if line[0] != ' '
+            )
+            raise AssertionError(f'README.rst is not up-to-date:\n{diff}')
+        finally:
+            # restore the origin file
+            shutil.copy(
+                old_rest_readme_path,
+                Path(CREOLE_PACKAGE_ROOT, 'README.rst'),
+            )
