@@ -1,8 +1,9 @@
 from pathlib import Path
 
-import creole
-from creole.setup_utils import update_creole_rst_readme
 from poetry_publish.publish import poetry_publish
+from poetry_publish.utils.subprocess_utils import verbose_check_call
+
+import creole
 
 
 def publish():
@@ -11,8 +12,10 @@ def publish():
         Call this via:
             $ poetry run publish
     """
-    update_creole_rst_readme()  # don't publish if README.rst is not up-to-date
+    verbose_check_call('make', 'fix-code-style')  # don't publish if code style wrong
+
     poetry_publish(
         package_root=Path(creole.__file__).parent.parent,
         version=creole.__version__,
+        creole_readme=True  # don't publish if README.rst is not up-to-date
     )
