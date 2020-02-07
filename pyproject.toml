@@ -35,10 +35,10 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.6"
-docutils = "^0.16"
-poetry-publish = "^0.2.2"
+docutils = "^0.15"
 
 [tool.poetry.dev-dependencies]
+poetry-publish = "^0.2.2"
 tox = "^3.14.3"
 pygments = "^2.5.2"
 textile = "^4.0.0"

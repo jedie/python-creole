@@ -1,4 +1,3 @@
-
 """
     unitest base class
     ~~~~~~~~~~~~~~~~~~
@@ -11,31 +10,13 @@
 
 
 import re
-import warnings
+
+import textile
 
 from creole import creole2html, html2creole, html2rest, html2textile
-from creole.exceptions import DocutilsImportError
+from creole.rest_tools.clean_writer import rest2html
 from creole.tests.utils.utils import MarkupTest
 
-try:
-    import textile
-except ImportError:
-    test_textile = False
-    warnings.warn(
-        "Markup error: The Python textile library isn't installed."
-        " Download: http://pypi.python.org/pypi/textile"
-    )
-else:
-    test_textile = True
-
-
-try:
-    from creole.rest_tools.clean_writer import rest2html
-except DocutilsImportError as err:
-    REST_INSTALLED = False
-    warnings.warn(f"Can't run all ReSt unittests: {err}")
-else:
-    REST_INSTALLED = True
 
 tabs2spaces_re = re.compile(r"^(\t*)(.*?)$", re.M)
 
@@ -252,11 +233,6 @@ class BaseCreoleTest(MarkupTest):
         )
 
         # compare textile -> html
-        if not test_textile:
-            # TODO: Use @unittest.skipIf if python 2.6 will be not support anymore
-            warnings.warn("Skip textile test. Please install python textile module.")
-            return
-
         html = textile.textile(textile_string)
         html = html.replace("<br />", "<br />\n")
         html = tabs2spaces(html)
@@ -295,10 +271,6 @@ class BaseCreoleTest(MarkupTest):
                          strip_lines=False, debug=False, prepare_strings=True, **kwargs):
 
         # compare rest -> html
-        if not REST_INSTALLED:
-            warnings.warn("Skip ReSt test. Please install Docutils.")
-            return
-
         if prepare_strings:
             rest_string = self._prepare_text(rest_string)
             html_string = self._prepare_text(html_string)

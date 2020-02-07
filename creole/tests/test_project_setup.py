@@ -2,7 +2,9 @@
     :copyleft: 2020 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
-
+import os
+import shutil
+import subprocess
 from pathlib import Path
 
 from creole import __version__
@@ -35,3 +37,17 @@ def test_version():
         file_path=Path(CREOLE_PACKAGE_ROOT, 'pyproject.toml'),
         string=f'version = "{__version__}"'
     )
+
+
+def test_poetry_check():
+    poerty_bin = shutil.which('poetry')
+
+    output = subprocess.check_output(
+        [poerty_bin, 'check'],
+        universal_newlines=True,
+        env=os.environ,
+        stderr=subprocess.STDOUT,
+        cwd=str(CREOLE_PACKAGE_ROOT),
+    )
+    print(output)
+    assert output == 'All set!\n'

@@ -16,6 +16,7 @@ from urllib.parse import urlparse
 
 from creole.exceptions import DocutilsImportError
 
+
 try:
     import docutils  # noqa flake8
     from docutils import io, readers

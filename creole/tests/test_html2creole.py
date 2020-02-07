@@ -17,8 +17,12 @@
 import unittest
 
 from creole import html2creole
-from creole.shared.unknown_tags import (escape_unknown_nodes, raise_unknown_node, transparent_unknown_nodes,
-                                        use_html_macro)
+from creole.shared.unknown_tags import (
+    escape_unknown_nodes,
+    raise_unknown_node,
+    transparent_unknown_nodes,
+    use_html_macro,
+)
 from creole.tests.utils.base_unittest import BaseCreoleTest
 
 
