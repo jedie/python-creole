@@ -33,16 +33,13 @@ if __name__ == "__main__":
     html = creole2html(source_creole)
     print(html)
 
-
     print("\n\n" + "_" * 79 + "\n*** Convert html back into creole: ***\n\n")
     creole = html2creole(html)
     print(creole)
 
-
     print("\n\n" + "_" * 79 + "\n*** Convert html into ReStructuredText: ***\n\n")
     rest = html2rest(html)
     print(rest)
-
 
     print("\n\n" + "_" * 79 + "\n*** Convert html into textile: ***\n\n")
     textile = html2textile(html)
