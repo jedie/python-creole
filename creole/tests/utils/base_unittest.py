@@ -12,9 +12,11 @@
 import re
 
 import textile
+
 from creole import creole2html, html2creole, html2rest, html2textile
 from creole.rest_tools.clean_writer import rest2html
 from creole.tests.utils.utils import MarkupTest
+
 
 tabs2spaces_re = re.compile(r"^(\t*)(.*?)$", re.M)
 

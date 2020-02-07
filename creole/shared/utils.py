@@ -13,6 +13,7 @@
 import json
 import shlex
 
+
 try:
     from pygments import lexers
     from pygments.formatters import HtmlFormatter

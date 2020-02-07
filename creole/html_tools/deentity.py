@@ -12,6 +12,7 @@
 import re
 from html import entities
 
+
 entities_rules = '|'.join([
     r"(&\#(?P<number>\d+);)",
     r"(&\#x(?P<hex>[a-fA-F0-9]+);)",

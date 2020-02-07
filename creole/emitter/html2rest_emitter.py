@@ -19,6 +19,7 @@ import posixpath
 from creole.shared.base_emitter import BaseEmitter
 from creole.shared.markup_table import MarkupTable
 
+
 # Kink of nodes in which hyperlinks are stored in references intead of embedded urls.
 DO_SUBSTITUTION = ("th", "td",)  # TODO: In witch kind of node must we also substitude links?
 

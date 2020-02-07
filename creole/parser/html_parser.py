@@ -15,6 +15,7 @@ from creole.html_tools.strip_html import strip_html
 from creole.parser.html_parser_config import BLOCK_TAGS, IGNORE_TAGS
 from creole.shared.document_tree import DebugList, DocNode
 
+
 # ------------------------------------------------------------------------------
 
 block_re = re.compile(r'''

@@ -19,6 +19,7 @@ from creole.tests.constants import CREOLE_PACKAGE_ROOT
 from creole.tests.utils.base_unittest import BaseCreoleTest
 from creole.tests.utils.utils import IsolatedFilesystem
 
+
 TEST_README_DIR = Path(__file__).parent
 TEST_README_FILENAME = "test_README.creole"
 

@@ -17,6 +17,7 @@ from xml.sax.saxutils import escape
 
 from creole.shared.utils import get_pygments_formatter, get_pygments_lexer
 
+
 try:
     from pygments import highlight
     PYGMENTS = True

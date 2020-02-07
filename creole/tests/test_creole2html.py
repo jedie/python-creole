@@ -25,6 +25,7 @@ from creole.shared.utils import dict2string, string2dict
 from creole.tests import test_macros
 from creole.tests.utils.base_unittest import BaseCreoleTest
 
+
 try:
     import pygments  # noqa flake8
     PYGMENTS = True

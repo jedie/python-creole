@@ -18,6 +18,7 @@ import sys
 
 from creole.exceptions import DocutilsImportError
 
+
 try:
     import docutils
     from docutils.core import publish_parts
