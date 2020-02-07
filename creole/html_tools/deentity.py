@@ -1,4 +1,3 @@
-
 """
     python-creole utils
     ~~~~~~~~~~~~~~~~~~~
@@ -24,7 +23,7 @@ entities_regex = re.compile(
 )
 
 
-class Deentity(object):
+class Deentity:
     """
     replace html entity
 

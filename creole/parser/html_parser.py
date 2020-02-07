@@ -1,4 +1,3 @@
-
 """
     python-creole
     ~~~~~~~~~~~~~
@@ -77,7 +76,7 @@ class HtmlParser(HTMLParser):
     _inline_placeholder = "inlinedata"
 
     def __init__(self, debug=False):
-        super(HtmlParser, self).__init__(convert_charrefs=False)
+        super().__init__(convert_charrefs=False)
 
         self.debugging = debug
         if self.debugging:
@@ -120,7 +119,7 @@ class HtmlParser(HTMLParser):
         for name, text in groups.items():
             if text is not None:
                 if self.debugging:
-                    print("%15s: %r (%r)" % (name, text, match.group(0)))
+                    print(f"{name:>15}: {text!r} ({match.group(0)!r})")
                 method = getattr(self, f'_pre_{name}_cut')
                 return method(groups)
 
@@ -251,7 +250,7 @@ class HtmlParser(HTMLParser):
     def debug_msg(self, method, txt):
         if not self.debugging:
             return
-        print("%-8s %8s: %s" % (self.getpos(), method, txt))
+        print(f"{str(self.getpos()):<8} {method:>8}: {txt}")
 
     def debug(self, start_node=None):
         """
@@ -269,7 +268,7 @@ class HtmlParser(HTMLParser):
 
         def emit(node, ident=0):
             for child in node.children:
-                txt = "%s%s" % (" " * ident, child.kind)
+                txt = f"{' ' * ident}{child.kind}"
 
                 if child.content:
                     txt += f": {child.content!r}"

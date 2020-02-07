@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-# coding: utf-8
+
 
 """
     html -> textile Emitter
@@ -23,7 +22,7 @@ class TextileEmitter(BaseEmitter):
     """
 
     def __init__(self, *args, **kwargs):
-        super(TextileEmitter, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.table_head_prefix = "_. "
         self.table_auto_width = False

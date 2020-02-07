@@ -1,4 +1,3 @@
-
 """
     creole2html unittest
     ~~~~~~~~~~~~~~~~~~~~

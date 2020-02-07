@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-# coding: utf-8
+
 
 """
     python-creole
@@ -83,13 +82,13 @@ class DocNode:
                 continue
             if callable(getattr(self, i)):
                 continue
-            print("%20s: %r" % (i, getattr(self, i, "---")))
+            print(f"{i:>20}: {getattr(self, i, '---')!r}")
 
 
 class DebugList(list):
     def __init__(self, html2creole):
         self.html2creole = html2creole
-        super(DebugList, self).__init__()
+        super().__init__()
 
     def append(self, item):
         #        for stack_frame in inspect.stack(): print(stack_frame)

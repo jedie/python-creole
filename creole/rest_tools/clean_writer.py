@@ -59,7 +59,7 @@ class CleanHTMLWriter(html4css1.Writer):
         self.translator_class = CleanHTMLTranslator
 
 
-class CleanHTMLTranslator(html4css1.HTMLTranslator, object):
+class CleanHTMLTranslator(html4css1.HTMLTranslator):
     """
     Clean html translator for docutils system.
     """
@@ -97,15 +97,18 @@ class CleanHTMLTranslator(html4css1.HTMLTranslator, object):
             parts.append(part)
 
         if DEBUG:
-            print("Tag %r - ids: %r - attributes: %r - parts: %r" % (
-                tagname, getattr(node, "ids", "-"), attributes, parts
-            ))
+            print(
+                f'Tag {tagname!r}'
+                f' - ids: {getattr(node, "ids", "-")!r}'
+                f' - attributes: {attributes!r}'
+                f' - parts: {parts!r}'
+            )
 
         if empty:
             infix = ' /'
         else:
             infix = ''
-        html = '<%s%s>%s' % (' '.join(parts), infix, suffix)
+        html = f"<{' '.join(parts)}{infix}>{suffix}"
         if DEBUG:
             print(f"startag html: {html!r}")
         return html
@@ -148,7 +151,7 @@ class CleanHTMLTranslator(html4css1.HTMLTranslator, object):
         node.stubs = []
 
     def visit_field_list(self, node):
-        super(CleanHTMLTranslator, self).visit_field_list(node)
+        super().visit_field_list(node)
         if "<col" in self.body[-1]:
             del(self.body[-1])
 
@@ -168,7 +171,7 @@ class CleanHTMLTranslator(html4css1.HTMLTranslator, object):
     depart_figure = _do_nothing
 
     def visit_image(self, node):
-        super(CleanHTMLTranslator, self).visit_image(node)
+        super().visit_image(node)
         if self.body[-1].startswith('<img'):
             align = None
 

@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-# coding: utf-8
+#!/usr/bin/env python3
 
 
 """
@@ -7,7 +6,6 @@
     ~~~~~~~~~~~
 """
 
-from __future__ import division, absolute_import, print_function, unicode_literals
 
 from creole import creole2html, html2creole, html2rest, html2textile
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+
 
 """
     python-creole commandline interface
@@ -15,7 +15,7 @@ import codecs
 from creole import VERSION_STRING, creole2html, html2creole, html2rest, html2textile
 
 
-class CreoleCLI(object):
+class CreoleCLI:
     def __init__(self, convert_func):
         self.convert_func = convert_func
         self.parser = argparse.ArgumentParser(

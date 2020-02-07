@@ -1,4 +1,3 @@
-
 """
     Base document tree emitter
     ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -15,7 +14,7 @@ from creole.shared.markup_table import MarkupTable
 from creole.shared.unknown_tags import transparent_unknown_nodes
 
 
-class BaseEmitter(object):
+class BaseEmitter:
     """
     Build from a document_tree (html2creole.parser.HtmlParser instance) a
     creole markup text.
@@ -236,4 +235,4 @@ class BaseEmitter(object):
     def debug_msg(self, method, txt):
         if not self.debugging:
             return
-        print("%13s: %s" % (method, txt))
+        print(f"{method:>13}: {txt}")

@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     Unittest which failed, cause bugfixes not implemented, yet.
 """

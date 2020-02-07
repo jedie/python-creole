@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-# coding: utf-8
+
 
 """
     html -> creole Emitter
@@ -24,7 +23,7 @@ class CreoleEmitter(BaseEmitter):
 
     def __init__(self, document_tree, strict=False, *args, **kwargs):
         self.strict = strict
-        super(CreoleEmitter, self).__init__(document_tree, *args, **kwargs)
+        super().__init__(document_tree, *args, **kwargs)
 
         self.table_head_prefix = "= "
         self.table_auto_width = True
@@ -62,7 +61,7 @@ class CreoleEmitter(BaseEmitter):
             return "\n"
 
     def headline_emit(self, node):
-        return "%s %s\n\n" % ("=" * node.level, self.emit_children(node))
+        return f"{'=' * node.level} {self.emit_children(node)}\n\n"
 
     # --------------------------------------------------------------------------
 
@@ -131,9 +130,9 @@ class CreoleEmitter(BaseEmitter):
 
         if not self.strict:
             if width and height:
-                return "{{%s|%s|%sx%s}}" % (src, text, width, height)
+                return f"{{{{{src}|{text}|{width}x{height}}}}}"
 
-        return "{{%s|%s}}" % (src, text)
+        return f"{{{{{src}|{text}}}}}"
 
     # --------------------------------------------------------------------------
 
