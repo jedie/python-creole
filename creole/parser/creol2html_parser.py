@@ -26,7 +26,7 @@ from creole.parser.creol2html_rules import INLINE_FLAGS, INLINE_RULES, BlockRule
 from creole.shared.document_tree import DocNode
 
 
-class CreoleParser(object):
+class CreoleParser:
     """
     Parse the raw text and create a document object
     that can be converted into output using Emitter.
@@ -473,7 +473,7 @@ class CreoleParser(object):
 
         def emit(node, ident=0):
             for child in node.children:
-                print("%s%s: %r" % (" " * ident, child.kind, child.content))
+                print(f"{' ' * ident}{child.kind}: {child.content!r}")
                 emit(child, ident + 4)
         emit(start_node)
         print("*" * 80)
@@ -483,7 +483,7 @@ class CreoleParser(object):
         print("  debug groups:")
         for name, text in groups.items():
             if text is not None:
-                print("%15s: %r" % (name, text))
+                print(f"{name:>15}: {text!r}")
         print("-" * 80)
 
 
@@ -508,7 +508,7 @@ if __name__ == "__main__":
         groups = match.groupdict()
         for name, text in groups.items():
             if name != "char" and text is not None:
-                print("%20s: %r" % (name, text))
+                print(f"{name:>20}: {text!r}")
 
     parser = CreoleParser("", blog_line_breaks=blog_line_breaks)
 

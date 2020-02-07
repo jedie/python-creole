@@ -1,6 +1,3 @@
-# coding: utf-8
-
-
 """
     python creole utilities
     ~~~~~~~~~~~~~~~~~~~~~~~

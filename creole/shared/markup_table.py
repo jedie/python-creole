@@ -1,5 +1,4 @@
-
-class MarkupTable(object):
+class MarkupTable:
     """
     Container for holding table data and render the data in creole markup.
     Format every cell width to the same col width.

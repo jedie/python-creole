@@ -1,4 +1,3 @@
-
 """
     WikiCreole to HTML converter
 
@@ -16,7 +15,7 @@ from creole.parser.creol2html_parser import CreoleParser
 from creole.shared.utils import string2dict
 
 
-class TableOfContent(object):
+class TableOfContent:
     def __init__(self):
         self.max_depth = None
         self.headlines = []
@@ -91,7 +90,7 @@ class TableOfContent(object):
         return document
 
 
-class HtmlEmitter(object):
+class HtmlEmitter:
     """
     Generate HTML output for the document
     tree consisting of DocNodes.
@@ -212,10 +211,10 @@ class HtmlEmitter(object):
     # --------------------------------------------------------------------------
 
     def _typeface(self, node, tag):
-        return '<%(tag)s>%(data)s</%(tag)s>' % {
-            "tag": tag,
-            "data": self.emit_children(node),
-        }
+        return '<{tag}>{data}</{tag}>'.format(
+            tag=tag,
+            data=self.emit_children(node),
+        )
 
     # TODO: How can we generalize that:
     def emphasis_emit(self, node):
@@ -278,7 +277,7 @@ class HtmlEmitter(object):
                     w_str, h_str = size_str.split("x", 1)
                     width = int(w_str.strip())
                     height = int(h_str.strip())
-                    return '<img src="%s" title="%s" alt="%s" width="%s" height="%s" />' % (
+                    return '<img src="{}" title="{}" alt="{}" width="{}" height="{}" />'.format(
                         self.attr_escape(target), title, title, width, height)
             except BaseException:
                 pass
@@ -339,7 +338,7 @@ class HtmlEmitter(object):
                 else:
                     try:
                         sourceline = inspect.getsourcelines(macro)[0][0].strip()
-                    except IOError as err:
+                    except OSError as err:
                         evalue = etype(f"{evalue} (error getting sourceline: {err} from {filename})")
                     else:
                         evalue = etype(f"{evalue} (sourceline: {sourceline!r} from {filename})")

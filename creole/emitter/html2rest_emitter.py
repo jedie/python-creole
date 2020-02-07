@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-# coding: utf-8
+
 
 """
     html -> reStructuredText Emitter
@@ -35,7 +34,7 @@ class ReStructuredTextEmitter(BaseEmitter):
     """
 
     def __init__(self, *args, **kwargs):
-        super(ReStructuredTextEmitter, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.table_head_prefix = "_. "
         self.table_auto_width = False
@@ -97,7 +96,7 @@ class ReStructuredTextEmitter(BaseEmitter):
         if self._substitution_data and node.parent == self.root:
             result += "%s\n\n" % self._get_block_data()
 
-        result += super(ReStructuredTextEmitter, self).emit_node(node)
+        result += super().emit_node(node)
         return result
 
     def p_emit(self, node):
@@ -262,9 +261,7 @@ class ReStructuredTextEmitter(BaseEmitter):
 
     def li_emit(self, node):
         content = self.emit_children(node).strip("\n")
-        result = "\n%s%s %s\n" % (
-            "    " * (node.level - 1), self._list_markup, content
-        )
+        result = f"\n{'    ' * (node.level - 1)}{self._list_markup} {content}\n"
         return result
 
     def _list_emit(self, node, list_type):

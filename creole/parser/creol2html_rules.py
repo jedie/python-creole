@@ -1,6 +1,3 @@
-# coding: utf-8
-
-
 """
     Creole Rules for parser
     ~~~~~~~~~~~~~~~~~~~~~~~
@@ -13,7 +10,7 @@
 import re
 
 
-class InlineRules(object):
+class InlineRules:
     """
     All inline rules
     """
@@ -97,7 +94,7 @@ class InlineRules(object):
     char = r'(?P<char> . )'
 
 
-class BlockRules(object):
+class BlockRules:
     """
     All used block rules.
     """
@@ -169,7 +166,7 @@ class BlockRules(object):
         )
 
 
-class SpecialRules(object):
+class SpecialRules:
     """
     re rules witch not directly used as inline/block rules.
     """

@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-# coding: utf-8
+
 
 """
     unittest for CLI
@@ -22,7 +21,7 @@ from creole.tests.utils.unittest_subprocess import SubprocessMixin
 CMDS = ("creole2html", "html2creole", "html2rest", "html2textile")
 
 
-class CliTestMixins(object):
+class CliTestMixins:
     def test_creole2html(self):
         self._test_convert(
             source_content=b"= test creole2html =",
@@ -101,7 +100,7 @@ class CreoleCLITests(BaseCreoleTest, SubprocessMixin, CliTestMixins):
 class CreoleCLITestsDirect(BaseCreoleTest, CliTestMixins):
 
     def setUp(self):
-        super(CreoleCLITestsDirect, self).setUp()
+        super().setUp()
         self._old_sys_argv = sys.argv[:]
 
     def tearDown(self):

@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-# coding: utf-8
+#!/usr/bin/env python3
 
 
 """
@@ -7,7 +6,6 @@
     ~~~~~~~~~~~
 """
 
-from __future__ import division, absolute_import, print_function, unicode_literals
 
 from creole import creole2html, html2creole, html2rest, html2textile
 
@@ -35,16 +33,13 @@ if __name__ == "__main__":
     html = creole2html(source_creole)
     print(html)
 
-
     print("\n\n" + "_" * 79 + "\n*** Convert html back into creole: ***\n\n")
     creole = html2creole(html)
     print(creole)
 
-
     print("\n\n" + "_" * 79 + "\n*** Convert html into ReStructuredText: ***\n\n")
     rest = html2rest(html)
     print(rest)
-
 
     print("\n\n" + "_" * 79 + "\n*** Convert html into textile: ***\n\n")
     textile = html2textile(html)
