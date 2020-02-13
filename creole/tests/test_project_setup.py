@@ -8,6 +8,7 @@ import subprocess
 from pathlib import Path
 
 from creole import __version__
+from creole.setup_utils import assert_rst_readme
 from creole.tests.constants import CREOLE_PACKAGE_ROOT
 
 
@@ -37,6 +38,10 @@ def test_version():
         file_path=Path(CREOLE_PACKAGE_ROOT, 'pyproject.toml'),
         string=f'version = "{__version__}"'
     )
+
+
+def test_assert_rst_readme():
+    assert_rst_readme(package_root=CREOLE_PACKAGE_ROOT)
 
 
 def test_poetry_check():
