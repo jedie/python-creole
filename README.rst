@@ -298,11 +298,15 @@ Note: In this case you must install **docutils**! See above.
 history
 =======
 
-* *dev* - `compare v1.4.4...master <https://github.com/jedie/python-creole/compare/v1.4.4...master>`_ 
+* *dev* - `compare v1.4.5...master <https://github.com/jedie/python-creole/compare/v1.4.5...master>`_ 
+
+    * TBC
+
+* v1.4.5 - 2020-02-13 - `compare v1.4.4...v1.4.5 <https://github.com/jedie/python-creole/compare/v1.4.4...v1.4.5>`_ 
 
     * new: ``creole.setup_utils.assert_rst_readme`` for project setup tests
 
-    * TBC
+    * use `https://github.com/ymyzk/tox-gh-actions <https://github.com/ymyzk/tox-gh-actions>`_ on gitlab CI
 
 * v1.4.4 - 2020-02-07 - `compare v1.4.3...v1.4.4 <https://github.com/jedie/python-creole/compare/v1.4.3...v1.4.4>`_ 
 
@@ -667,4 +671,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-02-13 10:27:40 with "python-creole"``
+``Note: this file is generated from README.creole 2020-02-13 10:43:57 with "python-creole"``

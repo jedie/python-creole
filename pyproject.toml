@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "python-creole"
-version = "1.4.4"
+version = "1.4.5"
 description = "python-creole is an open-source (GPL) markup converter in pure Python for: creole2html, html2creole, html2ReSt, html2textile"
 
 # Will be generated from README.creole with: "poetry run update_rst_readme"
@@ -38,7 +38,7 @@ python = "^3.6"
 docutils = "^0.15"
 
 [tool.poetry.dev-dependencies]
-poetry-publish = "^0.2.2"
+poetry-publish = "^0.3.0"
 tox = "^3.14.3"
 pygments = "^2.5.2"
 textile = "^4.0.0"
