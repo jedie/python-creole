@@ -20,6 +20,7 @@ import warnings
 from pathlib import Path
 
 from creole import creole2html, html2rest
+from creole.shared.diff_utils import unified_diff
 from creole.shared.unknown_tags import raise_unknown_node, transparent_unknown_nodes
 
 
@@ -100,6 +101,23 @@ def get_long_description(package_root, filename='README.creole', raise_errors=No
     return long_description_rest
 
 
+def _generate_rst_readme(*, creole_readme_path):
+    with creole_readme_path.open('r') as f:
+        creole_readme = f.read().strip()
+
+    # convert creole into html
+    html_readme = creole2html(creole_readme)
+
+    # convert html to ReSt
+    rest_readme = html2rest(
+        html_readme,
+        emitter_kwargs={
+            'unknown_emit': raise_unknown_node  # raise a error if a unknown node found
+        }
+    )
+    return rest_readme
+
+
 def update_rst_readme(package_root, filename='README.creole'):
     """
     Generate README.rst from README.creole
@@ -115,19 +133,7 @@ def update_rst_readme(package_root, filename='README.creole'):
         end='...', flush=True
     )
 
-    with creole_readme_path.open('r') as f:
-        creole_readme = f.read().strip()
-
-    # convert creole into html
-    html_readme = creole2html(creole_readme)
-
-    # convert html to ReSt
-    rest_readme = html2rest(
-        html_readme,
-        emitter_kwargs={
-            'unknown_emit': raise_unknown_node  # raise a error if a unknown node found
-        }
-    )
+    rest_readme = _generate_rst_readme(creole_readme_path=creole_readme_path)
 
     with rest_readme_path.open('w') as f:
         f.write(rest_readme)
@@ -144,6 +150,24 @@ def update_rst_readme(package_root, filename='README.creole'):
 
     print('done.')
     return rest_readme_path
+
+
+def assert_rst_readme(package_root, filename='README.creole'):
+    """
+    raise AssertionError if README.rst is not up-to-date.
+    """
+    creole_readme_path = Path(package_root, filename)
+    rest_readme = _generate_rst_readme(creole_readme_path=creole_readme_path)
+    rest_readme_path = creole_readme_path.with_suffix('.rst')
+    with rest_readme_path.open('r') as f:
+        content = f.read()
+
+    assert len(content) > 0, f'Empty content in {rest_readme_path}'
+    content = content.rsplit('\n', 4)[0]  # remove note about generation with modification time
+
+    if rest_readme != content:
+        diff = unified_diff(content, rest_readme, filename=rest_readme_path.name)
+        raise AssertionError(f'{rest_readme_path.name} is not up-to-date:\n{diff}')
 
 
 def update_creole_rst_readme():

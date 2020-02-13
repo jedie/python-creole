@@ -300,6 +300,8 @@ history
 
 * *dev* - `compare v1.4.4...master <https://github.com/jedie/python-creole/compare/v1.4.4...master>`_ 
 
+    * new: ``creole.setup_utils.assert_rst_readme`` for project setup tests
+
     * TBC
 
 * v1.4.4 - 2020-02-07 - `compare v1.4.3...v1.4.4 <https://github.com/jedie/python-creole/compare/v1.4.3...v1.4.4>`_ 
@@ -665,4 +667,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-02-07 15:07:21 with "python-creole"``
+``Note: this file is generated from README.creole 2020-02-13 10:27:40 with "python-creole"``

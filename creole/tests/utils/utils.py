@@ -8,8 +8,6 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
-
-import difflib
 import os
 import shutil
 import tempfile
@@ -17,17 +15,7 @@ import textwrap
 import unittest
 from pathlib import Path
 
-
-def make_diff(block1, block2):
-    d = difflib.Differ()
-
-    block1 = block1.replace("\\n", "\\n\n").split("\n")
-    block2 = block2.replace("\\n", "\\n\n").split("\n")
-
-    diff = d.compare(block1, block2)
-
-    result = [f"{line:>2} {i}\n" for line, i in enumerate(diff)]
-    return "".join(result)
+from creole.shared.diff_utils import unified_diff
 
 
 class MarkupTest(unittest.TestCase):
@@ -54,7 +42,7 @@ class MarkupTest(unittest.TestCase):
             return
 
         try:
-            diff = make_diff(first, second)
+            diff = unified_diff(first, second)
         except AttributeError:
             raise self.failureException(f"{first!r} is not {second!r}")
 
