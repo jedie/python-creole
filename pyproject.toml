@@ -35,19 +35,19 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.6"
-docutils = "^0.15"
+docutils = "*"
 
 [tool.poetry.dev-dependencies]
-poetry-publish = "^0.3.0"
-tox = "^3.14.3"
-pygments = "^2.5.2"
-textile = "^4.0.0"
-pytest = "^4.6"
-pytest-cov = "^2.8.1"
-isort = "^4.3.21"
-flake8 = "^3.7.9"
-flynt = "^0.40.1"
-autopep8 = "^1.4.4"
+poetry-publish = "*"
+tox = "*"
+pygments = "*"
+textile = "*"
+pytest = "*"
+pytest-cov = "*"
+isort = "*"
+flake8 = "*"
+flynt = "*"
+autopep8 = "*"
 
 [tool.poetry.scripts]
 creole2html = "creole.cmdline:cli_creole2html"
