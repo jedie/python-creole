@@ -41,7 +41,8 @@ def test_version():
 
 
 def test_assert_rst_readme():
-    assert_rst_readme(package_root=CREOLE_PACKAGE_ROOT)
+    if 'dev' not in __version__ and 'rc' not in __version__:
+        assert_rst_readme(package_root=CREOLE_PACKAGE_ROOT)
 
 
 def test_poetry_check():
