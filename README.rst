@@ -302,7 +302,7 @@ history
 
     * TBC
 
-* v1.4.5 - 2020-02-13 - `compare v1.4.5...v1.4.6 <https://github.com/jedie/python-creole/compare/v1.4.5...v1.4.6>`_ 
+* v1.4.6 - 2020-02-13 - `compare v1.4.5...v1.4.6 <https://github.com/jedie/python-creole/compare/v1.4.5...v1.4.6>`_ 
 
     * less restricted dependency specification
 
@@ -675,4 +675,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-02-19 09:54:13 with "python-creole"``
+``Note: this file is generated from README.creole 2020-02-19 10:23:20 with "python-creole"``

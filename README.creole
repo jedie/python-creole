@@ -229,7 +229,7 @@ Note: In this case you must install **docutils**! See above.
 
 * *dev* - [[https://github.com/jedie/python-creole/compare/v1.4.6...master|compare v1.4.6...master]]
 ** TBC
-* v1.4.5 - 2020-02-13 - [[https://github.com/jedie/python-creole/compare/v1.4.5...v1.4.6|compare v1.4.5...v1.4.6]]
+* v1.4.6 - 2020-02-13 - [[https://github.com/jedie/python-creole/compare/v1.4.5...v1.4.6|compare v1.4.5...v1.4.6]]
 ** less restricted dependency specification
 * v1.4.5 - 2020-02-13 - [[https://github.com/jedie/python-creole/compare/v1.4.4...v1.4.5|compare v1.4.4...v1.4.5]]
 ** new: {{{creole.setup_utils.assert_rst_readme}}} for project setup tests
