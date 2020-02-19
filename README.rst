@@ -298,9 +298,13 @@ Note: In this case you must install **docutils**! See above.
 history
 =======
 
-* *dev* - `compare v1.4.5...master <https://github.com/jedie/python-creole/compare/v1.4.5...master>`_ 
+* *dev* - `compare v1.4.6...master <https://github.com/jedie/python-creole/compare/v1.4.6...master>`_ 
 
     * TBC
+
+* v1.4.5 - 2020-02-13 - `compare v1.4.5...v1.4.6 <https://github.com/jedie/python-creole/compare/v1.4.5...v1.4.6>`_ 
+
+    * less restricted dependency specification
 
 * v1.4.5 - 2020-02-13 - `compare v1.4.4...v1.4.5 <https://github.com/jedie/python-creole/compare/v1.4.4...v1.4.5>`_ 
 
@@ -671,4 +675,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-02-13 10:43:57 with "python-creole"``
+``Note: this file is generated from README.creole 2020-02-19 09:54:13 with "python-creole"``
