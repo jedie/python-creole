@@ -118,11 +118,11 @@ class ReSt2HtmlTests(BaseCreoleTest):
         with tempfile.NamedTemporaryFile() as temp:
             temp.write(test_content)
             temp.flush()
-            self.assert_rest2html("""
+            self.assert_rest2html(f"""
                 Enable include and test it.
 
-                .. include:: %s
-            """ % temp.name, """
+                .. include:: {temp.name}
+            """, """
                 <p>Enable include and test it.</p>
                 <p>Content from include file.</p>
             """, file_insertion_enabled=True, input_encoding="utf-8")
