@@ -131,7 +131,7 @@ class CleanHTMLTranslator(html4css1.HTMLTranslator):
         self.html_body.extend(
             self.body_prefix[1:] + self.body_pre_docinfo + self.docinfo + self.body + self.body_suffix[:-1]
         )
-        assert not self.context, 'len(context) = %s' % len(self.context)
+        assert not self.context, f'len(context) = {len(self.context)}'
 
     # __________________________________________________________________________
     # Clean table:

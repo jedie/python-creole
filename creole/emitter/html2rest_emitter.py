@@ -1,5 +1,3 @@
-
-
 """
     html -> reStructuredText Emitter
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -65,7 +63,7 @@ class ReStructuredTextEmitter(BaseEmitter):
 
     def inlinedata_pre_emit(self, node):
         """ a pre inline block -> no newline at the end """
-        return "<pre>%s</pre>" % self.deentity.replace_all(node.content)
+        return f"<pre>{self.deentity.replace_all(node.content)}</pre>"
 
     def blockdata_pass_emit(self, node):
         return f"{node.content}\n\n"
@@ -88,19 +86,19 @@ class ReStructuredTextEmitter(BaseEmitter):
             # add rest at the end
             if not result.endswith("\n\n"):
                 result += "\n\n"
-            result += "%s\n\n" % self._get_block_data()
+            result += f"{self._get_block_data()}\n\n"
         return result
 
     def emit_node(self, node):
         result = ""
         if self._substitution_data and node.parent == self.root:
-            result += "%s\n\n" % self._get_block_data()
+            result += f"{self._get_block_data()}\n\n"
 
         result += super().emit_node(node)
         return result
 
     def p_emit(self, node):
-        return "%s\n\n" % self.emit_children(node)
+        return f"{self.emit_children(node)}\n\n"
 
     HEADLINE_DATA = {
         1: ("=", True),
@@ -255,7 +253,7 @@ class ReStructuredTextEmitter(BaseEmitter):
     # --------------------------------------------------------------------------
 
     def code_emit(self, node):
-        return "``%s``" % self._emit_content(node)
+        return f"``{self._emit_content(node)}``"
 
     # --------------------------------------------------------------------------
 

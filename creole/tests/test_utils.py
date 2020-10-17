@@ -1,5 +1,3 @@
-
-
 """
     unittest for some utils
     ~~~~~~~~~~~~~~~~~~~~~~~

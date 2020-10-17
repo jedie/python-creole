@@ -163,7 +163,7 @@ class HtmlEmitter:
         return '<hr />\n'
 
     def paragraph_emit(self, node):
-        return '<p>%s</p>\n' % self.emit_children(node)
+        return f'<p>{self.emit_children(node)}</p>\n'
 
     def _list_emit(self, node, list_type):
         if node.parent.kind in ("document",):
@@ -197,16 +197,16 @@ class HtmlEmitter:
         return self._list_emit(node, list_type="li")
 
     def table_emit(self, node):
-        return '<table>\n%s</table>\n' % self.emit_children(node)
+        return f'<table>\n{self.emit_children(node)}</table>\n'
 
     def table_row_emit(self, node):
-        return '<tr>\n%s</tr>\n' % self.emit_children(node)
+        return f'<tr>\n{self.emit_children(node)}</tr>\n'
 
     def table_cell_emit(self, node):
-        return '\t<td>%s</td>\n' % self.emit_children(node)
+        return f'\t<td>{self.emit_children(node)}</td>\n'
 
     def table_head_emit(self, node):
-        return '\t<th>%s</th>\n' % self.emit_children(node)
+        return f'\t<th>{self.emit_children(node)}</th>\n'
 
     # --------------------------------------------------------------------------
 
@@ -254,7 +254,7 @@ class HtmlEmitter:
         return header
 
     def preformatted_emit(self, node):
-        return '<pre>%s</pre>' % self.html_escape(node.content)
+        return f'<pre>{self.html_escape(node.content)}</pre>'
 
     def link_emit(self, node):
         target = node.content
@@ -377,11 +377,11 @@ class HtmlEmitter:
 
     def pre_block_emit(self, node):
         """ pre block, with newline at the end """
-        return "<pre>%s</pre>\n" % self.html_escape(node.content)
+        return f"<pre>{self.html_escape(node.content)}</pre>\n"
 
     def pre_inline_emit(self, node):
         """ pre without newline at the end """
-        return "<tt>%s</tt>" % self.html_escape(node.content)
+        return f"<tt>{self.html_escape(node.content)}</tt>"
 
     def default_emit(self, node):
         """Fallback function for emitting unknown nodes."""

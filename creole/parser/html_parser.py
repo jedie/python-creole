@@ -235,7 +235,7 @@ class HtmlParser(HTMLParser):
         if tag == "br":  # handled in starttag
             return
 
-        self.debug_msg("starttag", "%r" % self.get_starttag_text())
+        self.debug_msg("starttag", f"{self.get_starttag_text()!r}")
 
         if tag in ("ul", "ol"):
             self.__list_level -= 1

@@ -1,5 +1,3 @@
-
-
 """
     html -> textile Emitter
     ~~~~~~~~~~~~~~~~~~~~~~
@@ -35,11 +33,11 @@ class TextileEmitter(BaseEmitter):
 
     def blockdata_pre_emit(self, node):
         """ pre block -> with newline at the end """
-        return "<pre>%s</pre>\n" % self.deentity.replace_all(node.content)
+        return f"<pre>{self.deentity.replace_all(node.content)}</pre>\n"
 
     def inlinedata_pre_emit(self, node):
         """ a pre inline block -> no newline at the end """
-        return "<pre>%s</pre>" % self.deentity.replace_all(node.content)
+        return f"<pre>{self.deentity.replace_all(node.content)}</pre>"
 
     def blockdata_pass_emit(self, node):
         return f"{node.content}\n\n"
@@ -48,7 +46,7 @@ class TextileEmitter(BaseEmitter):
     # --------------------------------------------------------------------------
 
     def p_emit(self, node):
-        return "%s\n\n" % self.emit_children(node)
+        return f"{self.emit_children(node)}\n\n"
 
     def headline_emit(self, node):
         return f"h{node.level:d}. {self.emit_children(node)}\n\n"

@@ -1,5 +1,3 @@
-
-
 """
     html2textile unittest
     ~~~~~~~~~~~~~~~~~~~~~
