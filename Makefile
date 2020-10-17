@@ -32,14 +32,15 @@ update: check-poetry ## Update the dependencies as according to the pyproject.to
 	poetry update
 
 lint: ## Run code formatters and linter
-	poetry run flynt --fail-on-change --line_length=${MAX_LINE_LENGTH} creole
-	poetry run isort --check-only --recursive creole
-	poetry run flake8 creole
+	poetry run flynt --fail-on-change --line_length=${MAX_LINE_LENGTH} .
+	poetry run isort --check-only .
+	poetry run flake8 .
 
 fix-code-style: ## Fix code formatting
-	poetry run flynt --line_length=${MAX_LINE_LENGTH} creole
-	poetry run isort --apply --recursive creole
-	poetry run autopep8 --ignore-local-config --max-line-length=${MAX_LINE_LENGTH} --aggressive --aggressive --in-place --recursive creole
+	poetry run flynt --line_length=${MAX_LINE_LENGTH} .
+	poetry run pyupgrade --exit-zero-even-if-changed --py3-plus --py36-plus --py37-plus `find . -name "*.py" -type f -not -path "./.tox/*"`
+	poetry run isort .
+	poetry run autopep8 --aggressive --aggressive --in-place --recursive .
 
 tox-listenvs: check-poetry ## List all tox test environments
 	poetry run tox --listenvs

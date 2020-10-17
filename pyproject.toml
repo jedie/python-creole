@@ -49,6 +49,7 @@ isort = "*"
 flake8 = "*"
 flynt = "*"
 autopep8 = "*"
+pyupgrade = "*"
 
 [tool.poetry.scripts]
 creole2html = "creole.cmdline:cli_creole2html"
