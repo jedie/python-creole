@@ -1,6 +1,9 @@
+import tempfile
 from pathlib import Path
 
-from creole.setup_utils import update_rst_readme
+import pytest
+
+from creole.setup_utils import _generate_rst_readme, update_rst_readme
 from creole.tests.constants import CREOLE_PACKAGE_ROOT
 
 
@@ -13,3 +16,21 @@ def test_update_rst_readme(capsys):
     assert captured.err == ''
     assert isinstance(rest_readme_path, Path)
     assert str(rest_readme_path).endswith('/README.rst')
+
+
+def test_non_valid_readme(capsys):
+    with tempfile.NamedTemporaryFile() as fp:
+        path = Path(fp.name)
+        with path.open('w') as f:
+            f.write('= headline\n')
+            f.write('\n')
+            f.write('----\n')  # << error ;)
+
+        with pytest.raises(SystemExit):
+            _generate_rst_readme(creole_readme_path=path)
+
+        captured = capsys.readouterr()
+        assert captured.out == ''
+        assert captured.err == (
+            '<string>:5: (ERROR/3) Document or section may not begin with a transition.\n'
+        )

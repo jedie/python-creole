@@ -19,6 +19,8 @@ import sys
 import warnings
 from pathlib import Path
 
+from readme_renderer.rst import render
+
 from creole import creole2html, html2rest
 from creole.shared.diff_utils import unified_diff
 from creole.shared.unknown_tags import raise_unknown_node, transparent_unknown_nodes
@@ -115,6 +117,13 @@ def _generate_rst_readme(*, creole_readme_path):
             'unknown_emit': raise_unknown_node  # raise a error if a unknown node found
         }
     )
+
+    # Check if generated ReSt is valid, see also:
+    # https://pypi.org/help/#description-content-type
+    rendered = render(rest_readme, stream=sys.stderr)
+    if rendered is None:
+        sys.exit(1)
+
     return rest_readme
 
 
