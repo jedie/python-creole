@@ -1,5 +1,3 @@
-
-
 """
     rest2html unittest
     ~~~~~~~~~~~~~~~~~~

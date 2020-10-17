@@ -1,5 +1,3 @@
-
-
 """
     html -> creole Emitter
     ~~~~~~~~~~~~~~~~~~~~~~
@@ -44,7 +42,6 @@ class CreoleEmitter(BaseEmitter):
 
     def blockdata_pass_emit(self, node):
         return f"{node.content}\n\n"
-        return node.content
 
     # --------------------------------------------------------------------------
 
@@ -149,32 +146,3 @@ class CreoleEmitter(BaseEmitter):
 
     def span_emit(self, node):
         return self._emit_content(node)
-
-
-if __name__ == '__main__':
-    import doctest
-    print(doctest.testmod())
-
-#    import sys;sys.exit()
-    from creole.parser.html_parser import HtmlParser
-
-    data = """A <<unittest_macro1 args="foo1">>bar1<</unittest_macro1>> in a line..."""
-
-#    print(data.strip())
-    h2c = HtmlParser(
-        debug=True
-    )
-    document_tree = h2c.feed(data)
-    h2c.debug()
-
-    from creole.shared.unknown_tags import escape_unknown_nodes
-
-    e = CreoleEmitter(document_tree,
-                      debug=True,
-                      unknown_emit=escape_unknown_nodes
-                      )
-    content = e.emit()
-    print("*" * 79)
-    print(content)
-    print("*" * 79)
-    print(content.replace(" ", ".").replace("\n", "\\n\n"))

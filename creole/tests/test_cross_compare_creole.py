@@ -1,5 +1,3 @@
-
-
 """
     cross compare creole unittest
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

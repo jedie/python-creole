@@ -81,7 +81,7 @@ class BaseEmitter:
     # --------------------------------------------------------------------------
 
     def p_emit(self, node):
-        return "%s\n\n" % self.emit_children(node)
+        return f"{self.emit_children(node)}\n\n"
 
     def br_emit(self, node):
         if self._inner_list != "":
@@ -111,7 +111,7 @@ class BaseEmitter:
         else:
             self._inner_list += list_type
 
-        content = "%s" % self.emit_children(node)
+        content = f"{self.emit_children(node)}"
 
         self._inner_list = self._inner_list[:-1]
 

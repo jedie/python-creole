@@ -1,5 +1,3 @@
-
-
 """
     Try to be so strict as PyPi.
 
@@ -19,7 +17,7 @@ from creole.exceptions import DocutilsImportError
 try:
     import docutils  # noqa flake8
     from docutils import io, readers
-    from docutils.core import publish_doctree, Publisher
+    from docutils.core import Publisher, publish_doctree
     from docutils.transforms import TransformError
 except ImportError as err:
     msg = (

@@ -1,5 +1,3 @@
-
-
 """
     html -> reStructuredText Emitter
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -65,11 +63,10 @@ class ReStructuredTextEmitter(BaseEmitter):
 
     def inlinedata_pre_emit(self, node):
         """ a pre inline block -> no newline at the end """
-        return "<pre>%s</pre>" % self.deentity.replace_all(node.content)
+        return f"<pre>{self.deentity.replace_all(node.content)}</pre>"
 
     def blockdata_pass_emit(self, node):
         return f"{node.content}\n\n"
-        return node.content
 
     # --------------------------------------------------------------------------
 
@@ -88,19 +85,19 @@ class ReStructuredTextEmitter(BaseEmitter):
             # add rest at the end
             if not result.endswith("\n\n"):
                 result += "\n\n"
-            result += "%s\n\n" % self._get_block_data()
+            result += f"{self._get_block_data()}\n\n"
         return result
 
     def emit_node(self, node):
         result = ""
         if self._substitution_data and node.parent == self.root:
-            result += "%s\n\n" % self._get_block_data()
+            result += f"{self._get_block_data()}\n\n"
 
         result += super().emit_node(node)
         return result
 
     def p_emit(self, node):
-        return "%s\n\n" % self.emit_children(node)
+        return f"{self.emit_children(node)}\n\n"
 
     HEADLINE_DATA = {
         1: ("=", True),
@@ -255,7 +252,7 @@ class ReStructuredTextEmitter(BaseEmitter):
     # --------------------------------------------------------------------------
 
     def code_emit(self, node):
-        return "``%s``" % self._emit_content(node)
+        return f"``{self._emit_content(node)}``"
 
     # --------------------------------------------------------------------------
 
@@ -293,52 +290,3 @@ class ReStructuredTextEmitter(BaseEmitter):
         self.emit_children(node)
         content = self._table.get_rest_table()
         return f"{content}\n\n"
-
-
-if __name__ == '__main__':
-    import doctest
-    print(doctest.testmod())
-
-#    import sys;sys.exit()
-    from creole.parser.html_parser import HtmlParser
-
-    data = """<p>A nested bullet lists:</p>
-<ul>
-<li><p>item 1</p>
-<ul>
-<li><p>A <strong>bold subitem 1.1</strong> here.</p>
-<ul>
-<li>subsubitem 1.1.1</li>
-<li>subsubitem 1.1.2 with inline <img alt="substitution text" src="/url/to/image.png" /> image.</li>
-</ul>
-</li>
-<li><p>subitem 1.2</p>
-</li>
-</ul>
-</li>
-<li><p>item 2</p>
-<ul>
-<li>subitem 2.1</li>
-</ul>
-</li>
-</ul>
-<p>Text under list.</p>
-<p>4 <img alt="PNG pictures" src="/image.png" /> four</p>
-<p>5 <img alt="Image without files ext?" src="/path1/path2/image" /> five</p>
-"""
-
-    print(data)
-    h2c = HtmlParser(
-        #        debug=True
-    )
-    document_tree = h2c.feed(data)
-    h2c.debug()
-
-    e = ReStructuredTextEmitter(document_tree,
-                                debug=True
-                                )
-    content = e.emit()
-    print("*" * 79)
-    print(content)
-    print("*" * 79)
-    print(content.replace(" ", ".").replace("\n", "\\n\n"))

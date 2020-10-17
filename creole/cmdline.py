@@ -1,5 +1,3 @@
-
-
 """
     python-creole commandline interface
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

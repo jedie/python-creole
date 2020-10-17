@@ -81,8 +81,8 @@ class MarkupTable:
         # preformat every table cell
         cells, widths = self._get_preformat_info()
 
-        separator_line = "+%s+" % "+".join(["-" * width for width in widths])
-        headline_separator = "+%s+" % "+".join(["=" * width for width in widths])
+        separator_line = f"+{'+'.join([('-' * width) for width in widths])}+"
+        headline_separator = f"+{'+'.join([('=' * width) for width in widths])}+"
 
         lines = []
         for no, row in enumerate(cells):

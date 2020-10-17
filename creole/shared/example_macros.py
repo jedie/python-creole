@@ -35,7 +35,7 @@ def pre(text):
     Macro tag <<pre>>...<</pre>>.
     Put text between html pre tag.
     """
-    return '<pre>%s</pre>' % escape(text)
+    return f'<pre>{escape(text)}</pre>'
 
 
 def code(ext, text):
