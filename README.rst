@@ -7,7 +7,7 @@ python-creole is pure python. No external libs needed.
 
 Compatible Python Versions (see `tox.ini <https://github.com/jedie/python-creole/blob/master/tox.ini>`_ or `.travis.yml <https://github.com/jedie/python-creole/blob/master/.travis.yml>`_):
 
-* 3.8, 3.7, 3.6
+* 3.9, 3.8, 3.7, 3.6
 
 * PyPy3
 
@@ -301,6 +301,8 @@ history
 * *dev* - `compare v1.4.6...master <https://github.com/jedie/python-creole/compare/v1.4.6...master>`_ 
 
     * ``update_rst_readme()`` will touch ``README.rst`` if there are not change (timestamp will not changed in file)
+
+    * Run tests with Python 3.9, too.
 
     * Some meta updates to project setup
 
@@ -679,4 +681,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-10-17 20:45:35 with "python-creole"``
+``Note: this file is generated from README.creole 2020-10-17 21:03:50 with "python-creole"``
