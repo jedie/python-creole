@@ -135,6 +135,19 @@ def update_rst_readme(package_root, filename='README.creole'):
 
     rest_readme = _generate_rst_readme(creole_readme_path=creole_readme_path)
 
+    # Check if content was changed
+    changed = False
+    with rest_readme_path.open('r') as f:
+        for new_line, old_line in zip(rest_readme.splitlines(), f):
+            if new_line.rstrip() != old_line.rstrip():
+                changed = True
+                break
+
+    if not changed:
+        # The existing README.rst is up-to-date: Don't change the timestamp
+        print('nothing changed, ok.')
+        return rest_readme_path
+
     with rest_readme_path.open('w') as f:
         f.write(rest_readme)
 
