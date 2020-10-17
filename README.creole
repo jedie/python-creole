@@ -228,6 +228,8 @@ Note: In this case you must install **docutils**! See above.
 = history =
 
 * *dev* - [[https://github.com/jedie/python-creole/compare/v1.4.6...master|compare v1.4.6...master]]
+** {{{update_rst_readme()}}} will touch {{{README.rst}}} if there are not change (timestamp will not changed in file)
+** Some meta updates to project setup
 ** TBC
 * v1.4.6 - 2020-02-13 - [[https://github.com/jedie/python-creole/compare/v1.4.5...v1.4.6|compare v1.4.5...v1.4.6]]
 ** less restricted dependency specification
