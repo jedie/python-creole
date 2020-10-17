@@ -298,15 +298,17 @@ Note: In this case you must install **docutils**! See above.
 history
 =======
 
-* *dev* - `compare v1.4.6...master <https://github.com/jedie/python-creole/compare/v1.4.6...master>`_ 
+* *dev* - `compare v1.4.7...master <https://github.com/jedie/python-creole/compare/v1.4.7...master>`_ 
+
+    * TBC
+
+* v1.4.7 - 2020-10-17 - `compare v1.4.6...v1.4.7 <https://github.com/jedie/python-creole/compare/v1.4.6...v1.4.7>`_ 
 
     * ``update_rst_readme()`` will touch ``README.rst`` if there are not change (timestamp will not changed in file)
 
     * Run tests with Python 3.9, too.
 
     * Some meta updates to project setup
-
-    * TBC
 
 * v1.4.6 - 2020-02-13 - `compare v1.4.5...v1.4.6 <https://github.com/jedie/python-creole/compare/v1.4.5...v1.4.6>`_ 
 
@@ -681,4 +683,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-10-17 21:03:50 with "python-creole"``
+``Note: this file is generated from README.creole 2020-10-17 21:06:26 with "python-creole"``
