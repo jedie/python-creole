@@ -2,8 +2,7 @@
     :copyleft: 2020 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
-
-from poetry_publish.tests.test_project_setup import test_assert_rst_readme as assert_rst_readme
+from poetry_publish.tests.test_assert_rst_readme import test_assert_rst_readme as assert_rst_readme
 from poetry_publish.tests.test_project_setup import test_poetry_check as assert_poetry_check
 from poetry_publish.tests.test_project_setup import test_version as assert_version
 
