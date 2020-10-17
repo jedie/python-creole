@@ -28,6 +28,9 @@ install-poetry: ## install or update poetry
 install: check-poetry ## install python-creole via poetry
 	poetry install
 
+update: check-poetry ## Update the dependencies as according to the pyproject.toml file
+	poetry update
+
 lint: ## Run code formatters and linter
 	poetry run flynt --fail-on-change --line_length=${MAX_LINE_LENGTH} creole
 	poetry run isort --check-only --recursive creole
