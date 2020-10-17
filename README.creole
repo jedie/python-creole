@@ -229,6 +229,8 @@ Note: In this case you must install **docutils**! See above.
 
 * *dev* - [[https://github.com/jedie/python-creole/compare/v1.4.7...master|compare v1.4.7...master]]
 ** TBC
+* v1.4.8 - 2020-10-17 - [[https://github.com/jedie/python-creole/compare/v1.4.7...v1.4.8|compare v1.4.7...v1.4.8]]
+** Validate generated {{{README.rst}}} with [[https://pypi.org/project/readme-renderer/|readme-renderer]]
 * v1.4.7 - 2020-10-17 - [[https://github.com/jedie/python-creole/compare/v1.4.6...v1.4.7|compare v1.4.6...v1.4.7]]
 ** {{{update_rst_readme()}}} will touch {{{README.rst}}} if there are not change (timestamp will not changed in file)
 ** Run tests with Python 3.9, too.

@@ -302,6 +302,10 @@ history
 
     * TBC
 
+* v1.4.8 - 2020-10-17 - `compare v1.4.7...v1.4.8 <https://github.com/jedie/python-creole/compare/v1.4.7...v1.4.8>`_ 
+
+    * Validate generated ``README.rst`` with `readme-renderer <https://pypi.org/project/readme-renderer/>`_
+
 * v1.4.7 - 2020-10-17 - `compare v1.4.6...v1.4.7 <https://github.com/jedie/python-creole/compare/v1.4.6...v1.4.7>`_ 
 
     * ``update_rst_readme()`` will touch ``README.rst`` if there are not change (timestamp will not changed in file)
@@ -683,4 +687,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-10-17 21:06:26 with "python-creole"``
+``Note: this file is generated from README.creole 2020-10-17 22:52:28 with "python-creole"``
