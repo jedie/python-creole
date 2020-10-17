@@ -32,6 +32,7 @@ classifiers = [
 packages = [
     { include = "creole" },
 ]
+include = ['AUTHORS', 'LICENSE']
 
 [tool.poetry.dependencies]
 python = "^3.6"
