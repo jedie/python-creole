@@ -277,8 +277,7 @@ class HtmlEmitter:
                     w_str, h_str = size_str.split("x", 1)
                     width = int(w_str.strip())
                     height = int(h_str.strip())
-                    return '<img src="{}" title="{}" alt="{}" width="{}" height="{}" />'.format(
-                        self.attr_escape(target), title, title, width, height)
+                    return f'<img src="{self.attr_escape(target)}" title="{title}" alt="{title}" width="{width}" height="{height}" />'
             except BaseException:
                 pass
         return f'<img src="{self.attr_escape(target)}" title="{text}" alt="{text}" />'

@@ -41,7 +41,6 @@ class TextileEmitter(BaseEmitter):
 
     def blockdata_pass_emit(self, node):
         return f"{node.content}\n\n"
-        return node.content
 
     # --------------------------------------------------------------------------
 
@@ -125,41 +124,3 @@ class TextileEmitter(BaseEmitter):
 
     def ol_emit(self, node):
         return self._list_emit(node, list_type="#")
-
-
-if __name__ == '__main__':
-    import doctest
-    print(doctest.testmod())
-
-#    import sys;sys.exit()
-    from creole.parser.html_parser import HtmlParser
-
-    data = """
-<h1>Textile</h1>
-<table>
-<tr>
-    <th>Headline 1</th>
-    <th>Headline 2</th>
-</tr>
-<tr>
-    <td>cell one</td>
-    <td>cell two</td>
-</tr>
-</table>
-"""
-
-#    print(data.strip())
-    h2c = HtmlParser(
-        debug=True
-    )
-    document_tree = h2c.feed(data)
-    h2c.debug()
-
-    e = TextileEmitter(document_tree,
-                       debug=True
-                       )
-    content = e.emit()
-    print("*" * 79)
-    print(content)
-    print("*" * 79)
-    print(content.replace(" ", ".").replace("\n", "\\n\n"))
