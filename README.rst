@@ -305,7 +305,7 @@ history
 
 * v1.4.9 - 2020-11-4 - `compare v1.4.8...v1.4.9 <https://github.com/jedie/python-creole/compare/v1.4.8...v1.4.9>`_ 
 
-    * Add missing classifier for Python 3.9
+    * Add missing classifier for Python 3.9 (`Contributed by jugmac00 <https://github.com/jedie/python-creole/pull/55>`_)
 
     * Update readme test
 
@@ -694,4 +694,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-11-04 08:42:52 with "python-creole"``
+``Note: this file is generated from README.creole 2020-11-04 08:46:39 with "python-creole"``
