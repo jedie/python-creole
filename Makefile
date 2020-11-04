@@ -57,6 +57,9 @@ tox-py37: check-poetry ## Run pytest via tox with *python v3.7*
 tox-py38: check-poetry ## Run pytest via tox with *python v3.8*
 	poetry run tox -e py38
 
+tox-py39: check-poetry ## Run pytest via tox with *python v3.9*
+	poetry run tox -e py39
+
 pytest: check-poetry ## Run pytest
 	poetry run pytest
 

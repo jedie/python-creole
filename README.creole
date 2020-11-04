@@ -212,6 +212,7 @@ tox                  Run pytest via tox with all environments
 tox-py36             Run pytest via tox with *python v3.6*
 tox-py37             Run pytest via tox with *python v3.7*
 tox-py38             Run pytest via tox with *python v3.8*
+tox-py39             Run pytest via tox with *python v3.9*
 pytest               Run pytest
 update-rst-readme    update README.rst from README.creole
 publish              Release new version to PyPi
@@ -227,8 +228,11 @@ Note: In this case you must install **docutils**! See above.
 
 = history =
 
-* *dev* - [[https://github.com/jedie/python-creole/compare/v1.4.7...master|compare v1.4.7...master]]
+* *dev* - [[https://github.com/jedie/python-creole/compare/v1.4.9...master|compare v1.4.9...master]]
 ** TBC
+* v1.4.9 - 2020-11-4 - [[https://github.com/jedie/python-creole/compare/v1.4.8...v1.4.9|compare v1.4.8...v1.4.9]]
+** Add missing classifier for Python 3.9 ([[https://github.com/jedie/python-creole/pull/55|Contributed by jugmac00]])
+** Update readme test
 * v1.4.8 - 2020-10-17 - [[https://github.com/jedie/python-creole/compare/v1.4.7...v1.4.8|compare v1.4.7...v1.4.8]]
 ** Validate generated {{{README.rst}}} with [[https://pypi.org/project/readme-renderer/|readme-renderer]]
 * v1.4.7 - 2020-10-17 - [[https://github.com/jedie/python-creole/compare/v1.4.6...v1.4.7|compare v1.4.6...v1.4.7]]

@@ -281,6 +281,7 @@ To see all make targets, just call ``make``:
     tox-py36             Run pytest via tox with *python v3.6*
     tox-py37             Run pytest via tox with *python v3.7*
     tox-py38             Run pytest via tox with *python v3.8*
+    tox-py39             Run pytest via tox with *python v3.9*
     pytest               Run pytest
     update-rst-readme    update README.rst from README.creole
     publish              Release new version to PyPi
@@ -298,9 +299,15 @@ Note: In this case you must install **docutils**! See above.
 history
 =======
 
-* *dev* - `compare v1.4.7...master <https://github.com/jedie/python-creole/compare/v1.4.7...master>`_ 
+* *dev* - `compare v1.4.9...master <https://github.com/jedie/python-creole/compare/v1.4.9...master>`_ 
 
     * TBC
+
+* v1.4.9 - 2020-11-4 - `compare v1.4.8...v1.4.9 <https://github.com/jedie/python-creole/compare/v1.4.8...v1.4.9>`_ 
+
+    * Add missing classifier for Python 3.9 (`Contributed by jugmac00 <https://github.com/jedie/python-creole/pull/55>`_)
+
+    * Update readme test
 
 * v1.4.8 - 2020-10-17 - `compare v1.4.7...v1.4.8 <https://github.com/jedie/python-creole/compare/v1.4.7...v1.4.8>`_ 
 
@@ -687,4 +694,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-10-17 22:52:28 with "python-creole"``
+``Note: this file is generated from README.creole 2020-11-04 08:46:39 with "python-creole"``
