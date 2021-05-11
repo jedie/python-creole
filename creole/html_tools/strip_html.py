@@ -95,7 +95,7 @@ def strip_html(html_code):
         return result
 
     data = html_code.strip()
-    clean_data = " ".join([line.strip() for line in data.split("\n")])
+    clean_data = " ".join(line.strip() for line in data.split("\n"))
     clean_data = strip_html_regex.sub(strip_tag, clean_data)
     return clean_data
 

@@ -388,7 +388,7 @@ class HtmlEmitter:
 
     def emit_children(self, node):
         """Emit all the children of a node."""
-        return ''.join([self.emit_node(child) for child in node.children])
+        return ''.join(self.emit_node(child) for child in node.children)
 
     def emit_node(self, node):
         """Emit a single node."""

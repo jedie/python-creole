@@ -58,7 +58,7 @@ class ReStructuredTextEmitter(BaseEmitter):
     def blockdata_pre_emit(self, node):
         """ pre block -> with newline at the end """
         pre_block = self.deentity.replace_all(node.content).strip()
-        pre_block = "\n".join(["    %s" % line for line in pre_block.splitlines()])
+        pre_block = "\n".join(f"    {line}" for line in pre_block.splitlines())
         return f"::\n\n{pre_block}\n\n"
 
     def inlinedata_pre_emit(self, node):
@@ -267,7 +267,7 @@ class ReStructuredTextEmitter(BaseEmitter):
 
         if node.level == 1:
             # FIXME: This should be made ​​easier and better
-            complete_list = "\n\n".join([i.strip("\n") for i in content.split("\n") if i])
+            complete_list = "\n\n".join(i.strip("\n") for i in content.split("\n") if i)
             content = f"{complete_list}\n\n"
 
         return content
