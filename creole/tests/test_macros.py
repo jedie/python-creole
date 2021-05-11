@@ -23,7 +23,7 @@ def unittest_macro1(**kwargs):
     >>> unittest_macro1(a=1,b=2)
     '[test macro1 - kwargs: a=1,b=2]'
     """
-    kwargs = ','.join('{}={}'.format(k, json.dumps(v)) for k, v in sorted(kwargs.items()))
+    kwargs = ','.join(f'{k}={json.dumps(v)}' for k, v in sorted(kwargs.items()))
     return f"[test macro1 - kwargs: {kwargs}]"
 
 

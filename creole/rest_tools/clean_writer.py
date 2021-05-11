@@ -91,7 +91,7 @@ class CleanHTMLTranslator(html4css1.HTMLTranslator):
                 continue
 
             if isinstance(value, list):
-                value = ' '.join([str(x) for x in value])
+                value = ' '.join(str(x) for x in value)
 
             part = f'{name.lower()}="{self.attval(str(value))}"'
             parts.append(part)

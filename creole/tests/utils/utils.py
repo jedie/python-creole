@@ -32,9 +32,9 @@ class MarkupTest(unittest.TestCase):
     def _format_output(self, txt):
         txt = txt.split("\\n")
         if self.VERBOSE == 1:
-            txt = "".join(['%s\\n\n' % i for i in txt])
+            txt = "".join(f'{i}\\n\n' for i in txt)
         elif self.VERBOSE == 2:
-            txt = "".join(['%s\n' % i for i in txt])
+            txt = "".join(f'{i}\n' for i in txt)
         return txt
 
     def assertEqual(self, first, second, msg=""):

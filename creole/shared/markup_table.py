@@ -60,7 +60,7 @@ class MarkupTable:
         if not self.auto_width:
             lines = []
             for row in self.rows:
-                lines.append("|" + "|".join([cell for cell in row]) + "|")
+                lines.append("|" + "|".join(cell for cell in row) + "|")
         else:
             # preformat every table cell
             cells, widths = self._get_preformat_info()
@@ -81,8 +81,8 @@ class MarkupTable:
         # preformat every table cell
         cells, widths = self._get_preformat_info()
 
-        separator_line = f"+{'+'.join([('-' * width) for width in widths])}+"
-        headline_separator = f"+{'+'.join([('=' * width) for width in widths])}+"
+        separator_line = f"+{'+'.join(('-' * width) for width in widths)}+"
+        headline_separator = f"+{'+'.join(('=' * width) for width in widths)}+"
 
         lines = []
         for no, row in enumerate(cells):
