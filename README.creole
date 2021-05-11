@@ -227,9 +227,13 @@ Note: In this case you must install **docutils**! See above.
 
 = history =
 
-* *dev* - [[https://github.com/jedie/python-creole/compare/v1.4.9...master|compare v1.4.9...master]]
-** Remove Travis CI (All tests already running via github actions)
+* *dev* - [[https://github.com/jedie/python-creole/compare/v1.4.10...master|compare v1.4.10...master]]
 ** TBC
+* v1.4.10 - 2021-05-11 - [[https://github.com/jedie/python-creole/compare/v1.4.9...v1.4.10|compare v1.4.9...v1.4.10]]
+** Update some string formatting to f-strings
+** Replace some {{{join()}}} list comprehension with generators
+** Test on github actions also under MacOS
+** Remove Travis CI (All tests already running via github actions)
 * v1.4.9 - 2020-11-4 - [[https://github.com/jedie/python-creole/compare/v1.4.8...v1.4.9|compare v1.4.8...v1.4.9]]
 ** Add missing classifier for Python 3.9 ([[https://github.com/jedie/python-creole/pull/55|Contributed by jugmac00]])
 ** Update readme test
