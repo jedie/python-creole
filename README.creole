@@ -3,7 +3,7 @@
 python-creole is a OpenSource (GPL) Python lib for converting markups.
 python-creole is pure python. No external libs needed.
 
-Compatible Python Versions (see [[https://github.com/jedie/python-creole/blob/master/tox.ini|tox.ini]] or [[https://github.com/jedie/python-creole/blob/master/.travis.yml|.travis.yml]]):
+Compatible Python Versions (see [[https://github.com/jedie/python-creole/blob/master/tox.ini|tox.ini]]):
  * 3.9, 3.8, 3.7, 3.6
  * PyPy3
 
@@ -19,7 +19,6 @@ Existing converters:
 The creole2html part based on the creole markup parser and emitter from the MoinMoin project by Radomir Dopieralski and Thomas Waldmann.
 
 | {{https://github.com/jedie/python-creole/workflows/test/badge.svg?branch=master|Build Status on github}} ||
-| {{https://travis-ci.org/jedie/python-creole.svg|Build Status on travis-ci.org}} | [[https://travis-ci.org/jedie/python-creole/|travis-ci.org/jedie/python-creole]] |
 | {{https://coveralls.io/repos/jedie/python-creole/badge.svg|Coverage Status on coveralls.io}} | [[https://coveralls.io/r/jedie/python-creole|coveralls.io/r/jedie/python-creole]] |
 | {{https://landscape.io/github/jedie/python-creole/master/landscape.svg|Status on landscape.io}} | [[https://landscape.io/github/jedie/python-creole/master|landscape.io/github/jedie/python-creole/master]] |
 | {{https://badge.fury.io/py/python-creole.svg|PyPi version}} | [[https://pypi.org/project/python-creole/|pypi.org/project/python-creole/]] |
@@ -229,6 +228,7 @@ Note: In this case you must install **docutils**! See above.
 = history =
 
 * *dev* - [[https://github.com/jedie/python-creole/compare/v1.4.9...master|compare v1.4.9...master]]
+** Remove Travis CI (All tests already running via github actions)
 ** TBC
 * v1.4.9 - 2020-11-4 - [[https://github.com/jedie/python-creole/compare/v1.4.8...v1.4.9|compare v1.4.8...v1.4.9]]
 ** Add missing classifier for Python 3.9 ([[https://github.com/jedie/python-creole/pull/55|Contributed by jugmac00]])

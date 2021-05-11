@@ -5,7 +5,7 @@ about python-creole
 python-creole is a OpenSource (GPL) Python lib for converting markups.
 python-creole is pure python. No external libs needed.
 
-Compatible Python Versions (see `tox.ini <https://github.com/jedie/python-creole/blob/master/tox.ini>`_ or `.travis.yml <https://github.com/jedie/python-creole/blob/master/.travis.yml>`_):
+Compatible Python Versions (see `tox.ini <https://github.com/jedie/python-creole/blob/master/tox.ini>`_):
 
 * 3.9, 3.8, 3.7, 3.6
 
@@ -28,8 +28,6 @@ The creole2html part based on the creole markup parser and emitter from the Moin
 +-----------------------------------+
 | |Build Status on github|          |
 +-----------------------------------+
-| |Build Status on travis-ci.org|   |
-+-----------------------------------+
 | |Coverage Status on coveralls.io| |
 +-----------------------------------+
 | |Status on landscape.io|          |
@@ -38,8 +36,6 @@ The creole2html part based on the creole markup parser and emitter from the Moin
 +-----------------------------------+
 
 .. |Build Status on github| image:: https://github.com/jedie/python-creole/workflows/test/badge.svg?branch=master
-.. |Build Status on travis-ci.org| image:: https://travis-ci.org/jedie/python-creole.svg
-.. _travis-ci.org/jedie/python-creole: https://travis-ci.org/jedie/python-creole/
 .. |Coverage Status on coveralls.io| image:: https://coveralls.io/repos/jedie/python-creole/badge.svg
 .. _coveralls.io/r/jedie/python-creole: https://coveralls.io/r/jedie/python-creole
 .. |Status on landscape.io| image:: https://landscape.io/github/jedie/python-creole/master/landscape.svg
@@ -300,6 +296,8 @@ history
 =======
 
 * *dev* - `compare v1.4.9...master <https://github.com/jedie/python-creole/compare/v1.4.9...master>`_ 
+
+    * Remove Travis CI (All tests already running via github actions)
 
     * TBC
 
@@ -694,4 +692,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2020-11-04 08:46:39 with "python-creole"``
+``Note: this file is generated from README.creole 2021-05-11 16:05:04 with "python-creole"``

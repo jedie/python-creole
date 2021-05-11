@@ -1,21 +1,27 @@
-name: test
+# https://github.com/actions/setup-python
+
+name: Test
 
 on:
+  push:
   schedule:
     - cron: '0 8 * * *'
-  push:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    name: 'Python ${{ matrix.python-version }} on ${{ matrix.os }}'
+    runs-on: ${{ matrix.os }}
+    env:
+      PYTHONUNBUFFERED: 1
     strategy:
-      max-parallel: 4
+      fail-fast: false
       matrix:
-        python-version: [3.9, 3.8, 3.7, 3.6, pypy3]
+        python-version: [3.9, 3.8, 3.7, 3.6]
+        os: [ubuntu-latest, macOS-latest, windows-latest]
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: 'Set up Python ${{ matrix.python-version }}'
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v2
       with:
         python-version: '${{ matrix.python-version }}'
 
@@ -51,5 +57,4 @@ jobs:
       run: |
         source $HOME/.poetry/env
         make lint
-
-
+y
