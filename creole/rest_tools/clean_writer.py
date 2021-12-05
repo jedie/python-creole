@@ -42,7 +42,7 @@ DEBUG = False
 #DEBUG = True
 
 IGNORE_ATTR = (
-    "start", "class", "frame", "rules",
+    "start", "class", "classes", "frame", "rules",
 )
 IGNORE_TAGS = (
     "div",

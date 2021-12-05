@@ -228,6 +228,7 @@ Note: In this case you must install **docutils**! See above.
 = history =
 
 * *dev* - [[https://github.com/jedie/python-creole/compare/v1.4.10...master|compare v1.4.10...master]]
+** Remove deprecated "parser_kwargs" and "emitter_kwargs"
 ** TBC
 * v1.4.10 - 2021-05-11 - [[https://github.com/jedie/python-creole/compare/v1.4.9...v1.4.10|compare v1.4.9...v1.4.10]]
 ** Update some string formatting to f-strings

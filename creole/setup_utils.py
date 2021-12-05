@@ -113,9 +113,7 @@ def _generate_rst_readme(*, creole_readme_path):
     # convert html to ReSt
     rest_readme = html2rest(
         html_readme,
-        emitter_kwargs={
-            'unknown_emit': raise_unknown_node  # raise a error if a unknown node found
-        }
+        unknown_emit=raise_unknown_node  # raise a error if a unknown node found
     )
 
     # Check if generated ReSt is valid, see also:
