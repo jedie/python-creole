@@ -297,6 +297,8 @@ history
 
 * *dev* - `compare v1.4.10...master <https://github.com/jedie/python-creole/compare/v1.4.10...master>`_ 
 
+    * Remove deprecated "parser_kwargs" and "emitter_kwargs"
+
     * TBC
 
 * v1.4.10 - 2021-05-11 - `compare v1.4.9...v1.4.10 <https://github.com/jedie/python-creole/compare/v1.4.9...v1.4.10>`_ 
@@ -700,4 +702,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2021-05-11 16:58:01 with "python-creole"``
+``Note: this file is generated from README.creole 2021-12-05 16:58:04 with "python-creole"``

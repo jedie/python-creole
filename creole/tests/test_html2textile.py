@@ -51,7 +51,7 @@ class TextileTests(BaseCreoleTest):
 
                 <p>555<x />666</p>
             """,
-            emitter_kwargs={"unknown_emit": preformat_unknown_nodes}
+            unknown_emit=preformat_unknown_nodes
         )
 
     def test_transparent_unknown_nodes(self):

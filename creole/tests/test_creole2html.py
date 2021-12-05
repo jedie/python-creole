@@ -48,10 +48,8 @@ class TestCreole2html(BaseCreoleTest):
         my_stderr = StringIO()
         creole2html(
             markup_string="<<notexist1>><<notexist2>><</notexist2>>",
-            emitter_kwargs={
-                "verbose": 2,
-                "stderr": my_stderr,
-            }
+            verbose=2,
+            stderr=my_stderr,
         )
         error_msg = my_stderr.getvalue()
 
@@ -78,33 +76,27 @@ class TestCreole2html(BaseCreoleTest):
         """
         html = creole2html(
             markup_string="<<html>><p>foo</p><</html>><bar?>",
-            emitter_kwargs={
-                "verbose": 1,
-                "macros": example_macros,
-                "stderr": sys.stderr,
-            }
+            verbose=1,
+            macros=example_macros,
+            stderr=sys.stderr,
         )
         self.assertEqual(html, '<p>foo</p>\n<p>&lt;bar?&gt;</p>')
 
     def test_example_macros2(self):
         html = creole2html(
             markup_string="<<html>>{{{&lt;nocode&gt;}}}<</html>>",
-            emitter_kwargs={
-                "verbose": 1,
-                "macros": example_macros,
-                "stderr": sys.stderr,
-            }
+            verbose=1,
+            macros=example_macros,
+            stderr=sys.stderr,
         )
         self.assertEqual(html, '{{{&lt;nocode&gt;}}}')
 
     def test_example_macros3(self):
         html = creole2html(
             markup_string="<<html>>1<</html>><<html>>2<</html>>",
-            emitter_kwargs={
-                "verbose": 1,
-                "macros": example_macros,
-                "stderr": sys.stderr,
-            }
+            verbose=1,
+            macros=example_macros,
+            stderr=sys.stderr,
         )
         self.assertEqual(html, '1\n2')
 
@@ -117,11 +109,9 @@ class TestCreole2html(BaseCreoleTest):
 
         html = creole2html(
             markup_string="<<test bar='b' foo='a'>>c<</test>>",
-            emitter_kwargs={
-                "verbose": 1,
-                "macros": {"test": test},
-                "stderr": sys.stderr,
-            }
+            verbose=1,
+            macros={"test": test},
+            stderr=sys.stderr,
         )
         self.assertEqual(html, 'a|b|c')
 
@@ -132,15 +122,14 @@ class TestCreole2html(BaseCreoleTest):
         def testmacro():
             pass
 
-        self.assertRaises(TypeError,
-                          creole2html,
-                          markup_string="<<test no=1 arg2='foo'>>bar<</test>>",
-                          emitter_kwargs={
-                              "verbose": 1,
-                              "macros": testmacro,
-                              "stderr": sys.stderr,
-                          }
-                          )
+        self.assertRaises(
+            TypeError,
+            creole2html,
+            markup_string="<<test no=1 arg2='foo'>>bar<</test>>",
+            verbose=1,
+            macros=testmacro,
+            stderr=sys.stderr,
+        )
 
     def test_macro_wrong_arguments_with_error_report(self):
         """
@@ -152,15 +141,14 @@ class TestCreole2html(BaseCreoleTest):
 
         html = creole2html(
             markup_string="<<test bar='foo'>>c<</test>>",
-            emitter_kwargs={
-                "verbose": 2,
-                "macros": {"test": test},
-                "stderr": my_stderr,
-            }
+            verbose=2,
+            macros={"test": test},
+            stderr=my_stderr,
         )
-        self.assertEqual(html,
-                         "[Error: Macro 'test' error: test() got an unexpected keyword argument 'bar']"
-                         )
+        self.assertEqual(
+            html,
+            "[Error: Macro 'test' error: test() got an unexpected keyword argument 'bar']"
+        )
         error_msg = my_stderr.getvalue()
 
         # Check traceback information into our stderr handler
@@ -182,15 +170,14 @@ class TestCreole2html(BaseCreoleTest):
 
         html = creole2html(
             markup_string="<<test bar='foo'>>c<</test>>",
-            emitter_kwargs={
-                "verbose": 1,
-                "macros": {"test": test},
-                "stderr": my_stderr,
-            }
+            verbose=1,
+            macros={"test": test},
+            stderr=my_stderr,
         )
-        self.assertEqual(html,
-                         "[Error: Macro 'test' error: test() got an unexpected keyword argument 'bar']"
-                         )
+        self.assertEqual(
+            html,
+            "[Error: Macro 'test' error: test() got an unexpected keyword argument 'bar']"
+        )
         error_msg = my_stderr.getvalue()
         self.assertEqual(error_msg, "")
 
@@ -210,8 +197,8 @@ class TestCreole2html(BaseCreoleTest):
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;hello world&#39;</span><span class="p">)</span><br />
             </pre></div><br />
             """,
-                                macros={'code': example_macros.code}
-                                )
+            macros={'code': example_macros.code}
+        )
 
     def test_code_macro_fallback(self):
         # force to use fallback. Will be reset in self.setUp()

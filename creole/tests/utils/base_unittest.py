@@ -192,7 +192,7 @@ class BaseCreoleTest(MarkupTest):
         )
 
     def assert_html2textile(self, textile_string, html_string,
-                            strip_lines=False, debug=False, parser_kwargs={}, emitter_kwargs={}):
+                            strip_lines=False, debug=False, **kwargs):
         """
         Check html2textile
         """
@@ -205,7 +205,7 @@ class BaseCreoleTest(MarkupTest):
             html_string = strip_html_lines(html_string, strip_lines)
 
         # compare html -> textile
-        textile_string2 = html2textile(html_string, debug, parser_kwargs, emitter_kwargs)
+        textile_string2 = html2textile(html_string, debug, **kwargs)
         if debug:
             print("-" * 79)
             print(textile_string2)
@@ -216,7 +216,7 @@ class BaseCreoleTest(MarkupTest):
         return textile_string, html_string
 
     def cross_compare_textile(self, textile_string, html_string,
-                              strip_lines=False, debug=False, parser_kwargs={}, emitter_kwargs={}):
+                              strip_lines=False, debug=False, **kwargs):
         """
             Checks:
                 * html2textile
@@ -229,7 +229,7 @@ class BaseCreoleTest(MarkupTest):
         # compare html -> textile
         textile_string, html_string = self.assert_html2textile(
             textile_string, html_string,
-            strip_lines, debug, parser_kwargs, emitter_kwargs
+            strip_lines, debug, **kwargs
         )
 
         # compare textile -> html
@@ -242,7 +242,7 @@ class BaseCreoleTest(MarkupTest):
         self.assertEqual(html_string, html, msg="textile2html")
 
     def assert_html2rest(self, rest_string, html_string,
-                         strip_lines=False, debug=False, parser_kwargs={}, emitter_kwargs={}):
+                         strip_lines=False, debug=False, **kwargs):
         """
         Check html to reStructuredText converter
         """
@@ -258,7 +258,7 @@ class BaseCreoleTest(MarkupTest):
         print(html_string)
 
         # compare html -> reStructuredText
-        rest_string2 = html2rest(html_string, debug, parser_kwargs, emitter_kwargs)
+        rest_string2 = html2rest(html_string, debug, **kwargs)
         print("-" * 100)
         print(rest_string2)
         print("-" * 100)
@@ -291,14 +291,14 @@ class BaseCreoleTest(MarkupTest):
         self.assertEqual(html, html_string, msg="rest2html")
 
     def cross_compare_rest(self, rest_string, html_string,
-                           strip_lines=False, debug=False, parser_kwargs={}, emitter_kwargs={}):
+                           strip_lines=False, debug=False, **kwargs):
         #        assert isinstance(textile_string, str)
         #        assert isinstance(html_string, str)
         self.assertNotEqual(rest_string, html_string)
 
         rest_string, html_string = self.assert_html2rest(
             rest_string, html_string,
-            strip_lines, debug, parser_kwargs, emitter_kwargs
+            strip_lines, debug, **kwargs
         )
 
         # compare rest -> html
@@ -313,7 +313,7 @@ class BaseCreoleTest(MarkupTest):
                       creole_string=None,
                       textile_string=None,
                       rest_string=None,
-                      strip_lines=False, debug=False, parser_kwargs={}, emitter_kwargs={}):
+                      strip_lines=False, debug=False, **kwargs):
         """
         Cross compare with:
             * creole2html
@@ -323,17 +323,17 @@ class BaseCreoleTest(MarkupTest):
         """
         if creole_string:
             self.cross_compare_creole(
-                creole_string, html_string, strip_lines, debug, parser_kwargs, emitter_kwargs
+                creole_string, html_string, strip_lines, debug, **kwargs
             )
 
         if textile_string:
             self.cross_compare_textile(
-                textile_string, html_string, strip_lines, debug, parser_kwargs, emitter_kwargs
+                textile_string, html_string, strip_lines, debug, **kwargs
             )
 
         if rest_string:
             self.cross_compare_rest(
-                rest_string, html_string, strip_lines, debug, parser_kwargs, emitter_kwargs
+                rest_string, html_string, strip_lines, debug, **kwargs
             )
 
 
