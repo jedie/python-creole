@@ -11,9 +11,10 @@
 
 import re
 
+import markdown
 import textile
 
-from creole import creole2html, html2creole, html2rest, html2textile
+from creole import creole2html, html2creole, html2markdown, html2rest, html2textile
 from creole.rest_tools.clean_writer import rest2html
 from creole.tests.utils.utils import MarkupTest
 
@@ -215,6 +216,31 @@ class BaseCreoleTest(MarkupTest):
 
         return textile_string, html_string
 
+    def assert_html2markdown(
+        self, markdown_string, html_string, strip_lines=False, debug=False, **kwargs
+    ):
+        """
+        Check html2markdown
+        """
+        self.assertNotEqual(markdown_string, html_string)
+
+        markdown_string = self._prepare_text(markdown_string)
+        html_string = self._prepare_text(html_string)
+
+        if strip_lines:
+            html_string = strip_html_lines(html_string, strip_lines)
+
+        # compare html -> markdown
+        markdown_string2 = html2markdown(html_string, debug, **kwargs)
+        if debug:
+            print("-" * 79)
+            print(markdown_string2)
+            print("-" * 79)
+
+        self.assertEqual(markdown_string2, markdown_string, msg="html2markdown")
+
+        return markdown_string, html_string
+
     def cross_compare_textile(self, textile_string, html_string,
                               strip_lines=False, debug=False, **kwargs):
         """
@@ -240,6 +266,32 @@ class BaseCreoleTest(MarkupTest):
             html = strip_html_lines(html, strip_lines)
 
         self.assertEqual(html_string, html, msg="textile2html")
+
+    def cross_compare_markdown(
+        self, markdown_string, html_string, strip_lines=False, debug=False, **kwargs
+    ):
+        """
+        Checks:
+            * html2markdown
+            * markdown2html
+        """
+        #        assert isinstance(markdown_string, str)
+        #        assert isinstance(html_string, str)
+        self.assertNotEqual(markdown_string, html_string)
+
+        # compare html -> markdown
+        markdown_string, html_string = self.assert_html2markdown(
+            markdown_string, html_string, strip_lines, debug, **kwargs
+        )
+
+        # compare markdown -> html
+        html = markdown.markdown(markdown_string)
+        html = html.replace("<br />", "<br />\n")
+        html = tabs2spaces(html)
+        if strip_lines:
+            html = strip_html_lines(html, strip_lines)
+
+        self.assertEqual(html_string, html, msg="markdown2html")
 
     def assert_html2rest(self, rest_string, html_string,
                          strip_lines=False, debug=False, **kwargs):

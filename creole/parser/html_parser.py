@@ -95,6 +95,7 @@ class HtmlParser(HTMLParser):
         self.__list_level = 0
 
     def _pre_cut(self, data, type, placeholder):
+        # TODO: Check if we have a code block, e.g.: "<pre><code>...</code></pre>"
         if self.debugging:
             print(f"append blockdata: {data!r}")
         assert isinstance(data, str), "blockdata is not unicode"
@@ -125,27 +126,32 @@ class HtmlParser(HTMLParser):
 
 #        data = match.group("data")
 
-    def feed(self, raw_data):
+    def feed(self, raw_data, preprocess=True) -> DocNode:
         assert isinstance(raw_data, str), "feed data must be unicode!"
         data = raw_data.strip()
+        if preprocess:
+            # cut out <pre> and <tt> areas block tag areas
+            data = block_re.sub(self._pre_cut_out, data)
+            data = inline_re.sub(self._pre_cut_out, data)
 
-        # cut out <pre> and <tt> areas block tag areas
-        data = block_re.sub(self._pre_cut_out, data)
-        data = inline_re.sub(self._pre_cut_out, data)
+            # Delete whitespace from html code
+            data = strip_html(data)
 
-        # Delete whitespace from html code
-        data = strip_html(data)
-
-        if self.debugging:
+            if self.debugging:
+                print("_" * 79)
+                print("raw data:")
+                print(repr(raw_data))
+                print(" -" * 40)
+                print("cleaned data:")
+                print(data)
+                print("-" * 79)
+                # print(data.replace(">", ">\n"))
+                # print("-"*79)
+        elif self.debugging:
             print("_" * 79)
-            print("raw data:")
-            print(repr(raw_data))
-            print(" -" * 40)
-            print("cleaned data:")
+            print("data:")
             print(data)
             print("-" * 79)
-#            print(clean_data.replace(">", ">\n"))
-#            print("-"*79)
 
         HTMLParser.feed(self, data)
 

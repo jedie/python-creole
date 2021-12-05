@@ -10,3 +10,5 @@ coverage.xml
 /dist
 /build
 /publish.log
+
+README.html

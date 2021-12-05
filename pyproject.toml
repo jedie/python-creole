@@ -48,9 +48,10 @@ textile = "*"
 pytest = "*"
 pytest-cov = "*"
 isort = "*"
-pylint = "*"
+flake8 = "*"
 autopep8 = "*"
 darker = "*"
+markdown = "*"
 
 [tool.poetry.scripts]
 creole2html = "creole.cmdline:cli_creole2html"
@@ -58,6 +59,7 @@ html2creole = "creole.cmdline:cli_html2creole"
 html2rest = "creole.cmdline:cli_html2rest"
 html2textile = "creole.cmdline:cli_html2textile"
 update_rst_readme = "creole.setup_utils:update_creole_rst_readme"
+update_markdown_readme = "creole.setup_utils:update_creole_markdown_readme"
 publish = "creole.publish:publish"
 
 [build-system]
@@ -76,7 +78,7 @@ check = false
 stdout = false
 isort = true
 lint = [
-    "pylint",
+    "flake8",
 ]
 log_level = "INFO"
 

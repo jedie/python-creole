@@ -41,6 +41,7 @@ def strip_html(html_code):
     >>> strip_html('<li>  Force  <br /> \\n linebreak </li>')
     '<li>Force<br />linebreak</li>'
 
+    FIXME: Space between </strong> </i> :
     >>> strip_html('one  <i>two \\n <strong>   \\n  three  \\n  </strong></i>')
     'one <i>two <strong>three</strong> </i>'
 

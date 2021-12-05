@@ -19,9 +19,10 @@ import sys
 import warnings
 from pathlib import Path
 
+import markdown
 from readme_renderer.rst import render
 
-from creole import creole2html, html2rest
+from creole import creole2html, html2markdown, html2rest
 from creole.shared.diff_utils import unified_diff
 from creole.shared.unknown_tags import raise_unknown_node, transparent_unknown_nodes
 
@@ -125,6 +126,23 @@ def _generate_rst_readme(*, creole_readme_path):
     return rest_readme
 
 
+def _generate_markdown_readme(*, creole_readme_path):
+    creole_readme = creole_readme_path.read_text(encoding='utf-8').strip()
+
+    # convert creole into html
+    html_readme = creole2html(creole_readme)
+
+    # convert html to Markdown
+    markdown_readme = html2markdown(
+        html_readme, unknown_emit=raise_unknown_node  # raise a error if a unknown node found
+    )
+
+    # Just try to render:
+    html = markdown.markdown(markdown_readme)
+
+    return markdown_readme
+
+
 def update_rst_readme(package_root, filename='README.creole'):
     """
     Generate README.rst from README.creole
@@ -172,6 +190,54 @@ def update_rst_readme(package_root, filename='README.creole'):
     return rest_readme_path
 
 
+def update_markdown_readme(package_root, filename='README.creole'):
+    """
+    Generate README.md from README.creole
+    """
+    assert isinstance(package_root, Path)
+    assert package_root.is_dir(), f'Directory not found: {package_root}'
+    creole_readme_path = Path(package_root, filename)
+    assert creole_readme_path.is_file(), f'File not found: {creole_readme_path}'
+
+    markdown_readme_path = creole_readme_path.with_suffix('.md')
+    print(
+        f'Generate {markdown_readme_path.name} from {creole_readme_path.name}',
+        end='...',
+        flush=True,
+    )
+
+    markdown_readme = _generate_markdown_readme(creole_readme_path=creole_readme_path)
+
+    # # Check if content was changed
+    changed = False
+    with markdown_readme_path.open('r') as f:
+        for new_line, old_line in zip(markdown_readme.splitlines(), f):
+            if new_line.rstrip() != old_line.rstrip():
+                changed = True
+                break
+
+    if not changed:
+        # The existing README.rst is up-to-date: Don't change the timestamp
+        print('nothing changed, ok.')
+        return markdown_readme_path
+
+    with markdown_readme_path.open('w') as f:
+        f.write(markdown_readme)
+
+        # Add a note about generation with modification time from source:
+
+        f.write('\n\n------------\n\n')
+
+        modification_time = creole_readme_path.stat().st_mtime
+        dt = datetime.datetime.fromtimestamp(modification_time)
+        dt = dt.replace(microsecond=0)
+        dt = dt.isoformat(sep=' ')
+        f.write(f'``Note: this file is generated from {filename} {dt} with "python-creole"``')
+
+    print('done.')
+    return markdown_readme_path
+
+
 def assert_rst_readme(package_root, filename='README.creole'):
     """
     raise AssertionError if README.rst is not up-to-date.
@@ -179,8 +245,7 @@ def assert_rst_readme(package_root, filename='README.creole'):
     creole_readme_path = Path(package_root, filename)
     rest_readme = _generate_rst_readme(creole_readme_path=creole_readme_path)
     rest_readme_path = creole_readme_path.with_suffix('.rst')
-    with rest_readme_path.open('r') as f:
-        content = f.read()
+    content = rest_readme_path.read_text(encoding='UTF-8')
 
     assert len(content) > 0, f'Empty content in {rest_readme_path}'
     content = content.rsplit('\n', 4)[0]  # remove note about generation with modification time
@@ -190,6 +255,23 @@ def assert_rst_readme(package_root, filename='README.creole'):
         raise AssertionError(f'{rest_readme_path.name} is not up-to-date:\n{diff}')
 
 
+def assert_markdown_readme(package_root, filename='README.creole'):
+    """
+    raise AssertionError if README.md is not up-to-date.
+    """
+    creole_readme_path = Path(package_root, filename)
+    markdown_readme = _generate_markdown_readme(creole_readme_path=creole_readme_path)
+    markdown_readme_path = creole_readme_path.with_suffix('.md')
+    content = markdown_readme_path.read_text(encoding='UTF-8')
+
+    assert len(content) > 0, f'Empty content in {markdown_readme_path}'
+    content = content.rsplit('\n', 4)[0]  # remove note about generation with modification time
+
+    if markdown_readme != content:
+        diff = unified_diff(content, markdown_readme, filename=markdown_readme_path.name)
+        raise AssertionError(f'{markdown_readme_path.name} is not up-to-date:\n{diff}')
+
+
 def update_creole_rst_readme():
     return update_rst_readme(
         package_root=Path(__file__).parent.parent,
@@ -197,5 +279,12 @@ def update_creole_rst_readme():
     )
 
 
+def update_creole_markdown_readme():
+    return update_markdown_readme(
+        package_root=Path(__file__).parent.parent, filename='README.creole'
+    )
+
+
 if __name__ == '__main__':
     update_creole_rst_readme()
+    update_creole_markdown_readme()

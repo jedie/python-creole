@@ -8,7 +8,7 @@ from poetry_publish.tests.test_project_setup import test_poetry_check as assert_
 from poetry_publish.tests.test_project_setup import test_version as assert_version
 
 from creole import __version__
-from creole.setup_utils import update_rst_readme
+from creole.setup_utils import update_markdown_readme, update_rst_readme
 from creole.tests.constants import CREOLE_PACKAGE_ROOT
 
 
@@ -29,6 +29,17 @@ def test_update_rst_readme(capsys):
     assert captured.err == ''
     assert isinstance(rest_readme_path, Path)
     assert str(rest_readme_path).endswith('/README.rst')
+
+
+def test_update_md_readme(capsys):
+    rest_readme_path = update_markdown_readme(
+        package_root=CREOLE_PACKAGE_ROOT, filename='README.creole'
+    )
+    captured = capsys.readouterr()
+    assert captured.out == 'Generate README.md from README.creole...nothing changed, ok.\n'
+    assert captured.err == ''
+    assert isinstance(rest_readme_path, Path)
+    assert str(rest_readme_path).endswith('/README.md')
 
 
 def test_poetry_check():

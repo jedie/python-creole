@@ -17,6 +17,7 @@ import warnings
 
 from creole.emitter.creol2html_emitter import HtmlEmitter
 from creole.emitter.html2creole_emitter import CreoleEmitter
+from creole.emitter.html2markdown_emitter import MarkdownEmitter
 from creole.emitter.html2rest_emitter import ReStructuredTextEmitter
 from creole.emitter.html2textile_emitter import TextileEmitter
 from creole.parser.creol2html_parser import CreoleParser
@@ -108,6 +109,20 @@ def html2textile(html_string, debug=False,
 
     # create textile markup from the document tree
     emitter = TextileEmitter(document_tree, debug=debug, unknown_emit=unknown_emit)
+    return emitter.emit()
+
+
+def html2markdown(html_string, debug=False, unknown_emit=None):
+    """
+    convert html code into markdown markup
+
+    >>> html2markdown('<p>This is <strong>markdown <i>markup</i></strong>!</p>')
+    'This is **markdown _markup_**!'
+    """
+    document_tree = parse_html(html_string, debug=debug)
+
+    # create markdown markup from the document tree
+    emitter = MarkdownEmitter(document_tree, debug=debug, unknown_emit=unknown_emit)
     return emitter.emit()
 
 
