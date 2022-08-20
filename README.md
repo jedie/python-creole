@@ -226,9 +226,9 @@ Note: In this case you must install **docutils**! See above.
 # history
 
 
-* [*dev*](https://github.com/jedie/python-creole/compare/v1.5.0.rc1...master)
+* [*dev*](https://github.com/jedie/python-creole/compare/v1.5.0.rc2...master)
   * TBC
-* [v1.5.0.rc1 - 2022-08-20](https://github.com/jedie/python-creole/compare/v1.4.10...v1.5.0.rc1)
+* [v1.5.0.rc2 - 2022-08-20](https://github.com/jedie/python-creole/compare/v1.4.10...v1.5.0.rc2)
   * NEW: html2markdown
   * creole2html bugfixes:
     * replace wrong `<tt>` with `<code>`
@@ -438,4 +438,4 @@ first source code was written 27.11.2008: [Forum thread (de)](http://www.python-
 
 ------------
 
-``Note: this file is generated from README.creole 2022-08-20 23:21:34 with "python-creole"``
+``Note: this file is generated from README.creole 2022-08-21 00:49:59 with "python-creole"``

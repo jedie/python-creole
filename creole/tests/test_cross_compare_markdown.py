@@ -100,6 +100,7 @@ class CrossCompareMarkdownTests(BaseCreoleTest):
             ),
             # debug=True,
         )
+
     def test_typeface_basic(self):
         self.cross_compare_markdown(
             markdown_string='_emphasis_',
