@@ -131,6 +131,7 @@ def _generate_markdown_readme(*, creole_readme_path):
 
     # convert creole into html
     html_readme = creole2html(creole_readme)
+    creole_readme_path.with_suffix('.html').write_text(html_readme)
 
     # convert html to Markdown
     markdown_readme = html2markdown(

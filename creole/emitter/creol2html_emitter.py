@@ -382,7 +382,7 @@ class HtmlEmitter:
 
     def pre_inline_emit(self, node):
         """ pre without newline at the end """
-        return f"<tt>{self.html_escape(node.content)}</tt>"
+        return f"<code>{self.html_escape(node.content)}</code>"
 
     def default_emit(self, node):
         """Fallback function for emitting unknown nodes."""

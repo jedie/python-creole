@@ -52,7 +52,8 @@ class MarkdownEmitter(BaseEmitter):
             code_node: DocNode = root_node.children[0]
             code = self.deentity.replace_all(code_node.children[0].content)
 
-            if class_value := code_node.attrs.get('class'):
+            class_value = code_node.attrs.get('class')
+            if class_value :
                 if class_value.startswith('language-'):
                     language = class_value.partition('-')[2]
                     return f'```{language}{code}```\n\n'
@@ -73,10 +74,7 @@ class MarkdownEmitter(BaseEmitter):
         return result
 
     def br_emit(self, node: DocNode):
-        if self._inner_list != '':
-            return '\\\\'
-        else:
-            return '\n'
+        return '\n'
 
     def headline_emit(self, node: DocNode):
         prefix = '#' * node.level
@@ -124,7 +122,8 @@ class MarkdownEmitter(BaseEmitter):
     def a_emit(self, node: DocNode):
         link_text = self.emit_children(node)
         url = node.attrs['href']
-        if title := node.attrs.get('title'):
+        title = node.attrs.get('title')
+        if title :
             return f'[{link_text}]({url} "{title}")'
         else:
             return f'[{link_text}]({url})'
@@ -141,20 +140,14 @@ class MarkdownEmitter(BaseEmitter):
 
     # --------------------------------------------------------------------------
 
-    def _list_emit(self, node: DocNode):
-        # start_newline = False
-        # if self.last and self.last.kind not in BLOCK_TAGS:
-        #     if not self.last.content or not self.last.content.endswith("\n"):
-        #         start_newline = True
-
-        content = f"{self.emit_children(node)}"
+    def list_emit(self, node: DocNode):
+        content = self.emit_children(node)
+        if node.level == 1:
+            content += '\n\n'
         return content
 
-    def ul_emit(self, node: DocNode):
-        return self.emit_children(node)
-
-    def ol_emit(self, node: DocNode):
-        return self.emit_children(node)
+    ul_emit = list_emit
+    ol_emit = list_emit
 
     def li_emit(self, node: DocNode):
         list_level = node.level

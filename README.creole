@@ -240,6 +240,9 @@ Note: In this case you must install **docutils**! See above.
 
 * *dev* - [[https://github.com/jedie/python-creole/compare/v1.4.10...master|compare v1.4.10...master]]
 ** NEW: html2markdown
+** creole2html bugfixes:
+*** replace wrong {{{<tt>}}} with {{{<code>}}}
+*** Add newline after lists
 ** Remove deprecated "parser_kwargs" and "emitter_kwargs"
 ** Rename git {{{master}}} branch to {{{main}}}.
 ** TBC

@@ -315,6 +315,12 @@ history
 
     * NEW: html2markdown
 
+    * creole2html bugfixes:
+
+        * replace wrong ``<tt>`` with ``<code>``
+
+        * Add newline after lists
+
     * Remove deprecated "parser_kwargs" and "emitter_kwargs"
 
     * Rename git ``master`` branch to ``main``.
@@ -722,4 +728,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2022-08-20 11:18:44 with "python-creole"``
+``Note: this file is generated from README.creole 2022-08-20 21:45:05 with "python-creole"``

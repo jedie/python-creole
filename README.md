@@ -7,14 +7,18 @@ Compatible Python Versions (see [tox.ini](https://github.com/jedie/python-creole
 
 
 * 3.9, 3.8, 3.7, 3.6
-* PyPy3Existing converters:
+* PyPy3
+
+Existing converters:
 
 
 * creole -> html
 * html -> creole markup
 * reSt -> html (for clean html code)
 * html -> reStructuredText markup (only a subset of reSt supported)
-* html -> textile markup (not completed yet)The creole2html part based on the creole markup parser and emitter from the MoinMoin project by Radomir Dopieralski and Thomas Waldmann.
+* html -> textile markup (not completed yet)
+
+The creole2html part based on the creole markup parser and emitter from the MoinMoin project by Radomir Dopieralski and Thomas Waldmann.
 
 | ![Build Status on github](https://github.com/jedie/python-creole/workflows/test/badge.svg?branch=master "Build Status on github") |
 | ![Coverage Status on coveralls.io](https://coveralls.io/repos/jedie/python-creole/badge.svg "Coverage Status on coveralls.io")    |
@@ -27,17 +31,19 @@ Python packages available on: [http://pypi.python.org/pypi/python-creole/](http:
 ```
 ~$ pip install python-creole
 ```
-To setup a virtualenv via Poetry, see ##unittests## section below.
+To setup a virtualenv via Poetry, see `unittests` section below.
 
 ## dependencies
 
-For the most parts (##creole2html## and ##html2creole##) no external libraries are needed.
+For the most parts (`creole2html` and `html2creole`) no external libraries are needed.
 
 For all functionality (and running the unittests) these modules are needed:
 
 
 * [docutils](http://pypi.python.org/pypi/docutils/) (for the ReStructuredText stuff)
-* [textile](http://pypi.python.org/pypi/textile/) (for html2textile tests)# example
+* [textile](http://pypi.python.org/pypi/textile/) (for html2textile tests)
+
+# example
 
 ## creole2html
 
@@ -109,7 +115,7 @@ You can pass image width/height in image tags, e.g.:
 >>> creole2html(creole_markup)
 '<p><img src="foobar.jpg" title="image title" alt="image title" width="90" height="160" /></p>'
 ```
-The third part (##90x160##) is not in creole standard, you can force a _strict_ mode, e.g.:
+The third part (`90x160`) is not in creole standard, you can force a _strict_ mode, e.g.:
 
 ```
 >>> creole2html(creole_markup, strict=True)
@@ -136,7 +142,9 @@ If you have python-creole installed, you will get these simple CLI scripts:
 * html2creole
 * html2rest
 * html2textile
-* html2markdownHere the ##--help## output from ##html2creole##:
+* html2markdown
+
+Here the `--help` output from `html2creole`:
 
 ```
 $ html2creole --help
@@ -164,13 +172,19 @@ $ html2creole foobar.html foobar.creole
 We store documentation/examples into the project wiki:
 
 
-* [https://github.com/jedie/python-creole/wiki](https://github.com/jedie/python-creole/wiki)How to handle unknown html tags in html2creole:
+* [https://github.com/jedie/python-creole/wiki](https://github.com/jedie/python-creole/wiki)
+
+How to handle unknown html tags in html2creole:
 
 
-* [https://github.com/jedie/python-creole/wiki/Unknown-Html-Tags](https://github.com/jedie/python-creole/wiki/Unknown-Html-Tags)Contributers should take a look at this page:
+* [https://github.com/jedie/python-creole/wiki/Unknown-Html-Tags](https://github.com/jedie/python-creole/wiki/Unknown-Html-Tags)
+
+Contributers should take a look at this page:
 
 
-* [https://github.com/jedie/python-creole/wiki/Developer-Info](https://github.com/jedie/python-creole/wiki/Developer-Info)Creole Markup Cheat Sheet can be found here: [http://www.wikicreole.org/wiki/CheatSheet](http://www.wikicreole.org/wiki/CheatSheet)
+* [https://github.com/jedie/python-creole/wiki/Developer-Info](https://github.com/jedie/python-creole/wiki/Developer-Info)
+
+Creole Markup Cheat Sheet can be found here: [http://www.wikicreole.org/wiki/CheatSheet](http://www.wikicreole.org/wiki/CheatSheet)
 
 ![Creole Markup Cheat Sheet](http://www.wikicreole.org/imageServlet?page=CheatSheet%2Fcreole_cheat_sheet.png&width=340 "Creole Markup Cheat Sheet")
 
@@ -200,7 +214,7 @@ We store documentation/examples into the project wiki:
 ```
 ## make targets
 
-To see all make targets, just call ##make##:
+To see all make targets, just call `make`:
 
 ```
 ~/python-creole$ make
@@ -231,50 +245,53 @@ Note: In this case you must install **docutils**! See above.
 
 * *dev* - [compare v1.4.10...master](https://github.com/jedie/python-creole/compare/v1.4.10...master)
   * NEW: html2markdown
+  * creole2html bugfixes:
+    * replace wrong `<tt>` with `<code>`
+    * Add newline after lists
   * Remove deprecated "parser_kwargs" and "emitter_kwargs"
-  * Rename git ##master## branch to ##main##.
+  * Rename git `master` branch to `main`.
   * TBC
 * v1.4.10 - 2021-05-11 - [compare v1.4.9...v1.4.10](https://github.com/jedie/python-creole/compare/v1.4.9...v1.4.10)
   * Update some string formatting to f-strings
-  * Replace some ##join()## list comprehension with generators
+  * Replace some `join()` list comprehension with generators
   * Test on github actions also under MacOS
   * Remove Travis CI (All tests already running via github actions)
 * v1.4.9 - 2020-11-4 - [compare v1.4.8...v1.4.9](https://github.com/jedie/python-creole/compare/v1.4.8...v1.4.9)
   * Add missing classifier for Python 3.9 ([Contributed by jugmac00](https://github.com/jedie/python-creole/pull/55))
   * Update readme test
 * v1.4.8 - 2020-10-17 - [compare v1.4.7...v1.4.8](https://github.com/jedie/python-creole/compare/v1.4.7...v1.4.8)
-  * Validate generated ##README.rst## with [readme-renderer](https://pypi.org/project/readme-renderer/)
+  * Validate generated `README.rst` with [readme-renderer](https://pypi.org/project/readme-renderer/)
 * v1.4.7 - 2020-10-17 - [compare v1.4.6...v1.4.7](https://github.com/jedie/python-creole/compare/v1.4.6...v1.4.7)
-  * ##update_rst_readme()## will touch ##README.rst## if there are not change (timestamp will not changed in file)
+  * `update_rst_readme()` will touch `README.rst` if there are not change (timestamp will not changed in file)
   * Run tests with Python 3.9, too.
   * Some meta updates to project setup
 * v1.4.6 - 2020-02-13 - [compare v1.4.5...v1.4.6](https://github.com/jedie/python-creole/compare/v1.4.5...v1.4.6)
   * less restricted dependency specification
 * v1.4.5 - 2020-02-13 - [compare v1.4.4...v1.4.5](https://github.com/jedie/python-creole/compare/v1.4.4...v1.4.5)
-  * new: ##creole.setup_utils.assert_rst_readme## for project setup tests
+  * new: `creole.setup_utils.assert_rst_readme` for project setup tests
   * use [https://github.com/ymyzk/tox-gh-actions](https://github.com/ymyzk/tox-gh-actions) on gitlab CI
 * v1.4.4 - 2020-02-07 - [compare v1.4.3...v1.4.4](https://github.com/jedie/python-creole/compare/v1.4.3...v1.4.4)
-  * Fix #44: Move ##poetry-publish## to ##dev-dependencies## and lower ##docutils## requirement to ![^0.15](^0.15 "^0.15")
+  * Fix #44: Move `poetry-publish` to `dev-dependencies` and lower `docutils` requirement to ![^0.15](^0.15 "^0.15")
   * some code style updated
   * Always update README.rst before publish
 * v1.4.3 - 2020-02-01 - [compare v1.4.2...v1.4.3](https://github.com/jedie/python-creole/compare/v1.4.2...v1.4.3)
-  * Use new [poetry-publish](https://pypi.org/project/poetry-publish/) for ##make publish##
+  * Use new [poetry-publish](https://pypi.org/project/poetry-publish/) for `make publish`
 * v1.4.2 - 2020-02-01 - [compare v1.4.1...v1.4.2](https://github.com/jedie/python-creole/compare/v1.4.1...v1.4.2)
   * Update CI configs on github and travis
-  * Update ##Makefile##: add ##make publish## and ##make update-rst-readme##
-  * Add generated ##README.rst## in repository to fix install problems about missing readme
+  * Update `Makefile`: add `make publish` and `make update-rst-readme`
+  * Add generated `README.rst` in repository to fix install problems about missing readme
 * v1.4.1 - 2020-01-19 - [compare v1.4.0...v1.4.1](https://github.com/jedie/python-creole/compare/v1.4.0...v1.4.1)
   * Remove Python v2 support code
   * [Fix "Undefined substitution referenced" error](https://github.com/jedie/python-creole/issues/26) contributed by dforsi
   * [Fix regression in tests for setup_utils](https://github.com/jedie/python-creole/pull/37) contributed by jugmac00
   * Fix code style with: autopep8
   * sort imports with isort
-  * change old ##%-formatted## and ##.format(...)## strings into Python 3.6+'s ##f-strings## with flynt
+  * change old `%-formatted` and `.format(...)` strings into Python 3.6+'s `f-strings` with flynt
   * Activate linting in CI pipeline
 * v1.4.0 - 2020-01-19 - [compare v1.3.2...v1.4.0](https://github.com/jedie/python-creole/compare/v1.3.2...v1.4.0)
   * modernize project:
     * use poetry
-    * Add a ##Makefile##
+    * Add a `Makefile`
     * use pytest and tox
     * remove Python v2 support
     * Test with Python v3.6, v3.7 and v3.8
@@ -297,8 +314,8 @@ Note: In this case you must install **docutils**! See above.
   * Use origin PyPi code to check generated reStructuredText in setup.py
   * Update unitest for textile v2.1.8
 * v1.2.0 - 2014-05-15 - [compare v1.1.1...v1.2.0](https://github.com/jedie/python-creole/compare/v1.1.1...v1.2.0)
-  * NEW: Add ##<<code>>## example macro (Source code highlighting with pygments) - implemented by Julien Enselme
-  * NEW: Add ##<<toc>>## macro to create a table of contents list
+  * NEW: Add `<<code>>` example macro (Source code highlighting with pygments) - implemented by Julien Enselme
+  * NEW: Add `<<toc>>` macro to create a table of contents list
   * Bugfix for: AttributeError: 'CreoleParser' object has no attribute '_escaped_char_repl'
   * Bugfix for: AttributeError: 'CreoleParser' object has no attribute '_escaped_url_repl'
   * API Change: Callable macros will raise a TypeError instead of create a DeprecationWarning (Was removed in v0.5)
@@ -313,12 +330,12 @@ Note: In this case you must install **docutils**! See above.
   * Security fix in rest2html: Disable "file_insertion_enabled" and "raw_enabled" as default.
 * v1.0.5 - 2012-09-03
   * made automatic protocol links more strict: Only whitespace before and at the end are allowed.
-  * Bugfix: Don't allow ##ftp:/broken## (Only one slash) to be a link.
+  * Bugfix: Don't allow `ftp:/broken` (Only one slash) to be a link.
 * v1.0.4 - 2012-06-11
   * html2rest: Handle double link/image substitution and raise better error messages
   * Bugfix in unittests (include test README file in python package).  Thanks to Wen Heping for reporting this.
 * v1.0.3 - 2012-06-11
-  * Bugfix: ##AttributeError: 'module' object has no attribute 'interesting_cdata'## from HTMLParser patch. Thanks to Wen Heping for reporting this.
+  * Bugfix: `AttributeError: 'module' object has no attribute 'interesting_cdata'` from HTMLParser patch. Thanks to Wen Heping for reporting this.
   * Fix a bug in get_long_description() ReSt test for Py3k and his unittests.
   * Use Travis CI, too.
 * v1.0.2 - 2012-04-04
@@ -346,22 +363,22 @@ Note: In this case you must install **docutils**! See above.
   * Bugfix in get_long_description() error handling (_local variable 'long_description_origin' referenced before assignment_)
 * v0.8.1
   * Bugfix for installation under python 2.5
-  * Note: [setup helper](https://github.com/jedie/python-creole/wiki/Use-In-Setup) changed: rename ##GetLongDescription(...)## to ##get_long_description(...)##
+  * Note: [setup helper](https://github.com/jedie/python-creole/wiki/Use-In-Setup) changed: rename `GetLongDescription(...)` to `get_long_description(...)`
 * v0.8
   * New GetLongDescription() helper for setup.py, see: [https://github.com/jedie/python-creole/wiki/Use-In-Setup](https://github.com/jedie/python-creole/wiki/Use-In-Setup)
 * v0.7.3
   * Bugfix in html2rest:
-    * table without ##<th>## header
+    * table without `<th>` header
     * new line after table
     * create reference hyperlinks in table cells intead of embedded urls.
     * Don't always use raise_unknown_node()
   * Add child content to raise_unknown_node()
 * v0.7.2
-  * Activate ##----## to ##<hr>## in html2rest
+  * Activate `----` to `<hr>` in html2rest
   * Update demo.py
 * v0.7.1
   * Bugfix if docutils are not installed
-  * API change: rest2html is now here: ##from creole.rest2html.clean_writer import rest2html##
+  * API change: rest2html is now here: `from creole.rest2html.clean_writer import rest2html`
 * v0.7.0
   * **NEW**: Add a html2reStructuredText converter (only a subset of reSt supported)
 * v0.6.1
@@ -407,7 +424,7 @@ Note: In this case you must install **docutils**! See above.
     * see also: [issues 6](http://code.google.com/p/python-creole/issues/detail?id=6)
     * Thanks Betz Stefan alias 'encbladexp'
 * v0.2.2
-  * html2creole bugfix: convert ##<a href="/url/">Search & Destroy</a>##
+  * html2creole bugfix: convert `<a href="/url/">Search & Destroy</a>`
 * v0.2.1
   * html2creole bugfixes in:
     * converting tables: ignore tbody tag and better handling p and a tags in td
@@ -418,7 +435,9 @@ Note: In this case you must install **docutils**! See above.
 * v0.1.1
   * improve macros stuff, patch by Vitja Makarov: [issues 2](http://code.google.com/p/python-creole/issues/detail?id=2)
 * v0.1.0
-  * first version cut out from [PyLucid CMS](http://www.pylucid.org)first source code was written 27.11.2008: [Forum thread (de)](http://www.python-forum.de/viewtopic.php?f=3&t=16742)
+  * first version cut out from [PyLucid CMS](http://www.pylucid.org)
+
+first source code was written 27.11.2008: [Forum thread (de)](http://www.python-forum.de/viewtopic.php?f=3&t=16742)
 
 ## Project links
 
@@ -434,4 +453,4 @@ Note: In this case you must install **docutils**! See above.
 
 ------------
 
-``Note: this file is generated from README.creole 2022-08-20 11:18:44 with "python-creole"``
+``Note: this file is generated from README.creole 2022-08-20 21:45:05 with "python-creole"``

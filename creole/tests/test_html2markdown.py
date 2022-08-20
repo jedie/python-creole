@@ -28,7 +28,7 @@ class MarkdownTests(BaseCreoleTest):
                 <p>Below the code block.</p>
                 '''
             ),
-            debug=True,
+            # debug=True,
         )
 
     def test_lists(self):
@@ -77,5 +77,23 @@ class MarkdownTests(BaseCreoleTest):
                 </ul>
                 '''
             ),
-            debug=True,
+            # debug=True,
+        )
+        self.assert_html2markdown(
+            markdown_string=cleandoc(
+                '''
+                * html2markdown
+
+                Here the `--help` output
+                '''
+            ),
+            html_string=cleandoc(
+                '''
+                <ul>
+                    <li>html2markdown</li>
+                </ul>
+                <p>Here the <code>--help</code> output</p>
+                '''
+            ),
+            # debug=True,
         )
