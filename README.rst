@@ -190,14 +190,14 @@ Here the ``--help`` output from ``html2creole``:
 
     $ html2creole --help
     usage: html2creole [-h] [-v] [--encoding ENCODING] sourcefile destination
-
+    
     python-creole is an open-source (GPL) markup converter in pure Python for:
     creole2html, html2creole, html2ReSt, html2textile
-
+    
     positional arguments:
       sourcefile           source file to convert
       destination          Output filename
-
+    
     optional arguments:
       -h, --help           show this help message and exit
       -v, --version        show program's version number and exit
@@ -240,19 +240,19 @@ unittests
     # clone repository (or use your fork):
     ~$ git clone https://github.com/jedie/python-creole.git
     ~$ cd python-creole
-
+    
     # install or update poetry:
     ~/python-creole$ make install-poetry
-
+    
     # install python-creole via poetry:
     ~/python-creole$ make install
-
+    
     # Run pytest:
     ~/python-creole$ make pytest
-
+    
     # Run pytest via tox with all environments:
     ~/python-creole$ make tox
-
+    
     # Run pytest via tox with one Python version:
     ~/python-creole$ make tox-py38
     ~/python-creole$ make tox-py37
@@ -295,13 +295,15 @@ Note: In this case you must install **docutils**! See above.
 history
 =======
 
-* *dev* - `compare v1.4.10...master <https://github.com/jedie/python-creole/compare/v1.4.10...master>`_
+* *dev* - `compare v1.4.10...master <https://github.com/jedie/python-creole/compare/v1.4.10...master>`_ 
 
     * Remove deprecated "parser_kwargs" and "emitter_kwargs"
 
+    * Rename git ``master`` branch to ``main``.
+
     * TBC
 
-* v1.4.10 - 2021-05-11 - `compare v1.4.9...v1.4.10 <https://github.com/jedie/python-creole/compare/v1.4.9...v1.4.10>`_
+* v1.4.10 - 2021-05-11 - `compare v1.4.9...v1.4.10 <https://github.com/jedie/python-creole/compare/v1.4.9...v1.4.10>`_ 
 
     * Update some string formatting to f-strings
 
@@ -311,17 +313,17 @@ history
 
     * Remove Travis CI (All tests already running via github actions)
 
-* v1.4.9 - 2020-11-4 - `compare v1.4.8...v1.4.9 <https://github.com/jedie/python-creole/compare/v1.4.8...v1.4.9>`_
+* v1.4.9 - 2020-11-4 - `compare v1.4.8...v1.4.9 <https://github.com/jedie/python-creole/compare/v1.4.8...v1.4.9>`_ 
 
     * Add missing classifier for Python 3.9 (`Contributed by jugmac00 <https://github.com/jedie/python-creole/pull/55>`_)
 
     * Update readme test
 
-* v1.4.8 - 2020-10-17 - `compare v1.4.7...v1.4.8 <https://github.com/jedie/python-creole/compare/v1.4.7...v1.4.8>`_
+* v1.4.8 - 2020-10-17 - `compare v1.4.7...v1.4.8 <https://github.com/jedie/python-creole/compare/v1.4.7...v1.4.8>`_ 
 
     * Validate generated ``README.rst`` with `readme-renderer <https://pypi.org/project/readme-renderer/>`_
 
-* v1.4.7 - 2020-10-17 - `compare v1.4.6...v1.4.7 <https://github.com/jedie/python-creole/compare/v1.4.6...v1.4.7>`_
+* v1.4.7 - 2020-10-17 - `compare v1.4.6...v1.4.7 <https://github.com/jedie/python-creole/compare/v1.4.6...v1.4.7>`_ 
 
     * ``update_rst_readme()`` will touch ``README.rst`` if there are not change (timestamp will not changed in file)
 
@@ -329,17 +331,17 @@ history
 
     * Some meta updates to project setup
 
-* v1.4.6 - 2020-02-13 - `compare v1.4.5...v1.4.6 <https://github.com/jedie/python-creole/compare/v1.4.5...v1.4.6>`_
+* v1.4.6 - 2020-02-13 - `compare v1.4.5...v1.4.6 <https://github.com/jedie/python-creole/compare/v1.4.5...v1.4.6>`_ 
 
     * less restricted dependency specification
 
-* v1.4.5 - 2020-02-13 - `compare v1.4.4...v1.4.5 <https://github.com/jedie/python-creole/compare/v1.4.4...v1.4.5>`_
+* v1.4.5 - 2020-02-13 - `compare v1.4.4...v1.4.5 <https://github.com/jedie/python-creole/compare/v1.4.4...v1.4.5>`_ 
 
     * new: ``creole.setup_utils.assert_rst_readme`` for project setup tests
 
     * use `https://github.com/ymyzk/tox-gh-actions <https://github.com/ymyzk/tox-gh-actions>`_ on gitlab CI
 
-* v1.4.4 - 2020-02-07 - `compare v1.4.3...v1.4.4 <https://github.com/jedie/python-creole/compare/v1.4.3...v1.4.4>`_
+* v1.4.4 - 2020-02-07 - `compare v1.4.3...v1.4.4 <https://github.com/jedie/python-creole/compare/v1.4.3...v1.4.4>`_ 
 
     * Fix #44: Move ``poetry-publish`` to ``dev-dependencies`` and lower ``docutils`` requirement to |^0.15|
 
@@ -347,11 +349,11 @@ history
 
     * Always update README.rst before publish
 
-* v1.4.3 - 2020-02-01 - `compare v1.4.2...v1.4.3 <https://github.com/jedie/python-creole/compare/v1.4.2...v1.4.3>`_
+* v1.4.3 - 2020-02-01 - `compare v1.4.2...v1.4.3 <https://github.com/jedie/python-creole/compare/v1.4.2...v1.4.3>`_ 
 
     * Use new `poetry-publish <https://pypi.org/project/poetry-publish/>`_ for ``make publish``
 
-* v1.4.2 - 2020-02-01 - `compare v1.4.1...v1.4.2 <https://github.com/jedie/python-creole/compare/v1.4.1...v1.4.2>`_
+* v1.4.2 - 2020-02-01 - `compare v1.4.1...v1.4.2 <https://github.com/jedie/python-creole/compare/v1.4.1...v1.4.2>`_ 
 
     * Update CI configs on github and travis
 
@@ -359,7 +361,7 @@ history
 
     * Add generated ``README.rst`` in repository to fix install problems about missing readme
 
-* v1.4.1 - 2020-01-19 - `compare v1.4.0...v1.4.1 <https://github.com/jedie/python-creole/compare/v1.4.0...v1.4.1>`_
+* v1.4.1 - 2020-01-19 - `compare v1.4.0...v1.4.1 <https://github.com/jedie/python-creole/compare/v1.4.0...v1.4.1>`_ 
 
     * Remove Python v2 support code
 
@@ -375,7 +377,7 @@ history
 
     * Activate linting in CI pipeline
 
-* v1.4.0 - 2020-01-19 - `compare v1.3.2...v1.4.0 <https://github.com/jedie/python-creole/compare/v1.3.2...v1.4.0>`_
+* v1.4.0 - 2020-01-19 - `compare v1.3.2...v1.4.0 <https://github.com/jedie/python-creole/compare/v1.3.2...v1.4.0>`_ 
 
     * modernize project:
 
@@ -389,17 +391,17 @@ history
 
         * Test with Python v3.6, v3.7 and v3.8
 
-* v1.3.2 - 2018-02-27 - `compare v1.3.1...v1.3.2 <https://github.com/jedie/python-creole/compare/v1.3.1...v1.3.2>`_
+* v1.3.2 - 2018-02-27 - `compare v1.3.1...v1.3.2 <https://github.com/jedie/python-creole/compare/v1.3.1...v1.3.2>`_ 
 
     * Adding optional img size to creole2html and html2creole contributed by `John Dupuy <https://github.com/JohnAD>`_
 
     * run tests also with python 3.5 and 3.6
 
-* v1.3.1 - 2015-08-15 - `compare v1.3.0...v1.3.1 <https://github.com/jedie/python-creole/compare/v1.3.0...v1.3.1>`_
+* v1.3.1 - 2015-08-15 - `compare v1.3.0...v1.3.1 <https://github.com/jedie/python-creole/compare/v1.3.0...v1.3.1>`_ 
 
     * Bugfix for "Failed building wheel for python-creole"
 
-* v1.3.0 - 2015-06-02 - `compare v1.2.2...v1.3.0 <https://github.com/jedie/python-creole/compare/v1.2.2...v1.3.0>`_
+* v1.3.0 - 2015-06-02 - `compare v1.2.2...v1.3.0 <https://github.com/jedie/python-creole/compare/v1.2.2...v1.3.0>`_ 
 
     * Refactory internal file structure
 
@@ -413,19 +415,19 @@ history
 
     * use **json.dumps()** instead of **repr()** in some cases
 
-* v1.2.2 - 2015-04-05 - `compare v1.2.1...v1.2.2 <https://github.com/jedie/python-creole/compare/v1.2.1...v1.2.2>`_
+* v1.2.2 - 2015-04-05 - `compare v1.2.1...v1.2.2 <https://github.com/jedie/python-creole/compare/v1.2.1...v1.2.2>`_ 
 
     * Bugfix textile unittests if url scheme is unknown
 
     * migrate google-code Wiki to github and remove google-code links
 
-* v1.2.1 - 2014-09-14 - `compare v1.2.0...v1.2.1 <https://github.com/jedie/python-creole/compare/v1.2.0...v1.2.1>`_
+* v1.2.1 - 2014-09-14 - `compare v1.2.0...v1.2.1 <https://github.com/jedie/python-creole/compare/v1.2.0...v1.2.1>`_ 
 
     * Use origin PyPi code to check generated reStructuredText in setup.py
 
     * Update unitest for textile v2.1.8
 
-* v1.2.0 - 2014-05-15 - `compare v1.1.1...v1.2.0 <https://github.com/jedie/python-creole/compare/v1.1.1...v1.2.0>`_
+* v1.2.0 - 2014-05-15 - `compare v1.1.1...v1.2.0 <https://github.com/jedie/python-creole/compare/v1.1.1...v1.2.0>`_ 
 
     * NEW: Add ``<<code>>`` example macro (Source code highlighting with pygments) - implemented by Julien Enselme
 
@@ -555,7 +557,7 @@ history
 
     * Bugfix if docutils are not installed
 
-    * API change: rest2html is now here: ``from creole.rest2html.clean_writer import rest2html``
+    * API change: rest2html is now here: ``from creole.rest2html.clean_writer import rest2html`` 
 
 * v0.7.0
 
@@ -702,4 +704,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2021-12-05 16:58:04 with "python-creole"``
+``Note: this file is generated from README.creole 2022-08-20 09:52:40 with "python-creole"``

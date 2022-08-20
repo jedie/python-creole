@@ -43,7 +43,10 @@ class CreoleCLI:
         self.convert(sourcefile, destination, encoding)
 
     def convert(self, sourcefile, destination, encoding):
-        print(f"Convert {sourcefile!r} to {destination!r} with {self.convert_func.__name__} (codec: {encoding})")
+        print(
+            f"Convert {sourcefile!r} to {destination!r} with {self.convert_func.__name__}"
+            f" (codec: {encoding})"
+        )
 
         with codecs.open(sourcefile, "r", encoding=encoding) as infile:
             with codecs.open(destination, "w", encoding=encoding) as outfile:

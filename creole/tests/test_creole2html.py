@@ -197,7 +197,7 @@ class TestCreole2html(BaseCreoleTest):
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;hello world&#39;</span><span class="p">)</span><br />
             </pre></div><br />
             """,
-            macros={'code': example_macros.code}
+            macros={'code': example_macros.code},
         )
 
     def test_code_macro_fallback(self):

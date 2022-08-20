@@ -36,8 +36,7 @@ packages = [
 include = ['AUTHORS', 'LICENSE']
 
 [tool.poetry.dependencies]
-# TODO: Restrict to >=3.7
-python = ">=3.6,<4.0.0"
+python = ">=3.7,<4.0.0"
 docutils = "*"
 
 [tool.poetry.dev-dependencies]
@@ -49,10 +48,8 @@ textile = "*"
 pytest = "*"
 pytest-cov = "*"
 isort = "*"
-flake8 = "*"
-flynt = "*"
+pylint = "*"
 autopep8 = "*"
-pyupgrade = "*"
 darker = "*"
 
 [tool.poetry.scripts]
@@ -79,7 +76,7 @@ check = false
 stdout = false
 isort = true
 lint = [
-    "flake8",
+    "pylint",
 ]
 log_level = "INFO"
 

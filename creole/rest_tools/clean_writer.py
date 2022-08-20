@@ -153,7 +153,7 @@ class CleanHTMLTranslator(html4css1.HTMLTranslator):
     def visit_field_list(self, node):
         super().visit_field_list(node)
         if "<col" in self.body[-1]:
-            del(self.body[-1])
+            del self.body[-1]
 
     def depart_field_list(self, node):
         self.body.append('</table>\n')

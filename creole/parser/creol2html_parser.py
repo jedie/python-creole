@@ -22,7 +22,13 @@
 import re
 from pprint import pformat
 
-from creole.parser.creol2html_rules import INLINE_FLAGS, INLINE_RULES, BlockRules, InlineRules, SpecialRules
+from creole.parser.creol2html_rules import (
+    INLINE_FLAGS,
+    INLINE_RULES,
+    BlockRules,
+    InlineRules,
+    SpecialRules,
+)
 from creole.shared.document_tree import DocNode
 
 
@@ -87,7 +93,7 @@ class CreoleParser:
         if self.cur.children:
             last_child = self.cur.children[-1]
             if last_child.kind == "break":
-                del(self.cur.children[-1])
+                del self.cur.children[-1]
 
     def _upto(self, node, kinds):
         """

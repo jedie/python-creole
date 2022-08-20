@@ -23,17 +23,16 @@ install: check-poetry ## install python-creole via poetry
 	poetry install
 
 update: install-poetry ## Update the dependencies as according to the pyproject.toml file
-	poetry update
+	poetry update -v
 
 lint: ## Run code formatters and linter
-	poetry run flynt --fail-on-change --line-length=${MAX_LINE_LENGTH} .
+	poetry run darker --diff --check
 	poetry run isort --check-only .
-	poetry run flake8 .
 
 fix-code-style: ## Fix code formatting
-	poetry run flynt --line-length=${MAX_LINE_LENGTH} .
-	poetry run pyupgrade --py37-plus `git ls-files -- '*.py'`
-	poetry run autopep8 --aggressive --aggressive --in-place --recursive .
+	poetry run darker
+	poetry run autopep8 --in-place --max-line-length ${MAX_LINE_LENGTH} --recursive .
+	poetry run darker
 	poetry run isort .
 
 tox-listenvs: check-poetry ## List all tox test environments
