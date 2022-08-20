@@ -34,16 +34,6 @@ Python packages available on: [http://pypi.python.org/pypi/python-creole/](http:
 ```
 To setup a virtualenv via Poetry, see `unittests` section below.
 
-## dependencies
-
-For the most parts (`creole2html` and `html2creole`) no external libraries are needed.
-
-For all functionality (and running the unittests) these modules are needed:
-
-
-* [docutils](http://pypi.python.org/pypi/docutils/) (for the ReStructuredText stuff)
-* [textile](http://pypi.python.org/pypi/textile/) (for html2textile tests)
-
 # example
 
 ## creole2html
@@ -223,7 +213,7 @@ fix-code-style       Fix code formatting
 tox-listenvs         List all tox test environments
 tox                  Run pytest via tox with all environments
 pytest               Run pytest
-update-readmes       update README.rst from README.creole
+update-readmes       update README.rst and README.md from README.creole
 publish              Release new version to PyPi
 ```
 ## Use creole in README
@@ -236,9 +226,9 @@ Note: In this case you must install **docutils**! See above.
 # history
 
 
-* [*dev*](https://github.com/jedie/python-creole/compare/v1.5.0...master)
+* [*dev*](https://github.com/jedie/python-creole/compare/v1.5.0.rc1...master)
   * TBC
-* [v1.5.0 - 2022-08-20](https://github.com/jedie/python-creole/compare/v1.4.10...v1.5.0)
+* [v1.5.0.rc1 - 2022-08-20](https://github.com/jedie/python-creole/compare/v1.4.10...v1.5.0.rc1)
   * NEW: html2markdown
   * creole2html bugfixes:
     * replace wrong `<tt>` with `<code>`
@@ -448,4 +438,4 @@ first source code was written 27.11.2008: [Forum thread (de)](http://www.python-
 
 ------------
 
-``Note: this file is generated from README.creole 2022-08-20 22:35:17 with "python-creole"``
+``Note: this file is generated from README.creole 2022-08-20 23:21:34 with "python-creole"``

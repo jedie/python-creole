@@ -84,12 +84,16 @@ class CrossCompareMarkdownTests(BaseCreoleTest):
 
     def test_typeface_basic(self):
         self.cross_compare_markdown(
-            markdown_string='*single asterisks*',
-            html_string='<p><em>single asterisks</em></p>',
+            markdown_string='_emphasis_',
+            html_string='<p><em>emphasis</em></p>',
         )
         self.cross_compare_markdown(
             markdown_string='**double asterisks**',
             html_string='<p><strong>double asterisks</strong></p>',
+        )
+        self.cross_compare_markdown(
+            markdown_string='This is **markdown _markup_**!',
+            html_string='<p>This is <strong>markdown <em>markup</em></strong>!</p>',
         )
 
     def test_inline_code(self):
@@ -103,20 +107,6 @@ class CrossCompareMarkdownTests(BaseCreoleTest):
             html_string='<p>backtick in: <code>print("`")</code> function.</p>',
             debug=True,
         )
-
-        # self.cross_compare_markdown(
-        #     markdown_string=cleandoc(
-        #         '''
-        #         This is: _italic_, **bold**, `monospace`.
-        #         '''
-        #     ),
-        #     html_string=cleandoc(
-        #         '''
-        #         <p>This is: <em>italic</em>, <strong>bold</strong>, <code>monospace</code>.</p>
-        #         '''
-        #     ),
-        #     debug=True,
-        # )
 
     def test_lists(self):
         self.cross_compare_markdown(
