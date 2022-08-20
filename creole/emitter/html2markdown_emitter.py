@@ -35,7 +35,7 @@ class MarkdownEmitter(BaseEmitter):
         self._table = MarkupTable(head_prefix='', debug_msg=self.debug_msg)
         self.emit_children(node)
         content = self._table.get_markdown_table()
-        return f'{content}\n\n'
+        return f'\n{content}\n'
 
     def tr_emit(self, node):
         self._table.add_tr()
@@ -70,29 +70,28 @@ class MarkdownEmitter(BaseEmitter):
             if class_value:
                 if class_value.startswith('language-'):
                     language = class_value.partition('-')[2]
-                    return f'```{language}{code}```\n\n'
+                    return f'\n```{language}{code}```\n'
 
-            return f'```{code}```\n\n'
+            return f'\n```{code}```\n'
 
-        return f'```{self.deentity.replace_all(pre_content)}```\n'
+        return f'\n```{self.deentity.replace_all(pre_content)}```\n'
 
     def blockdata_pass_emit(self, node: DocNode):
-        return f'{node.content}\n\n'
+        return f'\n{node.content}\n'
 
     # --------------------------------------------------------------------------
 
     def p_emit(self, node: DocNode):
-        result = self.emit_children(node)
-        if self._inner_list == '':
-            result += '\n\n'
-        return result
+        return f'\n{self.emit_children(node)}\n'
 
     def br_emit(self, node: DocNode):
         return '\n'
 
     def headline_emit(self, node: DocNode):
         prefix = '#' * node.level
-        return f'{prefix} {self.emit_children(node)}\n\n'
+        if node.parent not in ('document', 'headline', 'p'):
+            prefix = f'\n{prefix}'
+        return f'{prefix} {self.emit_children(node)}\n'
 
     # --------------------------------------------------------------------------
 
@@ -130,7 +129,7 @@ class MarkdownEmitter(BaseEmitter):
     # --------------------------------------------------------------------------
 
     def hr_emit(self, node: DocNode):
-        return '----\n\n'
+        return '\n----\n'
 
     def a_emit(self, node: DocNode):
         link_text = self.emit_children(node)
@@ -156,7 +155,7 @@ class MarkdownEmitter(BaseEmitter):
     def list_emit(self, node: DocNode):
         content = self.emit_children(node)
         if node.level == 1:
-            content += '\n\n'
+            return f'\n{content}\n'
         return content
 
     ul_emit = list_emit

@@ -140,5 +140,26 @@ class MarkdownTests(BaseCreoleTest):
                 <p>Text after the table.</p>
                 '''
             ),
+            debug=True,
+        )
+        self.assert_html2markdown(
+            markdown_string=cleandoc(
+                '''
+                A table:
+
+                | A1 | B1 |
+
+                Text after.
+                '''
+            ),
+            html_string=cleandoc(
+                '''
+                <p>A table:</p>
+                <table>
+                <tr><td>A1</td><td>B1</td></tr>
+                </table>
+                <p>Text after.</p>
+                '''
+            ),
             # debug=True,
         )
