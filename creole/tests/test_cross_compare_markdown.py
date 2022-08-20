@@ -95,6 +95,7 @@ class CrossCompareMarkdownTests(BaseCreoleTest):
             markdown_string='This is **markdown _markup_**!',
             html_string='<p>This is <strong>markdown <em>markup</em></strong>!</p>',
         )
+
     def test_inline_code(self):
         self.cross_compare_markdown(
             markdown_string='Use the `print()` function.',
