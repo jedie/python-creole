@@ -15,20 +15,14 @@ check-poetry:
 		exit 1 ; \
 	fi
 
-install-poetry: ## install or update poetry
-	@if [[ "${POETRY_VERSION}" == *"Poetry"* ]] ; \
-	then \
-		echo 'Update poetry v$(POETRY_VERSION)' ; \
-		poetry self update ; \
-	else \
-		echo 'Install poetry' ; \
-		curl -sSL "https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py" | python3 ; \
-	fi
+install-poetry:  ## install or update poetry
+	pip3 install -U pip
+	pip3 install -U poetry
 
 install: check-poetry ## install python-creole via poetry
 	poetry install
 
-update: check-poetry ## Update the dependencies as according to the pyproject.toml file
+update: install-poetry ## Update the dependencies as according to the pyproject.toml file
 	poetry update
 
 lint: ## Run code formatters and linter
@@ -38,7 +32,7 @@ lint: ## Run code formatters and linter
 
 fix-code-style: ## Fix code formatting
 	poetry run flynt --line-length=${MAX_LINE_LENGTH} .
-	poetry run pyupgrade --exit-zero-even-if-changed --py3-plus --py36-plus --py37-plus `find . -name "*.py" -type f -not -path "./.tox/*"`
+	poetry run pyupgrade --py37-plus `git ls-files -- '*.py'`
 	poetry run autopep8 --aggressive --aggressive --in-place --recursive .
 	poetry run isort .
 
@@ -47,18 +41,6 @@ tox-listenvs: check-poetry ## List all tox test environments
 
 tox: check-poetry ## Run pytest via tox with all environments
 	poetry run tox
-
-tox-py36: check-poetry ## Run pytest via tox with *python v3.6*
-	poetry run tox -e py36
-
-tox-py37: check-poetry ## Run pytest via tox with *python v3.7*
-	poetry run tox -e py37
-
-tox-py38: check-poetry ## Run pytest via tox with *python v3.8*
-	poetry run tox -e py38
-
-tox-py39: check-poetry ## Run pytest via tox with *python v3.9*
-	poetry run tox -e py39
 
 pytest: check-poetry ## Run pytest
 	poetry run pytest
