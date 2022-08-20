@@ -619,7 +619,7 @@ history
 
 * v0.3.3
 
-    * Use <tt> when {{{ ... }}} is inline and not <pre>, see: `PyLucid Forum Thread <http://forum.pylucid.org/viewtopic.php?f=3&t=320>`_
+    * Use ``<tt>`` when {{{ ... }}} is inline and not ``<pre>``, see: `PyLucid Forum Thread <http://forum.pylucid.org/viewtopic.php?f=3&t=320>`_
 
     * Bugfix in html2creole: insert newline before new list. TODO: apply to all block tags: `issues 16 <http://code.google.com/p/python-creole/issues/detail?id=16#c5>`_
 
@@ -728,4 +728,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2022-08-20 21:45:05 with "python-creole"``
+``Note: this file is generated from README.creole 2022-08-20 21:51:36 with "python-creole"``

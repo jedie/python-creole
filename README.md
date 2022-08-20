@@ -397,7 +397,7 @@ Note: In this case you must install **docutils**! See above.
   * only emit children of empty tags like div and span (contributed by Eric O'Connell)
   * remove inter wiki links and doesn't check the protocol
 * v0.3.3
-  * Use <tt> when {{{ ... }}} is inline and not <pre>, see: [PyLucid Forum Thread](http://forum.pylucid.org/viewtopic.php?f=3&t=320)
+  * Use `<tt>` when {{{ ... }}} is inline and not `<pre>`, see: [PyLucid Forum Thread](http://forum.pylucid.org/viewtopic.php?f=3&t=320)
   * Bugfix in html2creole: insert newline before new list. TODO: apply to all block tags: [issues 16](http://code.google.com/p/python-creole/issues/detail?id=16#c5)
 * v0.3.2
   * Bugfix for spaces after Headline: [issues 15](https://code.google.com/p/python-creole/issues/detail?id=15)
@@ -453,4 +453,4 @@ first source code was written 27.11.2008: [Forum thread (de)](http://www.python-
 
 ------------
 
-``Note: this file is generated from README.creole 2022-08-20 21:45:05 with "python-creole"``
+``Note: this file is generated from README.creole 2022-08-20 21:51:36 with "python-creole"``

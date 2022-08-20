@@ -53,7 +53,7 @@ class MarkdownEmitter(BaseEmitter):
             code = self.deentity.replace_all(code_node.children[0].content)
 
             class_value = code_node.attrs.get('class')
-            if class_value :
+            if class_value:
                 if class_value.startswith('language-'):
                     language = class_value.partition('-')[2]
                     return f'```{language}{code}```\n\n'
@@ -123,7 +123,7 @@ class MarkdownEmitter(BaseEmitter):
         link_text = self.emit_children(node)
         url = node.attrs['href']
         title = node.attrs.get('title')
-        if title :
+        if title:
             return f'[{link_text}]({url} "{title}")'
         else:
             return f'[{link_text}]({url})'
