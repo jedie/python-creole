@@ -291,11 +291,11 @@ Note: In this case you must install **docutils**! See above.
 history
 =======
 
-* `*dev* <https://github.com/jedie/python-creole/compare/v1.5.0.rc1...master>`_ 
+* `*dev* <https://github.com/jedie/python-creole/compare/v1.5.0.rc2...master>`_ 
 
     * TBC
 
-* `v1.5.0.rc1 - 2022-08-20 <https://github.com/jedie/python-creole/compare/v1.4.10...v1.5.0.rc1>`_ 
+* `v1.5.0.rc2 - 2022-08-20 <https://github.com/jedie/python-creole/compare/v1.4.10...v1.5.0.rc2>`_ 
 
     * NEW: html2markdown
 
@@ -710,4 +710,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2022-08-20 23:21:34 with "python-creole"``
+``Note: this file is generated from README.creole 2022-08-21 00:49:59 with "python-creole"``
