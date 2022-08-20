@@ -55,18 +55,6 @@ Python packages available on: `http://pypi.python.org/pypi/python-creole/ <http:
 
 To setup a virtualenv via Poetry, see ``unittests`` section below.
 
-------------
-dependencies
-------------
-
-For the most parts (``creole2html`` and ``html2creole``) no external libraries are needed.
-
-For all functionality (and running the unittests) these modules are needed:
-
-* `docutils <http://pypi.python.org/pypi/docutils/>`_ (for the ReStructuredText stuff)
-
-* `textile <http://pypi.python.org/pypi/textile/>`_ (for html2textile tests)
-
 =======
 example
 =======
@@ -99,7 +87,7 @@ Convert html code back into creole markup:
 rest2html
 ---------
 
-Convert ReStructuredText into clean html code (needs `docutils`_):
+Convert ReStructuredText into clean html code (needs `docutils <http://pypi.python.org/pypi/docutils/>`_):
 
 ::
 
@@ -287,7 +275,7 @@ To see all make targets, just call ``make``:
     tox-listenvs         List all tox test environments
     tox                  Run pytest via tox with all environments
     pytest               Run pytest
-    update-readmes       update README.rst from README.creole
+    update-readmes       update README.rst and README.md from README.creole
     publish              Release new version to PyPi
 
 --------------------
@@ -303,11 +291,11 @@ Note: In this case you must install **docutils**! See above.
 history
 =======
 
-* `*dev* <https://github.com/jedie/python-creole/compare/v1.5.0...master>`_ 
+* `*dev* <https://github.com/jedie/python-creole/compare/v1.5.0.rc1...master>`_ 
 
     * TBC
 
-* `v1.5.0 - 2022-08-20 <https://github.com/jedie/python-creole/compare/v1.4.10...v1.5.0>`_ 
+* `v1.5.0.rc1 - 2022-08-20 <https://github.com/jedie/python-creole/compare/v1.4.10...v1.5.0.rc1>`_ 
 
     * NEW: html2markdown
 
@@ -722,4 +710,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2022-08-20 22:35:17 with "python-creole"``
+``Note: this file is generated from README.creole 2022-08-20 23:21:34 with "python-creole"``
