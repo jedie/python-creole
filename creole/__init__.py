@@ -8,7 +8,7 @@
     :PyPi:
       https://pypi.org/project/python-creole/
 
-    :copyleft: 2008-2021 by python-creole team, see AUTHORS for more details.
+    :copyleft: 2008-2022 by python-creole team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
 """
 
@@ -23,7 +23,7 @@ from creole.parser.creol2html_parser import CreoleParser
 from creole.parser.html_parser import HtmlParser
 
 
-__version__ = "1.4.10"
+__version__ = "1.5.0.rc0"
 __api__ = "1.0"  # Creole 1.0 spec - http://wikicreole.org/
 
 VERSION_STRING = __version__  # remove in future

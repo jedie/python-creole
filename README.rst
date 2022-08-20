@@ -5,7 +5,7 @@ about python-creole
 python-creole is a OpenSource (GPL) Python lib for converting markups.
 python-creole is pure python. No external libs needed.
 
-Compatible Python Versions (see `tox.ini <https://github.com/jedie/python-creole/blob/master/tox.ini>`_):
+Compatible Python Versions (see `tox.ini <https://github.com/jedie/python-creole/blob/main/tox.ini>`_):
 
 * 3.9, 3.8, 3.7, 3.6
 
@@ -38,7 +38,7 @@ The creole2html part based on the creole markup parser and emitter from the Moin
 .. |Build Status on github| image:: https://github.com/jedie/python-creole/workflows/test/badge.svg?branch=master
 .. |Coverage Status on coveralls.io| image:: https://coveralls.io/repos/jedie/python-creole/badge.svg
 .. _coveralls.io/r/jedie/python-creole: https://coveralls.io/r/jedie/python-creole
-.. |Status on landscape.io| image:: https://landscape.io/github/jedie/python-creole/master/landscape.svg
+.. |Status on landscape.io| image:: https://landscape.io/github/jedie/python-creole/main/landscape.svg
 .. _landscape.io/github/jedie/python-creole/master: https://landscape.io/github/jedie/python-creole/master
 .. |PyPi version| image:: https://badge.fury.io/py/python-creole.svg
 .. _pypi.org/project/python-creole/: https://pypi.org/project/python-creole/
@@ -133,7 +133,7 @@ Convert html code into textile markup
     >>> html2textile(u'<p>This is <strong>textile <i>markup</i></strong>!</p>')
     u'This is *textile __markup__*!'
 
-See also: `http://github.com/jedie/python-creole/blob/master/demo.py <http://github.com/jedie/python-creole/blob/master/demo.py>`_
+See also: `http://github.com/jedie/python-creole/blob/main/demo.py <http://github.com/jedie/python-creole/blob/main/demo.py>`_
 
 =====================
 Image size additional
@@ -160,7 +160,7 @@ Source code highlighting support
 ================================
 
 You can find a example macro which highlight source code thanks to the pygments
-library. It is located here: `/creole/shared/example_macros.py <https://github.com/jedie/python-creole/blob/master/creole/shared/example_macros.py>`_.
+library. It is located here: `/creole/shared/example_macros.py <https://github.com/jedie/python-creole/blob/main/creole/shared/example_macros.py>`_.
 Here is how to use it:
 
 ::
@@ -298,6 +298,8 @@ history
 * *dev* - `compare v1.4.10...master <https://github.com/jedie/python-creole/compare/v1.4.10...master>`_ 
 
     * Remove deprecated "parser_kwargs" and "emitter_kwargs"
+
+    * Rename git ``master`` branch to ``main``.
 
     * TBC
 
@@ -702,4 +704,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2021-12-05 16:58:04 with "python-creole"``
+``Note: this file is generated from README.creole 2022-08-20 09:52:40 with "python-creole"``

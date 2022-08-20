@@ -338,7 +338,9 @@ class HtmlEmitter:
                     try:
                         sourceline = inspect.getsourcelines(macro)[0][0].strip()
                     except OSError as err:
-                        evalue = etype(f"{evalue} (error getting sourceline: {err} from {filename})")
+                        evalue = etype(
+                            f"{evalue} (error getting sourceline: {err} from {filename})"
+                        )
                     else:
                         evalue = etype(f"{evalue} (sourceline: {sourceline!r} from {filename})")
                     exc_info = etype, evalue, etb

@@ -1,9 +1,10 @@
-# https://github.com/actions/setup-python
-
-name: Test
+name: pytest
 
 on:
   push:
+    branches:
+      - master
+  pull_request:
   schedule:
     - cron: '0 8 * * *'
 
@@ -14,47 +15,43 @@ jobs:
     env:
       PYTHONUNBUFFERED: 1
     strategy:
-      fail-fast: false
       matrix:
-        python-version: [3.9, 3.8, 3.7, 3.6]
+        # TODO: "3.10" https://github.com/jedie/python-creole/issues/66
+        python-version: ["3.9", "3.8", "3.7"]
+        # TODO: Test on windows-latest, too?
         os: [ubuntu-latest, macOS-latest]
     steps:
     - uses: actions/checkout@v2
-    - name: 'Set up Python ${{ matrix.python-version }}'
+      with:
+        fetch-depth: 0
+    - name: 'fetch main'
+      run: |
+        git fetch origin main
+    - name: 'Set up Python ${{ matrix.python-version }} on ${{ matrix.os }}'
       uses: actions/setup-python@v2
       with:
         python-version: '${{ matrix.python-version }}'
 
+    - uses: actions/cache@v2
+      with:
+        path: ~/.cache/
+        key: dot-cache-files
+
     - name: 'Install package'
       run: |
-        make install-poetry
-        source $HOME/.poetry/env
-        poetry lock
-        poetry show --tree
+        pip3 install poetry
         make install
-        pip3 install tox-gh-actions
 
     - name: 'List installed packages'
       run: |
-        source $HOME/.poetry/env
         poetry run pip freeze
 
-    - name: 'List all tox test environments'
+    - name: 'Run tests with Python v${{ matrix.python-version }} on ${{ matrix.os }}'
       run: |
-        source $HOME/.poetry/env
-        make tox-listenvs
-
-    - name: 'Run tests with Python v${{ matrix.python-version }}'
-      run: |
-        source $HOME/.poetry/env
-        make tox
+        make pytest
 
     - name: 'Upload coverage report'
-      run: bash <(curl -s https://codecov.io/bash)
-
-    - name: 'Run linters'
-      if: matrix.python-version == '3.8'
-      run: |
-        source $HOME/.poetry/env
-        make lint
-
+      uses: codecov/codecov-action@v2
+      with:
+        fail_ci_if_error: false
+        verbose: true
