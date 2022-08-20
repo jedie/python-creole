@@ -637,17 +637,20 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
         """)
 
     def test_toc_with_no_toc(self):
-        self.assert_creole2html(r"""
+        self.assert_creole2html(
+            """
             <<toc>>
             = This is the Headline
             Use {{{<<toc>>}}} to insert a table of contents.
-        """, """
+            """,
+            """
             <ul>
                 <li><a href="#This is the Headline">This is the Headline</a></li>
             </ul>
             <a name="This is the Headline"><h1>This is the Headline</h1></a>
-            <p>Use <tt>&lt;&lt;toc&gt;&gt;</tt> to insert a table of contents.</p>
-        """)
+            <p>Use <code>&lt;&lt;toc&gt;&gt;</code> to insert a table of contents.</p>
+            """,
+        )
 
     def test_toc_more_then_one_toc(self):
         self.assert_creole2html(r"""
@@ -855,13 +858,16 @@ class TestCreole2htmlMarkup(BaseCreoleTest):
         """))
 
     def test_tt(self):
-        self.assert_creole2html(r"""
+        self.assert_creole2html(
+            """
             inline {{{<escaped>}}} and {{{ **not strong** }}}...
             ...and ##**strong** Teletyper## ;)
-        """, """
-            <p>inline <tt>&lt;escaped&gt;</tt> and <tt> **not strong** </tt>...<br />
+            """,
+            """
+            <p>inline <code>&lt;escaped&gt;</code> and <code> **not strong** </code>...<br />
             ...and <tt><strong>strong</strong> Teletyper</tt> ;)</p>
-        """)
+            """,
+        )
 
     def test_protocol_in_brackets(self):
         self.assert_creole2html(r"""

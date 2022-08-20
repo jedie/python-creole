@@ -39,7 +39,6 @@ class BaseEmitter:
 
     def blockdata_pass_emit(self, node):
         return f"{node.content}\n\n"
-        return node.content
 
     # --------------------------------------------------------------------------
 

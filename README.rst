@@ -81,7 +81,7 @@ Convert creole markup to html code:
 
     >>> from creole import creole2html
     >>> creole2html("This is **creole //markup//**")
-    u'<p>This is <strong>creole <i>markup</i></strong></p>\n'
+    '<p>This is <strong>creole <i>markup</i></strong></p>\n'
 
 -----------
 html2creole
@@ -92,8 +92,8 @@ Convert html code back into creole markup:
 ::
 
     >>> from creole import html2creole
-    >>> html2creole(u'<p>This is <strong>creole <i>markup</i></strong></p>\n')
-    u'This is **creole //markup//**'
+    >>> html2creole('<p>This is <strong>creole <i>markup</i></strong></p>\n')
+    'This is **creole //markup//**'
 
 ---------
 rest2html
@@ -105,7 +105,7 @@ Convert ReStructuredText into clean html code (needs `docutils`_):
 
     >>> from creole.rest2html.clean_writer import rest2html
     >>> rest2html(u"A ReSt link to `PyLucid CMS <http://www.pylucid.org>`_ :)")
-    u'<p>A ReSt link to <a href="http://www.pylucid.org">PyLucid CMS</a> :)</p>\\n'
+    '<p>A ReSt link to <a href="http://www.pylucid.org">PyLucid CMS</a> :)</p>\\n'
 
 (more information: `rest2html wiki page <https://github.com/jedie/python-creole/wiki/rest2html>`_)
 
@@ -118,8 +118,8 @@ Convert html code into ReStructuredText markup:
 ::
 
     >>> from creole import html2rest
-    >>> html2rest(u'<p>This is <strong>ReStructuredText</strong> <em>markup</em>!</p>')
-    u'This is **ReStructuredText** *markup*!'
+    >>> html2rest('<p>This is <strong>ReStructuredText</strong> <em>markup</em>!</p>')
+    'This is **ReStructuredText** *markup*!'
 
 ------------
 html2textile
@@ -130,8 +130,22 @@ Convert html code into textile markup
 ::
 
     >>> from creole import html2textile
-    >>> html2textile(u'<p>This is <strong>textile <i>markup</i></strong>!</p>')
-    u'This is *textile __markup__*!'
+    >>> html2textile('<p>This is <strong>textile <i>markup</i></strong>!</p>')
+    'This is *textile __markup__*!'
+
+See also: `http://github.com/jedie/python-creole/blob/master/demo.py <http://github.com/jedie/python-creole/blob/master/demo.py>`_
+
+-------------
+html2markdown
+-------------
+
+Convert html code into textile markup
+
+::
+
+    >>> from creole import html2markdown
+    >>> html2markdown('<p>This is <strong>markdown <i>markup</i></strong>!</p>')
+    'This is **markdown _markup_**!'
 
 See also: `http://github.com/jedie/python-creole/blob/main/demo.py <http://github.com/jedie/python-creole/blob/main/demo.py>`_
 
@@ -183,6 +197,8 @@ If you have python-creole installed, you will get these simple CLI scripts:
 * html2rest
 
 * html2textile
+
+* html2markdown
 
 Here the ``--help`` output from ``html2creole``:
 
@@ -296,6 +312,14 @@ history
 =======
 
 * *dev* - `compare v1.4.10...master <https://github.com/jedie/python-creole/compare/v1.4.10...master>`_ 
+
+    * NEW: html2markdown
+
+    * creole2html bugfixes:
+
+        * replace wrong ``<tt>`` with ``<code>``
+
+        * Add newline after lists
 
     * Remove deprecated "parser_kwargs" and "emitter_kwargs"
 
@@ -595,7 +619,7 @@ history
 
 * v0.3.3
 
-    * Use <tt> when {{{ ... }}} is inline and not <pre>, see: `PyLucid Forum Thread <http://forum.pylucid.org/viewtopic.php?f=3&t=320>`_
+    * Use ``<tt>`` when {{{ ... }}} is inline and not ``<pre>``, see: `PyLucid Forum Thread <http://forum.pylucid.org/viewtopic.php?f=3&t=320>`_
 
     * Bugfix in html2creole: insert newline before new list. TODO: apply to all block tags: `issues 16 <http://code.google.com/p/python-creole/issues/detail?id=16#c5>`_
 
@@ -704,4 +728,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2022-08-20 09:52:40 with "python-creole"``
+``Note: this file is generated from README.creole 2022-08-20 21:51:36 with "python-creole"``

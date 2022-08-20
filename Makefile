@@ -44,8 +44,9 @@ tox: check-poetry ## Run pytest via tox with all environments
 pytest: check-poetry ## Run pytest
 	poetry run pytest
 
-update-rst-readme: ## update README.rst from README.creole
+update-readmes: ## update README.rst from README.creole
 	poetry run update_rst_readme
+	poetry run update_markdown_readme
 
 publish: ## Release new version to PyPi
 	poetry run publish
