@@ -7,7 +7,6 @@
 /publish.log
 
 .idea
-/poetry.lock
 /.coverage
 
 .tox
