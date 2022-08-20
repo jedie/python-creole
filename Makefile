@@ -32,12 +32,12 @@ update: check-poetry ## Update the dependencies as according to the pyproject.to
 	poetry update
 
 lint: ## Run code formatters and linter
-	poetry run flynt --fail-on-change --line_length=${MAX_LINE_LENGTH} .
+	poetry run flynt --fail-on-change --line-length=${MAX_LINE_LENGTH} .
 	poetry run isort --check-only .
 	poetry run flake8 .
 
 fix-code-style: ## Fix code formatting
-	poetry run flynt --line_length=${MAX_LINE_LENGTH} .
+	poetry run flynt --line-length=${MAX_LINE_LENGTH} .
 	poetry run pyupgrade --exit-zero-even-if-changed --py3-plus --py36-plus --py37-plus `find . -name "*.py" -type f -not -path "./.tox/*"`
 	poetry run autopep8 --aggressive --aggressive --in-place --recursive .
 	poetry run isort .
