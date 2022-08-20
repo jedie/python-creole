@@ -28,10 +28,10 @@ The creole2html part based on the creole markup parser and emitter from the Moin
 # install
 
 Python packages available on: [http://pypi.python.org/pypi/python-creole/](http://pypi.python.org/pypi/python-creole/)
-
 ```
 ~$ pip install python-creole
 ```
+
 To setup a virtualenv via Poetry, see `unittests` section below.
 
 # example
@@ -39,91 +39,91 @@ To setup a virtualenv via Poetry, see `unittests` section below.
 ## creole2html
 
 Convert creole markup to html code:
-
 ```
 >>> from creole import creole2html
 >>> creole2html("This is **creole //markup//**")
 '<p>This is <strong>creole <i>markup</i></strong></p>\n'
 ```
+
 ## html2creole
 
 Convert html code back into creole markup:
-
 ```
 >>> from creole import html2creole
 >>> html2creole('<p>This is <strong>creole <i>markup</i></strong></p>\n')
 'This is **creole //markup//**'
 ```
+
 ## rest2html
 
 Convert ReStructuredText into clean html code (needs [docutils](http://pypi.python.org/pypi/docutils/)):
-
 ```
 >>> from creole.rest2html.clean_writer import rest2html
 >>> rest2html(u"A ReSt link to `PyLucid CMS <http://www.pylucid.org>`_ :)")
 '<p>A ReSt link to <a href="http://www.pylucid.org">PyLucid CMS</a> :)</p>\\n'
 ```
+
 (more information: [rest2html wiki page](https://github.com/jedie/python-creole/wiki/rest2html))
 
 ## html2rest
 
 Convert html code into ReStructuredText markup:
-
 ```
 >>> from creole import html2rest
 >>> html2rest('<p>This is <strong>ReStructuredText</strong> <em>markup</em>!</p>')
 'This is **ReStructuredText** *markup*!'
 ```
+
 ## html2textile
 
 Convert html code into textile markup
-
 ```
 >>> from creole import html2textile
 >>> html2textile('<p>This is <strong>textile <i>markup</i></strong>!</p>')
 'This is *textile __markup__*!'
 ```
+
 See also: [http://github.com/jedie/python-creole/blob/master/demo.py](http://github.com/jedie/python-creole/blob/master/demo.py)
 
 ## html2markdown
 
 Convert html code into textile markup
-
 ```
 >>> from creole import html2markdown
 >>> html2markdown('<p>This is <strong>markdown <i>markup</i></strong>!</p>')
 'This is **markdown _markup_**!'
 ```
+
 See also: [http://github.com/jedie/python-creole/blob/main/demo.py](http://github.com/jedie/python-creole/blob/main/demo.py)
 
 # Image size additional
 
 You can pass image width/height in image tags, e.g.:
-
 ```
 >>> from creole import creole2html
 >>> creole_markup="""{{foobar.jpg|image title|90x160}}"""
 >>> creole2html(creole_markup)
 '<p><img src="foobar.jpg" title="image title" alt="image title" width="90" height="160" /></p>'
 ```
-The third part (`90x160`) is not in creole standard, you can force a _strict_ mode, e.g.:
 
+The third part (`90x160`) is not in creole standard, you can force a _strict_ mode, e.g.:
 ```
 >>> creole2html(creole_markup, strict=True)
 '<p><img src="foobar.jpg" title="image title|90x160" alt="image title|90x160" /></p>'
 ```
+
 # Source code highlighting support
 
 You can find a example macro which highlight source code thanks to the pygments
 library. It is located here: [/creole/shared/example_macros.py](https://github.com/jedie/python-creole/blob/main/creole/shared/example_macros.py).
 Here is how to use it:
-
 ```
 >>> from creole import creole2html
 >>> from creole.shared.example_macros import code
 >>> creole_markup="""<<code ext=".py">>#some code\nprint('coucou')\n<</code>>"""
 >>> creole2html(creole_markup, macros={'code': code})
 ```
+
 # commandline interface
 
 If you have python-creole installed, you will get these simple CLI scripts:
@@ -136,7 +136,6 @@ If you have python-creole installed, you will get these simple CLI scripts:
 * html2markdown
 
 Here the `--help` output from `html2creole`:
-
 ```
 $ html2creole --help
 usage: html2creole [-h] [-v] [--encoding ENCODING] sourcefile destination
@@ -153,11 +152,12 @@ optional arguments:
   -v, --version        show program's version number and exit
   --encoding ENCODING  Codec for read/write file (default encoding: utf-8)
 ```
-Example to convert a html file into a creole file:
 
+Example to convert a html file into a creole file:
 ```
 $ html2creole foobar.html foobar.creole
 ```
+
 # documentation
 
 We store documentation/examples into the project wiki:
@@ -180,7 +180,6 @@ Creole Markup Cheat Sheet can be found here: [http://www.wikicreole.org/wiki/Che
 ![Creole Markup Cheat Sheet](http://www.wikicreole.org/imageServlet?page=CheatSheet%2Fcreole_cheat_sheet.png&width=340 "Creole Markup Cheat Sheet")
 
 ## unittests
-
 ```
 # clone repository (or use your fork):
 ~$ git clone https://github.com/jedie/python-creole.git
@@ -198,10 +197,10 @@ Creole Markup Cheat Sheet can be found here: [http://www.wikicreole.org/wiki/Che
 # Run pytest via tox with all environments:
 ~/python-creole$ make tox
 ```
+
 ## make targets
 
 To see all make targets, just call `make`:
-
 ```
 ~/python-creole$ make
 help                 List all commands
@@ -216,6 +215,7 @@ pytest               Run pytest
 update-readmes       update README.rst and README.md from README.creole
 publish              Release new version to PyPi
 ```
+
 ## Use creole in README
 
 With python-creole you can convert a README on-the-fly from creole into ReStructuredText in setup.py

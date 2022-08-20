@@ -81,7 +81,25 @@ class CrossCompareMarkdownTests(BaseCreoleTest):
             markdown_string='----',
             html_string='<hr />',
         )
+        self.cross_compare_markdown(
+            markdown_string=cleandoc(
+                '''
+                before
 
+                ----
+
+                after
+                '''
+            ),
+            html_string=cleandoc(
+                '''
+                <p>before</p>
+                <hr />
+                <p>after</p>
+                '''
+            ),
+            # debug=True,
+        )
     def test_typeface_basic(self):
         self.cross_compare_markdown(
             markdown_string='_emphasis_',
