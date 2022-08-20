@@ -99,6 +99,23 @@ class MarkupTable:
 
         return "\n".join(lines)
 
+    def get_markdown_table(self):
+        """return the table data in markdown markup."""
+        cells, widths = self._get_preformat_info()
+
+        lines = []
+        for no, row in enumerate(cells):
+            if no == 1 and self.has_header:
+                cells = ['-' * (width - 2) for width in widths]
+                lines.append(f'| {" | ".join(cells)} |')
+            cells = [cell.ljust(width) for cell, width in zip(row, widths)]
+            lines.append(f'|{"|".join(cells)}|')
+
+        result = "\n".join(lines)
+
+        self.debug_msg("Table.get_table_markup", result)
+        return result
+
 
 if __name__ == '__main__':
     import doctest

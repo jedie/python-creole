@@ -97,3 +97,48 @@ class MarkdownTests(BaseCreoleTest):
             ),
             # debug=True,
         )
+
+    def test_table(self):
+        self.assert_html2markdown(
+            markdown_string=cleandoc(
+                '''
+                | A1 | B1 |
+                | A2 | B2 |
+                '''
+            ),
+            html_string=cleandoc(
+                '''
+                <table>
+                <tr><td>A1</td><td>B1</td></tr>
+                <tr><td>A2</td><td>B2</td></tr>
+                </table>
+                '''
+            ),
+            # debug=True,
+        )
+        self.assert_html2markdown(
+            markdown_string=cleandoc(
+                '''
+                # A Table
+
+                | Foo | Bar |
+                | --- | --- |
+                | A1  | B1  |
+                | A2  | B2  |
+
+                Text after the table.
+                '''
+            ),
+            html_string=cleandoc(
+                '''
+                <h1>A Table</h1>
+                <table>
+                <tr><th>Foo</th><th>Bar</th></tr>
+                <tr><td>A1</td><td>B1</td></tr>
+                <tr><td>A2</td><td>B2</td></tr>
+                </table>
+                <p>Text after the table.</p>
+                '''
+            ),
+            # debug=True,
+        )
