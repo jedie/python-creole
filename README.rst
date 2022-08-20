@@ -268,11 +268,6 @@ unittests
     
     # Run pytest via tox with all environments:
     ~/python-creole$ make tox
-    
-    # Run pytest via tox with one Python version:
-    ~/python-creole$ make tox-py38
-    ~/python-creole$ make tox-py37
-    ~/python-creole$ make tox-py36
 
 ------------
 make targets
@@ -286,16 +281,13 @@ To see all make targets, just call ``make``:
     help                 List all commands
     install-poetry       install or update poetry
     install              install python-creole via poetry
+    update               Update the dependencies as according to the pyproject.toml file
     lint                 Run code formatters and linter
     fix-code-style       Fix code formatting
     tox-listenvs         List all tox test environments
     tox                  Run pytest via tox with all environments
-    tox-py36             Run pytest via tox with *python v3.6*
-    tox-py37             Run pytest via tox with *python v3.7*
-    tox-py38             Run pytest via tox with *python v3.8*
-    tox-py39             Run pytest via tox with *python v3.9*
     pytest               Run pytest
-    update-rst-readme    update README.rst from README.creole
+    update-readmes       update README.rst from README.creole
     publish              Release new version to PyPi
 
 --------------------
@@ -311,7 +303,11 @@ Note: In this case you must install **docutils**! See above.
 history
 =======
 
-* *dev* - `compare v1.4.10...master <https://github.com/jedie/python-creole/compare/v1.4.10...master>`_ 
+* `*dev* <https://github.com/jedie/python-creole/compare/v1.5.0...master>`_ 
+
+    * TBC
+
+* `v1.5.0 - 2022-08-20 <https://github.com/jedie/python-creole/compare/v1.4.10...v1.5.0>`_ 
 
     * NEW: html2markdown
 
@@ -325,9 +321,7 @@ history
 
     * Rename git ``master`` branch to ``main``.
 
-    * TBC
-
-* v1.4.10 - 2021-05-11 - `compare v1.4.9...v1.4.10 <https://github.com/jedie/python-creole/compare/v1.4.9...v1.4.10>`_ 
+* `v1.4.10 - 2021-05-11 <https://github.com/jedie/python-creole/compare/v1.4.9...v1.4.10>`_ 
 
     * Update some string formatting to f-strings
 
@@ -337,7 +331,7 @@ history
 
     * Remove Travis CI (All tests already running via github actions)
 
-* v1.4.9 - 2020-11-4 - `compare v1.4.8...v1.4.9 <https://github.com/jedie/python-creole/compare/v1.4.8...v1.4.9>`_ 
+* `v1.4.9 - 2020-11-4 <https://github.com/jedie/python-creole/compare/v1.4.8...v1.4.9>`_ 
 
     * Add missing classifier for Python 3.9 (`Contributed by jugmac00 <https://github.com/jedie/python-creole/pull/55>`_)
 
@@ -728,4 +722,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2022-08-20 21:51:36 with "python-creole"``
+``Note: this file is generated from README.creole 2022-08-20 22:35:17 with "python-creole"``

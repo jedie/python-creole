@@ -10,12 +10,10 @@
 """
 
 
-import posixpath
-
 from creole.parser.html_parser import HtmlParser
-from creole.parser.html_parser_config import BLOCK_TAGS
 from creole.shared.base_emitter import BaseEmitter
 from creole.shared.document_tree import DocNode
+from creole.shared.markup_table import MarkupTable
 
 
 class MarkdownEmitter(BaseEmitter):
@@ -28,13 +26,29 @@ class MarkdownEmitter(BaseEmitter):
         self.strict = strict
         super().__init__(document_tree, *args, **kwargs)
 
-        self.table_head_prefix = '= '
-        self.table_auto_width = True
-
     def emit(self):
         """Emit the document represented by self.root DOM tree."""
         return self.emit_node(self.root).strip()  # FIXME
 
+    # --------------------------------------------------------------------------
+    def table_emit(self, node):
+        self._table = MarkupTable(head_prefix='', debug_msg=self.debug_msg)
+        self.emit_children(node)
+        content = self._table.get_markdown_table()
+        return f'{content}\n\n'
+
+    def tr_emit(self, node):
+        self._table.add_tr()
+        self.emit_children(node)
+        return ''
+
+    def th_emit(self, node):
+        self._table.add_th(self.emit_children(node))
+        return ''
+
+    def td_emit(self, node):
+        self._table.add_td(self.emit_children(node))
+        return ''
     # --------------------------------------------------------------------------
 
     def blockdata_pre_emit(self, node: DocNode):

@@ -24,6 +24,7 @@ The creole2html part based on the creole markup parser and emitter from the Moin
 | ![Coverage Status on coveralls.io](https://coveralls.io/repos/jedie/python-creole/badge.svg "Coverage Status on coveralls.io")    |
 | ![Status on landscape.io](https://landscape.io/github/jedie/python-creole/main/landscape.svg "Status on landscape.io")            |
 | ![PyPi version](https://badge.fury.io/py/python-creole.svg "PyPi version")                                                        |
+
 # install
 
 Python packages available on: [http://pypi.python.org/pypi/python-creole/](http://pypi.python.org/pypi/python-creole/)
@@ -206,11 +207,6 @@ Creole Markup Cheat Sheet can be found here: [http://www.wikicreole.org/wiki/Che
 
 # Run pytest via tox with all environments:
 ~/python-creole$ make tox
-
-# Run pytest via tox with one Python version:
-~/python-creole$ make tox-py38
-~/python-creole$ make tox-py37
-~/python-creole$ make tox-py36
 ```
 ## make targets
 
@@ -221,16 +217,13 @@ To see all make targets, just call `make`:
 help                 List all commands
 install-poetry       install or update poetry
 install              install python-creole via poetry
+update               Update the dependencies as according to the pyproject.toml file
 lint                 Run code formatters and linter
 fix-code-style       Fix code formatting
 tox-listenvs         List all tox test environments
 tox                  Run pytest via tox with all environments
-tox-py36             Run pytest via tox with *python v3.6*
-tox-py37             Run pytest via tox with *python v3.7*
-tox-py38             Run pytest via tox with *python v3.8*
-tox-py39             Run pytest via tox with *python v3.9*
 pytest               Run pytest
-update-rst-readme    update README.rst from README.creole
+update-readmes       update README.rst from README.creole
 publish              Release new version to PyPi
 ```
 ## Use creole in README
@@ -243,20 +236,21 @@ Note: In this case you must install **docutils**! See above.
 # history
 
 
-* *dev* - [compare v1.4.10...master](https://github.com/jedie/python-creole/compare/v1.4.10...master)
+* [*dev*](https://github.com/jedie/python-creole/compare/v1.5.0...master)
+  * TBC
+* [v1.5.0 - 2022-08-20](https://github.com/jedie/python-creole/compare/v1.4.10...v1.5.0)
   * NEW: html2markdown
   * creole2html bugfixes:
     * replace wrong `<tt>` with `<code>`
     * Add newline after lists
   * Remove deprecated "parser_kwargs" and "emitter_kwargs"
   * Rename git `master` branch to `main`.
-  * TBC
-* v1.4.10 - 2021-05-11 - [compare v1.4.9...v1.4.10](https://github.com/jedie/python-creole/compare/v1.4.9...v1.4.10)
+* [v1.4.10 - 2021-05-11](https://github.com/jedie/python-creole/compare/v1.4.9...v1.4.10)
   * Update some string formatting to f-strings
   * Replace some `join()` list comprehension with generators
   * Test on github actions also under MacOS
   * Remove Travis CI (All tests already running via github actions)
-* v1.4.9 - 2020-11-4 - [compare v1.4.8...v1.4.9](https://github.com/jedie/python-creole/compare/v1.4.8...v1.4.9)
+* [v1.4.9 - 2020-11-4](https://github.com/jedie/python-creole/compare/v1.4.8...v1.4.9)
   * Add missing classifier for Python 3.9 ([Contributed by jugmac00](https://github.com/jedie/python-creole/pull/55))
   * Update readme test
 * v1.4.8 - 2020-10-17 - [compare v1.4.7...v1.4.8](https://github.com/jedie/python-creole/compare/v1.4.7...v1.4.8)
@@ -444,6 +438,7 @@ first source code was written 27.11.2008: [Forum thread (de)](http://www.python-
 | GitHub | [https://github.com/jedie/python-creole](https://github.com/jedie/python-creole)           |
 | Wiki   | [https://github.com/jedie/python-creole/wiki](https://github.com/jedie/python-creole/wiki) |
 | PyPi   | [https://pypi.org/project/python-creole/](https://pypi.org/project/python-creole/)         |
+
 ## donation
 
 
@@ -453,4 +448,4 @@ first source code was written 27.11.2008: [Forum thread (de)](http://www.python-
 
 ------------
 
-``Note: this file is generated from README.creole 2022-08-20 21:51:36 with "python-creole"``
+``Note: this file is generated from README.creole 2022-08-20 22:35:17 with "python-creole"``

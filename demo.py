@@ -7,7 +7,7 @@
 """
 
 
-from creole import creole2html, html2creole, html2rest, html2textile
+from creole import creole2html, html2creole, html2markdown, html2rest, html2textile
 
 
 source_creole = """\
@@ -15,7 +15,7 @@ source_creole = """\
 
 You can convert from:
 
-* **creole2html**, **html2creole**, **html2rest**, //html2textile//
+* **creole2html**, **html2creole**, **html2rest**, **html2markdown**, //html2textile//
 
 === a table:
 
@@ -25,7 +25,7 @@ You can convert from:
 
 ----
 
-More info on our [[http://code.google.com/p/python-creole/|Homepage]]."""
+More info on our [[https://github.com/jedie/python-creole/|Homepage]]."""
 
 
 if __name__ == "__main__":
@@ -44,3 +44,7 @@ if __name__ == "__main__":
     print("\n\n" + "_" * 79 + "\n*** Convert html into textile: ***\n\n")
     textile = html2textile(html)
     print(textile)
+
+    print("\n\n" + "_" * 79 + "\n*** Convert html into markdown: ***\n\n")
+    markdown = html2markdown(html)
+    print(markdown)
