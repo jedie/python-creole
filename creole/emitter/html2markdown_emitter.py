@@ -105,8 +105,7 @@ class MarkdownEmitter(BaseEmitter):
     def i_emit(self, node: DocNode):
         return self._typeface(node, key='_')
 
-    def em_emit(self, node: DocNode):
-        return self._typeface(node, key='*')
+    em_emit = i_emit
 
     def tt_emit(self, node: DocNode):
         return self._typeface(node, key='##')
