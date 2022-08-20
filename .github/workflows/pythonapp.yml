@@ -16,8 +16,10 @@ jobs:
       PYTHONUNBUFFERED: 1
     strategy:
       matrix:
-        python-version: ["3.10", "3.9", "3.8", "3.7"]
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        # TODO: "3.10" https://github.com/jedie/python-creole/issues/66
+        python-version: ["3.9", "3.8", "3.7"]
+        # TODO: Test on windows-latest, too?
+        os: [ubuntu-latest, macOS-latest]
     steps:
     - uses: actions/checkout@v2
       with:
