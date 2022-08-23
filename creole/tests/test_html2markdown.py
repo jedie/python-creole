@@ -51,6 +51,7 @@ class MarkdownTests(BaseCreoleTest):
             markdown_string='**This text is _extremely_ important**',
             html_string='<p><strong>This text is <em>extremely</em> important</strong></p>',
         )
+
     def test_lists(self):
         self.assert_html2markdown(
             markdown_string=cleandoc(
