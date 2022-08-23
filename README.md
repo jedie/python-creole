@@ -255,7 +255,7 @@ Note: In this case you must install **docutils**! See above.
   * new: `creole.setup_utils.assert_rst_readme` for project setup tests
   * use [https://github.com/ymyzk/tox-gh-actions](https://github.com/ymyzk/tox-gh-actions) on gitlab CI
 * v1.4.4 - 2020-02-07 - [compare v1.4.3...v1.4.4](https://github.com/jedie/python-creole/compare/v1.4.3...v1.4.4)
-  * Fix #44: Move `poetry-publish` to `dev-dependencies` and lower `docutils` requirement to ![^0.15](^0.15 "^0.15")
+  * Fix #44: Move `poetry-publish` to `dev-dependencies` and lower `docutils` requirement to `^0.15`
   * some code style updated
   * Always update README.rst before publish
 * v1.4.3 - 2020-02-01 - [compare v1.4.2...v1.4.3](https://github.com/jedie/python-creole/compare/v1.4.2...v1.4.3)

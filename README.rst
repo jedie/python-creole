@@ -349,7 +349,7 @@ history
 
 * v1.4.4 - 2020-02-07 - `compare v1.4.3...v1.4.4 <https://github.com/jedie/python-creole/compare/v1.4.3...v1.4.4>`_ 
 
-    * Fix #44: Move ``poetry-publish`` to ``dev-dependencies`` and lower ``docutils`` requirement to |^0.15|
+    * Fix #44: Move ``poetry-publish`` to ``dev-dependencies`` and lower ``docutils`` requirement to ``^0.15``
 
     * some code style updated
 
@@ -678,8 +678,6 @@ history
 * v0.1.0
 
     * first version cut out from `PyLucid CMS <http://www.pylucid.org>`_
-
-.. |^0.15| image:: ^0.15
 
 first source code was written 27.11.2008: `Forum thread (de) <http://www.python-forum.de/viewtopic.php?f=3&t=16742>`_
 
