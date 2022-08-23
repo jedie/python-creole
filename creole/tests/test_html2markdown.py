@@ -163,3 +163,26 @@ class MarkdownTests(BaseCreoleTest):
             ),
             # debug=True,
         )
+    def test_links_with_spaces(self):
+        self.assert_html2markdown(
+            markdown_string=cleandoc(
+                '''
+                [one](/foo%20bar.png)
+
+                [/somewhere/foo bar.exe](https://somewhere/foo%20bar.exe?bar=1#anchor "Foo Bar")
+
+                ![Alt text](https://foo.tld/a%20image.png?bar=1#anchor)
+                '''
+            ),
+            html_string=cleandoc(
+                '''
+                <p><a href="/foo bar.png">one</a></p>
+                <p>
+                    <a href="https://somewhere/foo bar.exe?bar=1#anchor" title="Foo Bar">
+                    /somewhere/foo bar.exe
+                    </a>
+                </p>
+                <p><img alt="Alt text" src="https://foo.tld/a image.png?bar=1#anchor" /></p>
+                '''
+            ),
+        )

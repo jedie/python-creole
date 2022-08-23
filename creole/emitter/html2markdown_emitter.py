@@ -8,12 +8,25 @@
     :license: GNU GPL v3 or above, see LICENSE for more details.
 
 """
-
+from urllib.parse import ParseResult, quote, urlparse, urlunparse
 
 from creole.parser.html_parser import HtmlParser
 from creole.shared.base_emitter import BaseEmitter
 from creole.shared.document_tree import DocNode
 from creole.shared.markup_table import MarkupTable
+
+
+def quote_link(uri):
+    """
+    >>> quote_link('http://foo.tld/a image with spaces.png')
+    'http://foo.tld/a%20image%20with%20spaces.png'
+
+    >>> quote_link('https://foo.tld/a image.png?bar=1#anchor')
+    'https://foo.tld/a%20image.png?bar=1#anchor'
+    """
+    scheme, netloc, url, params, query, fragment = urlparse(uri)
+    url = quote(url)
+    return urlunparse(ParseResult(scheme, netloc, url, params, query, fragment))
 
 
 class MarkdownEmitter(BaseEmitter):
@@ -133,7 +146,9 @@ class MarkdownEmitter(BaseEmitter):
 
     def a_emit(self, node: DocNode):
         link_text = self.emit_children(node)
-        url = node.attrs['href']
+
+        url = quote_link(node.attrs['href'])
+
         title = node.attrs.get('title')
         if title:
             return f'[{link_text}]({url} "{title}")'
@@ -141,7 +156,7 @@ class MarkdownEmitter(BaseEmitter):
             return f'[{link_text}]({url})'
 
     def img_emit(self, node: DocNode):
-        src = node.attrs['src']
+        src = quote_link(node.attrs['src'])
 
         title = node.attrs.get('title')
         alt = node.attrs.get('alt', '')
