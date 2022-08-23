@@ -31,6 +31,26 @@ class MarkdownTests(BaseCreoleTest):
             # debug=True,
         )
 
+    def test_typeface(self):
+        self.assert_html2markdown(
+            markdown_string='This is ~~Strikethrough~~',
+            html_string='<p>This is <del>Strikethrough</del></p>',
+            debug=True,
+        )
+        self.assert_html2markdown(
+            markdown_string='This is <sub>Subscript</sub>',
+            html_string='<p>This is <sub>Subscript</sub></p>',
+            debug=True,
+        )
+        self.assert_html2markdown(
+            markdown_string='This is <sup>Superscript</sup>',
+            html_string='<p>This is <sup>Superscript</sup></p>',
+            debug=True,
+        )
+        self.assert_html2markdown(
+            markdown_string='**This text is _extremely_ important**',
+            html_string='<p><strong>This text is <em>extremely</em> important</strong></p>',
+        )
     def test_lists(self):
         self.assert_html2markdown(
             markdown_string=cleandoc(
@@ -163,6 +183,7 @@ class MarkdownTests(BaseCreoleTest):
             ),
             # debug=True,
         )
+
     def test_links_with_spaces(self):
         self.assert_html2markdown(
             markdown_string=cleandoc(

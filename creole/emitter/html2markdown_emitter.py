@@ -122,11 +122,14 @@ class MarkdownEmitter(BaseEmitter):
     def tt_emit(self, node: DocNode):
         return self._typeface(node, key='##')
 
+    def _typeface_html(self, node, tag):
+        return f'<{tag}>{self.emit_children(node)}</{tag}>'
+
     def sup_emit(self, node: DocNode):
-        return self._typeface(node, key='^^')
+        return self._typeface_html(node, tag='sup')
 
     def sub_emit(self, node: DocNode):
-        return self._typeface(node, key=',,')
+        return self._typeface_html(node, tag='sub')
 
     def u_emit(self, node: DocNode):
         return self._typeface(node, key='__')
