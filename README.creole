@@ -3,8 +3,8 @@
 python-creole is a OpenSource (GPL) Python lib for converting markups.
 python-creole is pure python. No external libs needed.
 
-Compatible Python Versions (see [[https://github.com/jedie/python-creole/blob/main/tox.ini|tox.ini]]):
- * 3.9, 3.8, 3.7, 3.6
+Compatible Python Versions (see [[https://github.com/jedie/python-creole/blob/main/pyproject.toml|tox config in pyproject.toml]]):
+ * 3.9, 3.8, 3.7
  * PyPy3
 
 
@@ -15,6 +15,7 @@ Existing converters:
 * reSt -> html (for clean html code)
 * html -> reStructuredText markup (only a subset of reSt supported)
 * html -> textile markup (not completed yet)
+* html -> markdown markup
 
 The creole2html part based on the creole markup parser and emitter from the MoinMoin project by Radomir Dopieralski and Thomas Waldmann.
 
@@ -221,9 +222,9 @@ Note: In this case you must install **docutils**! See above.
 
 = history =
 
-* [[https://github.com/jedie/python-creole/compare/v1.5.0.rc2...master|*dev*]]
+* [[https://github.com/jedie/python-creole/compare/v1.5.0.rc3...master|*dev*]]
 ** TBC
-* [[https://github.com/jedie/python-creole/compare/v1.4.10...v1.5.0.rc2|v1.5.0.rc2 - 2022-08-20]]
+* [[https://github.com/jedie/python-creole/compare/v1.4.10...v1.5.0.rc3|v1.5.0.rc3 - 2022-08-20]]
 ** NEW: html2markdown
 ** creole2html bugfixes:
 *** replace wrong {{{<tt>}}} with {{{<code>}}}
@@ -250,7 +251,7 @@ Note: In this case you must install **docutils**! See above.
 ** new: {{{creole.setup_utils.assert_rst_readme}}} for project setup tests
 ** use https://github.com/ymyzk/tox-gh-actions on gitlab CI
 * v1.4.4 - 2020-02-07 - [[https://github.com/jedie/python-creole/compare/v1.4.3...v1.4.4|compare v1.4.3...v1.4.4]]
-** Fix #44: Move {{{poetry-publish}}} to {{{dev-dependencies}}} and lower {{{docutils}}} requirement to {{^0.15}}
+** Fix #44: Move {{{poetry-publish}}} to {{{dev-dependencies}}} and lower {{{docutils}}} requirement to {{{^0.15}}}
 ** some code style updated
 ** Always update README.rst before publish
 * v1.4.3 - 2020-02-01 - [[https://github.com/jedie/python-creole/compare/v1.4.2...v1.4.3|compare v1.4.2...v1.4.3]]

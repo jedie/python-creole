@@ -31,6 +31,26 @@ class MarkdownTests(BaseCreoleTest):
             # debug=True,
         )
 
+    def test_typeface(self):
+        self.assert_html2markdown(
+            markdown_string='This is ~~Strikethrough~~',
+            html_string='<p>This is <del>Strikethrough</del></p>',
+            debug=True,
+        )
+        self.assert_html2markdown(
+            markdown_string='This is <sub>Subscript</sub>',
+            html_string='<p>This is <sub>Subscript</sub></p>',
+            debug=True,
+        )
+        self.assert_html2markdown(
+            markdown_string='This is <sup>Superscript</sup>',
+            html_string='<p>This is <sup>Superscript</sup></p>',
+            debug=True,
+        )
+        self.assert_html2markdown(
+            markdown_string='**This text is _extremely_ important**',
+            html_string='<p><strong>This text is <em>extremely</em> important</strong></p>',
+        )
     def test_lists(self):
         self.assert_html2markdown(
             markdown_string=cleandoc(
@@ -162,4 +182,28 @@ class MarkdownTests(BaseCreoleTest):
                 '''
             ),
             # debug=True,
+        )
+
+    def test_links_with_spaces(self):
+        self.assert_html2markdown(
+            markdown_string=cleandoc(
+                '''
+                [one](/foo%20bar.png)
+
+                [/somewhere/foo bar.exe](https://somewhere/foo%20bar.exe?bar=1#anchor "Foo Bar")
+
+                ![Alt text](https://foo.tld/a%20image.png?bar=1#anchor)
+                '''
+            ),
+            html_string=cleandoc(
+                '''
+                <p><a href="/foo bar.png">one</a></p>
+                <p>
+                    <a href="https://somewhere/foo bar.exe?bar=1#anchor" title="Foo Bar">
+                    /somewhere/foo bar.exe
+                    </a>
+                </p>
+                <p><img alt="Alt text" src="https://foo.tld/a image.png?bar=1#anchor" /></p>
+                '''
+            ),
         )

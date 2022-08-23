@@ -5,9 +5,9 @@ about python-creole
 python-creole is a OpenSource (GPL) Python lib for converting markups.
 python-creole is pure python. No external libs needed.
 
-Compatible Python Versions (see `tox.ini <https://github.com/jedie/python-creole/blob/main/tox.ini>`_):
+Compatible Python Versions (see `tox config in pyproject.toml <https://github.com/jedie/python-creole/blob/main/pyproject.toml>`_):
 
-* 3.9, 3.8, 3.7, 3.6
+* 3.9, 3.8, 3.7
 
 * PyPy3
 
@@ -22,6 +22,8 @@ Existing converters:
 * html -> reStructuredText markup (only a subset of reSt supported)
 
 * html -> textile markup (not completed yet)
+
+* html -> markdown markup
 
 The creole2html part based on the creole markup parser and emitter from the MoinMoin project by Radomir Dopieralski and Thomas Waldmann.
 
@@ -291,11 +293,11 @@ Note: In this case you must install **docutils**! See above.
 history
 =======
 
-* `*dev* <https://github.com/jedie/python-creole/compare/v1.5.0.rc2...master>`_ 
+* `*dev* <https://github.com/jedie/python-creole/compare/v1.5.0.rc3...master>`_ 
 
     * TBC
 
-* `v1.5.0.rc2 - 2022-08-20 <https://github.com/jedie/python-creole/compare/v1.4.10...v1.5.0.rc2>`_ 
+* `v1.5.0.rc3 - 2022-08-20 <https://github.com/jedie/python-creole/compare/v1.4.10...v1.5.0.rc3>`_ 
 
     * NEW: html2markdown
 
@@ -349,7 +351,7 @@ history
 
 * v1.4.4 - 2020-02-07 - `compare v1.4.3...v1.4.4 <https://github.com/jedie/python-creole/compare/v1.4.3...v1.4.4>`_ 
 
-    * Fix #44: Move ``poetry-publish`` to ``dev-dependencies`` and lower ``docutils`` requirement to |^0.15|
+    * Fix #44: Move ``poetry-publish`` to ``dev-dependencies`` and lower ``docutils`` requirement to ``^0.15``
 
     * some code style updated
 
@@ -679,8 +681,6 @@ history
 
     * first version cut out from `PyLucid CMS <http://www.pylucid.org>`_
 
-.. |^0.15| image:: ^0.15
-
 first source code was written 27.11.2008: `Forum thread (de) <http://www.python-forum.de/viewtopic.php?f=3&t=16742>`_
 
 -------------
@@ -710,4 +710,4 @@ donation
 
 ------------
 
-``Note: this file is generated from README.creole 2022-08-21 00:49:59 with "python-creole"``
+``Note: this file is generated from README.creole 2022-08-23 07:57:12 with "python-creole"``
