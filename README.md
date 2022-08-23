@@ -3,10 +3,10 @@
 python-creole is a OpenSource (GPL) Python lib for converting markups.
 python-creole is pure python. No external libs needed.
 
-Compatible Python Versions (see [tox.ini](https://github.com/jedie/python-creole/blob/main/tox.ini)):
+Compatible Python Versions (see [tox config in pyproject.toml](https://github.com/jedie/python-creole/blob/main/pyproject.toml)):
 
 
-* 3.9, 3.8, 3.7, 3.6
+* 3.9, 3.8, 3.7
 * PyPy3
 
 Existing converters:
@@ -17,6 +17,7 @@ Existing converters:
 * reSt -> html (for clean html code)
 * html -> reStructuredText markup (only a subset of reSt supported)
 * html -> textile markup (not completed yet)
+* html -> markdown markup
 
 The creole2html part based on the creole markup parser and emitter from the MoinMoin project by Radomir Dopieralski and Thomas Waldmann.
 
@@ -438,4 +439,4 @@ first source code was written 27.11.2008: [Forum thread (de)](http://www.python-
 
 ------------
 
-``Note: this file is generated from README.creole 2022-08-23 07:53:38 with "python-creole"``
+``Note: this file is generated from README.creole 2022-08-23 07:57:12 with "python-creole"``
