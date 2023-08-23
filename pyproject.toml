@@ -63,8 +63,8 @@ update_markdown_readme = "creole.setup_utils:update_creole_markdown_readme"
 publish = "creole.publish:publish"
 
 [build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
 
 
 [tool.darker]
